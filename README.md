@@ -17,8 +17,8 @@
 
 ### LICENSE
 
-[GNU GENERAL PUBLIC LICENSE](https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE)
+[GPL-3.0 License](https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE)
 
 ---
 
-Copyright (C) 2017-2021 字节星球 [<https://www.bytecho.net/>]
+Copyright (C) 2017-2021 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
