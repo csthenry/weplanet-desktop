@@ -21,4 +21,4 @@
 
 ---
 
-Copyright (C) 2017-2021 字节星球 [<https://www.bytecho.net/>]
+Copyright (C) 2017-2021 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
