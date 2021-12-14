@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>813</width>
-    <height>528</height>
+    <width>979</width>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,14 +19,181 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actHome"/>
+   <addaction name="actMyInfo"/>
+   <addaction name="actAttend"/>
+   <addaction name="actApply"/>
+   <addaction name="separator"/>
+   <addaction name="actUserManager"/>
+   <addaction name="actAttendManager"/>
+   <addaction name="actApplyList"/>
+   <addaction name="actApplyItems"/>
+   <addaction name="actGroup"/>
+   <addaction name="separator"/>
+   <addaction name="actMore"/>
+   <addaction name="actExit"/>
   </widget>
+  <action name="actHome">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-star.svg</normaloff>:/images/color_icon/color-star.svg</iconset>
+   </property>
+   <property name="text">
+    <string>首页</string>
+   </property>
+   <property name="toolTip">
+    <string>首页</string>
+   </property>
+  </action>
+  <action name="actUserManager">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-account.svg</normaloff>:/images/color_icon/color-account.svg</iconset>
+   </property>
+   <property name="text">
+    <string>用户管理</string>
+   </property>
+   <property name="toolTip">
+    <string>actUserManager</string>
+   </property>
+  </action>
+  <action name="actAttend">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-event.svg</normaloff>:/images/color_icon/color-event.svg</iconset>
+   </property>
+   <property name="text">
+    <string>考勤</string>
+   </property>
+   <property name="toolTip">
+    <string>考勤</string>
+   </property>
+  </action>
+  <action name="actApply">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-add.svg</normaloff>:/images/color_icon/color-add.svg</iconset>
+   </property>
+   <property name="text">
+    <string>申请</string>
+   </property>
+   <property name="toolTip">
+    <string>申请</string>
+   </property>
+  </action>
+  <action name="actMyInfo">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-paste.svg</normaloff>:/images/color_icon/color-paste.svg</iconset>
+   </property>
+   <property name="text">
+    <string>个人信息</string>
+   </property>
+   <property name="toolTip">
+    <string>个人信息</string>
+   </property>
+  </action>
+  <action name="actApplyList">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-script.svg</normaloff>:/images/color_icon/color-script.svg</iconset>
+   </property>
+   <property name="text">
+    <string>审批列表</string>
+   </property>
+   <property name="toolTip">
+    <string>审批列表</string>
+   </property>
+  </action>
+  <action name="actApplyItems">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-way.svg</normaloff>:/images/color_icon/color-way.svg</iconset>
+   </property>
+   <property name="text">
+    <string>审批流程</string>
+   </property>
+   <property name="toolTip">
+    <string>审批流程</string>
+   </property>
+  </action>
+  <action name="actAttendManager">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-flag.svg</normaloff>:/images/color_icon/color-flag.svg</iconset>
+   </property>
+   <property name="text">
+    <string>考勤管理</string>
+   </property>
+  </action>
+  <action name="actGroup">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-web.svg</normaloff>:/images/color_icon/color-web.svg</iconset>
+   </property>
+   <property name="text">
+    <string>团队架构</string>
+   </property>
+   <property name="toolTip">
+    <string>团队架构</string>
+   </property>
+  </action>
+  <action name="actExit">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-launch.svg</normaloff>:/images/color_icon/color-launch.svg</iconset>
+   </property>
+   <property name="text">
+    <string>退出</string>
+   </property>
+   <property name="toolTip">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="actMore">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-idea.svg</normaloff>:/images/color_icon/color-idea.svg</iconset>
+   </property>
+   <property name="text">
+    <string>更多...</string>
+   </property>
+   <property name="toolTip">
+    <string>更多...</string>
+   </property>
+  </action>
  </widget>
- <resources/>
- <connections/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

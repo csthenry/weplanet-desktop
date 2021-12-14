@@ -17,15 +17,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    formlogin.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    service.cpp
 
 HEADERS += \
-    mainwindow.h
+    formlogin.h \
+    mainwindow.h \
+    service.h
 
 FORMS += \
+    formlogin.ui \
     mainwindow.ui
+
 RC_ICONS = mainWindow_favicon_x32.ico
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

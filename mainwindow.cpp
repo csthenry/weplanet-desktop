@@ -1,64 +1,37 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-QSqlDatabase MainWindow::connectDatabase()
-{
-
-    db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("localhost");
-    db.setPort(3306);
-    db.setDatabaseName("magic");
-    db.setUserName("root");
-    db.setPassword("123456");
-
-    if (!db.open())   //打开数据库
-        QMessageBox::warning(this, "错误", "打开数据库失败",
-                                 QMessageBox::Ok,QMessageBox::NoButton);
-    else
-
-        QMessageBox::information(this, "提示", "打开数据库成功",
-                                 QMessageBox::Ok,QMessageBox::NoButton);
-    return db;
-
-}
-
-void MainWindow::initDatabaseTables(QSqlDatabase db)
-{
-
-        if(!db.open()){
-            qDebug() << "error info :" << db.lastError();
-        }
-        else{
-            QSqlQuery query;
-            QString creatTableStr = "CREATE TABLE magic_users   \
-                    (                                           \
-                      uid           int(10)      NOT NULL AUTO_INCREMENT,     \
-                      password      varchar(64)  NOT NULL ,         \
-                      name          varchar(32)  NOT NULL ,     \
-                      gender        char(1)      NULL ,         \
-                      telephone     varchar(64)  NULL ,         \
-                      mail          varchar(128) NULL ,         \
-                      user_group         char(1)      NULL ,         \
-                      user_position      char(1)      NULL ,         \
-                      PRIMARY KEY (uid)           \
-                    )ENGINE=InnoDB;";
-
-            query.prepare(creatTableStr);
-            if(!query.exec()){
-                qDebug()<<"query error :"<<query.lastError();
-            }
-            else{
-                qDebug()<<"creat table success!";
-            }
-        }
-}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    initDatabaseTables(connectDatabase());
+    QSqlDatabase db;
+    service::connectDatabase(db);
+
+    QPixmap statusOKIcon(":/images/color_icon/color-approve.svg"), statusErrorIcon(":/images/color_icon/color-delete.svg");
+    statusIcon = new QLabel();  //用于显示状态图标的lable
+    statusIcon->setMaximumSize(25, 25);
+    statusIcon->setScaledContents(true);    //图片自适应大小
+    statusIcon->setPixmap(statusErrorIcon);
+
+    connectStatusLable = new QLabel("Database Connection status: connecting...");
+    connectStatusLable->setMinimumWidth(250);
+
+    ui->statusbar->addWidget(statusIcon);   //将状态组件添加至statusBar
+    ui->statusbar->addWidget(connectStatusLable);
+
+    if (db.open())   //打开数据库
+    {
+        statusIcon->setPixmap(statusOKIcon);
+        connectStatusLable->setText("Database Connection status: connected");
+    }
+    else
+    {
+        statusIcon->setPixmap(statusErrorIcon);
+        connectStatusLable->setText("Database status: " + db.lastError().text());
+    }
 }
 
 MainWindow::~MainWindow()

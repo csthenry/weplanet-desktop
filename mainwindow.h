@@ -4,7 +4,9 @@
 #include <QMainWindow>
 #include <QDataWidgetMapper>
 #include <QMessageBox>
-#include    <QtSql>
+#include <QPixmap>
+#include <QLabel>
+#include "service.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,12 +16,9 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    QSqlDatabase connectDatabase();
-    void initDatabaseTables(QSqlDatabase db);
-
 private:
-    QSqlDatabase db;//数据库连接
+
+    QLabel *connectStatusLable, *statusIcon;
 
     QSqlTableModel *tabModel;  //数据模型
 
