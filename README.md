@@ -17,7 +17,7 @@
 
 ### LICENSE
 
-[GNU GENERAL PUBLIC LICENSE](https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE)
+[GPL-3.0 License](https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE)
 
 ---
 
