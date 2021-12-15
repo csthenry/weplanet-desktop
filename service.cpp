@@ -137,7 +137,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
     }
 }
 
-bool service::authAccount(QSqlDatabase& db, QString& uid, int account, QString pwd)
+bool service::authAccount(QSqlDatabase& db, QString& uid, long long account, QString pwd)
 {
     if(!db.open())
         return false;

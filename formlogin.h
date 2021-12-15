@@ -19,6 +19,7 @@ public:
     ~formLogin();
 
 private:
+    QString uid;
     QString readPwd;    //保存的密码
     QString loginUid;   //登录成功的uid
     void writeLoginSettings();

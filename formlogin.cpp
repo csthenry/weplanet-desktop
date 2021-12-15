@@ -11,11 +11,13 @@ formLogin::formLogin(QDialog *parent) :
     ui(new Ui::formLogin)
 {
     ui->setupUi(this);
-    //限制账号只能输入数字
-    QRegExp regx("[0-9]+$");
-    QValidator* validator = new QRegExpValidator(regx, ui->lineEdit_Uid);
-    ui->lineEdit_Uid->setValidator(validator);
-    ui->lineEdit_SignupTel->setValidator(validator);
+
+    //限制登录注册输入
+    QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z]{1,16}$");
+    QValidator* validator_account = new QRegExpValidator(regx_account);
+    ui->lineEdit_Uid->setValidator(validator_account);
+    ui->lineEdit_SignupTel->setValidator(validator_account);
+
 
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
 
@@ -80,7 +82,8 @@ void formLogin::on_btn_Login_clicked()
 {
     QString pwd = readPwd;
     QSettings settings("bytecho", "magicgms");  //公司名称和应用名称
-    if(service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toInt(), pwd) || service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toInt(), service::pwdEncrypt(ui->lineEdit_Pwd->text())))
+
+    if(service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toLongLong(), pwd) || service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toLongLong(), service::pwdEncrypt(ui->lineEdit_Pwd->text())))
     {
         writeLoginSettings();   //验证成功后，保存账号密码
         this->accept();
@@ -123,6 +126,11 @@ void formLogin::on_btn_Signup_clicked()
     if(ui->lineEdit_SignupPwd->text() != ui->lineEdit_SignupPwdAgain->text())
     {
         QMessageBox::warning(this, "警告", "注册失败，请检查密码填写是否一致。", QMessageBox::Ok);
+        return;
+    }
+    if(ui->lineEdit_SignupPwd->text().length() < 6)
+    {
+        QMessageBox::warning(this, "警告", "注册失败，请输入6~16位的密码以确保安全。", QMessageBox::Ok);
         return;
     }
     creatTableStr =
