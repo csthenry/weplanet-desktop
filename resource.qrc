@@ -66,5 +66,6 @@
         <file>color_icon/color-way.svg</file>
         <file>color_icon/color-web.svg</file>
         <file>color_icon/color-widget.svg</file>
+        <file>color_icon/main.svg</file>
     </qresource>
 </RCC>

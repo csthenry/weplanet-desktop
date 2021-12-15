@@ -19,7 +19,8 @@ public:
     ~formLogin();
 
 private:
-    QString readPwd;
+    QString readPwd;    //保存的密码
+    QString loginUid;   //登录成功的uid
     void writeLoginSettings();
     QString readLoginSettings();
 
@@ -29,6 +30,8 @@ private slots:
     void on_checkBox_remPwd_clicked(bool checked);
 
     void on_lineEdit_Uid_textEdited(const QString &arg1);
+
+    void on_btn_Signup_clicked();
 
 private:
     Ui::formLogin *ui;
