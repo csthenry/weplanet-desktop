@@ -18,8 +18,17 @@ public:
     explicit formLogin(QDialog *parent = nullptr);
     ~formLogin();
 
+private:
+    QString readPwd;
+    void writeLoginSettings();
+    QString readLoginSettings();
+
 private slots:
     void on_btn_Login_clicked();
+
+    void on_checkBox_remPwd_clicked(bool checked);
+
+    void on_lineEdit_Uid_textEdited(const QString &arg1);
 
 private:
     Ui::formLogin *ui;

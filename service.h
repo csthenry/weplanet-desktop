@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtSql>
+#include <QSettings>
 #include <QCryptographicHash>
 
 class service
