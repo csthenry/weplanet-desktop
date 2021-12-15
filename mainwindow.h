@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QLabel>
 #include "service.h"
+#include "formlogin.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,6 +18,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    QString uid;
+
+    QSqlDatabase db;
 
     QLabel *connectStatusLable, *statusIcon;
 
@@ -26,9 +30,18 @@ private:
 
     QDataWidgetMapper *dataMapper; //数据映射
 
+    QPixmap statusOKIcon, statusErrorIcon;
+
+    formLogin *formLoginWindow;
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
     ~MainWindow();
+
+
+private slots:
+    void receiveData(QSqlDatabase db, QString uid); //接收登录窗口信号
+
+    void on_actExit_triggered();
 
 private:
     Ui::MainWindow *ui;

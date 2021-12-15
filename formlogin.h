@@ -14,6 +14,7 @@ class formLogin : public QDialog
     Q_OBJECT
 
 public:
+    void send();
     explicit formLogin(QDialog *parent = nullptr);
     ~formLogin();
 
@@ -22,6 +23,10 @@ private slots:
 
 private:
     Ui::formLogin *ui;
+    QSqlDatabase db;
+
+signals:
+    void sendData(QSqlDatabase db, QString uid);
 };
 
 #endif // FORMLOGIN_H

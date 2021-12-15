@@ -1,5 +1,10 @@
 #include "formlogin.h"
-#include "ui_formLogin.h"
+#include "ui_formlogin.h"
+
+void formLogin::send()
+{
+    emit sendData(db, ui->lineEdit_Uid->text());
+}
 
 formLogin::formLogin(QDialog *parent) :
     QDialog(parent),
@@ -11,7 +16,12 @@ formLogin::formLogin(QDialog *parent) :
     QValidator* validator = new QRegExpValidator(regx, ui->lineEdit_Uid);
     ui->lineEdit_Uid->setValidator(validator);
 
+    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
 
+    setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
+    service::connectDatabase(db);
+    db.open();
+    service::initDatabaseTables(db);
 }
 
 formLogin::~formLogin()
@@ -22,9 +32,6 @@ formLogin::~formLogin()
 void formLogin::on_btn_Login_clicked()
 {
 
-    QSqlDatabase db;
-    service::connectDatabase(db);
-    db.open();
     if(service::authAccount(db, ui->lineEdit_Uid->text().toInt(), service::pwdEncrypt(ui->lineEdit_Pwd->text())))
         this->accept();
     else
