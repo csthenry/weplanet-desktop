@@ -43,6 +43,26 @@ private slots:
 
     void on_actExit_triggered();
 
+    void on_actHome_triggered();
+
+    void on_actMyInfo_triggered();
+
+    void on_actAttend_triggered();
+
+    void on_actApply_triggered();
+
+    void on_actUserManager_triggered();
+
+    void on_actAttendManager_triggered();
+
+    void on_actApplyList_triggered();
+
+    void on_actApplyItems_triggered();
+
+    void on_actGroup_triggered();
+
+    void on_actMore_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

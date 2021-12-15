@@ -137,17 +137,30 @@ bool service::initDatabaseTables(QSqlDatabase& db)
     }
 }
 
-bool service::authAccount(QSqlDatabase& db, int uid, QString pwd)
+bool service::authAccount(QSqlDatabase& db, QString& uid, int account, QString pwd)
 {
     if(!db.open())
         return false;
     QSqlQuery query;
-    query.exec("SELECT password FROM magic_users; WHERE uid = " + QString::number(uid));
+    //验证UID
+    query.exec("SELECT password FROM magic_users WHERE uid = " + QString::number(account));
     if(query.next() && pwd == query.value(0))
+    {
+        uid = QString::number(account);
+        qDebug() << uid << "登录方式：账号登录";
         return true;
+    }
     else
     {
-        qDebug() << query.lastError().text();
+        //验证手机号，可能有重复的手机号，所以用while
+        query.exec("SELECT uid, password FROM magic_users WHERE telephone = " + QString::number(account));
+        while(query.next())
+            if(pwd == query.value(1))
+            {
+                uid = query.value(0).toString();
+                qDebug() << uid << "登录方式：手机号登录";
+                return true;
+            }
         return false;
     }
 }

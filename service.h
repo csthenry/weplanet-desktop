@@ -15,7 +15,7 @@ public:
 
     static bool initDatabaseTables(QSqlDatabase& db);
 
-    static bool authAccount(QSqlDatabase& db, int uid, QString pwd);
+    static bool authAccount(QSqlDatabase& db, QString& uid, int account, QString pwd);
 
     service();
 

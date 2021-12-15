@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     statusIcon->setMaximumSize(25, 25);
     statusIcon->setScaledContents(true);    //图片自适应大小
 
-    connectStatusLable = new QLabel("Database Connection status: connecting...");
+    connectStatusLable = new QLabel("Database Status: connecting...");
     connectStatusLable->setMinimumWidth(250);
 
     ui->statusbar->addWidget(statusIcon);   //将状态组件添加至statusBar
@@ -38,12 +38,12 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
     if (db.open())   //打开数据库
     {
         statusIcon->setPixmap(statusOKIcon);
-        connectStatusLable->setText("Database Connection status: connected");
+        connectStatusLable->setText("Database Status: connected");
     }
     else
     {
         statusIcon->setPixmap(statusErrorIcon);
-        connectStatusLable->setText("Database status: " + db.lastError().text());
+        connectStatusLable->setText("Database Status: " + db.lastError().text());
     }
 }
 
@@ -51,15 +51,64 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
 void MainWindow::on_actExit_triggered()
 {
     formLoginWindow = new formLogin();
-    this->hide();
+    this->close();
     connect(formLoginWindow, SIGNAL(sendData(QSqlDatabase, QString)), this, SLOT(receiveData(QSqlDatabase, QString)));    //接收登录窗口的信号
     if (formLoginWindow->exec() == QDialog::Accepted)
     {
         formLoginWindow->send();    //发送信号
-        delete formLoginWindow;
+        //reload函数，用于重载窗口数据
         this->show();
     }
-    else
-        delete formLoginWindow;
+    delete formLoginWindow;
 
+}
+
+void MainWindow::on_actHome_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_actMyInfo_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_actAttend_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_actApply_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_actUserManager_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(4);
+}
+
+void MainWindow::on_actAttendManager_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+void MainWindow::on_actApplyList_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(6);
+}
+
+void MainWindow::on_actApplyItems_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(7);
+}
+
+void MainWindow::on_actGroup_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(8);
+}
+
+void MainWindow::on_actMore_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(9);
 }
