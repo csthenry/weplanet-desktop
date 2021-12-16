@@ -1,5 +1,6 @@
 QT       += core gui
 QT       += sql
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,11 +21,13 @@ SOURCES += \
     formlogin.cpp \
     main.cpp \
     mainwindow.cpp \
+    querymodel.cpp \
     service.cpp
 
 HEADERS += \
     formlogin.h \
     mainwindow.h \
+    querymodel.h \
     service.h
 
 FORMS += \

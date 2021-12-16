@@ -8,6 +8,7 @@
 #include <QLabel>
 #include "service.h"
 #include "formlogin.h"
+#include "querymodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,9 +31,12 @@ private:
 
     QDataWidgetMapper *dataMapper; //数据映射
 
-    QPixmap statusOKIcon, statusErrorIcon;
+    QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon;
 
     formLogin *formLoginWindow;
+
+    void setHomePageBaseInfo();
+
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
     ~MainWindow();

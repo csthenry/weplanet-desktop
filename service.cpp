@@ -48,11 +48,12 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   uid           int(10)      NOT NULL AUTO_INCREMENT,     \
                   password      varchar(64)  NOT NULL ,         \
                   name          varchar(32)  NOT NULL ,     \
-                  gender        tinyint(1)   NULL ,         \
+                  gender        tinytext     NULL ,         \
                   telephone     varchar(64)  NULL ,         \
                   mail          varchar(128) NULL ,         \
                   user_group    int(10) NOT  NULL ,         \
-                  user_position int(10)      NULL ,         \
+                  user_dpt      int(10)     NULL ,         \
+                  user_avatar   varchar(64)  NULL ,         \
                   PRIMARY KEY (uid)             \
                   )ENGINE=InnoDB;               \
                   INSERT INTO magic_users       \
@@ -183,5 +184,58 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, long long account, QSt
             }
         return false;
     }
+}
+
+QPixmap service::getAvatar(QString url)
+{
+    QUrl picUrl(url);
+    QNetworkAccessManager manager;
+    QEventLoop loop;
+    QNetworkReply *reply = manager.get(QNetworkRequest(url));
+    //请求结束并下载完成后，退出子事件循环
+    QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    //开启子事件循环
+    loop.exec();
+    QByteArray jpegData = reply->readAll();
+    QPixmap pixmap;
+    pixmap.loadFromData(jpegData);
+    return pixmap;
+}
+
+QPixmap service::setAvatarStyle(QPixmap avatar)
+{
+    QPixmap pixmapa(avatar), pixmap(120,120);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    QPainterPath path;
+    path.addEllipse(0, 0, 120, 120);
+    painter.setClipPath(path);
+    painter.drawPixmap(0, 0, 120, 120, pixmapa);
+    return pixmap;
+}
+
+QString service::getGroup(QString uid)
+{
+    QSqlQuery query;
+    query.exec("SELECT user_group FROM magic_users WHERE uid = " + uid);
+    if(!query.next())
+        return "--";
+    query.exec("SELECT group_name FROM magic_group WHERE group_id = " + query.value(0).toString());
+    if(!query.next())
+        return "--";
+    return query.value(0).toString();
+}
+
+QString service::getDepartment(QString uid)
+{
+    QSqlQuery query;
+    query.exec("SELECT user_dpt FROM magic_users WHERE uid = " + uid);
+    if(!query.next())
+        return "--";
+    query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id = " + query.value(0).toString());
+    if(!query.next())
+        return "--";
+    return query.value(0).toString();
 }
 
