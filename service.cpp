@@ -48,15 +48,15 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   uid           int(10)      NOT NULL AUTO_INCREMENT,     \
                   password      varchar(64)  NOT NULL ,         \
                   name          varchar(32)  NOT NULL ,     \
-                  gender        char(1)      NULL ,         \
+                  gender        tinyint(1)   NULL ,         \
                   telephone     varchar(64)  NULL ,         \
                   mail          varchar(128) NULL ,         \
-                  user_group         char(1) NOT NULL ,         \
-                  user_position      char(1)      NULL ,         \
+                  user_group    int(10) NOT  NULL ,         \
+                  user_position int(10)      NULL ,         \
                   PRIMARY KEY (uid)             \
                   )ENGINE=InnoDB;               \
                   INSERT INTO magic_users       \
-                  ( uid, password, name, user_group )       \
+                  (uid, password, name, user_group)       \
                   VALUES                        \
                   (                            \
                 100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1'    \
@@ -64,7 +64,27 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         query.prepare(creatTableStr);
         query.exec();
 
-        //用户组权限分配表 待设计。。。
+        //用户组权限分配表，默认有管理员和普通用户
+        creatTableStr =
+                  "CREATE TABLE IF NOT EXISTS magic_group"
+                  "(group_id        int(10)     NOT NULL    AUTO_INCREMENT,"
+                  "group_name      varchar(32) NOT NULL,"
+                  "users_manage     tinyint(1)  NOT NUll,"
+                  "attend_manage    tinyint(1)  NOT NUll,"
+                  "apply_manage     tinyint(1)  NOT NUll,"
+                  "applyItem_manage tinyint(1)  NOT NUll,"
+                  "group_manage     tinyint(1)  NOT NUll,"
+                  "activity_manage  tinyint(1)  NOT NUll,"
+                  "send_message     tinyint(1)  NOT NUll,"
+                  "PRIMARY KEY (group_id))ENGINE=InnoDB;"
+                  "INSERT INTO magic_group"
+                  "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
+                  "VALUES(1, '超级管理员', 1, 1, 1, 1, 1, 1, 1);"
+                  "INSERT INTO magic_group"
+                  "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
+                  "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1);";
+        query.prepare(creatTableStr);
+        query.exec();
 
         //团队架构表
         creatTableStr =
@@ -100,7 +120,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "op2_text       text,"
                   "op3_text       text,"
                   "process_uidList varchar(64),"
-                  "status         char(1)     NOT NUll,"
+                  "status         tinyint(1)     NOT NUll,"
                   "check_uidList  varchar(64),"
                   "reject_uid     int(10),"
                   "PRIMARY KEY (apply_id, uid)"
@@ -116,7 +136,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "op1_title      varchar(32),"
                   "op2_title      varchar(32),"
                   "op3_title      varchar(32),"
-                  "option_num         char(1),"
+                  "option_num     tinyint(1),"
                   "PRIMARY KEY (alist_id)"
                   ")ENGINE=InnoDB;";
         query.prepare(creatTableStr);
@@ -144,7 +164,7 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, long long account, QSt
     QSqlQuery query;
     //验证UID
     query.exec("SELECT password FROM magic_users WHERE uid = " + QString::number(account));
-    if(query.next() && pwd == query.value(0))
+    if(query.next() && pwd == query.value(0).toString())
     {
         uid = QString::number(account);
         qDebug() << uid << "登录方式：账号登录";
@@ -155,7 +175,7 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, long long account, QSt
         //验证手机号，可能有重复的手机号，所以用while
         query.exec("SELECT uid, password FROM magic_users WHERE telephone = " + QString::number(account));
         while(query.next())
-            if(pwd == query.value(1))
+            if(pwd == query.value(1).toString())
             {
                 uid = query.value(0).toString();
                 qDebug() << uid << "登录方式：手机号登录";

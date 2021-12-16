@@ -15,11 +15,11 @@ class formLogin : public QDialog
 
 public:
     void send();
+    bool autoLoginSuccess = false;  //自动登录标记
     explicit formLogin(QDialog *parent = nullptr);
     ~formLogin();
 
 private:
-    QString uid;
     QString readPwd;    //保存的密码
     QString loginUid;   //登录成功的uid
     void writeLoginSettings();
@@ -33,6 +33,8 @@ private slots:
     void on_lineEdit_Uid_textEdited(const QString &arg1);
 
     void on_btn_Signup_clicked();
+
+    void on_lineEdit_Pwd_textEdited(const QString &arg1);
 
 private:
     Ui::formLogin *ui;
