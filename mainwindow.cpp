@@ -138,6 +138,17 @@ void MainWindow::on_actApplyItems_triggered()
 void MainWindow::on_actGroup_triggered()
 {
     ui->stackedWidget->setCurrentIndex(8);
+    if(!db.open())
+    {
+        statusIcon->setPixmap(*statusErrorIcon);
+        connectStatusLable->setText("Database Status: " + db.lastError().text());
+    }
+    else
+    {
+        queryModel tableModel(db, this);
+        ui->tableView_department->setModel(tableModel.setActGroupPage_departmentModel());
+        ui->tableView_group->setModel(tableModel.setActGroupPage_groupModel());
+    }
 }
 
 void MainWindow::on_actMore_triggered()

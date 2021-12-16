@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>8</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_20">
@@ -670,19 +670,181 @@
        </layout>
       </widget>
       <widget class="QWidget" name="page_Group">
-       <layout class="QGridLayout" name="gridLayout_6">
+       <layout class="QGridLayout" name="gridLayout_26">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_18">
           <property name="title">
-           <string>团队部门管理</string>
+           <string>组织架构管理</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_25">
+           <item row="0" column="0">
+            <widget class="QGroupBox" name="groupBox_24">
+             <property name="title">
+              <string>当前部门</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_21">
+              <item row="0" column="0">
+               <widget class="QTableView" name="tableView_department"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QGroupBox" name="groupBox_25">
+             <property name="minimumSize">
+              <size>
+               <width>250</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>部门管理</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="2" column="1">
+               <widget class="QPushButton" name="btn_editDpt_check">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>确认操作</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="btn_delDpt">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>删除部门</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="btn_addDpt">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>新增部门</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QPushButton" name="btn_editDpt_cancel">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>取消操作</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="1" column="0">
          <widget class="QGroupBox" name="groupBox_19">
           <property name="title">
            <string>用户组管理及权限分配</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_24">
+           <item row="0" column="0">
+            <widget class="QGroupBox" name="groupBox_23">
+             <property name="title">
+              <string>当前用户组</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_22">
+              <item row="0" column="0">
+               <widget class="QTableView" name="tableView_group"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QGroupBox" name="groupBox_26">
+             <property name="minimumSize">
+              <size>
+               <width>250</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>用户组管理</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_23">
+              <item row="1" column="0">
+               <widget class="QPushButton" name="btn_delGroup">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>删除用户组</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="btn_addGroup">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>新增用户组</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QPushButton" name="btn_editGroup_cancel">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>取消操作</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="btn_editGroup_check">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>45</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>确认操作</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -838,10 +1000,10 @@
      <normaloff>:/images/color_icon/color-web.svg</normaloff>:/images/color_icon/color-web.svg</iconset>
    </property>
    <property name="text">
-    <string>团队架构</string>
+    <string>组织架构</string>
    </property>
    <property name="toolTip">
-    <string>团队架构</string>
+    <string>组织架构</string>
    </property>
   </action>
   <action name="actExit">
