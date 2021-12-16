@@ -50,6 +50,9 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
 
 void MainWindow::on_actExit_triggered()
 {
+    QSettings settings("bytecho", "magicgms");
+    settings.setValue("isAutoLogin", false);    //注销后自动登录失效
+
     formLoginWindow = new formLogin();
     this->close();
     connect(formLoginWindow, SIGNAL(sendData(QSqlDatabase, QString)), this, SLOT(receiveData(QSqlDatabase, QString)));    //接收登录窗口的信号

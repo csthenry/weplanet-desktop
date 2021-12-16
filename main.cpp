@@ -7,7 +7,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     formLogin *formLoginWindow = new formLogin();
-    if (formLoginWindow->exec() == QDialog::Accepted)
+
+    if (formLoginWindow->autoLoginSuccess || formLoginWindow->exec() == QDialog::Accepted)
     {
         MainWindow w(nullptr, formLoginWindow);
         w.show();
