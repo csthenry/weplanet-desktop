@@ -21,7 +21,7 @@ formLogin::formLogin(QDialog *parent) :
     ui->lineEdit_SignupPwd->setValidator(validator_pwd);
     ui->lineEdit_SignupPwdAgain->setValidator(validator_pwd);
 
-
+    ui->labelStatus->setWhatsThis("如果显示绿色图标，表示数据库连接正常，否则请检查网络或联系技术支持。\nEmail: cst@bytecho.net");
 
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
 
@@ -32,7 +32,9 @@ formLogin::formLogin(QDialog *parent) :
     ui->mainIcon->setScaledContents(true);
     ui->mainIcon->setPixmap(mainicon);
 
-    service::connectDatabase(db);
+    service loginService;
+    loginService.connectDatabase(db);
+
     db.open();
 
     if (db.open())   //打开数据库
@@ -91,7 +93,10 @@ QString formLogin::readLoginSettings()
                 autoLoginSuccess = true;
             }
             else
+            {
+                autoLoginSuccess = false;
                 QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+            }
         }
         return settings.value("pwd").toString();
     }
@@ -167,7 +172,7 @@ void formLogin::on_btn_Signup_clicked()
         QMessageBox::information(this, "通知", "注册成功，你的信息如下：\n账号：" + query.lastInsertId().toString()+"\n姓名：" + ui->lineEdit_SignupName->text() +"\n手机号：" +ui->lineEdit_SignupTel->text() + "\n请妥善保管以上信息，可使用手机号登录。", QMessageBox::Ok);
     }
     else
-        QMessageBox::warning(this, "警告", "注册失败，错误信息：" + query.lastError().text(), QMessageBox::Ok);
+        QMessageBox::warning(this, "警告", "注册失败，错误信息：" + db.lastError().text() + "\n" + query.lastError().text(), QMessageBox::Ok);
 }
 
 void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)

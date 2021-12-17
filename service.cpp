@@ -3,17 +3,26 @@
 
 service::service()
 {
+    /*****************请在此处完善数据库信息*****************/
 
+    dataBaseType = "QMYSQL";    //available drivers: QSQLITE QMYSQL QMYSQL3 QODBC QODBC3 QPSQL QPSQL7
+    hostName = "localhost";
+    dataBasePort = 3306;
+    dataBaseName = "magic";
+    dataBaseUserName = "root";
+    dataBasePassword = "123456";
+
+    /*****************请在此处完善数据库信息*****************/
 }
 
-QString service::pwdEncrypt(const QString &str)//字符串MD5算法加密
+QString service::pwdEncrypt(const QString &str) //字符串MD5算法加密
 {
     QByteArray btArray;
     btArray.append(str);//加入原始字符串
     QCryptographicHash hash(QCryptographicHash::Md5);  //Md5加密算法
     hash.addData(btArray);  //添加数据到加密哈希值
     QByteArray resultArray =hash.result();  //返回最终的哈希值
-    QString md5 = resultArray.toHex();//转换为16进制字符串
+    QString md5 = resultArray.toHex();  //转换为16进制字符串
     return  md5;
 }
 
@@ -24,12 +33,12 @@ void service::connectDatabase(QSqlDatabase& db)
     if(QSqlDatabase::contains("qt_sql_default_connection"))
         db = QSqlDatabase::database("qt_sql_default_connection");
     else
-        db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("localhost");
-    db.setPort(3306);
-    db.setDatabaseName("magic");
-    db.setUserName("root");
-    db.setPassword("123456");
+        db = QSqlDatabase::addDatabase(dataBaseType);
+    db.setHostName(hostName);
+    db.setPort(dataBasePort);
+    db.setDatabaseName(dataBaseName);
+    db.setUserName(dataBaseUserName);
+    db.setPassword(dataBasePassword);
 }
 
 bool service::initDatabaseTables(QSqlDatabase& db)
@@ -43,25 +52,24 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         QSqlQuery query;
         //创建magic_users表
         //初始化root用户数据，登录名100000，密码123456
-        QString creatTableStr = "CREATE TABLE IF NOT EXISTS magic_users   \
-                (                                           \
-                  uid           int(10)      NOT NULL AUTO_INCREMENT,     \
-                  password      varchar(64)  NOT NULL ,         \
-                  name          varchar(32)  NOT NULL ,     \
-                  gender        tinytext     NULL ,         \
-                  telephone     varchar(64)  NULL ,         \
-                  mail          varchar(128) NULL ,         \
-                  user_group    int(10) NOT  NULL ,         \
-                  user_dpt      int(10)     NULL ,         \
-                  user_avatar   varchar(64)  NULL ,         \
-                  PRIMARY KEY (uid)             \
-                  )ENGINE=InnoDB;               \
-                  INSERT INTO magic_users       \
-                  (uid, password, name, user_group)       \
-                  VALUES                        \
-                  (                            \
-                100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1'    \
-                  )";
+        QString creatTableStr = "CREATE TABLE IF NOT EXISTS magic_users "
+                 "(                                                     "
+                 "uid           int(10)      NOT NULL AUTO_INCREMENT,   "
+                 "password      varchar(64)  NOT NULL ,     "
+                 "name          varchar(32)  NOT NULL ,     "
+                 "gender        tinytext     NULL ,"
+                 "telephone     varchar(64)  NULL ,"
+                 "mail          varchar(128) NULL ,"
+                 "user_group    int(10) NOT  NULL ,"
+                 "user_dpt      int(10)      NULL ,"
+                 "user_avatar   varchar(64)  NULL ,"
+                 "PRIMARY KEY (uid)                "
+                 ")ENGINE=InnoDB;                  "
+                 "INSERT INTO magic_users          "
+                 "(uid, password, name, user_group)"
+                 "VALUES                           "
+                 "(                                "
+                 "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1')";
         query.prepare(creatTableStr);
         query.exec();
 
@@ -69,7 +77,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_group"
                   "(group_id        int(10)     NOT NULL    AUTO_INCREMENT,"
-                  "group_name      varchar(32) NOT NULL,"
+                  "group_name      varchar(32)  NOT NULL,"
                   "users_manage     tinyint(1)  NOT NUll,"
                   "attend_manage    tinyint(1)  NOT NUll,"
                   "apply_manage     tinyint(1)  NOT NUll,"
@@ -77,7 +85,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "group_manage     tinyint(1)  NOT NUll,"
                   "activity_manage  tinyint(1)  NOT NUll,"
                   "send_message     tinyint(1)  NOT NUll,"
-                  "PRIMARY KEY (group_id))ENGINE=InnoDB;"
+                  "PRIMARY KEY (group_id)) ENGINE=InnoDB;"
                   "INSERT INTO magic_group"
                   "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
                   "VALUES(1, '超级管理员', 1, 1, 1, 1, 1, 1, 1);"
@@ -87,7 +95,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         query.prepare(creatTableStr);
         query.exec();
 
-        //团队架构表
+        //组织架构表
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_department"
                   "(dpt_id      int(10)      NOT NULL    AUTO_INCREMENT,"
@@ -114,16 +122,16 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         //申请表
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_apply"
-                  "(apply_id      int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "uid            int(10)      NOT NUll,"
-                  "alist_id       int(10)      NOT NUll,"
-                  "op1_text       text,"
-                  "op2_text       text,"
-                  "op3_text       text,"
+                  "(apply_id       int(10)      NOT NULL    AUTO_INCREMENT,"
+                  "uid             int(10)      NOT NUll,"
+                  "alist_id        int(10)      NOT NUll,"
+                  "op1_text        text,"
+                  "op2_text        text,"
+                  "op3_text        text,"
                   "process_uidList varchar(64),"
-                  "status         tinyint(1)     NOT NUll,"
-                  "check_uidList  varchar(64),"
-                  "reject_uid     int(10),"
+                  "status          tinyint(1)   NOT NUll,"
+                  "check_uidList   varchar(64),"
+                  "reject_uid      int(10),"
                   "PRIMARY KEY (apply_id, uid)"
                   ")ENGINE=InnoDB;";
         query.prepare(creatTableStr);
@@ -137,7 +145,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "op1_title      varchar(32),"
                   "op2_title      varchar(32),"
                   "op3_title      varchar(32),"
-                  "option_num     tinyint(1),"
+                  "option_num     tinyint(1), "
                   "PRIMARY KEY (alist_id)"
                   ")ENGINE=InnoDB;";
         query.prepare(creatTableStr);
@@ -146,10 +154,10 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         //用户认证信息表
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_verify"
-                  "(uid      int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "verify_name          varchar(32)  NOT NUll,"
-                  "info      varchar(32),"
-                  "icon         char(1),"
+                  "(uid            int(10)      NOT NULL    AUTO_INCREMENT,"
+                  "verify_name     varchar(32)  NOT NUll,"
+                  "info            varchar(32),"
+                  "icon            char(1),"
                   "PRIMARY KEY (uid)"
                   ")ENGINE=InnoDB;";
         query.prepare(creatTableStr);
@@ -158,14 +166,14 @@ bool service::initDatabaseTables(QSqlDatabase& db)
     }
 }
 
-bool service::authAccount(QSqlDatabase& db, QString& uid, long long account, QString pwd)
+bool service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
 {
     if(!db.open())
         return false;
     QSqlQuery query;
     //验证UID
     query.exec("SELECT password FROM magic_users WHERE uid = " + QString::number(account));
-    if(query.next() && pwd == query.value(0).toString())
+    if(query.next() && pwd == query.value("password").toString())
     {
         uid = QString::number(account);
         qDebug() << uid << "登录方式：账号登录";
@@ -176,9 +184,9 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, long long account, QSt
         //验证手机号，可能有重复的手机号，所以用while
         query.exec("SELECT uid, password FROM magic_users WHERE telephone = " + QString::number(account));
         while(query.next())
-            if(pwd == query.value(1).toString())
+            if(pwd == query.value("password").toString())
             {
-                uid = query.value(0).toString();
+                uid = query.value("uid").toString();
                 qDebug() << uid << "登录方式：手机号登录";
                 return true;
             }
@@ -186,7 +194,7 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, long long account, QSt
     }
 }
 
-QPixmap service::getAvatar(QString url)
+QPixmap service::getAvatar(const QString& url)
 {
     QUrl picUrl(url);
     QNetworkAccessManager manager;
@@ -215,27 +223,27 @@ QPixmap service::setAvatarStyle(QPixmap avatar)
     return pixmap;
 }
 
-QString service::getGroup(QString uid)
+QString service::getGroup(const QString& uid)
 {
     QSqlQuery query;
     query.exec("SELECT user_group FROM magic_users WHERE uid = " + uid);
     if(!query.next())
         return "--";
-    query.exec("SELECT group_name FROM magic_group WHERE group_id = " + query.value(0).toString());
+    query.exec("SELECT group_name FROM magic_group WHERE group_id = " + query.value("user_group").toString());
     if(!query.next())
         return "--";
-    return query.value(0).toString();
+    return query.value("group_name").toString();
 }
 
-QString service::getDepartment(QString uid)
+QString service::getDepartment(const QString& uid)
 {
     QSqlQuery query;
     query.exec("SELECT user_dpt FROM magic_users WHERE uid = " + uid);
     if(!query.next())
         return "--";
-    query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id = " + query.value(0).toString());
+    query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id = " + query.value("user_dpt").toString());
     if(!query.next())
         return "--";
-    return query.value(0).toString();
+    return query.value("dpt_name").toString();
 }
 

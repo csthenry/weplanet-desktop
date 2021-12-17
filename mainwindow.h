@@ -9,6 +9,7 @@
 #include "service.h"
 #include "formlogin.h"
 #include "querymodel.h"
+#include "comboboxdelegate.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,15 +26,17 @@ private:
 
     QLabel *connectStatusLable, *statusIcon;
 
-    QSqlTableModel *tabModel;  //数据模型
+    QSqlTableModel *groupModel, *departmentModel;  //数据模型
 
-    QItemSelectionModel *theSelection; //选择模型
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department; //选择模型
 
     QDataWidgetMapper *dataMapper; //数据映射
 
     QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon;
 
     formLogin *formLoginWindow;
+
+    ComboBoxDelegate comboxDelegateAuthority, comboxDelegateGender, comboxDelegateUserGroup, comboxDelegateUserDpt, comboxDelegateUserVerify;   //自定义数据代理
 
     void setHomePageBaseInfo();
 
@@ -66,6 +69,26 @@ private slots:
     void on_actGroup_triggered();
 
     void on_actMore_triggered();
+
+    void on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+
+    void on_groupPageGroupcurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+
+    void on_btn_addGroup_clicked();
+
+    void on_btn_editGroup_check_clicked();
+
+    void on_btn_editGroup_cancel_clicked();
+
+    void on_btn_addDpt_clicked();
+
+    void on_btn_delDpt_clicked();
+
+    void on_btn_delGroup_clicked();
+
+    void on_btn_editDpt_check_clicked();
+
+    void on_btn_editDpt_cancel_clicked();
 
 private:
     Ui::MainWindow *ui;
