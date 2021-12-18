@@ -4,6 +4,7 @@
 #include <QItemSelectionModel>
 #include <QSqlQueryModel>
 #include <QSqlTableModel>
+#include <QSqlRelationalTableModel>
 #include <QSqlError>
 #include <QSql>
 
@@ -14,12 +15,14 @@ public:
     QSqlQueryModel* setBaseUserInfo();
     QSqlTableModel* setActGroupPage_departmentModel();
     QSqlTableModel* setActGroupPage_groupModel();
+    QSqlRelationalTableModel *setActUserPage_relationalTableModel();
 private:
     QString uid;
     QObject* parent;    //主窗口
     QSqlDatabase db;
     QSqlQueryModel *qryModel;
     QSqlTableModel *tabModel;
+    QSqlRelationalTableModel *relTableModel;
     QItemSelection *theSelection;
 };
 

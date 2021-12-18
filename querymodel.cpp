@@ -46,21 +46,49 @@ QSqlTableModel *queryModel::setActGroupPage_groupModel()
     tabModel = new QSqlTableModel(parent, db);
 
     tabModel->setTable("magic_group");
-    tabModel->setSort(tabModel->fieldIndex("group_id"), Qt::AscendingOrder);
-    tabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    tabModel->setHeaderData(tabModel->fieldIndex("group_id"),Qt::Horizontal,"编号");
-    tabModel->setHeaderData(tabModel->fieldIndex("group_name"),Qt::Horizontal,"用户组名称");
-    tabModel->setHeaderData(tabModel->fieldIndex("users_manage"),Qt::Horizontal,"用户管理权");
-    tabModel->setHeaderData(tabModel->fieldIndex("attend_manage"),Qt::Horizontal,"考勤管理权");
-    tabModel->setHeaderData(tabModel->fieldIndex("apply_manage"),Qt::Horizontal,"审批权限");
-    tabModel->setHeaderData(tabModel->fieldIndex("applyItem_manage"),Qt::Horizontal,"审批流程管理权");
-    tabModel->setHeaderData(tabModel->fieldIndex("group_manage"),Qt::Horizontal,"团体架构管理权");
-    tabModel->setHeaderData(tabModel->fieldIndex("activity_manage"),Qt::Horizontal,"活动管理权");
-    tabModel->setHeaderData(tabModel->fieldIndex("send_message"),Qt::Horizontal,"信息收发权限");
+    tabModel->setSort(tabModel->fieldIndex("group_id"), Qt::AscendingOrder);    //升序排列
+    tabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
+    tabModel->setHeaderData(tabModel->fieldIndex("group_id"), Qt::Horizontal,"编号");
+    tabModel->setHeaderData(tabModel->fieldIndex("group_name"), Qt::Horizontal,"用户组名称");
+    tabModel->setHeaderData(tabModel->fieldIndex("users_manage"), Qt::Horizontal,"用户管理权");
+    tabModel->setHeaderData(tabModel->fieldIndex("attend_manage"), Qt::Horizontal,"考勤管理权");
+    tabModel->setHeaderData(tabModel->fieldIndex("apply_manage"), Qt::Horizontal,"审批权限");
+    tabModel->setHeaderData(tabModel->fieldIndex("applyItem_manage"), Qt::Horizontal,"审批流程管理权");
+    tabModel->setHeaderData(tabModel->fieldIndex("group_manage"), Qt::Horizontal,"团体架构管理权");
+    tabModel->setHeaderData(tabModel->fieldIndex("activity_manage"), Qt::Horizontal,"活动管理权");
+    tabModel->setHeaderData(tabModel->fieldIndex("send_message"), Qt::Horizontal,"信息收发权限");
     if(!tabModel->select())
         return nullptr;
 
     if(tabModel->lastError().isValid())
         return nullptr;
     return tabModel;
+}
+
+QSqlRelationalTableModel *queryModel::setActUserPage_relationalTableModel()
+{
+    relTableModel = new QSqlRelationalTableModel(parent, db);
+    relTableModel->setTable("magic_users");
+    relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
+    relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
+
+    relTableModel->setHeaderData(relTableModel->fieldIndex("uid"), Qt::Horizontal,"账号（UID）");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("name"), Qt::Horizontal,"姓名");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("gender"), Qt::Horizontal,"性别");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("telephone"), Qt::Horizontal,"手机号");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("mail"), Qt::Horizontal,"邮箱");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("user_group"), Qt::Horizontal,"用户组");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("user_dpt"), Qt::Horizontal,"所在部门");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("user_avatar"), Qt::Horizontal,"头像地址");
+
+    //建立外键关联
+    relTableModel->setRelation(relTableModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
+    relTableModel->setRelation(relTableModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
+
+    if(!relTableModel->select())
+        return nullptr;
+
+    if(relTableModel->lastError().isValid())
+        return nullptr;
+    return relTableModel;
 }

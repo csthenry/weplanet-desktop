@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_20">
@@ -581,100 +581,458 @@
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QGroupBox" name="groupBox_8">
+           <property name="minimumSize">
+            <size>
+             <width>790</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="title">
             <string>用户列表</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout_28">
-            <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_32">
+            <item row="0" column="0" colspan="2">
              <widget class="QTableView" name="tableView_userManage"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="groupBox_28">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>130</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>数据搜索</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_31">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_17">
+                 <property name="text">
+                  <string>搜索UID或姓名：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" colspan="2">
+                <widget class="QLineEdit" name="lineEdit_searchUid">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <property name="echoMode">
+                  <enum>QLineEdit::Normal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <widget class="QPushButton" name="btn_userManagePage_search">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>搜索用户</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QPushButton" name="btn_userManagePage_recovery">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>重置</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QGroupBox" name="groupBox_29">
+              <property name="title">
+               <string>数据过滤</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_28">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_18">
+                 <property name="maximumSize">
+                  <size>
+                   <width>55</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>用户组：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" colspan="2">
+                <widget class="QComboBox" name="comboBox_group">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>所有用户组</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_19">
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>部门：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QComboBox" name="comboBox_department">
+                 <property name="minimumSize">
+                  <size>
+                   <width>130</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>所有部门</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QRadioButton" name="radioButton">
+                 <property name="text">
+                  <string>男</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QRadioButton" name="radioButton_2">
+                 <property name="text">
+                  <string>女</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QRadioButton" name="radioButton_3">
+                 <property name="text">
+                  <string>All</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3" colspan="2">
+                <widget class="QPushButton" name="btn_userManagePage_recovery_2">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>重置</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </widget>
           <widget class="QGroupBox" name="groupBox_9">
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="title">
             <string>编辑用户信息</string>
            </property>
-           <widget class="QLabel" name="avatar_2">
-            <property name="geometry">
-             <rect>
-              <x>20</x>
-              <y>40</y>
-              <width>120</width>
-              <height>120</height>
-             </rect>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>120</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>120</width>
-              <height>120</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">margin:5px;</string>
-            </property>
-            <property name="text">
-             <string>avatar</string>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label_6">
-            <property name="geometry">
-             <rect>
-              <x>170</x>
-              <y>40</y>
-              <width>72</width>
-              <height>15</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>UID：</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="lineEdit">
-            <property name="geometry">
-             <rect>
-              <x>210</x>
-              <y>100</y>
-              <width>113</width>
-              <height>21</height>
-             </rect>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="lineEdit_2">
-            <property name="geometry">
-             <rect>
-              <x>210</x>
-              <y>160</y>
-              <width>113</width>
-              <height>21</height>
-             </rect>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="lineEdit_3">
-            <property name="geometry">
-             <rect>
-              <x>220</x>
-              <y>230</y>
-              <width>113</width>
-              <height>21</height>
-             </rect>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="lineEdit_4">
-            <property name="geometry">
-             <rect>
-              <x>220</x>
-              <y>290</y>
-              <width>113</width>
-              <height>21</height>
-             </rect>
-            </property>
-           </widget>
+           <layout class="QGridLayout" name="gridLayout_29">
+            <item row="6" column="0" colspan="3">
+             <widget class="QPushButton" name="btn_editUser_cancel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>45</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>取消操作</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-stop.svg</normaloff>:/images/color_icon/color-stop.svg</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_14">
+              <property name="maximumSize">
+               <size>
+                <width>35</width>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>部门：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" colspan="3">
+             <widget class="QPushButton" name="btn_editUser_check">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>45</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>确认修改（谨慎操作*）</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-warning.svg</normaloff>:/images/color_icon/color-warning.svg</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" rowspan="3">
+             <widget class="QLabel" name="userManagePage_avatar">
+              <property name="minimumSize">
+               <size>
+                <width>120</width>
+                <height>120</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>120</width>
+                <height>120</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>16</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">margin:5px;</string>
+              </property>
+              <property name="text">
+               <string>avatar</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="3">
+             <widget class="QGroupBox" name="groupBox_27">
+              <property name="title">
+               <string>高级操作</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_24">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_7">
+                 <property name="text">
+                  <string>修改密码：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <widget class="QPushButton" name="btn_addUser">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>50</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>新增用户</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="resource.qrc">
+                   <normaloff>:/images/color_icon/color-add.svg</normaloff>:/images/color_icon/color-add.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="lineEdit_editPwd">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <property name="maxLength">
+                  <number>16</number>
+                 </property>
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="lineEdit_editPwdCheck">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <property name="maxLength">
+                  <number>16</number>
+                 </property>
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_8">
+                 <property name="text">
+                  <string>确认密码：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0" colspan="2">
+                <widget class="QPushButton" name="btn_delUser">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>50</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>删除用户（谨慎操作*）</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="resource.qrc">
+                   <normaloff>:/images/color_icon/color-warning.svg</normaloff>:/images/color_icon/color-warning.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_userManagePage_dpt">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="label_9">
+              <property name="maximumSize">
+               <size>
+                <width>35</width>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>类别：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_userManagePage_group">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_6">
+              <property name="maximumSize">
+               <size>
+                <width>35</width>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>UID：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_userManagePage_uid">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>

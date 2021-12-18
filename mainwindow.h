@@ -24,13 +24,17 @@ private:
 
     QSqlDatabase db;
 
+    QStringList comboxList;
+
     QLabel *connectStatusLable, *statusIcon;
 
     QSqlTableModel *groupModel, *departmentModel;  //数据模型
 
-    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department; //选择模型
+    QSqlRelationalTableModel *userManageModel;
 
-    QDataWidgetMapper *dataMapper; //数据映射
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection; //选择模型
+
+    QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
     QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon;
 
@@ -74,6 +78,10 @@ private slots:
 
     void on_groupPageGroupcurrentChanged(const QModelIndex &current, const QModelIndex &previous);
 
+    void on_userManagePagecurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+
+    void on_userManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
+
     void on_btn_addGroup_clicked();
 
     void on_btn_editGroup_check_clicked();
@@ -89,6 +97,30 @@ private slots:
     void on_btn_editDpt_check_clicked();
 
     void on_btn_editDpt_cancel_clicked();
+
+    void on_btn_addUser_clicked();
+
+    void on_btn_delUser_clicked();
+
+    void on_btn_editUser_check_clicked();
+
+    void on_btn_editUser_cancel_clicked();
+
+    void on_radioButton_clicked();
+
+    void on_radioButton_2_clicked();
+
+    void on_radioButton_3_clicked();
+
+    void on_btn_userManagePage_search_clicked();
+
+    void on_btn_userManagePage_recovery_clicked();
+
+    void on_comboBox_group_currentIndexChanged(const QString &arg1);
+
+    void on_comboBox_department_currentIndexChanged(const QString &arg1);
+
+    void on_btn_userManagePage_recovery_2_clicked();
 
 private:
     Ui::MainWindow *ui;
