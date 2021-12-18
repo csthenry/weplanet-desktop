@@ -106,12 +106,6 @@ private slots:
 
     void on_btn_editUser_cancel_clicked();
 
-    void on_radioButton_clicked();
-
-    void on_radioButton_2_clicked();
-
-    void on_radioButton_3_clicked();
-
     void on_btn_userManagePage_search_clicked();
 
     void on_btn_userManagePage_recovery_clicked();
@@ -121,6 +115,12 @@ private slots:
     void on_comboBox_department_currentIndexChanged(const QString &arg1);
 
     void on_btn_userManagePage_recovery_2_clicked();
+
+    void on_rBtn_woman_clicked();
+
+    void on_rBtn_man_clicked();
+
+    void on_rBtn_all_clicked();
 
 private:
     Ui::MainWindow *ui;

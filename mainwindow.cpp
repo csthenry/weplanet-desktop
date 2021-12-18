@@ -305,6 +305,10 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
         ui->btn_delUser->setEnabled(false);
 
     ui->label_userManagePage_uid->setText(curRecord.value("uid").toString());
+    if(curRecord.value("name").toString().isEmpty())
+        ui->label_userManagePage_name->setText("--");
+    else
+        ui->label_userManagePage_name->setText(curRecord.value("name").toString());
     ui->label_userManagePage_group->setText(curRecord.value("group_name").toString());    //这里应该填写关联的外键字段名
     ui->label_userManagePage_dpt->setText(curRecord.value("dpt_name").toString());
 
@@ -445,18 +449,24 @@ void MainWindow::on_btn_editUser_cancel_clicked()
     ui->btn_editUser_cancel->setEnabled(false);
 }
 
-void MainWindow::on_radioButton_clicked()
+void MainWindow::on_rBtn_man_clicked()
 {
+    ui->comboBox_group->setCurrentIndex(0);
+    ui->comboBox_department->setCurrentIndex(0);
     userManageModel->setFilter("gender='男'");
 }
 
-void MainWindow::on_radioButton_2_clicked()
+void MainWindow::on_rBtn_woman_clicked()
 {
+    ui->comboBox_group->setCurrentIndex(0);
+    ui->comboBox_department->setCurrentIndex(0);
     userManageModel->setFilter("gender='女'");
 }
 
-void MainWindow::on_radioButton_3_clicked()
+void MainWindow::on_rBtn_all_clicked()
 {
+    ui->comboBox_group->setCurrentIndex(0);
+    ui->comboBox_department->setCurrentIndex(0);
     userManageModel->setFilter("");
 }
 
@@ -488,7 +498,7 @@ void MainWindow::on_comboBox_group_currentIndexChanged(const QString &arg1)
 void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)
 {
     QString sqlWhere = "dpt_name='" + arg1 + "'";
-    if(ui->comboBox_group->currentText() != 0)
+    if(ui->comboBox_group->currentIndex() != 0)
         sqlWhere += " AND group_name='" + ui->comboBox_group->currentText() + "'";
     if(ui->comboBox_department->currentIndex() == 0)
     {
@@ -505,4 +515,5 @@ void MainWindow::on_btn_userManagePage_recovery_2_clicked()
     userManageModel->setFilter("");
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
+    ui->rBtn_all->setChecked(true);
 }
