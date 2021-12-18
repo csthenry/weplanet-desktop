@@ -66,12 +66,11 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                  "PRIMARY KEY (uid)                "
                  ")ENGINE=InnoDB;                  "
                  "INSERT INTO magic_users          "
-                 "(uid, password, name, user_group)"
+                 "(uid, password, name, user_group, user_dpt)"
                  "VALUES                           "
                  "(                                "
-                 "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1')";
-        query.prepare(creatTableStr);
-        query.exec();
+                 "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1')";
+        query.exec(creatTableStr);
 
         //用户组权限分配表，默认有管理员和普通用户
         creatTableStr =
@@ -92,8 +91,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "INSERT INTO magic_group"
                   "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
                   "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1);";
-        query.prepare(creatTableStr);
-        query.exec();
+        query.exec(creatTableStr);
 
         //组织架构表
         creatTableStr =
@@ -101,8 +99,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "(dpt_id      int(10)      NOT NULL    AUTO_INCREMENT,"
                   "dpt_name     varchar(32)  NOT NUll,"
                   "PRIMARY KEY (dpt_id))ENGINE=InnoDB";
-        query.prepare(creatTableStr);
-        query.exec();
+        query.exec(creatTableStr);
 
         //考勤表
         creatTableStr =
@@ -116,8 +113,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "supply_adminUid  int(10),"
                   "PRIMARY KEY (num, uid)"
                   ")ENGINE=InnoDB;";
-        query.prepare(creatTableStr);
-        query.exec();
+        query.exec(creatTableStr);
 
         //申请表
         creatTableStr =
@@ -134,8 +130,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "reject_uid      int(10),"
                   "PRIMARY KEY (apply_id, uid)"
                   ")ENGINE=InnoDB;";
-        query.prepare(creatTableStr);
-        query.exec();
+        query.exec(creatTableStr);
 
         //审批流程项目表
         creatTableStr =
@@ -148,20 +143,35 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "option_num     tinyint(1), "
                   "PRIMARY KEY (alist_id)"
                   ")ENGINE=InnoDB;";
-        query.prepare(creatTableStr);
-        query.exec();
+        query.exec(creatTableStr);
 
         //用户认证信息表
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_verify"
                   "(uid            int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "verify_name     varchar(32)  NOT NUll,"
+                  "v_id            int(10)  NOT NUll,"
                   "info            varchar(32),"
-                  "icon            char(1),"
                   "PRIMARY KEY (uid)"
                   ")ENGINE=InnoDB;";
-        query.prepare(creatTableStr);
-        query.exec();
+        query.exec(creatTableStr);
+
+        //用户认证类型表
+        creatTableStr =
+                  "CREATE TABLE IF NOT EXISTS magic_verifyList"
+                  "(v_id           int(10)      NOT NULL    AUTO_INCREMENT,"
+                  "verify_name     varchar(32)  NOT NUll,"
+                  "icon            tinyint(1)   NOT NUll,"
+                  "PRIMARY KEY (v_id)"
+                  ")ENGINE=InnoDB;"
+                  "INSERT INTO magic_verifyList"
+                  "(verify_name, icon)"
+                  "VALUES ('个人认证', 0);"
+                  "INSERT INTO magic_verifyList"
+                  "(verify_name, icon)"
+                  "VALUES ('机构认证', 1);";
+        query.exec(creatTableStr);
+
+        qDebug() <<query.lastError();
         return true;
     }
 }
