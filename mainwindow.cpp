@@ -456,7 +456,6 @@ void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &cu
 
     attendManageModel->setFilter("a_uid='" + curRecord.value("uid").toString() +"'");
 
-
 }
 
 void MainWindow::on_btn_addGroup_clicked()
@@ -699,4 +698,24 @@ void MainWindow::on_btn_attendManage_cancelAttend_clicked()
     else
         QMessageBox::warning(this, "消息", "数据不匹配，退签失败。", QMessageBox::Ok);
 
+}
+
+void MainWindow::on_btn_attendManagePage_exp_clicked()
+{
+    ExcelExport expExcel(this);
+    QSqlRecord re = attendManageModel->record();
+    //导出方式
+    int type = -1;
+    if(ui->rBtn_attendManagePage_all->isChecked())
+        type = 1;
+    if(ui->rBtn_attendManagePage_allToday->isChecked())
+        type = 2;
+    if(ui->rBtn__attendManagePage_curAll->isChecked())
+        type = 3;
+    curDateTime = QDateTime::currentDateTime();
+    QString filePath = QFileDialog::getSaveFileName(this, "导出数据", "考勤数据_" + curDateTime.toString("yyyy-MM-dd_hh-mm-ss"), "Microsoft Excel(*.xlsx)");
+    if(expExcel.WriteExcel(filePath, attendManageModel, ui->label_attendManagePage_uid->text(), type))
+        QMessageBox::information(this, "消息", "考勤数据已成功导出到：" + filePath, QMessageBox::Ok);
+    else
+        QMessageBox::warning(this, "消息", "考勤数据导出失败，请检查文件路径", QMessageBox::Ok);
 }

@@ -160,9 +160,9 @@ void formLogin::on_btn_Signup_clicked()
     }
     creatTableStr =
             "INSERT INTO magic_users"
-            "(password, name, user_group, telephone )"
+            "(password, name, user_group, user_dpt, telephone )"
             "VALUES                        "
-            "(:pwd, :name, 2, :phone) ";
+            "(:pwd, :name, 2, 1, :phone) ";
     query.prepare(creatTableStr);
     query.bindValue(0, service::pwdEncrypt(ui->lineEdit_SignupPwd->text()));
     query.bindValue(1, ui->lineEdit_SignupName->text());

@@ -11,6 +11,7 @@
 #include "formlogin.h"
 #include "querymodel.h"
 #include "comboboxdelegate.h"
+#include "excelexport.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -143,6 +144,8 @@ private slots:
     void on_btn_attendManage_reAttend_clicked();
 
     void on_btn_attendManage_cancelAttend_clicked();
+
+    void on_btn_attendManagePage_exp_clicked();
 
 private:
     Ui::MainWindow *ui;
