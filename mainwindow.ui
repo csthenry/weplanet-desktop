@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_20">
@@ -637,6 +637,16 @@
                  <property name="text">
                   <string>搜索用户</string>
                  </property>
+                 <property name="icon">
+                  <iconset resource="resource.qrc">
+                   <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
                 </widget>
                </item>
                <item row="1" column="2">
@@ -825,7 +835,7 @@
               </property>
               <property name="icon">
                <iconset resource="resource.qrc">
-                <normaloff>:/images/color_icon/color-warning.svg</normaloff>:/images/color_icon/color-warning.svg</iconset>
+                <normaloff>:/images/color_icon/color-setting_3.svg</normaloff>:/images/color_icon/color-setting_3.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1065,12 +1075,112 @@
        </layout>
       </widget>
       <widget class="QWidget" name="page_attendManage">
-       <layout class="QGridLayout" name="gridLayout_3">
+       <layout class="QGridLayout" name="gridLayout_36">
         <item row="0" column="0" rowspan="2">
          <widget class="QGroupBox" name="groupBox_10">
           <property name="title">
            <string>用户列表</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_33">
+           <item row="0" column="0">
+            <widget class="QTableView" name="tableView_attendUsers"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QGroupBox" name="groupBox_30">
+             <property name="title">
+              <string>用户筛选</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_30">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_21">
+                <property name="text">
+                 <string>搜索UID或姓名：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_searchUid_attend">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>35</height>
+                 </size>
+                </property>
+                <property name="echoMode">
+                 <enum>QLineEdit::Normal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QComboBox" name="comboBox_group_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>110</width>
+                  <height>35</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>所有用户组</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QComboBox" name="comboBox_department_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>110</width>
+                  <height>35</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>所有部门</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QPushButton" name="btn_attendManagePage_search">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>搜索用户</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resource.qrc">
+                  <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2" colspan="2">
+               <widget class="QPushButton" name="btn_attendManagePage_recovery">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>重置</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="0" column="1">
@@ -1078,6 +1188,11 @@
           <property name="title">
            <string>考勤详情</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_34">
+           <item row="0" column="0">
+            <widget class="QTableView" name="tableView_attendInfo"/>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="1" column="1">
@@ -1085,6 +1200,296 @@
           <property name="title">
            <string>考勤管理</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_35">
+           <item row="0" column="0" rowspan="6">
+            <widget class="QLabel" name="attendManagePage_avatar">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>120</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>120</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">margin:5px;</string>
+             </property>
+             <property name="text">
+              <string>avatar</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_15">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>UID：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_attendManagePage_uid">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" rowspan="2">
+            <widget class="QLabel" name="label_24">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>当天：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_status">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" rowspan="2">
+            <widget class="QLabel" name="label_22">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>姓名：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_name">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3" rowspan="2">
+            <widget class="QLabel" name="label_25">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>签到：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_beginTime">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1" rowspan="2">
+            <widget class="QLabel" name="label_16">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>类别：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_group">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3" rowspan="2">
+            <widget class="QLabel" name="label_26">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>签退：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_endTime">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="label_23">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>部门：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_attendManagePage_dpt">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0" rowspan="2" colspan="3">
+            <widget class="QGroupBox" name="groupBox_31">
+             <property name="title">
+              <string>数据导出</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="0">
+               <widget class="QRadioButton" name="rBtn_attendManagePage_all">
+                <property name="text">
+                 <string>所有用户全部</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QRadioButton" name="rBtn_attendManagePage_allToday">
+                <property name="text">
+                 <string>当天所有用户</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QRadioButton" name="rBtn__attendManagePage_curAll">
+                <property name="text">
+                 <string>当前用户全部</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="btn_attendManagePage_exp">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>35</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>导出数据</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="6" column="3" colspan="2">
+            <widget class="QPushButton" name="btn_attendManage_reAttend">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>补签</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="3" colspan="2">
+            <widget class="QPushButton" name="btn_attendManage_cancelAttend">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>退签</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -1390,6 +1795,9 @@
    <property name="movable">
     <bool>false</bool>
    </property>
+   <property name="allowedAreas">
+    <set>Qt::TopToolBarArea</set>
+   </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonTextUnderIcon</enum>
    </property>
@@ -1401,6 +1809,7 @@
    </attribute>
    <addaction name="actHome"/>
    <addaction name="actMyInfo"/>
+   <addaction name="actMessage"/>
    <addaction name="actAttend"/>
    <addaction name="actApply"/>
    <addaction name="separator"/>
@@ -1434,7 +1843,7 @@
     <string>用户管理</string>
    </property>
    <property name="toolTip">
-    <string>actUserManager</string>
+    <string>用户管理</string>
    </property>
   </action>
   <action name="actAttend">
@@ -1540,6 +1949,18 @@
    </property>
    <property name="toolTip">
     <string>更多...</string>
+   </property>
+  </action>
+  <action name="actMessage">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-mail.svg</normaloff>:/images/color_icon/color-mail.svg</iconset>
+   </property>
+   <property name="text">
+    <string>信息</string>
+   </property>
+   <property name="toolTip">
+    <string>信息</string>
    </property>
   </action>
  </widget>

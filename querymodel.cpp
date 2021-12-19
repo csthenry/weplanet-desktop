@@ -65,6 +65,32 @@ QSqlTableModel *queryModel::setActGroupPage_groupModel()
     return tabModel;
 }
 
+QSqlRelationalTableModel *queryModel::setActAttendPage_relationalTableModel()
+{
+    relTableModel = new QSqlRelationalTableModel(parent, db);
+
+    relTableModel->setTable("magic_attendance");
+    relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
+    relTableModel->setEditStrategy(QSqlTableModel::OnRowChange);  //自动提交
+    relTableModel->setHeaderData(relTableModel->fieldIndex("num"), Qt::Horizontal,"编号");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("a_uid"), Qt::Horizontal,"账号（UID）");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("begin_date"), Qt::Horizontal,"签到时间");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("end_date"), Qt::Horizontal,"签退时间");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("today"), Qt::Horizontal,"考勤日期");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("isSupply"), Qt::Horizontal,"是否补签");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("supply_adminUid"), Qt::Horizontal,"签到来源");
+
+    //建立外键关联
+    relTableModel->setRelation(relTableModel->fieldIndex("supply_adminUid"), QSqlRelation("magic_users", "uid", "name"));
+
+    if(!relTableModel->select())
+        return nullptr;
+
+    if(relTableModel->lastError().isValid())
+        return nullptr;
+    return relTableModel;
+}
+
 QSqlRelationalTableModel *queryModel::setActUserPage_relationalTableModel()
 {
     relTableModel = new QSqlRelationalTableModel(parent, db);

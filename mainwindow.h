@@ -5,6 +5,7 @@
 #include <QDataWidgetMapper>
 #include <QMessageBox>
 #include <QPixmap>
+#include <QDateTime>
 #include <QLabel>
 #include "service.h"
 #include "formlogin.h"
@@ -22,6 +23,8 @@ class MainWindow : public QMainWindow
 private:
     QString uid;
 
+    QDateTime curDateTime;
+
     QSqlDatabase db;
 
     QStringList comboxList;
@@ -30,7 +33,7 @@ private:
 
     QSqlTableModel *groupModel, *departmentModel;  //数据模型
 
-    QSqlRelationalTableModel *userManageModel;
+    QSqlRelationalTableModel *userManageModel, *attendManageModel;
 
     QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection; //选择模型
 
@@ -44,6 +47,11 @@ private:
 
     void setHomePageBaseInfo();
 
+    void setUsersTypeCombox(QComboBox* group, QComboBox* department);
+
+    void setUsersFilter_group(QComboBox* group, QComboBox* department);
+
+    void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
     ~MainWindow();
@@ -81,6 +89,8 @@ private slots:
     void on_userManagePagecurrentChanged(const QModelIndex &current, const QModelIndex &previous);
 
     void on_userManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
+
+    void on_attendManagePageUserscurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 
     void on_btn_addGroup_clicked();
 
@@ -121,6 +131,18 @@ private slots:
     void on_rBtn_man_clicked();
 
     void on_rBtn_all_clicked();
+
+    void on_comboBox_group_2_currentIndexChanged(const QString &arg1);
+
+    void on_comboBox_department_2_currentIndexChanged(const QString &arg1);
+
+    void on_btn_attendManagePage_recovery_clicked();
+
+    void on_btn_attendManagePage_search_clicked();
+
+    void on_btn_attendManage_reAttend_clicked();
+
+    void on_btn_attendManage_cancelAttend_clicked();
 
 private:
     Ui::MainWindow *ui;

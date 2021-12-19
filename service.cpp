@@ -56,7 +56,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                  "(                                                     "
                  "uid           int(10)      NOT NULL AUTO_INCREMENT,   "
                  "password      varchar(64)  NOT NULL ,"
-                 "name          varchar(32)  NULL ,"
+                 "name          varchar(32)  NOT NULL ,"
                  "gender        tinytext     NULL ,"
                  "telephone     varchar(64)  NULL ,"
                  "mail          varchar(128) NULL ,"
@@ -67,9 +67,12 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                  ")ENGINE=InnoDB;                  "
                  "INSERT INTO magic_users          "
                  "(uid, password, name, user_group, user_dpt)"
+                 "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1);"
+                 "INSERT INTO magic_users          "
+                 "(uid, password, name, user_group, user_dpt)"
                  "VALUES                           "
                  "(                                "
-                 "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1')";
+                 "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1');";
         query.exec(creatTableStr);
 
         //用户组权限分配表，默认有管理员和普通用户
@@ -98,18 +101,21 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "CREATE TABLE IF NOT EXISTS magic_department"
                   "(dpt_id      int(10)      NOT NULL    AUTO_INCREMENT,"
                   "dpt_name     varchar(32)  NOT NUll,"
-                  "PRIMARY KEY (dpt_id))ENGINE=InnoDB";
+                  "PRIMARY KEY (dpt_id))ENGINE=InnoDB"
+                  "INSERT INTO magic_department"
+                  "(dpt_name)"
+                  "VALUES('默认部门');";
         query.exec(creatTableStr);
 
         //考勤表
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_attendance"
-                  "(num      int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "uid       int(10)      NOT NUll,"
-                  "begin_date   datetime,"
-                  "end_date     datetime,"
-                  "today        date,"
-                  "isSupply     char(1),"
+                  "(num       int(10)      NOT NULL    AUTO_INCREMENT,"
+                  "a_uid      int(10)      NOT NUll,"
+                  "begin_date datetime,"
+                  "end_date   datetime,"
+                  "today      date,"
+                  "isSupply   tinyint(1)  NOT NUll,"
                   "supply_adminUid  int(10),"
                   "PRIMARY KEY (num, uid)"
                   ")ENGINE=InnoDB;";
@@ -119,7 +125,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_apply"
                   "(apply_id       int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "uid             int(10)      NOT NUll,"
+                  "apply_uid       int(10)      NOT NUll,"
                   "alist_id        int(10)      NOT NUll,"
                   "op1_text        text,"
                   "op2_text        text,"
@@ -128,7 +134,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "status          tinyint(1)   NOT NUll,"
                   "check_uidList   varchar(64),"
                   "reject_uid      int(10),"
-                  "PRIMARY KEY (apply_id, uid)"
+                  "PRIMARY KEY (apply_id, apply_uid)"
                   ")ENGINE=InnoDB;";
         query.exec(creatTableStr);
 
@@ -148,10 +154,10 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         //用户认证信息表
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_verify"
-                  "(uid            int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "v_id            int(10)  NOT NUll,"
+                  "(v_uid          int(10)      NOT NULL    AUTO_INCREMENT,"
+                  "vid            int(10)  NOT NUll,"
                   "info            varchar(32),"
-                  "PRIMARY KEY (uid)"
+                  "PRIMARY KEY (v_uid)"
                   ")ENGINE=InnoDB;";
         query.exec(creatTableStr);
 
@@ -164,14 +170,13 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "PRIMARY KEY (v_id)"
                   ")ENGINE=InnoDB;"
                   "INSERT INTO magic_verifyList"
-                  "(verify_name, icon)"
-                  "VALUES ('个人认证', 0);"
+                  "(v_id, verify_name, icon)"
+                  "VALUES (1, '个人认证', 0);"
                   "INSERT INTO magic_verifyList"
-                  "(verify_name, icon)"
-                  "VALUES ('机构认证', 1);";
+                  "(v_id, verify_name, icon)"
+                  "VALUES (2, '机构认证', 1);";
         query.exec(creatTableStr);
 
-        qDebug() <<query.lastError();
         return true;
     }
 }

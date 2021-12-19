@@ -15,6 +15,7 @@ public:
     QSqlQueryModel* setBaseUserInfo();
     QSqlTableModel* setActGroupPage_departmentModel();
     QSqlTableModel* setActGroupPage_groupModel();
+    QSqlRelationalTableModel* setActAttendPage_relationalTableModel();
     QSqlRelationalTableModel *setActUserPage_relationalTableModel();
 private:
     QString uid;

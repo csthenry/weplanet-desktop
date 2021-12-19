@@ -9,10 +9,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     statusIcon = new QLabel();  //用于显示状态图标的lable
     statusIcon->setMaximumSize(25, 25);
+
     statusIcon->setScaledContents(true);    //图片自适应大小
     ui->avatar->setScaledContents(true);
     ui->userManagePage_avatar->setScaledContents(true);
     ui->label_verifyIcon->setScaledContents(true);
+    ui->attendManagePage_avatar->setScaledContents(true);
+
     connectStatusLable = new QLabel("Database Status: connecting...");
     connectStatusLable->setMinimumWidth(250);
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
@@ -82,6 +85,58 @@ void MainWindow::setHomePageBaseInfo()
     }
     db.close();
 }
+
+void MainWindow::setUsersTypeCombox(QComboBox *group, QComboBox *department)
+{
+    //初始化数据过滤模块combox
+    QSqlQuery comboxGroup;
+    QStringList comboxItems;
+    comboxGroup.exec("SELECT * FROM magic_group");
+    while(comboxGroup.next())
+        comboxItems << comboxGroup.value("group_name").toString();
+    group->clear();
+    group->addItem("所有用户组");
+    group->addItems(comboxItems);
+    comboxItems.clear();
+    comboxGroup.exec("SELECT * FROM magic_department");
+    while(comboxGroup.next())
+        comboxItems << comboxGroup.value("dpt_name").toString();
+    department->clear();
+    department->addItem("所有部门");
+    department->addItems(comboxItems);
+}
+
+void MainWindow::setUsersFilter_group(QComboBox *group, QComboBox *department)
+{
+
+    QString sqlWhere = "group_name='" + group->currentText() + "'";
+    if(department->currentIndex() != 0)
+        sqlWhere += " AND dpt_name='" + department->currentText() + "'";
+    if(group->currentIndex() == 0)
+    {
+        if(department->currentIndex() != 0)
+            sqlWhere = "dpt_name='" + department->currentText() + "'";
+        else
+            sqlWhere.clear();
+    }
+    userManageModel->setFilter(sqlWhere);
+}
+
+void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department)
+{
+    QString sqlWhere = "dpt_name='" + department->currentText() + "'";
+    if(group->currentIndex() != 0)
+        sqlWhere += " AND group_name='" + group->currentText() + "'";
+    if(department->currentIndex() == 0)
+    {
+        if(group->currentIndex() != 0)
+            sqlWhere = "group_name='" + group->currentText() + "'";
+        else
+            sqlWhere.clear();
+    }
+    userManageModel->setFilter(sqlWhere);
+}
+
 
 void MainWindow::on_actExit_triggered()
 {
@@ -155,24 +210,9 @@ void MainWindow::on_actUserManager_triggered()
         comboxDelegateGender.setItems(comboxList, false);
         ui->tableView_userManage->setItemDelegateForColumn(userManageModel->fieldIndex("gender"), &comboxDelegateGender);
         ui->tableView_userManage->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_userManage));
-        userManageModel->relation(userManageModel->fieldIndex("group_name"));
 
         //初始化数据过滤模块combox
-        QSqlQuery comboxGroup;
-        QStringList comboxItems;
-        comboxGroup.exec("SELECT * FROM magic_group");
-        while(comboxGroup.next())
-            comboxItems << comboxGroup.value("group_name").toString();
-        ui->comboBox_group->clear();
-        ui->comboBox_group->addItem("所有用户组");
-        ui->comboBox_group->addItems(comboxItems);
-        comboxItems.clear();
-        comboxGroup.exec("SELECT * FROM magic_department");
-        while(comboxGroup.next())
-            comboxItems << comboxGroup.value("dpt_name").toString();
-        ui->comboBox_department->clear();
-        ui->comboBox_department->addItem("所有部门");
-        ui->comboBox_department->addItems(comboxItems);
+        setUsersTypeCombox(ui->comboBox_group, ui->comboBox_department);
 
     }
 
@@ -181,6 +221,43 @@ void MainWindow::on_actUserManager_triggered()
 void MainWindow::on_actAttendManager_triggered()
 {
     ui->stackedWidget->setCurrentIndex(5);
+    ui->tableView_attendUsers->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_attendUsers->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    if(!db.open())
+    {
+        statusIcon->setPixmap(*statusErrorIcon);
+        connectStatusLable->setText("Database Status: " + db.lastError().text());
+    }
+    else
+    {
+        queryModel relTableModel(db, this), relTableModel_attend(db, this);
+
+        //用户列表
+        userManageModel = relTableModel.setActUserPage_relationalTableModel();
+        ui->tableView_attendUsers->setModel(userManageModel);
+        ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
+        ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("password"));  //隐藏无关列
+        ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("user_avatar"));
+        ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("gender"));
+
+        userManagePageSelection = new QItemSelectionModel(userManageModel);     //套用用户管理页的selection
+        ui->tableView_attendUsers->setSelectionModel(userManagePageSelection);
+
+        //当前行变化时触发currentRowChanged信号
+        connect(userManagePageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+                    this, SLOT(on_attendManagePageUserscurrentRowChanged(QModelIndex, QModelIndex)));
+        //初始化数据过滤comBox
+        setUsersTypeCombox(ui->comboBox_group_2, ui->comboBox_department_2);
+
+        //签到列表
+        attendManageModel = relTableModel_attend.setActAttendPage_relationalTableModel();
+        ui->tableView_attendInfo->setModel(attendManageModel);
+        ui->tableView_attendInfo->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_attendInfo));
+
+    }
 }
 
 void MainWindow::on_actApplyList_triggered()
@@ -284,7 +361,7 @@ void MainWindow::on_userManagePagecurrentChanged(const QModelIndex &current, con
     ui->btn_editUser_check->setEnabled(userManageModel->isDirty());
     ui->btn_editUser_cancel->setEnabled(userManageModel->isDirty());
 
-    if(curRecord.value("uid") != "100000" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
+    if(curRecord.value("uid") != "100000" && curRecord.value("uid") != "1"  && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
         ui->btn_delUser->setEnabled(current.isValid());
     else
         ui->btn_delUser->setEnabled(false);
@@ -299,7 +376,7 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     ui->btn_editUser_check->setEnabled(userManageModel->isDirty());
     ui->btn_editUser_cancel->setEnabled(userManageModel->isDirty());
 
-    if(curRecord.value("uid") != "100000" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
+    if(curRecord.value("uid") != "100000" && curRecord.value("uid") != "1" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
         ui->btn_delUser->setEnabled(current.isValid());
     else
         ui->btn_delUser->setEnabled(false);
@@ -332,6 +409,53 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
             ui->lineEdit_editPwdCheck->clear();
         }
     }
+}
+
+void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+    Q_UNUSED(previous);
+    QSqlRecord curRecord = userManageModel->record(current.row());
+    QSqlQuery attendQuery;
+    QPixmap avatar = service::getAvatar(curRecord.value("user_avatar").toString());
+    curDateTime = QDateTime::currentDateTime();
+
+    ui->btn_attendManage_reAttend->setEnabled(current.isValid());
+    ui->btn_attendManage_cancelAttend->setEnabled(current.isValid());
+
+    ui->label_attendManagePage_uid->setText(curRecord.value("uid").toString());
+
+    attendQuery.exec("SELECT * FROM magic_attendance WHERE a_uid = '" + curRecord.value("uid").toString() + "' AND today = '" + curDateTime.date().toString("yyyy-MM-dd") + "';");
+    //qDebug() <<"SELECT * FROM magic_attendance WHERE uid = '" + curRecord.value("uid").toString() + "' AND today = '" + curDateTime.date().toString("yyyy-MM-dd") + "';";
+    if(attendQuery.next())
+    {
+        ui->label_attendManagePage_status->setText("已签到");
+        ui->label_attendManagePage_beginTime->setText(attendQuery.value("begin_date").toString());
+        if(attendQuery.value("end_date").toString().isEmpty())
+            ui->label_attendManagePage_endTime->setText("--");
+        else
+            ui->label_attendManagePage_endTime->setText(attendQuery.value("end_date").toString());
+    }
+    else
+    {
+        ui->label_attendManagePage_status->setText("未签到");
+        ui->label_attendManagePage_beginTime->setText("--");
+        ui->label_attendManagePage_endTime->setText("--");
+    }
+    if(curRecord.value("name").toString().isEmpty())
+        ui->label_attendManagePage_name->setText("--");
+    else
+        ui->label_attendManagePage_name->setText(curRecord.value("name").toString());
+    ui->label_attendManagePage_group->setText(curRecord.value("group_name").toString());    //这里应该填写关联的外键字段名
+    ui->label_attendManagePage_dpt->setText(curRecord.value("dpt_name").toString());
+
+    if(avatar.isNull())
+        ui->attendManagePage_avatar->setText("无头像");
+    else
+        ui->attendManagePage_avatar->setPixmap(service::setAvatarStyle(avatar));
+
+    attendManageModel->setFilter("a_uid='" + curRecord.value("uid").toString() +"'");
+
+
 }
 
 void MainWindow::on_btn_addGroup_clicked()
@@ -482,32 +606,14 @@ void MainWindow::on_btn_userManagePage_recovery_clicked()
 
 void MainWindow::on_comboBox_group_currentIndexChanged(const QString &arg1)
 {
-    QString sqlWhere = "group_name='" + arg1 + "'";
-    if(ui->comboBox_department->currentIndex() != 0)
-        sqlWhere += " AND dpt_name='" + ui->comboBox_department->currentText() + "'";
-    if(ui->comboBox_group->currentIndex() == 0)
-    {
-        if(ui->comboBox_department->currentIndex() != 0)
-            sqlWhere = "dpt_name='" + ui->comboBox_department->currentText() + "'";
-        else
-            sqlWhere.clear();
-    }
-    userManageModel->setFilter(sqlWhere);
+    Q_UNUSED(arg1);
+    setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
 }
 
 void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)
 {
-    QString sqlWhere = "dpt_name='" + arg1 + "'";
-    if(ui->comboBox_group->currentIndex() != 0)
-        sqlWhere += " AND group_name='" + ui->comboBox_group->currentText() + "'";
-    if(ui->comboBox_department->currentIndex() == 0)
-    {
-        if(ui->comboBox_group->currentIndex() != 0)
-            sqlWhere = "group_name='" + ui->comboBox_group->currentText() + "'";
-        else
-            sqlWhere.clear();
-    }
-    userManageModel->setFilter(sqlWhere);
+    Q_UNUSED(arg1);
+    setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
 }
 
 void MainWindow::on_btn_userManagePage_recovery_2_clicked()
@@ -516,4 +622,61 @@ void MainWindow::on_btn_userManagePage_recovery_2_clicked()
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
     ui->rBtn_all->setChecked(true);
+}
+
+void MainWindow::on_comboBox_group_2_currentIndexChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+    setUsersFilter_dpt(ui->comboBox_group_2, ui->comboBox_department_2);
+}
+
+void MainWindow::on_comboBox_department_2_currentIndexChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+    setUsersFilter_dpt(ui->comboBox_group_2, ui->comboBox_department_2);
+}
+
+void MainWindow::on_btn_attendManagePage_recovery_clicked()
+{
+    userManageModel->setFilter("");
+    attendManageModel->setFilter("");
+    ui->comboBox_group_2->setCurrentIndex(0);
+    ui->comboBox_department_2->setCurrentIndex(0);
+}
+
+void MainWindow::on_btn_attendManagePage_search_clicked()
+{
+    userManageModel->setFilter("uid='" + ui->lineEdit_searchUid_attend->text()+ "' OR name='" + ui->lineEdit_searchUid_attend->text() + "'");
+}
+
+void MainWindow::on_btn_attendManage_reAttend_clicked()
+{
+    if(ui->label_attendManagePage_uid->text().isEmpty())
+        return;
+    if(ui->label_attendManagePage_status->text() == "已签到")
+    {
+        QMessageBox::warning(this, "消息", "当前用户已签到，无需补签。", QMessageBox::Ok);
+        return;
+    }
+    curDateTime = QDateTime::currentDateTime();
+    attendManageModel->insertRow(attendManageModel->rowCount(), QModelIndex()); //在末尾添加一个记录
+    QModelIndex curIndex = attendManageModel->index(attendManageModel->rowCount() - 1, 1);//创建最后一行的ModelIndex
+    int currow = curIndex.row(); //获得当前行
+    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("a_uid")), ui->label_attendManagePage_uid->text());
+    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("today")), curDateTime.date().toString("yyyy-MM-dd"));
+    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("begin_date")), curDateTime.time().toString("HH:mm:ss"));
+    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("end_date")), curDateTime.time().toString("HH:mm:ss"));
+    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("isSupply")), 1);
+    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("name")), uid);   //这里要填外键关联的字段！
+    if(attendManageModel->submitAll())
+        QMessageBox::information(this, "消息", "补签成功，补签时间:\n" + curDateTime.toString("yyyy-MM-dd hh:mm:ss"),
+                                 QMessageBox::Ok);
+    else
+        QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendManageModel->lastError().text(),
+                                 QMessageBox::Ok);
+}
+
+void MainWindow::on_btn_attendManage_cancelAttend_clicked()
+{
+
 }
