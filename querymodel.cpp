@@ -72,7 +72,7 @@ QSqlRelationalTableModel *queryModel::setActAttendPage_relationalTableModel()
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnRowChange);  //自动提交
-    relTableModel->setHeaderData(relTableModel->fieldIndex("num"), Qt::Horizontal,"编号");
+    //relTableModel->setHeaderData(relTableModel->fieldIndex("num"), Qt::Horizontal,"编号");
     relTableModel->setHeaderData(relTableModel->fieldIndex("a_uid"), Qt::Horizontal,"账号（UID）");
     relTableModel->setHeaderData(relTableModel->fieldIndex("begin_date"), Qt::Horizontal,"签到时间");
     relTableModel->setHeaderData(relTableModel->fieldIndex("end_date"), Qt::Horizontal,"签退时间");

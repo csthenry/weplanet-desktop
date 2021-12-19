@@ -1201,6 +1201,45 @@
            <string>考勤管理</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_35">
+           <item row="4" column="3" rowspan="2">
+            <widget class="QLabel" name="label_26">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>签退：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_attendManagePage_dpt">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_status">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0" rowspan="6">
             <widget class="QLabel" name="attendManagePage_avatar">
              <property name="minimumSize">
@@ -1229,81 +1268,19 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_15">
-             <property name="maximumSize">
+           <item row="7" column="3" colspan="2">
+            <widget class="QPushButton" name="btn_attendManage_cancelAttend">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
               <size>
-               <width>35</width>
-               <height>35</height>
+               <width>0</width>
+               <height>40</height>
               </size>
              </property>
              <property name="text">
-              <string>UID：</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_attendManagePage_uid">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3" rowspan="2">
-            <widget class="QLabel" name="label_24">
-             <property name="maximumSize">
-              <size>
-               <width>35</width>
-               <height>35</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>当天：</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="4" rowspan="2">
-            <widget class="QLabel" name="label_attendManagePage_status">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" rowspan="2">
-            <widget class="QLabel" name="label_22">
-             <property name="maximumSize">
-              <size>
-               <width>35</width>
-               <height>35</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>姓名：</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2" rowspan="2">
-            <widget class="QLabel" name="label_attendManagePage_name">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
+              <string>退签</string>
              </property>
             </widget>
            </item>
@@ -1333,16 +1310,19 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="1" rowspan="2">
-            <widget class="QLabel" name="label_16">
-             <property name="maximumSize">
+           <item row="6" column="3" colspan="2">
+            <widget class="QPushButton" name="btn_attendManage_reAttend">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
               <size>
-               <width>35</width>
-               <height>35</height>
+               <width>0</width>
+               <height>40</height>
               </size>
              </property>
              <property name="text">
-              <string>类别：</string>
+              <string>补签</string>
              </property>
             </widget>
            </item>
@@ -1359,21 +1339,8 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="3" rowspan="2">
-            <widget class="QLabel" name="label_26">
-             <property name="maximumSize">
-              <size>
-               <width>35</width>
-               <height>35</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>签退：</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="4" rowspan="2">
-            <widget class="QLabel" name="label_attendManagePage_endTime">
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_attendManagePage_uid">
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -1385,21 +1352,8 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="label_23">
-             <property name="maximumSize">
-              <size>
-               <width>35</width>
-               <height>35</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>部门：</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="2">
-            <widget class="QLabel" name="label_attendManagePage_dpt">
+           <item row="1" column="2" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_name">
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -1408,6 +1362,45 @@
              </property>
              <property name="text">
               <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" rowspan="2">
+            <widget class="QLabel" name="label_24">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>当天：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_15">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>UID：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" rowspan="2">
+            <widget class="QLabel" name="label_22">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>姓名：</string>
              </property>
             </widget>
            </item>
@@ -1457,35 +1450,42 @@
              </layout>
             </widget>
            </item>
-           <item row="6" column="3" colspan="2">
-            <widget class="QPushButton" name="btn_attendManage_reAttend">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="minimumSize">
+           <item row="4" column="4" rowspan="2">
+            <widget class="QLabel" name="label_attendManagePage_endTime">
+             <property name="maximumSize">
               <size>
-               <width>0</width>
-               <height>40</height>
+               <width>16777215</width>
+               <height>30</height>
               </size>
              </property>
              <property name="text">
-              <string>补签</string>
+              <string/>
              </property>
             </widget>
            </item>
-           <item row="7" column="3" colspan="2">
-            <widget class="QPushButton" name="btn_attendManage_cancelAttend">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="minimumSize">
+           <item row="3" column="1" rowspan="2">
+            <widget class="QLabel" name="label_16">
+             <property name="maximumSize">
               <size>
-               <width>0</width>
-               <height>40</height>
+               <width>35</width>
+               <height>35</height>
               </size>
              </property>
              <property name="text">
-              <string>退签</string>
+              <string>类别：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="label_23">
+             <property name="maximumSize">
+              <size>
+               <width>35</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>部门：</string>
              </property>
             </widget>
            </item>

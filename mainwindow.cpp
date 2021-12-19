@@ -140,7 +140,7 @@ void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department)
 
 void MainWindow::on_actExit_triggered()
 {
-    QSettings settings("bytecho", "magicgms");
+    QSettings settings("bytecho", "MagicLightAssistant");
     settings.setValue("isAutoLogin", false);    //注销后自动登录失效
 
     formLoginWindow = new formLogin();
@@ -256,6 +256,7 @@ void MainWindow::on_actAttendManager_triggered()
         attendManageModel = relTableModel_attend.setActAttendPage_relationalTableModel();
         ui->tableView_attendInfo->setModel(attendManageModel);
         ui->tableView_attendInfo->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_attendInfo));
+        ui->tableView_attendInfo->hideColumn(attendManageModel->fieldIndex("num"));     //隐藏不需要的签到编号
 
     }
 }
@@ -678,5 +679,24 @@ void MainWindow::on_btn_attendManage_reAttend_clicked()
 
 void MainWindow::on_btn_attendManage_cancelAttend_clicked()
 {
+    curDateTime = QDateTime::currentDateTime();
+    QSqlRecord curRecord = attendManageModel->record(0);   //取顶部的数据，因为是按照时间降序排列
+    if(ui->label_attendManagePage_status->text() == "未签到")
+    {
+        QMessageBox::warning(this, "消息", "当前用户未签到，无法退签。", QMessageBox::Ok);
+        return;
+    }
+    //检测即将删除的数据是否与当前用户对应
+    if(curRecord.value("a_uid").toString() == ui->label_attendManagePage_uid->text() && curRecord.value("today").toString() == curDateTime.date().toString("yyyy-MM-dd"))
+    {
+        attendManageModel->removeRow(0); //删除顶部的数据
+        if(attendManageModel->submitAll())
+            QMessageBox::information(this, "消息", "当前用户已被成功退签，当日签到数据已经删除。", QMessageBox::Ok);
+        else
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendManageModel->lastError().text(),
+                                     QMessageBox::Ok);
+    }
+    else
+        QMessageBox::warning(this, "消息", "数据不匹配，退签失败。", QMessageBox::Ok);
 
 }

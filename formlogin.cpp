@@ -58,7 +58,7 @@ formLogin::~formLogin()
 
 void formLogin::writeLoginSettings()
 {
-    QSettings settings("bytecho", "magicgms");  //公司名称和应用名称
+    QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
     if(ui->checkBox_remPwd)
     {
         settings.setValue("uid", ui->lineEdit_Uid->text());
@@ -77,7 +77,7 @@ void formLogin::writeLoginSettings()
 
 QString formLogin::readLoginSettings()
 {
-    QSettings settings("bytecho", "magicgms");  //公司名称和应用名称
+    QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
     bool isSaveAccount = settings.value("isSaveAccount", false).toBool();
     ui->lineEdit_Uid->setText(settings.value("uid").toString());
     if(isSaveAccount)
@@ -106,7 +106,7 @@ QString formLogin::readLoginSettings()
 void formLogin::on_btn_Login_clicked()
 {
     QString pwd = readPwd;
-    QSettings settings("bytecho", "magicgms");  //公司名称和应用名称
+    QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
 
     if(service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toLongLong(), pwd) || service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toLongLong(), service::pwdEncrypt(ui->lineEdit_Pwd->text())))
     {
@@ -131,7 +131,7 @@ void formLogin::on_checkBox_remPwd_clicked(bool checked)
 
 void formLogin::on_lineEdit_Uid_textEdited(const QString &arg1)
 {
-    QSettings settings("bytecho", "magicgms");  //公司名称和应用名称
+    QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
     if(arg1 !=  settings.value("uid"))  //防止账户变化时还保存着之前的用户信息
     {
         settings.clear();
@@ -177,7 +177,7 @@ void formLogin::on_btn_Signup_clicked()
 
 void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)
 {
-    QSettings settings("bytecho", "magicgms");  //公司名称和应用名称
+    QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
     if(arg1 != "kH9bV0rP5dF8oW7g")  //防止账户变化时还保存着之前的用户信息
     {
         settings.clear();
