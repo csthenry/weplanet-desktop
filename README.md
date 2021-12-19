@@ -1,10 +1,10 @@
 # Magic Light Assistant
 
-![GitHub license](https://img.shields.io/github/license/CSTHenry/MagicGMS?style=flat-square)
-![GitHub forks](https://img.shields.io/github/forks/CSTHenry/MagicGMS?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/CSTHenry/MagicGMS?style=flat-square)
-![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicGMS?include_prereleases&style=flat-square)
-![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicGMS/total?style=flat-square)
+![GitHub license](https://img.shields.io/github/license/CSTHenry/MagicLightAssistant?style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/CSTHenry/MagicLightAssistant?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/CSTHenry/MagicLightAssistant?style=flat-square)
+![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicLightAssistant?include_prereleases&style=flat-square)
+![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicLightAssistant/total?style=flat-square)
 
 🚀Magic Light Assistant - 适用于小型团体的交互系统
 
