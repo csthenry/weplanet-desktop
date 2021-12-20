@@ -103,8 +103,8 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "dpt_name     varchar(32)  NOT NUll,"
                   "PRIMARY KEY (dpt_id))ENGINE=InnoDB;"
                   "INSERT INTO magic_department"
-                  "(dpt_name)"
-                  "VALUES('默认部门');";
+                  "(dpt_id, dpt_name)"
+                  "VALUES(1, '默认部门');";
         query.exec(creatTableStr);
 
         //考勤表
