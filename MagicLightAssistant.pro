@@ -41,6 +41,17 @@ FORMS += \
 
 RC_ICONS = mainWindow_favicon_x32.ico
 
+#info
+VERSION = 0.0.2
+
+QMAKE_TARGET_DESCRIPTION = Magic Light Assistant
+
+QMAKE_TARGET_COMPANY = bytecho.net
+
+QMAKE_TARGET_COPYRIGHT = Copyright (c) 2017-2021 bytecho.net. Written by Henry.
+
+RC_LANG = 0x0004
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
