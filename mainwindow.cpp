@@ -814,10 +814,11 @@ void MainWindow::on_btn_endAttend_clicked()
     }
     QSqlQuery query;
     curDateTime = QDateTime::currentDateTime();
-    query.exec("SELECT today FROM magic_attendance WHERE a_uid = '" + uid + "';");
-    if(!query.next() && !(query.value("today").toString() == curDateTime.date().toString("yyyy-MM-dd")))
+    query.exec("SELECT end_date, today FROM magic_attendance WHERE a_uid = '" + uid + "' AND today = '" + curDateTime.date().toString("yyyy-MM-dd") +"';");
+    query.next();
+    if(!query.value("end_date").isNull())
     {
-        QMessageBox::warning(this, "消息", "数据校验失败，签退失败。", QMessageBox::Ok);
+        QMessageBox::warning(this, "消息", "你已经在" + query.value("end_date").toString() + "签退过啦，请勿重复签退哦~", QMessageBox::Ok);
         return;
     }
     else
