@@ -78,10 +78,10 @@ QSqlRelationalTableModel *queryModel::setActAttendPage_relationalTableModel()
     relTableModel->setHeaderData(relTableModel->fieldIndex("end_date"), Qt::Horizontal,"签退时间");
     relTableModel->setHeaderData(relTableModel->fieldIndex("today"), Qt::Horizontal,"考勤日期");
     relTableModel->setHeaderData(relTableModel->fieldIndex("isSupply"), Qt::Horizontal,"是否补签");
-    relTableModel->setHeaderData(relTableModel->fieldIndex("supply_adminUid"), Qt::Horizontal,"签到来源");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("operator"), Qt::Horizontal,"签到来源");
 
     //建立外键关联
-    relTableModel->setRelation(relTableModel->fieldIndex("supply_adminUid"), QSqlRelation("magic_users", "uid", "name"));
+    relTableModel->setRelation(relTableModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
 
     if(!relTableModel->select())
         return nullptr;

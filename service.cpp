@@ -116,7 +116,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "end_date   datetime,"
                   "today      date,"
                   "isSupply   tinyint(1)  NOT NUll,"
-                  "supply_adminUid  int(10),"
+                  "operator   int(10),"
                   "PRIMARY KEY (num, uid)"
                   ")ENGINE=InnoDB;";
         query.exec(creatTableStr);
@@ -155,7 +155,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
         creatTableStr =
                   "CREATE TABLE IF NOT EXISTS magic_verify"
                   "(v_uid          int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "vid            int(10)  NOT NUll,"
+                  "vid             int(10)  NOT NUll,"
                   "info            varchar(32),"
                   "PRIMARY KEY (v_uid)"
                   ")ENGINE=InnoDB;";
