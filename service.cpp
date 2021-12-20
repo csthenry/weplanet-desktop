@@ -8,7 +8,7 @@ service::service()
     dataBaseType = "QMYSQL";    //available drivers: QSQLITE QMYSQL QMYSQL3 QODBC QODBC3 QPSQL QPSQL7
     hostName = "localhost";
     dataBasePort = 3306;
-    dataBaseName = "magic";
+    dataBaseName = "test_2";
     dataBaseUserName = "root";
     dataBasePassword = "123456";
 
@@ -101,7 +101,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "CREATE TABLE IF NOT EXISTS magic_department"
                   "(dpt_id      int(10)      NOT NULL    AUTO_INCREMENT,"
                   "dpt_name     varchar(32)  NOT NUll,"
-                  "PRIMARY KEY (dpt_id))ENGINE=InnoDB"
+                  "PRIMARY KEY (dpt_id))ENGINE=InnoDB;"
                   "INSERT INTO magic_department"
                   "(dpt_name)"
                   "VALUES('默认部门');";
@@ -117,7 +117,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "today      date,"
                   "isSupply   tinyint(1)  NOT NUll,"
                   "operator   int(10),"
-                  "PRIMARY KEY (num, uid)"
+                  "PRIMARY KEY (num, a_uid)"
                   ")ENGINE=InnoDB;";
         query.exec(creatTableStr);
 
