@@ -34,7 +34,7 @@ private:
 
     QSqlTableModel *groupModel, *departmentModel;  //数据模型
 
-    QSqlRelationalTableModel *userManageModel, *attendManageModel;
+    QSqlRelationalTableModel *userManageModel, *attendManageModel, *attendPageModel;
 
     QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection; //选择模型
 
@@ -146,6 +146,12 @@ private slots:
     void on_btn_attendManage_cancelAttend_clicked();
 
     void on_btn_attendManagePage_exp_clicked();
+
+    void on_btn_expAttend_clicked();
+
+    void on_btn_beginAttend_clicked();
+
+    void on_btn_endAttend_clicked();
 
 private:
     Ui::MainWindow *ui;
