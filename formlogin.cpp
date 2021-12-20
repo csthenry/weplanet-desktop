@@ -1,3 +1,11 @@
+/***************************************************/
+/*              Magic Light Assistant              */
+/* Copyright (c) 2017-2021 by bytecho.net          */
+/* Written by Henry                                */
+/* Function:                                       */
+/* Communication, activity, management and approval*/
+/***************************************************/
+
 #include "formlogin.h"
 #include "ui_formlogin.h"
 

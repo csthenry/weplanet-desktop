@@ -8,7 +8,7 @@ service::service()
     dataBaseType = "QMYSQL";    //available drivers: QSQLITE QMYSQL QMYSQL3 QODBC QODBC3 QPSQL QPSQL7
     hostName = "localhost";
     dataBasePort = 3306;
-    dataBaseName = "test_2";
+    dataBaseName = "magic";
     dataBaseUserName = "root";
     dataBasePassword = "123456";
 

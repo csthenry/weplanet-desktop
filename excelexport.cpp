@@ -7,7 +7,6 @@ ExcelExport::ExcelExport(QObject *parent)
 
 ExcelExport::~ExcelExport()
 {
-    delete excel;
 }
 
 // type 1 - 导出所有记录，type 2 - 导出当天所有记录，type 3 - 导出当前用户所有记录
@@ -93,6 +92,7 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
     if (excel != NULL)
     {
         excel->dynamicCall("Quit()");
+        delete excel;
         return true;
     }
     else
