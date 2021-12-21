@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->attendPage_avatar->setScaledContents(true);
 
     connectStatusLable = new QLabel("Database Status: connecting...");
-    connectStatusLable->setMinimumWidth(250);
+    connectStatusLable->setMinimumWidth(1100);
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
 
     verifyIcon = new QPixmap(":/images/color_icon/verify_2.svg");
@@ -89,7 +89,7 @@ void MainWindow::setHomePageBaseInfo()
     else
     {
         statusIcon->setPixmap(*statusErrorIcon);
-        connectStatusLable->setText("Database Status: " + query.lastError().text());
+        connectStatusLable->setText("Database Status: " + query.lastError().text() + db.lastError().text());
     }
     //首页考勤信息初始化
     curDateTime = QDateTime::currentDateTime();
