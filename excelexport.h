@@ -1,3 +1,11 @@
+/***************************************************/
+/*              Magic Light Assistant              */
+/* Copyright (c) 2017-2021 by bytecho.net          */
+/* Written by Henry                                */
+/* Function:                                       */
+/* Communication, activity, management and approval*/
+/***************************************************/
+
 #ifndef EXCELEXPORT_H
 #define EXCELEXPORT_H
 
