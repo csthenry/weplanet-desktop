@@ -121,7 +121,6 @@ void formLogin::on_btn_Login_clicked()
     }
     else
         QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
-    db.close();
 }
 
 void formLogin::on_checkBox_remPwd_clicked(bool checked)

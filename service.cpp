@@ -184,7 +184,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "(v_id, verify_name, icon)"
                   "VALUES (2, '机构认证', 1);";
         query.exec(creatTableStr);
-        db.close();
+        //登录窗口可能注册，不能关闭数据库
         return true;
     }
 }
