@@ -45,7 +45,7 @@
 
 ![screenshot_2](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_2.jpg)
 ![screenshot_3](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_3.jpg)
-![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_4.png)
+![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_6.png)
 
 更多截图请查看：https://github.com/CSTHenry/MagicLightAssistant/tree/master/screenshot
 
