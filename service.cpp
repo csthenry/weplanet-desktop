@@ -52,7 +52,7 @@ void service::connectDatabase(QSqlDatabase& db)
 bool service::initDatabaseTables(QSqlDatabase& db)
 {
 
-    if(!db.open()){
+    if(!db.isOpen() && !db.open()){
         qDebug() << "error info :" << db.lastError();
         return false;
     }
@@ -184,14 +184,14 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "(v_id, verify_name, icon)"
                   "VALUES (2, '机构认证', 1);";
         query.exec(creatTableStr);
-
+        db.close();
         return true;
     }
 }
 
 bool service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
 {
-    if(!db.open())
+    if(!db.isOpen() && !db.open())
         return false;
     QSqlQuery query;
     //验证UID
@@ -200,6 +200,7 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
     {
         uid = QString::number(account);
         qDebug() << uid << "登录方式：账号登录";
+        db.close();
         return true;
     }
     else
@@ -211,8 +212,10 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
             {
                 uid = query.value("uid").toString();
                 qDebug() << uid << "登录方式：手机号登录";
+                db.close();
                 return true;
             }
+        db.close();
         return false;
     }
 }
@@ -274,7 +277,7 @@ void service::buildAttendChart(QChartView *chartView_attend, const QWidget *pare
 {
     //绘制工作时间饼图
     QChart *attendChart = new QChart;
-    attendChart->setTitle("工作时长统计（每天建议工作7小时左右哦）");
+    attendChart->setTitle("工作时长统计（作息时间很不错~）");
     attendChart->setAnimationOptions(QChart::SeriesAnimations);
     chartView_attend->setChart(attendChart);
     chartView_attend->setRenderHint(QPainter::Antialiasing);
@@ -302,6 +305,10 @@ void service::buildAttendChart(QChartView *chartView_attend, const QWidget *pare
     //series->setLabelsVisible(true); //只影响当前的slices，必须添加完slice之后再设置
     attendChart->addSeries(series); //添加饼图序列
 
+    if(series->slices().at(0)->percentage() > (series->slices().at(1)->percentage() + series->slices().at(2)->percentage()))
+        attendChart->setTitle("工作时长统计（需要再勤奋一点哦！）");
+    if(series->slices().at(3)->percentage() > (series->slices().at(1)->percentage() + series->slices().at(2)->percentage()))
+        attendChart->setTitle("工作时长统计（要注意休息哦，身体最重要~）");
     attendChart->legend()->setFont(font);
     attendChart->setTitleFont(font);
     attendChart->legend()->setVisible(true); //图例

@@ -16,21 +16,6 @@ queryModel::queryModel(QSqlDatabase db, QObject* parent)
     this->parent = parent;
 }
 
-QSqlQueryModel* queryModel::setBaseUserInfo()
-{
-
-    qryModel = new QSqlQueryModel(parent);
-    if(!db.open())
-        return nullptr;
-    else
-    {
-        qDebug() << "进入查询 baseUserInfo";
-        //qryModel->setQuery("SELECT name, gender, telephone, mail, user_group, user_position, user_avatar FROM magic_users WHERE uid = " + uid + ";");
-    }
-    if(qryModel->lastError().isValid())
-        return nullptr;
-    return qryModel;
-}
 
 QSqlTableModel *queryModel::setActGroupPage_departmentModel()
 {

@@ -43,9 +43,7 @@ formLogin::formLogin(QDialog *parent) :
     service loginService;
     loginService.connectDatabase(db);
 
-    db.open();
-
-    if (db.open())   //打开数据库
+    if (db.isOpen() || db.open())   //打开数据库
     {
         ui->labelIcon->setPixmap(statusOKIcon);
         ui->labelStatus->setText("Database Status: connected");

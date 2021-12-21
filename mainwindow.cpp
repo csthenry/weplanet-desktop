@@ -47,27 +47,20 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
     this->db = db;
     this->uid = uid;
     ui->label_home_uid->setText(uid);
-
-    if(this->db.open())   //打开数据库
-    {
-        statusIcon->setPixmap(*statusOKIcon);
-        connectStatusLable->setText("Database Status: connected");
-    }
-    else
-    {
-        statusIcon->setPixmap(*statusErrorIcon);
-        connectStatusLable->setText("Database Status: " + this->db.lastError().text());
-    }
-    this->db.close();
     setHomePageBaseInfo();
 }
 
 void MainWindow::setHomePageBaseInfo()
 {
-    if(!db.open())
+    if(!db.isOpen() && !db.open())
     {
         statusIcon->setPixmap(*statusErrorIcon);
         connectStatusLable->setText("Database Status: " + db.lastError().text());
+    }
+    else
+    {
+        statusIcon->setPixmap(*statusOKIcon);
+        connectStatusLable->setText("Database Status: connected");
     }
     QSqlQuery query;
     query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar FROM magic_users WHERE uid = " + uid);
@@ -117,7 +110,7 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_homePage_beginTime->setText("--");
         ui->label_homePage_endTime->setText("--");
     }
-    db.close();
+    db.close();     //没有后续操作，可以关闭
 }
 
 void MainWindow::setUsersTypeCombox(QComboBox *group, QComboBox *department)
@@ -188,7 +181,6 @@ void MainWindow::on_actExit_triggered()
         this->show();
     }
     delete formLoginWindow;
-
 }
 
 void MainWindow::on_actHome_triggered()
@@ -208,13 +200,15 @@ void MainWindow::on_actAttend_triggered()
     curDateTime = QDateTime::currentDateTime();
     ui->stackedWidget->setCurrentIndex(2);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
-    if(!db.open())
+    if(!db.isOpen() && !db.open())
     {
         statusIcon->setPixmap(*statusErrorIcon);
         connectStatusLable->setText("Database Status: " + db.lastError().text());
     }
     else
     {
+        statusIcon->setPixmap(*statusOKIcon);
+        connectStatusLable->setText("Database Status: connected");
         queryModel relTableModel(db, this);
         attendPageModel = relTableModel.setActAttendPage_relationalTableModel();
         attendPageModel->setFilter("a_uid='" + uid +"'");     //只显示当前用户的考勤数据
@@ -243,6 +237,7 @@ void MainWindow::on_actAttend_triggered()
         }
     }
     service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), data_1, data_2, data_3, data_4);  //绘制统计图
+    //后续可能有签到签退操作，不能关闭数据库
 }
 void MainWindow::on_PieSliceHighlight(bool show)
 { //鼠标移入、移出时触发hovered()信号，动态设置setExploded()效果
@@ -261,13 +256,15 @@ void MainWindow::on_actUserManager_triggered()
     ui->stackedWidget->setCurrentIndex(4);
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
-    if(!db.open())
+    if(!db.isOpen() && !db.open())
     {
         statusIcon->setPixmap(*statusErrorIcon);
         connectStatusLable->setText("Database Status: " + db.lastError().text());
     }
     else
     {
+        statusIcon->setPixmap(*statusOKIcon);
+        connectStatusLable->setText("Database Status: connected");
         queryModel relTableModel(db, this);
         userManageModel = relTableModel.setActUserPage_relationalTableModel();
         ui->tableView_userManage->setModel(userManageModel);
@@ -292,9 +289,8 @@ void MainWindow::on_actUserManager_triggered()
 
         //初始化数据过滤模块combox
         setUsersTypeCombox(ui->comboBox_group, ui->comboBox_department);
-
     }
-
+    //后续可能有操作，不关闭数据库
 }
 
 void MainWindow::on_actAttendManager_triggered()
@@ -305,15 +301,17 @@ void MainWindow::on_actAttendManager_triggered()
 
     ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    if(!db.open())
+    if(!db.isOpen() && !db.open())
     {
         statusIcon->setPixmap(*statusErrorIcon);
         connectStatusLable->setText("Database Status: " + db.lastError().text());
     }
     else
     {
-        queryModel relTableModel(db, this), relTableModel_attend(db, this);
+        statusIcon->setPixmap(*statusOKIcon);
+        connectStatusLable->setText("Database Status: connected");
 
+        queryModel relTableModel(db, this), relTableModel_attend(db, this);
         //用户列表
         userManageModel = relTableModel.setActUserPage_relationalTableModel();
         ui->tableView_attendUsers->setModel(userManageModel);
@@ -336,8 +334,8 @@ void MainWindow::on_actAttendManager_triggered()
         ui->tableView_attendInfo->setModel(attendManageModel);
         ui->tableView_attendInfo->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_attendInfo));
         ui->tableView_attendInfo->hideColumn(attendManageModel->fieldIndex("num"));     //隐藏不需要的签到编号
-
     }
+    //后续可能有操作，不关闭数据库
 }
 
 void MainWindow::on_actApplyList_triggered()
@@ -365,13 +363,16 @@ void MainWindow::on_actGroup_triggered()
     //ui->tableView->resizeColumnsToContents();
     //ui->tableView->horizontalHeader()->setStretchLastSection(true);
 
-    if(!db.open())
+    if(!db.isOpen() && !db.open())
     {
         statusIcon->setPixmap(*statusErrorIcon);
         connectStatusLable->setText("Database Status: " + db.lastError().text());
     }
     else
     {
+        statusIcon->setPixmap(*statusOKIcon);
+        connectStatusLable->setText("Database Status: connected");
+
         queryModel tableModel(db, this);
         groupModel = tableModel.setActGroupPage_groupModel(), departmentModel = tableModel.setActGroupPage_departmentModel();
 
@@ -406,7 +407,7 @@ void MainWindow::on_actGroup_triggered()
         ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("activity_manage"), &comboxDelegateAuthority);
         ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("send_message"), &comboxDelegateAuthority);
     }
-
+    //可能有操作，不关闭数据库
 }
 
 void MainWindow::on_actMore_triggered()
