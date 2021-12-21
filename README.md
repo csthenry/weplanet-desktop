@@ -8,13 +8,13 @@
 
 🚀Magic Light Assistant - 适用于小型团体的交互系统
 
-  交流、工作、活动、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic <Light\> Assistant**。
+  交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic <Light\> Assistant**。
 
 - 平台：Windows x64
 - 类型：Qt桌面应用程序
 - 数据库：MySQL
 - 语言：C++ 11
-- 框架：Qt5
+- 框架：Qt5.14
 
 -> 此项目由一名非科班励志自学成才的大学生呈现——我的第一个可上线项目。
 
@@ -28,6 +28,7 @@
 * [x] 用户管理
 * [x] 组织架构管理
 * [x] 具有时效性的考勤系统
+* [x] 数据统计图表
 * [x] 数据可视化导出
 
 **进行中：**
@@ -44,6 +45,7 @@
 
 ![screenshot_2](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_2.jpg)
 ![screenshot_3](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_3.jpg)
+![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_4.png)
 
 更多截图请查看：https://github.com/CSTHenry/MagicLightAssistant/tree/master/screenshot
 
