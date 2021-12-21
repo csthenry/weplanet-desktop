@@ -1,3 +1,11 @@
+/***************************************************/
+/*              Magic Light Assistant              */
+/* Copyright (c) 2017-2021 by bytecho.net          */
+/* Written by Henry                                */
+/* Function:                                       */
+/* Communication, activity, management and approval*/
+/***************************************************/
+
 #include "querymodel.h"
 #include <QtDebug>
 #include "service.h"
@@ -117,4 +125,30 @@ QSqlRelationalTableModel *queryModel::setActUserPage_relationalTableModel()
     if(relTableModel->lastError().isValid())
         return nullptr;
     return relTableModel;
+}
+
+void queryModel::analyseWorkTime(int &data_1, int &data_2, int &data_3, int &data_4)
+{
+    int cnt = 0;
+    QTime workTime(0, 0, 0, 0), beginTime, endTime;
+    QSqlRecord curRecord;
+    do{
+        curRecord = relTableModel->record(cnt);
+        if(!curRecord.value("begin_date").isNull() && !curRecord.value("end_date").isNull())
+        {
+            beginTime = QTime::fromString(curRecord.value("begin_date").toString(), "hh:mm:ss");
+            endTime = QTime::fromString(curRecord.value("end_date").toString(), "hh:mm:ss");
+            workTime = workTime.addSecs(beginTime.secsTo(endTime));
+            if(workTime.hour() < 4)
+                data_1++;
+            if(workTime.hour() >= 4 && workTime.hour() <= 6)
+                data_2++;
+            if(workTime.hour() >= 6 && workTime.hour() <= 8)
+                data_3++;
+            if(workTime.hour() > 8)
+                data_4++;
+            workTime.setHMS(0, 0, 0, 0);
+        }
+        cnt ++;
+    }while(!curRecord.value("begin_date").isNull());
 }

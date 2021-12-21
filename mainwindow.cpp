@@ -98,6 +98,25 @@ void MainWindow::setHomePageBaseInfo()
         statusIcon->setPixmap(*statusErrorIcon);
         connectStatusLable->setText("Database Status: " + query.lastError().text());
     }
+    //首页考勤信息初始化
+    curDateTime = QDateTime::currentDateTime();
+    ui->label_homePage_attendDate->setText(curDateTime.date().toString("yyyy年MM月dd日"));
+    query.exec("SELECT * FROM magic_attendance WHERE a_uid='" + uid + "' AND today='" + curDateTime.date().toString("yyyy-MM-dd") + "';");
+    if(query.next())
+    {
+        ui->label_homePage_attendStatus->setText("已签到");
+        ui->label_homePage_beginTime->setText(query.value("begin_date").toString());
+        if(query.value("end_date").isNull())
+            ui->label_homePage_endTime->setText("--");
+        else
+            ui->label_homePage_endTime->setText(query.value("end_date").toString());
+    }
+    else
+    {
+        ui->label_homePage_attendStatus->setText("未签到");
+        ui->label_homePage_beginTime->setText("--");
+        ui->label_homePage_endTime->setText("--");
+    }
     db.close();
 }
 
@@ -175,6 +194,7 @@ void MainWindow::on_actExit_triggered()
 void MainWindow::on_actHome_triggered()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    setHomePageBaseInfo();  //刷新首页数据
 }
 
 void MainWindow::on_actMyInfo_triggered()
@@ -184,6 +204,7 @@ void MainWindow::on_actMyInfo_triggered()
 
 void MainWindow::on_actAttend_triggered()
 {
+    int data_1 = 0, data_2 = 0, data_3 = 0, data_4 = 0; //工作时间分析数据
     curDateTime = QDateTime::currentDateTime();
     ui->stackedWidget->setCurrentIndex(2);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -197,6 +218,7 @@ void MainWindow::on_actAttend_triggered()
         queryModel relTableModel(db, this);
         attendPageModel = relTableModel.setActAttendPage_relationalTableModel();
         attendPageModel->setFilter("a_uid='" + uid +"'");     //只显示当前用户的考勤数据
+        relTableModel.analyseWorkTime(data_1, data_2, data_3, data_4);  //分析工作时间
         ui->tableView_attendPage->setModel(attendPageModel);
         ui->tableView_attendPage->hideColumn(attendPageModel->fieldIndex("num"));   //隐藏考勤数据编号
         ui->tableView_attendPage->setEditTriggers(QAbstractItemView::NoEditTriggers); //不可编辑
@@ -220,9 +242,15 @@ void MainWindow::on_actAttend_triggered()
             ui->label_attendPage_endTime->setText("--");
         }
     }
-
+    service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), data_1, data_2, data_3, data_4);  //绘制统计图
 }
-
+void MainWindow::on_PieSliceHighlight(bool show)
+{ //鼠标移入、移出时触发hovered()信号，动态设置setExploded()效果
+    QPieSlice *slice;
+    slice = (QPieSlice *)sender();
+//    slice->setLabelVisible(show);
+    slice->setExploded(show);
+}
 void MainWindow::on_actApply_triggered()
 {
     ui->stackedWidget->setCurrentIndex(3);

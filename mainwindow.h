@@ -1,3 +1,11 @@
+/***************************************************/
+/*              Magic Light Assistant              */
+/* Copyright (c) 2017-2021 by bytecho.net          */
+/* Written by Henry                                */
+/* Function:                                       */
+/* Communication, activity, management and approval*/
+/***************************************************/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -12,6 +20,8 @@
 #include "querymodel.h"
 #include "comboboxdelegate.h"
 #include "excelexport.h"
+
+QT_CHARTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -152,6 +162,8 @@ private slots:
     void on_btn_beginAttend_clicked();
 
     void on_btn_endAttend_clicked();
+
+    void on_PieSliceHighlight(bool show);
 
 private:
     Ui::MainWindow *ui;

@@ -1,3 +1,11 @@
+/***************************************************/
+/*              Magic Light Assistant              */
+/* Copyright (c) 2017-2021 by bytecho.net          */
+/* Written by Henry                                */
+/* Function:                                       */
+/* Communication, activity, management and approval*/
+/***************************************************/
+
 #ifndef QUERYMODEL_H
 #define QUERYMODEL_H
 
@@ -6,6 +14,7 @@
 #include <QSqlTableModel>
 #include <QSqlRelationalTableModel>
 #include <QSqlError>
+#include <QTime>
 #include <QSql>
 
 class queryModel
@@ -17,6 +26,7 @@ public:
     QSqlTableModel* setActGroupPage_groupModel();
     QSqlRelationalTableModel* setActAttendPage_relationalTableModel();
     QSqlRelationalTableModel *setActUserPage_relationalTableModel();
+    void analyseWorkTime(int& data_1, int& data_2, int& data_3, int& data_4);
 private:
     QString uid;
     QObject* parent;    //主窗口
