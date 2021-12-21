@@ -1,8 +1,8 @@
 ﻿#ifndef COMBOBOXDELEGATE_H
 #define COMBOBOXDELEGATE_H
 
-#include    <QStyledItemDelegate>
-#include    <QComboBox>
+#include <QStyledItemDelegate>
+#include <QComboBox>
 
 class ComboBoxDelegate : public QStyledItemDelegate
 {
@@ -17,14 +17,13 @@ public:
 
     void setItems(QStringList items, bool isEdit);//初始化设置列表内容，是否可编辑
     //自定义代理组件必须继承以下4个函数
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                          const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     void setEditorData(QWidget *editor, const QModelIndex &index) const Q_DECL_OVERRIDE;
-    void setModelData(QWidget *editor, QAbstractItemModel *model,
-                      const QModelIndex &index) const Q_DECL_OVERRIDE;
-    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
-                              const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+    void setModelData(QWidget *editor, QAbstractItemModel *model,const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 #endif // QWCOMBOBOXDELEGATE_H

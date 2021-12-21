@@ -41,8 +41,7 @@ void ComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, 
     model->setData(index, str, Qt::EditRole);
 }
 
-void ComboBoxDelegate::updateEditorGeometry(QWidget *editor,
-                const QStyleOptionViewItem &option, const QModelIndex &index) const
+void ComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(index);
     editor->setGeometry(option.rect);

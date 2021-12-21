@@ -1,5 +1,6 @@
 QT       += core gui
 QT       += sql
+QT       += charts
 QT       += network
 QT       += axcontainer
 
@@ -42,7 +43,7 @@ FORMS += \
 RC_ICONS = mainWindow_favicon_x32.ico
 
 #info
-VERSION = 0.0.2
+VERSION = 0.0.3
 
 QMAKE_TARGET_DESCRIPTION = Magic Light Assistant
 
