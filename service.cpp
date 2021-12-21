@@ -1,3 +1,11 @@
+/***************************************************/
+/*              Magic Light Assistant              */
+/* Copyright (c) 2017-2021 by bytecho.net          */
+/* Written by Henry                                */
+/* Function:                                       */
+/* Communication, activity, management and approval*/
+/***************************************************/
+
 #include "service.h"
 #include <QDebug>
 
@@ -261,4 +269,44 @@ QString service::getDepartment(const QString& uid)
         return "--";
     return query.value("dpt_name").toString();
 }
+
+void service::buildAttendChart(QChartView *chartView_attend, const QWidget *parent, const QFont &font, int data_1, int data_2, int data_3, int data_4)
+{
+    //绘制工作时间饼图
+    QChart *attendChart = new QChart;
+    attendChart->setTitle("工作时长统计（每天建议工作7小时左右哦）");
+    attendChart->setAnimationOptions(QChart::SeriesAnimations);
+    chartView_attend->setChart(attendChart);
+    chartView_attend->setRenderHint(QPainter::Antialiasing);
+    QPieSeries *series = new QPieSeries(); //创建饼图序列
+    series->setHoleSize(0.1);   //饼图空心大小
+    //添加分块数据 6- 6-8 8-10 10+
+    series->append("4h以下", data_1); //添加一个饼图分块数据,标签，数值
+    series->append("4~6h", data_2);
+    series->append("6~8h", data_3);
+    series->append("8h以上", data_4);
+    QPieSlice *slice; //饼图分块
+
+    //设置每个分块的标签文字
+    for(int i = 0; i < 4; i++)
+    {
+        slice = series->slices().at(i);  //获取分块
+        slice->setLabel(slice->label() + QString::asprintf(":%.0f次", slice->value()));    //设置分块的标签
+        //信号与槽函数关联，鼠标落在某个分块上时，此分块弹出
+        slice->setLabelFont(font);
+        slice->setLabelVisible(true);
+        if(slice->value() < 1)
+            slice->setLabelVisible(false);  //过小就不显示label
+        parent->connect(slice, SIGNAL(hovered(bool)), parent, SLOT(on_PieSliceHighlight(bool)));
+    }
+    //series->setLabelsVisible(true); //只影响当前的slices，必须添加完slice之后再设置
+    attendChart->addSeries(series); //添加饼图序列
+
+    attendChart->legend()->setFont(font);
+    attendChart->setTitleFont(font);
+    attendChart->legend()->setVisible(true); //图例
+    attendChart->legend()->setAlignment(Qt::AlignBottom);
+}
+
+
 
