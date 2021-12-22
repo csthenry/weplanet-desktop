@@ -47,7 +47,7 @@ QSqlTableModel *queryModel::setActGroupPage_groupModel()
     tabModel->setHeaderData(tabModel->fieldIndex("attend_manage"), Qt::Horizontal,"考勤管理权");
     tabModel->setHeaderData(tabModel->fieldIndex("apply_manage"), Qt::Horizontal,"审批权限");
     tabModel->setHeaderData(tabModel->fieldIndex("applyItem_manage"), Qt::Horizontal,"审批流程管理权");
-    tabModel->setHeaderData(tabModel->fieldIndex("group_manage"), Qt::Horizontal,"团体架构管理权");
+    tabModel->setHeaderData(tabModel->fieldIndex("group_manage"), Qt::Horizontal,"组织架构管理权");
     tabModel->setHeaderData(tabModel->fieldIndex("activity_manage"), Qt::Horizontal,"活动管理权");
     tabModel->setHeaderData(tabModel->fieldIndex("send_message"), Qt::Horizontal,"信息收发权限");
     if(!tabModel->select())

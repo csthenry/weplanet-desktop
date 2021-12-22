@@ -38,6 +38,8 @@ private:
 
     QDateTime curDateTime;
 
+    QVector<QAction*> actionList;
+
     QSqlDatabase db;
 
     QStringList comboxList;

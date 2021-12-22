@@ -217,6 +217,90 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
     }
 }
 
+bool service::setAuthority(QString &uid, QVector<QAction*>& vector)
+{
+    QSqlQuery query;
+    QString groupId;
+    query.exec("SELECT user_group FROM magic_users WHERE uid='" + uid + "';");
+    query.next();
+    groupId = query.value(0).toString();
+    query.exec("SELECT * FROM magic_group WHERE group_id='" + groupId + "';");
+    if(query.next())
+    {
+        if(query.value("send_message").toString() == '0')
+        {
+            vector[0]->setEnabled(false);
+            vector[0]->setVisible(false);
+        }
+        else{
+            vector[0]->setEnabled(true);
+            vector[0]->setVisible(true);
+        }
+        if(query.value("users_manage").toString() == '0')
+        {
+            vector[1]->setEnabled(false);
+            vector[1]->setVisible(false);
+
+        }
+        else{
+            vector[1]->setEnabled(true);
+            vector[1]->setVisible(true);
+        }
+        if(query.value("attend_manage").toString() == '0')
+        {
+            vector[2]->setEnabled(false);
+            vector[2]->setVisible(false);
+
+        }
+        else{
+            vector[2]->setEnabled(true);
+            vector[2]->setVisible(true);
+        }
+        if(query.value("activity_manage").toString() == '0')
+        {
+            vector[3]->setEnabled(false);
+            vector[3]->setVisible(false);
+
+        }
+        else{
+            vector[3]->setEnabled(true);
+            vector[3]->setVisible(true);
+        }
+        if(query.value("apply_manage").toString() == '0')
+        {
+            vector[4]->setEnabled(false);
+            vector[4]->setVisible(false);
+
+        }
+        else{
+            vector[4]->setEnabled(true);
+            vector[4]->setVisible(true);
+        }
+        if(query.value("applyItem_manage").toString() == '0')
+        {
+            vector[5]->setEnabled(false);
+            vector[5]->setVisible(false);
+
+        }
+        else{
+            vector[5]->setEnabled(true);
+            vector[5]->setVisible(true);
+        }
+        if(query.value("group_manage").toString() == '0')
+        {
+            vector[6]->setEnabled(false);
+            vector[6]->setVisible(false);
+
+        }
+        else{
+            vector[6]->setEnabled(true);
+            vector[6]->setVisible(true);
+        }
+    }else
+        return false;
+    return true;
+}
+
 QPixmap service::getAvatar(const QString& url)
 {
     QUrl picUrl(url);

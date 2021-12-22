@@ -26,6 +26,15 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->attendPage_avatar->setScaledContents(true);
     ui->info_avatar->setScaledContents(true);
 
+    //用户权限设置（共7个）
+    actionList.append(ui->actMessage);
+    actionList.append(ui->actUserManager);
+    actionList.append(ui->actAttendManager);
+    actionList.append(ui->actManage);
+    actionList.append(ui->actApplyList);
+    actionList.append(ui->actApplyItems);
+    actionList.append(ui->actGroup);
+
     connectStatusLable = new QLabel("Database Status: connecting...");
     connectStatusLable->setMinimumWidth(1100);
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
@@ -51,6 +60,12 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
     this->uid = uid;
     ui->label_home_uid->setText(uid);
     ui->label_info_uid->setText(uid);
+    //权限检测
+    if(!service::setAuthority(uid, actionList))
+    {
+        QMessageBox::warning(this, "警告", "用户权限校验失败，程序即将关闭。", QMessageBox::Ok);
+        this->close();
+    }
     setHomePageBaseInfo();
 }
 
@@ -426,7 +441,6 @@ void MainWindow::on_actGroup_triggered()
         ui->tableView_department->setSelectionModel(groupPageSelection_department);
 
         ui->tableView_group->setRowHidden(0, true);
-        ui->tableView_group->setRowHidden(1, true);
 
         //权限设置combox
         comboxList.clear();
@@ -467,6 +481,8 @@ void MainWindow::on_groupPageGroupcurrentChanged(const QModelIndex &current, con
     ui->btn_editGroup_check->setEnabled(groupModel->isDirty());
 
     ui->btn_delGroup->setEnabled(current.isValid());
+    if(current.row() == 1)
+        ui->btn_delGroup->setEnabled(false);  //不能删除默认用户组
 }
 
 void MainWindow::on_userManagePagecurrentChanged(const QModelIndex &current, const QModelIndex &previous)

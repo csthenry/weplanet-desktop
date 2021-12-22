@@ -2950,7 +2950,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;超级管理员编号为1，普通用户编号为2。&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;均为系统内置用户组，&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#ff0000;&quot;&gt;不可见不可编辑&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;如需要指定不同用户的权限，请新增用户组。&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;对于用户权限，1为TRUE，0为FALSE。&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;对内容进行修改后，点击确认操作才会生效。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;超级管理员为系统内置用户组，&lt;/span&gt;&lt;span style=&quot; font-size:10pt; color:#ff0000;&quot;&gt;不可编辑&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;。&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;如需要指定不同用户的权限，请新增用户组。&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;对于用户权限，1为TRUE，0为FALSE。&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;对内容进行修改后，点击确认操作才会生效。&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
