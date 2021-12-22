@@ -41,7 +41,7 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
              << "考勤日期"
              << "是否补签"
              << "签到来源";
-    QSqlRecord curRecord; //获取记录
+    QSqlRecord curRecord = tableModel->record(0); //获取记录
     curDateTime = QDateTime::currentDateTime();
 
     //写入表头
@@ -55,7 +55,7 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
     switch (type)
     {
     case 1:
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; curRecord.value("num").isValid(); i++)
         {
             curRecord = tableModel->record(i - 1);
             for (int j = 1; curRecord.value(j).isValid(); j++)
@@ -66,7 +66,7 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
         }
         break;
     case 2:
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; curRecord.value("num").isValid(); i++)
         {
             curRecord = tableModel->record(i - 1);
             if (curRecord.value("today") != curDateTime.date().toString("yyyy-MM-dd"))
@@ -80,7 +80,7 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
         break;
     case 3:
         tableModel->setSort(tableModel->fieldIndex("a_uid"), Qt::DescendingOrder); //暂时按UID排列，避免出现空行
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; curRecord.value("num").isValid(); i++)
         {
             curRecord = tableModel->record(i - 1);
             if (curRecord.value("a_uid") != uid)

@@ -46,6 +46,7 @@ public:
 private:
 
     QSqlDatabase db;
+
     QString dataBaseType;
     QString hostName;
     int dataBasePort;
