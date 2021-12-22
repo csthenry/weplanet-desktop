@@ -26,10 +26,13 @@
 * [x] 注册，登录
 * [x] 个人信息管理
 * [x] 用户管理
+* [x] 公告系统
+* [x] 用户权限系统
 * [x] 组织架构管理
 * [x] 具有时效性的考勤系统
 * [x] 数据统计图表
-* [x] 数据可视化导出
+* [x] 数据分类导出
+* [x] 更新检测
 
 **进行中：**
 
@@ -45,7 +48,8 @@
 
 ![screenshot_2](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_2.jpg)
 ![screenshot_3](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_3.jpg)
-![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_6.png)
+![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_8.png)
+![screenshot_5](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_6.png)
 
 更多截图请查看：https://github.com/CSTHenry/MagicLightAssistant/tree/master/screenshot
 
