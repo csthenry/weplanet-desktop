@@ -1,6 +1,5 @@
 #include "readOnlyDelegate.h"
 
-
 readOnlyDelegate::readOnlyDelegate(QWidget *parent):QItemDelegate(parent)
 {
 

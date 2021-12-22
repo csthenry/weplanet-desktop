@@ -1,5 +1,5 @@
-#ifndef DELEGATE_H
-#define DELEGATE_H
+#ifndef READONLYDELEGATE_H
+#define READONLYDELEGATE_H
 #include <QItemDelegate>
 
 class readOnlyDelegate : public QItemDelegate
@@ -11,4 +11,4 @@ public:
 
 };
 
-#endif // DELEGATE_H
+#endif // READONLYDELEGATE_H
