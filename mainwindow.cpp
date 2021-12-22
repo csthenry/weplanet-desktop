@@ -581,7 +581,7 @@ void MainWindow::on_btn_addGroup_clicked()
 void MainWindow::on_btn_editGroup_check_clicked()
 {
     bool res = groupModel->submitAll();
-
+    QSqlQuery query;
     if (!res)
         QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + groupModel->lastError().text(),
                                  QMessageBox::Ok);
@@ -589,12 +589,18 @@ void MainWindow::on_btn_editGroup_check_clicked()
     {
         ui->btn_editGroup_check->setEnabled(false);
         ui->btn_editGroup_cancel->setEnabled(false);
+        if(!removedGroupId.isEmpty())
+        {
+            query.exec("UPDATE magic_users SET user_group='2' WHERE user_group='" + removedGroupId + "';");   //将已经删除的用户组恢复至默认普通用户
+            removedGroupId.clear();
+        }
     }
 }
 
 void MainWindow::on_btn_editGroup_cancel_clicked()
 {
     groupModel->revertAll();
+    removedGroupId.clear();
     ui->btn_editGroup_check->setEnabled(false);
     ui->btn_editGroup_cancel->setEnabled(false);
 }
@@ -613,19 +619,23 @@ void MainWindow::on_btn_addDpt_clicked()
 void MainWindow::on_btn_delDpt_clicked()
 {
     QModelIndex curIndex = groupPageSelection_department->currentIndex();//获取当前选择单元格的模型索引
+    QSqlRecord curRecord = departmentModel->record(curIndex.row());
+    removedDptId = curRecord.value("dpt_id").toString();    //记录已经删除的部门id
     departmentModel->removeRow(curIndex.row()); //删除
 }
 
 void MainWindow::on_btn_delGroup_clicked()
 {
     QModelIndex curIndex = groupPageSelection_group->currentIndex();//获取当前选择单元格的模型索引
+    QSqlRecord curRecord = groupModel->record(curIndex.row());
+    removedGroupId = curRecord.value("group_id").toString();    //记录已经删除的用户组id
     groupModel->removeRow(curIndex.row()); //删除
 }
 
 void MainWindow::on_btn_editDpt_check_clicked()
 {
     bool res = departmentModel->submitAll();
-
+    QSqlQuery query;
     if (!res)
         QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + departmentModel->lastError().text(),
                                  QMessageBox::Ok);
@@ -633,12 +643,18 @@ void MainWindow::on_btn_editDpt_check_clicked()
     {
         ui->btn_editDpt_check->setEnabled(false);
         ui->btn_editDpt_cancel->setEnabled(false);
+        if(!removedDptId.isEmpty())
+        {
+            query.exec("UPDATE magic_users SET user_dpt='1' WHERE user_dpt='" + removedDptId + "';");   //将已经删除的部门恢复至默认部门
+            removedDptId.clear();
+        }
     }
 }
 
 void MainWindow::on_btn_editDpt_cancel_clicked()
 {
     departmentModel->revertAll();
+    removedDptId.clear();
     ui->btn_editDpt_check->setEnabled(false);
     ui->btn_editDpt_cancel->setEnabled(false);
 }

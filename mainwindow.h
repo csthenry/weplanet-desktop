@@ -33,7 +33,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
-    QString uid;
+
+    QString uid, removedGroupId, removedDptId;
 
     QDateTime curDateTime;
 
