@@ -200,7 +200,6 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
     {
         uid = QString::number(account);
         qDebug() << uid << "登录方式：账号登录";
-        db.close();
         return true;
     }
     else
@@ -212,10 +211,8 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
             {
                 uid = query.value("uid").toString();
                 qDebug() << uid << "登录方式：手机号登录";
-                db.close();
                 return true;
             }
-        db.close();
         return false;
     }
 }

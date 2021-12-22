@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->label_verifyIcon->setScaledContents(true);
     ui->attendManagePage_avatar->setScaledContents(true);
     ui->attendPage_avatar->setScaledContents(true);
+    ui->info_avatar->setScaledContents(true);
 
     connectStatusLable = new QLabel("Database Status: connecting...");
     connectStatusLable->setMinimumWidth(1100);
@@ -49,6 +50,7 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
     this->db = db;
     this->uid = uid;
     ui->label_home_uid->setText(uid);
+    ui->label_info_uid->setText(uid);
     setHomePageBaseInfo();
 }
 
@@ -69,15 +71,35 @@ void MainWindow::setHomePageBaseInfo()
     if(query.next())
     {
         ui->label_home_name->setText(query.value("name").toString());
+        ui->label_info_name->setText(query.value("name").toString());
         ui->label_home_gender->setText(query.value("gender").toString());
-        if(ui->label_home_gender->text().isEmpty()) ui->label_home_gender->setText("--");   //将可能为空的数据设置值
+        ui->label_info_gender->setText(query.value("gender").toString());
+        if(ui->label_home_gender->text().isEmpty())
+        {
+            ui->label_home_gender->setText("--");   //将可能为空的数据设置值
+            ui->label_info_gender->setText("--");
+        }
         ui->label_home_tel->setText(query.value("telephone").toString());
-        if(ui->label_home_tel->text().isEmpty()) ui->label_home_tel->setText("--");
+        ui->label_info_tel->setText(query.value("telephone").toString());
+        if(ui->label_home_tel->text().isEmpty())
+        {
+            ui->label_home_tel->setText("--");
+            ui->label_info_tel->setText("--");
+        }
         ui->label_home_mail->setText(query.value("mail").toString());
-        if(ui->label_home_mail->text().isEmpty()) ui->label_home_mail->setText("--");
+        ui->label_info_mail->setText(query.value("mail").toString());
+        if(ui->label_home_mail->text().isEmpty())
+        {
+            ui->label_home_mail->setText("--");
+            ui->label_info_mail->setText("--");
+        }
         ui->avatar->setPixmap(service::setAvatarStyle(service::getAvatar(query.value("user_avatar").toString())));
+        ui->info_avatar->setPixmap(*ui->avatar->pixmap());
         ui->label_home_group->setText(service::getGroup(uid));
+        ui->label_info_group->setText(service::getGroup(uid));
         ui->label_home_department->setText(service::getDepartment(uid));
+        ui->label_info_department->setText(service::getDepartment(uid));
+
         ui->label_verifyIcon->setPixmap(*verifyIcon);
 
         //同时把考勤页面的数据也初始化
@@ -194,6 +216,10 @@ void MainWindow::on_actHome_triggered()
 void MainWindow::on_actMyInfo_triggered()
 {
     ui->stackedWidget->setCurrentIndex(1);
+    QRegExp regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
+    QValidator *validator_pwd= new QRegExpValidator(regx_pwd);
+    ui->lineEdit_personalPwd->setValidator(validator_pwd);
+    ui->lineEdit_editPwdCheck->setValidator(validator_pwd);
 }
 
 void MainWindow::on_actAttend_triggered()
@@ -870,4 +896,79 @@ void MainWindow::on_btn_endAttend_clicked()
             QMessageBox::warning(this, "消息", "数据更新失败，签退失败。", QMessageBox::Ok);
     }
 
+}
+
+void MainWindow::on_btn_personalSubmit_clicked()
+{
+    if(!db.isOpen() && !db.open())
+    {
+        statusIcon->setPixmap(*statusErrorIcon);
+        connectStatusLable->setText("Database Status: " + db.lastError().text());
+        return;
+    }
+    QString newPwd, newTel, newMail, newAvatar;
+    QSqlQuery query;
+    if(ui->lineEdit_checkOldPwd->text().isEmpty())
+    {
+        QMessageBox::warning(this, "消息", "请先验证原密码再提交修改。", QMessageBox::Ok);
+        return;
+    }
+    if(!ui->lineEdit_personalPwd->text().isEmpty())
+        newPwd = ui->lineEdit_personalPwd->text();
+    if(!ui->lineEdit_personalTel->text().isEmpty())
+        newTel = ui->lineEdit_personalTel->text();
+    if(!ui->lineEdit_personalMail->text().isEmpty())
+        newMail = ui->lineEdit_personalMail->text();
+    if(!ui->lineEdit_personalAvatar->text().isEmpty())
+        newAvatar = ui->lineEdit_personalAvatar->text();
+    if(service::authAccount(db, uid, uid.toLongLong(), service::pwdEncrypt(ui->lineEdit_checkOldPwd->text())))
+    {
+        if(!newTel.isEmpty())
+            query.exec("UPDATE magic_users SET telephone='" + newTel +"' WHERE uid='" + uid +"';");
+        if(!newMail.isEmpty())
+            query.exec("UPDATE magic_users SET mail='" + newMail +"' WHERE uid='" + uid +"';");
+        if(!newAvatar.isEmpty())
+            query.exec("UPDATE magic_users SET user_avatar='" + newAvatar +"' WHERE uid='" + uid +"';");
+        if(newPwd != ui->lineEdit_personalPwdCheck->text())
+        {
+            QMessageBox::warning(this, "警告", "两次密码输入不一致。", QMessageBox::Ok);
+            return;
+        }
+        if(!newPwd.isEmpty() && newPwd == ui->lineEdit_personalPwdCheck->text())
+        {
+            if(newPwd.length() < 6)
+            {
+                QMessageBox::warning(this, "警告", "请输入6~16位的密码以确保安全。", QMessageBox::Ok);
+                return;
+            }
+            else
+            {
+                query.exec("UPDATE magic_users SET password='" + service::pwdEncrypt(newPwd) +"' WHERE uid='" + uid +"';");
+                QMessageBox::warning(this, "消息", "由于你的（UID:" + uid + "）密码已经修改，账号即将注销，请重新登录。", QMessageBox::Ok);
+                on_btn_personalClear_clicked();
+                on_actExit_triggered();     //调用注销函数
+                return;
+            }
+        }
+        QMessageBox::warning(this, "消息", "你的个人信息（UID:" + uid + "）已经成功修改。", QMessageBox::Ok);
+        on_btn_personalClear_clicked();
+        setHomePageBaseInfo();      //刷新个人信息
+    }
+    else
+    {
+        QMessageBox::warning(this, "消息", "验证原密码验证失败，请检查原密码是否填写正确。", QMessageBox::Ok);
+        return;
+    }
+    on_btn_personalClear_clicked();
+    db.close();
+}
+
+void MainWindow::on_btn_personalClear_clicked()
+{
+    ui->lineEdit_personalPwd->clear();
+    ui->lineEdit_personalPwdCheck->clear();
+    ui->lineEdit_personalTel->clear();
+    ui->lineEdit_checkOldPwd->clear();
+    ui->lineEdit_personalMail->clear();
+    ui->lineEdit_personalAvatar->clear();
 }

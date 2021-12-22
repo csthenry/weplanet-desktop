@@ -168,6 +168,10 @@ private slots:
 
     void on_PieSliceHighlight(bool show);
 
+    void on_btn_personalSubmit_clicked();
+
+    void on_btn_personalClear_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
