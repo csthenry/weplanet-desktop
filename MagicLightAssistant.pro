@@ -26,6 +26,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     querymodel.cpp \
+    readOnlyDelegate.cpp \
     service.cpp
 
 HEADERS += \
@@ -34,6 +35,7 @@ HEADERS += \
     formlogin.h \
     mainwindow.h \
     querymodel.h \
+    readOnlyDelegate.h \
     service.h
 
 FORMS += \

@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -2448,10 +2448,10 @@
      <normaloff>:/images/color_icon/color-new_message.svg</normaloff>:/images/color_icon/color-new_message.svg</iconset>
    </property>
    <property name="text">
-    <string>信息</string>
+    <string>消息</string>
    </property>
    <property name="toolTip">
-    <string>信息</string>
+    <string>消息</string>
    </property>
   </action>
   <action name="actManage">
