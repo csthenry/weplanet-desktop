@@ -20,6 +20,7 @@
 #include "querymodel.h"
 #include "comboboxdelegate.h"
 #include "excelexport.h"
+#include "readOnlyDelegate.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -53,6 +54,8 @@ private:
     QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon;
 
     formLogin *formLoginWindow;
+
+    readOnlyDelegate *readOnlyDelegate;
 
     ComboBoxDelegate comboxDelegateAuthority, comboxDelegateGender, comboxDelegateUserGroup, comboxDelegateUserDpt, comboxDelegateUserVerify;   //自定义数据代理
 

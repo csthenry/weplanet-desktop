@@ -35,11 +35,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->statusbar->addWidget(connectStatusLable);
     ui->stackedWidget->setCurrentIndex(0);  //转到首页
     connect(formLoginWindow, SIGNAL(sendData(QSqlDatabase, QString)), this, SLOT(receiveData(QSqlDatabase, QString)));    //接收登录窗口的信号
+    readOnlyDelegate = new class readOnlyDelegate(this);    //用于tableView只读
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete readOnlyDelegate;
 }
 
 void MainWindow::receiveData(QSqlDatabase db, QString uid)
@@ -256,6 +258,8 @@ void MainWindow::on_actUserManager_triggered()
     ui->stackedWidget->setCurrentIndex(4);
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_userManage->setItemDelegateForColumn(0, readOnlyDelegate);    //UID不可编辑
+
     if(!db.isOpen() && !db.open())
     {
         statusIcon->setPixmap(*statusErrorIcon);
@@ -298,7 +302,8 @@ void MainWindow::on_actAttendManager_triggered()
     ui->stackedWidget->setCurrentIndex(5);
     ui->tableView_attendUsers->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_attendUsers->setSelectionMode(QAbstractItemView::SingleSelection);
-
+    ui->tableView_attendInfo->setItemDelegateForColumn(1, readOnlyDelegate);     //第一列不可编辑，因为隐藏了第一列，所以列号是1不是0
+    ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
     ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     if(!db.isOpen() && !db.open())
@@ -315,7 +320,6 @@ void MainWindow::on_actAttendManager_triggered()
         //用户列表
         userManageModel = relTableModel.setActUserPage_relationalTableModel();
         ui->tableView_attendUsers->setModel(userManageModel);
-        ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
         ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("password"));  //隐藏无关列
         ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("user_avatar"));
         ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("gender"));
@@ -362,6 +366,9 @@ void MainWindow::on_actGroup_triggered()
     ui->tableView_department->setAlternatingRowColors(true);
     //ui->tableView->resizeColumnsToContents();
     //ui->tableView->horizontalHeader()->setStretchLastSection(true);
+
+    ui->tableView_department->setItemDelegateForColumn(0, readOnlyDelegate);    //第一列不可编辑
+    ui->tableView_group->setItemDelegateForColumn(0, readOnlyDelegate);
 
     if(!db.isOpen() && !db.open())
     {
@@ -418,11 +425,12 @@ void MainWindow::on_actMore_triggered()
 void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     Q_UNUSED(previous);
-    Q_UNUSED(current);
     ui->btn_editDpt_cancel->setEnabled(departmentModel->isDirty());
     ui->btn_editDpt_check->setEnabled(departmentModel->isDirty());
 
     ui->btn_delDpt->setEnabled(current.isValid());
+    if(current.row() == 0)
+        ui->btn_delDpt->setEnabled(false);  //不能删除默认部门
 }
 
 void MainWindow::on_groupPageGroupcurrentChanged(const QModelIndex &current, const QModelIndex &previous)
