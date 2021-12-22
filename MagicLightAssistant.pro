@@ -20,6 +20,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    checkupdate.cpp \
     comboboxdelegate.cpp \
     excelexport.cpp \
     formlogin.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
     service.cpp
 
 HEADERS += \
+    checkupdate.h \
     comboboxdelegate.h \
     excelexport.h \
     formlogin.h \
@@ -45,7 +47,7 @@ FORMS += \
 RC_ICONS = mainWindow_favicon_x32.ico
 
 #info
-VERSION = 0.0.3
+VERSION = 0.0.4
 
 QMAKE_TARGET_DESCRIPTION = Magic Light Assistant
 

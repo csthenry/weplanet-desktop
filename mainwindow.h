@@ -21,6 +21,7 @@
 #include "comboboxdelegate.h"
 #include "excelexport.h"
 #include "readOnlyDelegate.h"
+#include "checkupdate.h"
 
 QT_CHARTS_USE_NAMESPACE
 

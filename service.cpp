@@ -306,7 +306,7 @@ QPixmap service::getAvatar(const QString& url)
     QUrl picUrl(url);
     QNetworkAccessManager manager;
     QEventLoop loop;
-    QNetworkReply *reply = manager.get(QNetworkRequest(url));
+    QNetworkReply *reply = manager.get(QNetworkRequest(picUrl));
     //请求结束并下载完成后，退出子事件循环
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     //开启子事件循环

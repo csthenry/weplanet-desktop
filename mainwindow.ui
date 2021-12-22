@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>8</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -654,6 +654,11 @@
              <height>0</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="title">
             <string>当前活动</string>
            </property>
@@ -684,12 +689,24 @@
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_33">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>公告栏</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_61">
            <item row="0" column="0">
-            <widget class="QLabel" name="label_57">
+            <widget class="QLabel" name="notice">
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>11</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -711,6 +728,12 @@
             <width>350</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
           </property>
           <property name="title">
            <string>个人详情</string>
@@ -861,7 +884,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>手  机  号：</string>
+                <string>手       机：</string>
                </property>
               </widget>
              </item>
@@ -1084,7 +1107,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>性        别：</string>
+                <string>性       别：</string>
                </property>
               </widget>
              </item>
@@ -1127,6 +1150,12 @@
         </item>
         <item row="1" column="1">
          <widget class="QGroupBox" name="groupBox_4">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>个人信息编辑（仅填写需要修改的部分）</string>
           </property>
@@ -1467,6 +1496,12 @@ padding: 0px 5px;</string>
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QGroupBox" name="groupBox_21">
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="title">
             <string>今日考勤</string>
            </property>
@@ -1707,6 +1742,7 @@ padding: 0px 5px;</string>
               <property name="font">
                <font>
                 <family>微软雅黑</family>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -1766,6 +1802,12 @@ padding: 0px 5px;</string>
              <height>0</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="title">
             <string>历史考勤信息</string>
            </property>
@@ -1789,6 +1831,12 @@ padding: 0px 5px;</string>
             <height>16777215</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>申请项</string>
           </property>
@@ -1796,6 +1844,12 @@ padding: 0px 5px;</string>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_7">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>申请栏</string>
           </property>
@@ -1803,6 +1857,12 @@ padding: 0px 5px;</string>
         </item>
         <item row="1" column="1">
          <widget class="QGroupBox" name="groupBox_22">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>申请记录和状态</string>
           </property>
@@ -1820,9 +1880,15 @@ padding: 0px 5px;</string>
           <widget class="QGroupBox" name="groupBox_8">
            <property name="minimumSize">
             <size>
-             <width>790</width>
+             <width>780</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>10</pointsize>
+            </font>
            </property>
            <property name="title">
             <string>用户列表</string>
@@ -1838,6 +1904,12 @@ padding: 0px 5px;</string>
                 <width>0</width>
                 <height>130</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
               </property>
               <property name="title">
                <string>数据搜索</string>
@@ -1914,6 +1986,12 @@ padding: 0px 5px;</string>
             </item>
             <item row="1" column="1">
              <widget class="QGroupBox" name="groupBox_29">
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
               <property name="title">
                <string>数据过滤</string>
               </property>
@@ -2019,9 +2097,15 @@ padding: 0px 5px;</string>
           <widget class="QGroupBox" name="groupBox_9">
            <property name="minimumSize">
             <size>
-             <width>300</width>
+             <width>310</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>10</pointsize>
+            </font>
            </property>
            <property name="title">
             <string>编辑用户信息</string>
@@ -2044,7 +2128,7 @@ padding: 0px 5px;</string>
              <widget class="QLabel" name="label_20">
               <property name="maximumSize">
                <size>
-                <width>35</width>
+                <width>40</width>
                 <height>35</height>
                </size>
               </property>
@@ -2070,7 +2154,7 @@ padding: 0px 5px;</string>
              <widget class="QLabel" name="label_9">
               <property name="maximumSize">
                <size>
-                <width>35</width>
+                <width>40</width>
                 <height>35</height>
                </size>
               </property>
@@ -2288,7 +2372,7 @@ padding: 0px 5px;</string>
              <widget class="QLabel" name="label_6">
               <property name="maximumSize">
                <size>
-                <width>35</width>
+                <width>40</width>
                 <height>35</height>
                </size>
               </property>
@@ -2329,7 +2413,7 @@ padding: 0px 5px;</string>
              <widget class="QLabel" name="label_14">
               <property name="maximumSize">
                <size>
-                <width>35</width>
+                <width>40</width>
                 <height>35</height>
                </size>
               </property>
@@ -2361,6 +2445,12 @@ padding: 0px 5px;</string>
        <layout class="QGridLayout" name="gridLayout_36">
         <item row="0" column="0" rowspan="2">
          <widget class="QGroupBox" name="groupBox_10">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>用户列表</string>
           </property>
@@ -2370,6 +2460,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="1" column="0">
             <widget class="QGroupBox" name="groupBox_30">
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="title">
               <string>用户筛选</string>
              </property>
@@ -2478,6 +2574,12 @@ padding: 0px 5px;</string>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_11">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>考勤详情</string>
           </property>
@@ -2490,12 +2592,24 @@ padding: 0px 5px;</string>
         </item>
         <item row="1" column="1">
          <widget class="QGroupBox" name="groupBox_12">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>考勤管理</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_35">
            <item row="4" column="3" rowspan="2">
             <widget class="QLabel" name="label_26">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>35</width>
@@ -2579,6 +2693,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="2" column="3" rowspan="2">
             <widget class="QLabel" name="label_25">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>35</width>
@@ -2660,6 +2780,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="0" column="3" rowspan="2">
             <widget class="QLabel" name="label_24">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>35</width>
@@ -2673,6 +2799,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="0" column="1">
             <widget class="QLabel" name="label_15">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>35</width>
@@ -2686,6 +2818,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="1" column="1" rowspan="2">
             <widget class="QLabel" name="label_22">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>35</width>
@@ -2699,6 +2837,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="6" column="0" rowspan="2" colspan="3">
             <widget class="QGroupBox" name="groupBox_31">
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="title">
               <string>数据导出</string>
              </property>
@@ -2758,6 +2902,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="3" column="1" rowspan="2">
             <widget class="QLabel" name="label_16">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>35</width>
@@ -2771,6 +2921,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="5" column="1">
             <widget class="QLabel" name="label_23">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>35</width>
@@ -2791,6 +2947,11 @@ padding: 0px 5px;</string>
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_13">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>审批队列</string>
           </property>
@@ -2798,6 +2959,11 @@ padding: 0px 5px;</string>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_14">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>审批处理</string>
           </property>
@@ -2809,6 +2975,12 @@ padding: 0px 5px;</string>
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_15">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>现有审批项</string>
           </property>
@@ -2816,6 +2988,12 @@ padding: 0px 5px;</string>
         </item>
         <item row="0" column="1" rowspan="2">
          <widget class="QGroupBox" name="groupBox_17">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>创建审批流程</string>
           </property>
@@ -2823,6 +3001,12 @@ padding: 0px 5px;</string>
         </item>
         <item row="1" column="0">
          <widget class="QGroupBox" name="groupBox_16">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>审批项管理</string>
           </property>
@@ -2834,6 +3018,12 @@ padding: 0px 5px;</string>
        <layout class="QGridLayout" name="gridLayout_26">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_18">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>组织架构管理</string>
           </property>
@@ -3063,6 +3253,12 @@ padding: 0px 5px;</string>
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_20">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>更多</string>
           </property>

@@ -46,6 +46,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->stackedWidget->setCurrentIndex(0);  //转到首页
     connect(formLoginWindow, SIGNAL(sendData(QSqlDatabase, QString)), this, SLOT(receiveData(QSqlDatabase, QString)));    //接收登录窗口的信号
     readOnlyDelegate = new class readOnlyDelegate(this);    //用于tableView只读
+
+    //检查更新
+    checkUpdate updateSoftWare;
+    updateSoftWare.parse_UpdateJson(ui->notice, this);
 }
 
 MainWindow::~MainWindow()
@@ -481,7 +485,7 @@ void MainWindow::on_groupPageGroupcurrentChanged(const QModelIndex &current, con
     ui->btn_editGroup_check->setEnabled(groupModel->isDirty());
 
     ui->btn_delGroup->setEnabled(current.isValid());
-    if(current.row() == 1)
+    if(current.row() == 1 || current.row() == 0)
         ui->btn_delGroup->setEnabled(false);  //不能删除默认用户组
 }
 
