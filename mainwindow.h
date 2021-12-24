@@ -176,6 +176,12 @@ private slots:
 
     void on_btn_personalClear_clicked();
 
+    void on_actMessage_triggered();
+
+    void on_action_triggered();
+
+    void on_actManage_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -245,7 +245,7 @@ void MainWindow::on_actAttend_triggered()
 {
     int data_1 = 0, data_2 = 0, data_3 = 0, data_4 = 0; //工作时间分析数据
     curDateTime = QDateTime::currentDateTime();
-    ui->stackedWidget->setCurrentIndex(2);
+    ui->stackedWidget->setCurrentIndex(4);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
     if(!db.isOpen() && !db.open())
     {
@@ -295,12 +295,12 @@ void MainWindow::on_PieSliceHighlight(bool show)
 }
 void MainWindow::on_actApply_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentIndex(5);
 }
 
 void MainWindow::on_actUserManager_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(4);
+    ui->stackedWidget->setCurrentIndex(6);
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_userManage->setItemDelegateForColumn(0, readOnlyDelegate);    //UID不可编辑
@@ -344,7 +344,7 @@ void MainWindow::on_actUserManager_triggered()
 
 void MainWindow::on_actAttendManager_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(5);
+    ui->stackedWidget->setCurrentIndex(7);
     ui->tableView_attendUsers->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_attendUsers->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_attendInfo->setItemDelegateForColumn(1, readOnlyDelegate);     //第一列不可编辑，因为隐藏了第一列，所以列号是1不是0
@@ -389,17 +389,17 @@ void MainWindow::on_actAttendManager_triggered()
 
 void MainWindow::on_actApplyList_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(6);
+    ui->stackedWidget->setCurrentIndex(9);
 }
 
 void MainWindow::on_actApplyItems_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(7);
+    ui->stackedWidget->setCurrentIndex(10);
 }
 
 void MainWindow::on_actGroup_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(8);
+    ui->stackedWidget->setCurrentIndex(11);
     bool isEditable = false;
 
     //tableView显示属性设置
@@ -463,7 +463,7 @@ void MainWindow::on_actGroup_triggered()
 
 void MainWindow::on_actMore_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(9);
+    ui->stackedWidget->setCurrentIndex(12);
 }
 
 void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous)
@@ -505,6 +505,8 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     ui->btn_editUser_check->setEnabled(userManageModel->isDirty());
     ui->btn_editUser_cancel->setEnabled(userManageModel->isDirty());
 
+    if(curRecord.value("uid") == "1")
+        ui->tableView_userManage->setItemDelegateForRow(current.row(), readOnlyDelegate);   //禁止编辑系统账号
     if(curRecord.value("uid") != "100000" && curRecord.value("uid") != "1" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
         ui->btn_delUser->setEnabled(current.isValid());
     else
@@ -861,7 +863,7 @@ void MainWindow::on_btn_attendManagePage_exp_clicked()
     if(expExcel.WriteExcel(filePath, attendManageModel, ui->label_attendManagePage_uid->text(), type))
         QMessageBox::information(this, "消息", "考勤数据已成功导出到：" + filePath, QMessageBox::Ok);
     else
-        QMessageBox::warning(this, "消息", "考勤数据导出失败，请检查文件路径", QMessageBox::Ok);
+        QMessageBox::warning(this, "消息", "考勤数据导出失败，请检查文件路径。", QMessageBox::Ok);
 }
 
 void MainWindow::on_btn_expAttend_clicked()
@@ -873,14 +875,14 @@ void MainWindow::on_btn_expAttend_clicked()
     if(expExcel.WriteExcel(filePath, attendPageModel, ui->label_attendPage_uid->text(), 1))     //因为已经按uid过滤，所以用type1即可
         QMessageBox::information(this, "消息", "考勤数据已成功导出到：" + filePath, QMessageBox::Ok);
     else
-        QMessageBox::warning(this, "消息", "考勤数据导出失败，请检查文件路径", QMessageBox::Ok);
+        QMessageBox::warning(this, "消息", "考勤数据导出失败，请检查文件路径。", QMessageBox::Ok);
 }
 
 void MainWindow::on_btn_beginAttend_clicked()
 {
     if(ui->label_attendPage_status->text() == "已签到")
     {
-        QMessageBox::warning(this, "消息", "今天已经在" + ui->label_attendPage_beginTime->text() + "签到过啦~请勿连续签到哦。", QMessageBox::Ok);
+        QMessageBox::warning(this, "消息", "今天已经在" + ui->label_attendPage_beginTime->text() + "签到过啦~请勿连续签到哦！", QMessageBox::Ok);
         return;
     }
     curDateTime = QDateTime::currentDateTime();
@@ -1007,4 +1009,19 @@ void MainWindow::on_btn_personalClear_clicked()
     ui->lineEdit_checkOldPwd->clear();
     ui->lineEdit_personalMail->clear();
     ui->lineEdit_personalAvatar->clear();
+}
+
+void MainWindow::on_actMessage_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_action_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_actManage_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(8);
 }

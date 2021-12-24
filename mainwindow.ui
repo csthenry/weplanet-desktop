@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -660,11 +660,11 @@
             </font>
            </property>
            <property name="title">
-            <string>当前活动</string>
+            <string>进行中的活动</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_20">
             <item row="0" column="0">
-             <widget class="QTableView" name="tableView_activity"/>
+             <widget class="QTableView" name="tableView_activityHome"/>
             </item>
            </layout>
           </widget>
@@ -1480,6 +1480,317 @@ padding: 0px 5px;</string>
              </property>
              <property name="text">
               <string>清空修改</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="messagePage">
+       <layout class="QGridLayout" name="gridLayout_45">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox_34">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>消息收发</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="activityPage">
+       <layout class="QGridLayout" name="gridLayout_46">
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox_35">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>活动</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_64">
+           <item row="0" column="0" colspan="3">
+            <widget class="QTableView" name="tableView_activity"/>
+           </item>
+           <item row="0" column="3" colspan="2">
+            <widget class="QGroupBox" name="groupBox_40">
+             <property name="title">
+              <string>活动详情</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_63">
+              <item row="0" column="0">
+               <layout class="QGridLayout" name="gridLayout_48">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_65">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>活动名称：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_actName">
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_44">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>发布者：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLabel" name="label_actAuthor">
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_57">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>报名时间：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_actJoin">
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_59">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>开始时间：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLabel" name="label_actBegin">
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="label_60">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>结束时间：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLabel" name="label_actEnd">
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>--</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_67">
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>活动说明：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_actInfo">
+                <property name="minimumSize">
+                 <size>
+                  <width>280</width>
+                  <height>220</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>--</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>527</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="label_38">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>活动筛选：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QComboBox" name="comboBox_activity">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="btn_actJoin">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>报名活动</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QPushButton" name="btn_actCancel">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>取消报名</string>
              </property>
             </widget>
            </item>
@@ -2935,6 +3246,258 @@ padding: 0px 5px;</string>
              </property>
              <property name="text">
               <string>部门：</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="actManagePage">
+       <layout class="QGridLayout" name="gridLayout_50">
+        <item row="0" column="0" rowspan="2">
+         <widget class="QGroupBox" name="groupBox_36">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>活动列表</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_62">
+           <item row="0" column="0">
+            <widget class="QTableView" name="tableView_actList"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QGroupBox" name="groupBox_37">
+             <property name="title">
+              <string>报名成员</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_51">
+              <item row="0" column="0">
+               <widget class="QTableView" name="tableView_actMember"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_38">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>发布活动</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_49">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_39">
+             <property name="text">
+              <string>活动名称：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="4">
+            <widget class="QLineEdit" name="lineEdit_actName">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border-radius: 17.4px;/*设置圆角的大小*/
+border: .5px solid rgb(207, 207, 207);
+padding: 0px 5px;</string>
+             </property>
+             <property name="echoMode">
+              <enum>QLineEdit::Normal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_40">
+             <property name="text">
+              <string>活动内容：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="4">
+            <widget class="QTextEdit" name="textEdit_activity">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QLabel" name="label_41">
+             <property name="text">
+              <string>报名时间：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QDateTimeEdit" name="dateTimeEdit_actJoin">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="date">
+              <date>
+               <year>2021</year>
+               <month>12</month>
+               <day>23</day>
+              </date>
+             </property>
+             <property name="displayFormat">
+              <string>yyyy-MM-dd H:mm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QLabel" name="label_42">
+             <property name="text">
+              <string>开始时间：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QDateTimeEdit" name="dateTimeEdit_actBegin">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="date">
+              <date>
+               <year>2021</year>
+               <month>12</month>
+               <day>23</day>
+              </date>
+             </property>
+             <property name="displayFormat">
+              <string>yyyy-MM-dd H:mm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QLabel" name="label_43">
+             <property name="text">
+              <string>结束时间：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="4">
+            <widget class="QDateTimeEdit" name="dateTimeEdit_actEnd">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="date">
+              <date>
+               <year>2021</year>
+               <month>12</month>
+               <day>23</day>
+              </date>
+             </property>
+             <property name="displayFormat">
+              <string>yyyy-MM-dd H:mm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="3">
+            <widget class="QPushButton" name="btn_actPush">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>发布活动</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3" colspan="2">
+            <widget class="QPushButton" name="btn_actClear">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="groupBox_39">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>活动管理</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_47">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="btn_actApprove">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>录取成员</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="btn_actReject">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>拒绝成员</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="btn_actDel">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>删除活动</string>
              </property>
             </widget>
            </item>
