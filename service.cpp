@@ -184,6 +184,31 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "(v_id, verify_name, icon)"
                   "VALUES (2, '机构认证', 1);";
         query.exec(creatTableStr);
+
+        //活动表
+        creatTableStr =
+                  "CREATE TABLE IF NOT EXISTS magic_activity"
+                  "(act_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+                  "act_name     varchar(32)  NOT NUll,"
+                  "act_des      text         NUll,"
+                  "joinDate     datetime     NOT NUll,"
+                  "beginDate    datetime     NOT NUll,"
+                  "endDate      datetime     NOT NUll,"
+                  "editUid      int(10)      NOT NUll,"
+                  "PRIMARY KEY (act_id)"
+                  ")ENGINE=InnoDB;";
+        query.exec(creatTableStr);
+
+        //活动成员表
+        creatTableStr =
+                  "CREATE TABLE IF NOT EXISTS magic_activityMembers"
+                  "(actm_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+                  "actm_uid      int(10)      NOT NUll,"
+                  "actm_joinDate datetime     NOT NUll,"
+                  "status        tinyint(1)   NOT NUll,"
+                  "PRIMARY KEY (actm_id)"
+                  ")ENGINE=InnoDB;";
+        query.exec(creatTableStr);
         //登录窗口可能注册，不能关闭数据库
         return true;
     }

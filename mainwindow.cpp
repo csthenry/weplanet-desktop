@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 {
     ui->setupUi(this);
 
-    statusIcon = new QLabel();     //用于显示状态图标的label
+    statusIcon = new QLabel(this);     //用于显示状态图标的label
     statusIcon->setMaximumSize(25, 25);
 
     statusIcon->setScaledContents(true);    //图片自适应大小
