@@ -420,6 +420,3 @@ void service::buildAttendChart(QChartView *chartView_attend, const QWidget *pare
     attendChart->legend()->setVisible(true); //图例
     attendChart->legend()->setAlignment(Qt::AlignBottom);
 }
-
-
-

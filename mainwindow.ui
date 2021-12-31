@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -2125,6 +2125,16 @@ padding: 0px 5px;</string>
                 <property name="text">
                  <string>导出历史考勤数据</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resource.qrc">
+                  <normaloff>:/images/color_icon/color-input.svg</normaloff>:/images/color_icon/color-input.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
                </widget>
               </item>
              </layout>
@@ -3218,6 +3228,16 @@ padding: 0px 5px;</string>
                 <property name="text">
                  <string>导出数据</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resource.qrc">
+                  <normaloff>:/images/color_icon/color-input.svg</normaloff>:/images/color_icon/color-input.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
                </widget>
               </item>
              </layout>
@@ -3997,7 +4017,7 @@ padding: 0px 5px;</string>
   <action name="actGroup">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-web.svg</normaloff>:/images/color_icon/color-web.svg</iconset>
+     <normaloff>:/images/color_icon/color-switch.svg</normaloff>:/images/color_icon/color-switch.svg</iconset>
    </property>
    <property name="text">
     <string>组织架构</string>
@@ -4033,7 +4053,7 @@ padding: 0px 5px;</string>
   <action name="actMessage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-new_message.svg</normaloff>:/images/color_icon/color-new_message.svg</iconset>
+     <normaloff>:/images/color_icon/color-reviews.svg</normaloff>:/images/color_icon/color-reviews.svg</iconset>
    </property>
    <property name="text">
     <string>消息</string>

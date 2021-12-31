@@ -55,6 +55,7 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
     switch (type)
     {
     case 1:
+        tableModel->setFilter("");
         for (int i = 1; curRecord.value("num").isValid(); i++)
         {
             curRecord = tableModel->record(i - 1);
@@ -64,8 +65,10 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
                 Range->dynamicCall("SetValue(const QString &)", curRecord.value(j).toString());
             }
         }
+        tableModel->setFilter("a_uid='" + uid +"'");
         break;
     case 2:
+        tableModel->setFilter("");
         for (int i = 1; curRecord.value("num").isValid(); i++)
         {
             curRecord = tableModel->record(i - 1);
@@ -77,6 +80,7 @@ bool ExcelExport::WriteExcel(const QString &filePath, QSqlTableModel *tableModel
                 Range->dynamicCall("SetValue(const QString &)", curRecord.value(j).toString());
             }
         }
+        tableModel->setFilter("a_uid='" + uid +"'");
         break;
     case 3:
         tableModel->setSort(tableModel->fieldIndex("a_uid"), Qt::DescendingOrder); //暂时按UID排列，避免出现空行
