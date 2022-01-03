@@ -58,6 +58,28 @@ QSqlTableModel *queryModel::setActGroupPage_groupModel()
     return tabModel;
 }
 
+QSqlTableModel *queryModel::setActivityPage()
+{
+    tabModel = new QSqlTableModel(parent, db);
+
+    tabModel->setTable("magic_activity");
+    tabModel->setSort(tabModel->fieldIndex("act_id"), Qt::AscendingOrder);
+    tabModel->setEditStrategy(QSqlTableModel::OnRowChange);     //自动提交
+    tabModel->setHeaderData(tabModel->fieldIndex("act_id"), Qt::Horizontal,"编号");
+    tabModel->setHeaderData(tabModel->fieldIndex("act_name"), Qt::Horizontal,"活动名称");
+    tabModel->setHeaderData(tabModel->fieldIndex("act_des"), Qt::Horizontal,"活动描述");
+    tabModel->setHeaderData(tabModel->fieldIndex("joinDate"), Qt::Horizontal,"报名时间");
+    tabModel->setHeaderData(tabModel->fieldIndex("beginDate"), Qt::Horizontal,"开始时间");
+    tabModel->setHeaderData(tabModel->fieldIndex("endDate"), Qt::Horizontal,"结束时间");
+    tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal,"发布者UID");
+    if(!tabModel->select())
+        return nullptr;
+
+    if(tabModel->lastError().isValid())
+        return nullptr;
+    return tabModel;
+}
+
 QSqlRelationalTableModel *queryModel::setActAttendPage_relationalTableModel()
 {
     relTableModel = new QSqlRelationalTableModel(parent, db);

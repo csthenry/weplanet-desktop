@@ -23,6 +23,7 @@ public:
     queryModel(QSqlDatabase db, QObject* parent);
     QSqlTableModel* setActGroupPage_departmentModel();
     QSqlTableModel* setActGroupPage_groupModel();
+    QSqlTableModel* setActivityPage();
     QSqlRelationalTableModel* setActAttendPage_relationalTableModel();
     QSqlRelationalTableModel *setActUserPage_relationalTableModel();
     void analyseWorkTime(int& data_1, int& data_2, int& data_3, int& data_4);

@@ -387,6 +387,30 @@ void MainWindow::on_actAttendManager_triggered()
     //后续可能有操作，不关闭数据库
 }
 
+void MainWindow::on_actManage_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(8);
+    ui->tableView_actList->setItemDelegateForColumn(0, readOnlyDelegate);
+    ui->tableView_actList->setItemDelegateForColumn(6, readOnlyDelegate);
+
+    if(!db.isOpen() && !db.open())
+    {
+        statusIcon->setPixmap(*statusErrorIcon);
+        connectStatusLable->setText("Database Status: " + db.lastError().text());
+    }
+    else
+    {
+        statusIcon->setPixmap(*statusOKIcon);
+        connectStatusLable->setText("Database Status: connected");
+        queryModel tabModel(db, this);
+        activityModel = tabModel.setActivityPage();
+        //活动列表
+        ui->tableView_actList->setModel(activityModel);
+
+    }
+
+}
+
 void MainWindow::on_actApplyList_triggered()
 {
     ui->stackedWidget->setCurrentIndex(9);
@@ -1019,9 +1043,4 @@ void MainWindow::on_actMessage_triggered()
 void MainWindow::on_action_triggered()
 {
     ui->stackedWidget->setCurrentIndex(3);
-}
-
-void MainWindow::on_actManage_triggered()
-{
-    ui->stackedWidget->setCurrentIndex(8);
 }

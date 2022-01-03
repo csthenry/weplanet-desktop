@@ -47,7 +47,7 @@ private:
 
     QLabel *connectStatusLable, *statusIcon;
 
-    QSqlTableModel *groupModel, *departmentModel;  //数据模型
+    QSqlTableModel *groupModel, *departmentModel, *activityModel;  //数据模型
 
     QSqlRelationalTableModel *userManageModel, *attendManageModel, *attendPageModel;
 
