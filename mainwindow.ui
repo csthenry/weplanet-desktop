@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>8</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -3489,7 +3489,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>清空</string>
+              <string>删除活动</string>
              </property>
             </widget>
            </item>
@@ -3542,7 +3542,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>删除活动</string>
+              <string>删除该报名记录</string>
              </property>
             </widget>
            </item>

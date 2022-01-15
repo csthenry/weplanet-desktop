@@ -109,6 +109,11 @@ QString formLogin::readLoginSettings()
     return "";
 }
 
+bool formLogin::autoLogin()
+{
+    return autoLoginSuccess;
+}
+
 void formLogin::on_btn_Login_clicked()
 {
     QString pwd = readPwd;

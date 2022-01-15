@@ -23,7 +23,6 @@ class formLogin : public QDialog
 
 public:
     void send();
-    bool autoLoginSuccess = false;  //自动登录标记
     explicit formLogin(QDialog *parent = nullptr);
     ~formLogin();
 
@@ -32,6 +31,10 @@ private:
     QString loginUid;   //登录成功的uid
     void writeLoginSettings();
     QString readLoginSettings();
+    bool autoLoginSuccess = false;  //自动登录标记
+
+public:
+    bool autoLogin();   //获取自动登录鉴权信息
 
 private slots:
     void on_btn_Login_clicked();

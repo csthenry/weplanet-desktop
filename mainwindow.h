@@ -51,7 +51,7 @@ private:
 
     QSqlRelationalTableModel *userManageModel, *attendManageModel, *attendPageModel;
 
-    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection; //选择模型
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection; //选择模型
 
     QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
@@ -109,6 +109,8 @@ private slots:
     void on_userManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 
     void on_attendManagePageUserscurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
+
+    void on_activityPagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 
     void on_btn_addGroup_clicked();
 
@@ -181,6 +183,10 @@ private slots:
     void on_action_triggered();
 
     void on_actManage_triggered();
+
+    void on_btn_actPush_clicked();
+
+    void on_btn_actClear_clicked();
 
 private:
     Ui::MainWindow *ui;

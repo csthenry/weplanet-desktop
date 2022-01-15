@@ -389,6 +389,14 @@ void MainWindow::on_actAttendManager_triggered()
 
 void MainWindow::on_actManage_triggered()
 {
+    curDateTime = QDateTime::currentDateTime();
+    ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
+    ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
+    ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
+
+    ui->tableView_actList->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_actList->setSelectionMode(QAbstractItemView::SingleSelection);
+
     ui->stackedWidget->setCurrentIndex(8);
     ui->tableView_actList->setItemDelegateForColumn(0, readOnlyDelegate);
     ui->tableView_actList->setItemDelegateForColumn(6, readOnlyDelegate);
@@ -406,6 +414,12 @@ void MainWindow::on_actManage_triggered()
         activityModel = tabModel.setActivityPage();
         //活动列表
         ui->tableView_actList->setModel(activityModel);
+
+        activitySelection = new QItemSelectionModel(activityModel);
+        ui->tableView_actList->setSelectionModel(activitySelection);
+        //当前行变化时触发currentChanged信号
+        connect(activitySelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+                    this, SLOT(on_activityPagecurrentRowChanged(QModelIndex, QModelIndex)));
 
     }
 
@@ -612,6 +626,12 @@ void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &cu
 
 }
 
+void MainWindow::on_activityPagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+    Q_UNUSED(current);
+    Q_UNUSED(previous);
+}
+
 void MainWindow::on_btn_addGroup_clicked()
 {
 
@@ -668,6 +688,8 @@ void MainWindow::on_btn_delDpt_clicked()
     QSqlRecord curRecord = departmentModel->record(curIndex.row());
     removedDptId = curRecord.value("dpt_id").toString();    //记录已经删除的部门id
     departmentModel->removeRow(curIndex.row()); //删除
+    ui->btn_editDpt_check->setEnabled(true);
+    ui->btn_editDpt_cancel->setEnabled(true);
 }
 
 void MainWindow::on_btn_delGroup_clicked()
@@ -676,6 +698,9 @@ void MainWindow::on_btn_delGroup_clicked()
     QSqlRecord curRecord = groupModel->record(curIndex.row());
     removedGroupId = curRecord.value("group_id").toString();    //记录已经删除的用户组id
     groupModel->removeRow(curIndex.row()); //删除
+    ui->btn_editGroup_check->setEnabled(true);
+    ui->btn_editGroup_cancel->setEnabled(true);
+
 }
 
 void MainWindow::on_btn_editDpt_check_clicked()
@@ -722,6 +747,8 @@ void MainWindow::on_btn_delUser_clicked()
 {
     QModelIndex curIndex = userManagePageSelection->currentIndex();//获取当前选择单元格的模型索引
     userManageModel->removeRow(curIndex.row()); //删除
+    ui->btn_editUser_check->setEnabled(true);
+    ui->btn_editUser_cancel->setEnabled(true);
 }
 
 void MainWindow::on_btn_editUser_check_clicked()
@@ -1043,4 +1070,45 @@ void MainWindow::on_actMessage_triggered()
 void MainWindow::on_action_triggered()
 {
     ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_btn_actPush_clicked()
+{
+    if(ui->lineEdit_actName->text().isEmpty() || ui->textEdit_activity->toPlainText().isEmpty())
+    {
+        QMessageBox::warning(this, "消息", "请先完善活动相关信息：活动名称，活动内容等。", QMessageBox::Ok);
+        return;
+    }
+    else
+    {
+        activityModel->insertRow(activityModel->rowCount(), QModelIndex());    //在末尾添加一个记录
+        QModelIndex curIndex = activityModel->index(activityModel->rowCount() - 1, 1);    //创建最后一行的ModelIndex
+        activitySelection->clearSelection();//清空选择项
+        activitySelection->setCurrentIndex(curIndex, QItemSelectionModel::Select);//设置刚插入的行为当前选择行
+
+        int currow = curIndex.row(); //获得当前行
+        activityModel->setData(activityModel->index(currow, 1), ui->lineEdit_actName->text()); //填写相应信息
+        activityModel->setData(activityModel->index(currow, 2), ui->textEdit_activity->toPlainText());
+        activityModel->setData(activityModel->index(currow, 3), ui->dateTimeEdit_actJoin->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
+        activityModel->setData(activityModel->index(currow, 4), ui->dateTimeEdit_actBegin->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
+        activityModel->setData(activityModel->index(currow, 5), ui->dateTimeEdit_actEnd->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
+        activityModel->setData(activityModel->index(currow, 6), uid);
+        if(activityModel->submitAll())
+        {
+            QMessageBox::information(this, "消息", "活动【" + ui->lineEdit_actName->text() + "】发布成功，请注意审核活动报名成员。"
+                                                  , QMessageBox::Ok);
+            ui->lineEdit_actName->clear();
+            ui->textEdit_activity->clear();
+        }
+    }
+}
+
+void MainWindow::on_btn_actClear_clicked()
+{
+    QMessageBox::StandardButton res;
+    QModelIndex curIndex = activitySelection->currentIndex();//获取当前选择单元格的模型索引
+    QSqlRecord curRecord = activityModel->record(curIndex.row());
+    res = QMessageBox::warning(this, "警告", "确认要删除【" + curRecord.value("act_name").toString() + "】活动吗？", QMessageBox::Yes|QMessageBox::No);
+    if(res == QMessageBox::Yes)
+        activityModel->removeRow(curIndex.row()); //删除
 }
