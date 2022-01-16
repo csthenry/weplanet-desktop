@@ -22,6 +22,8 @@
 #include "excelexport.h"
 #include "readOnlyDelegate.h"
 #include "checkupdate.h"
+#include "sqlthread.h"
+#include "baseinfowork.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -34,6 +36,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+
+    bool dbStatus = true;
+
+    SqlThread *sqlThread;
 
     QString uid, removedGroupId, removedDptId;
 
@@ -53,6 +59,8 @@ private:
 
     QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection; //选择模型
 
+    queryModel *relTableModel, *relTableModel_attend;
+
     QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
     QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon;
@@ -70,6 +78,11 @@ private:
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
+
+    QThread *loadBaseInfoThread;
+
+    baseInfoWork *curbaseInfoWork;
+
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
     ~MainWindow();
@@ -187,6 +200,10 @@ private slots:
     void on_btn_actPush_clicked();
 
     void on_btn_actClear_clicked();
+
+    void on_statusChanged(bool status);
+
+    void on_actAttendManagerFinished(QSqlRelationalTableModel *curModel);
 
 private:
     Ui::MainWindow *ui;

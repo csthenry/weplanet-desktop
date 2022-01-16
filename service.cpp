@@ -14,11 +14,11 @@ service::service()
     /*****************请在此处完善数据库信息*****************/
 
     dataBaseType = "QMYSQL";    //available drivers: QSQLITE QMYSQL QMYSQL3 QODBC QODBC3 QPSQL QPSQL7
-    hostName = "localhost";
+    hostName = "106.54.176.177";
     dataBasePort = 3306;
     dataBaseName = "magic";
-    dataBaseUserName = "root";
-    dataBasePassword = "123456";
+    dataBaseUserName = "magic";
+    dataBasePassword = "fPHHs6D7rsP8cztP";
 
     /*****************请在此处完善数据库信息*****************/
 }

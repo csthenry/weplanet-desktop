@@ -10,17 +10,20 @@
 #include <QtDebug>
 #include "service.h"
 
+queryModel::queryModel()
+{
+
+}
+
 queryModel::queryModel(QSqlDatabase db, QObject* parent)
 {
     this->db = db;
     this->parent = parent;
 }
 
-
 QSqlTableModel *queryModel::setActGroupPage_departmentModel()
 {
     tabModel = new QSqlTableModel(parent, db);
-
     tabModel->setTable("magic_department");
     tabModel->setSort(tabModel->fieldIndex("dpt_id"), Qt::AscendingOrder);
     tabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
@@ -37,7 +40,6 @@ QSqlTableModel *queryModel::setActGroupPage_departmentModel()
 QSqlTableModel *queryModel::setActGroupPage_groupModel()
 {
     tabModel = new QSqlTableModel(parent, db);
-
     tabModel->setTable("magic_group");
     tabModel->setSort(tabModel->fieldIndex("group_id"), Qt::AscendingOrder);    //升序排列
     tabModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -61,7 +63,6 @@ QSqlTableModel *queryModel::setActGroupPage_groupModel()
 QSqlTableModel *queryModel::setActivityPage()
 {
     tabModel = new QSqlTableModel(parent, db);
-
     tabModel->setTable("magic_activity");
     tabModel->setSort(tabModel->fieldIndex("act_id"), Qt::AscendingOrder);
     tabModel->setEditStrategy(QSqlTableModel::OnRowChange);     //自动提交
@@ -83,7 +84,6 @@ QSqlTableModel *queryModel::setActivityPage()
 QSqlRelationalTableModel *queryModel::setActAttendPage_relationalTableModel()
 {
     relTableModel = new QSqlRelationalTableModel(parent, db);
-
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnRowChange);  //自动提交
@@ -158,4 +158,14 @@ void queryModel::analyseWorkTime(int &data_1, int &data_2, int &data_3, int &dat
         }
         cnt ++;
     }while(!curRecord.value("begin_date").isNull());
+}
+
+QSqlTableModel *queryModel::getTableModel()
+{
+    return tabModel;
+}
+
+QSqlRelationalTableModel *queryModel::getrelTableModel()
+{
+    return relTableModel;
 }

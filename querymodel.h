@@ -20,6 +20,7 @@
 class queryModel
 {
 public:
+    queryModel();
     queryModel(QSqlDatabase db, QObject* parent);
     QSqlTableModel* setActGroupPage_departmentModel();
     QSqlTableModel* setActGroupPage_groupModel();
@@ -27,13 +28,15 @@ public:
     QSqlRelationalTableModel* setActAttendPage_relationalTableModel();
     QSqlRelationalTableModel *setActUserPage_relationalTableModel();
     void analyseWorkTime(int& data_1, int& data_2, int& data_3, int& data_4);
+
+    QSqlTableModel* getTableModel();
+    QSqlRelationalTableModel *getrelTableModel();
 private:
     QString uid;
     QObject* parent;    //主窗口
     QSqlDatabase db;
     QSqlTableModel *tabModel;
     QSqlRelationalTableModel *relTableModel;
-    QItemSelection *theSelection;
 };
 
 #endif // QUERYMODEL_H

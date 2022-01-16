@@ -20,6 +20,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    attendmanagework.cpp \
+    baseinfowork.cpp \
     checkupdate.cpp \
     comboboxdelegate.cpp \
     excelexport.cpp \
@@ -28,9 +30,12 @@ SOURCES += \
     mainwindow.cpp \
     querymodel.cpp \
     readOnlyDelegate.cpp \
-    service.cpp
+    service.cpp \
+    sqlthread.cpp
 
 HEADERS += \
+    attendmanagework.h \
+    baseinfowork.h \
     checkupdate.h \
     comboboxdelegate.h \
     excelexport.h \
@@ -38,7 +43,8 @@ HEADERS += \
     mainwindow.h \
     querymodel.h \
     readOnlyDelegate.h \
-    service.h
+    service.h \
+    sqlthread.h
 
 FORMS += \
     formlogin.ui \

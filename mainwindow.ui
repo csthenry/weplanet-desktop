@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -3886,6 +3886,12 @@ padding: 0px 5px;</string>
      <pointsize>11</pointsize>
     </font>
    </property>
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -3922,6 +3928,9 @@ padding: 0px 5px;</string>
    <addaction name="actExit"/>
   </widget>
   <action name="actHome">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/images/color_icon/color-star.svg</normaloff>:/images/color_icon/color-star.svg</iconset>
@@ -3934,6 +3943,9 @@ padding: 0px 5px;</string>
    </property>
   </action>
   <action name="actUserManager">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/images/color_icon/color-account.svg</normaloff>:/images/color_icon/color-account.svg</iconset>
