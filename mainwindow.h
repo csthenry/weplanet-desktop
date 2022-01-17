@@ -89,7 +89,7 @@ public:
 
 
 private slots:
-    void receiveData(QSqlDatabase db, QString uid); //接收登录窗口信号
+    void receiveData(QString uid); //接收登录窗口信号
 
     void on_actExit_triggered();
 
@@ -209,6 +209,8 @@ signals:
     void startDbWork();
 
     void startBaseInfoWork();
+
+    void startSetAuth(const QString& uid, const QVector<QAction *> &vector);
 private:
     Ui::MainWindow *ui;
 };

@@ -66,10 +66,9 @@ private slots:
 
 private:
     Ui::formLogin *ui;
-    QSqlDatabase db;
 
 signals:
-    void sendData(QSqlDatabase db, QString uid);
+    void sendData(QString uid);
     void startDbWork();
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
     void autoLoginAuthAccount(const long long account, const QString& pwd);

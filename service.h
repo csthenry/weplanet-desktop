@@ -33,7 +33,7 @@ public:
 
     static bool authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd);
 
-    static bool setAuthority(QSqlDatabase& db, QString& uid, QVector<QAction*>& vector);
+    static bool setAuthority(QSqlDatabase& db, const QString& uid, const QVector<QAction *> &vector);
 
     static QPixmap getAvatar(const QString& url);
 

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QtSql>
+#include <QDateTime>
 #include "service.h"
 
 class baseInfoWork : public QObject
@@ -18,6 +19,9 @@ public:
     void setUid(QString uid);
     void setDB(const QSqlDatabase &DB);
 
+    bool getAttendToday();
+    QString getBeginTime();
+    QString getEndTime();
     QString getLoginUid();
     QString getLastSignupUid();
     QString getName();
@@ -26,13 +30,16 @@ public:
     QString getMail();
     QString getGroup();
     QString getDepartment();
+
     QPixmap getAvatar();
 public slots:
     void autoAuthAccount(const long long account, const QString& pwd);
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
-    void setAuthority(QString &uid, QVector<QAction*>& vector);
+    void setAuthority(const QString &uid, const QVector<QAction *> &vector);
     void signUp(const QString& pwd, const QString& name, const QString& tel);
 private:
+    bool isAttend;
+    QDateTime curDateTime;
     QSqlDatabase DB;
     QString uid;
     QString loginUid;
@@ -45,6 +52,7 @@ private:
     QString department;
     QString avatarUrl;
     QPixmap avatar;
+    QString attendBeginTime, attendEndTime;
     QPixmap loadAvatar(const QString& url);
     QString loadGroup(const QString& uid);
     QString loadDepartment(const QString& uid);

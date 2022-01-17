@@ -11,7 +11,7 @@
 
 void formLogin::send()
 {
-    emit sendData(db, loginUid);
+    emit sendData(loginUid);
 }
 
 formLogin::formLogin(QDialog *parent) :

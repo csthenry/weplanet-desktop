@@ -61,7 +61,7 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;正在前往  &lt;span style=&quot; font-size:18pt;&quot;&gt;字节星球&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;欢迎登录 &lt;span style=&quot; font-size:18pt;&quot;&gt;字节星球&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QTabWidget" name="tabWidget">
@@ -115,7 +115,7 @@
         </size>
        </property>
        <property name="text">
-        <string>登     船     出     发</string>
+        <string>登     录</string>
        </property>
       </widget>
      </item>

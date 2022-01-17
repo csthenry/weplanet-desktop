@@ -252,7 +252,7 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
     }
 }
 
-bool service::setAuthority(QSqlDatabase& db, QString &uid, QVector<QAction*>& vector)
+bool service::setAuthority(QSqlDatabase& db, const QString &uid, const QVector<QAction*>& vector)
 {
     QSqlQuery query(db);
     QString groupId;
@@ -332,7 +332,9 @@ bool service::setAuthority(QSqlDatabase& db, QString &uid, QVector<QAction*>& ve
             vector[6]->setVisible(true);
         }
     }else
+    {
         return false;
+    }
     return true;
 }
 

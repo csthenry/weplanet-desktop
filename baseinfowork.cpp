@@ -7,6 +7,7 @@ baseInfoWork::baseInfoWork(QObject *parent) : QObject(parent)
 
 void baseInfoWork::loadBaseInfoWorking()
 {
+    curDateTime = QDateTime::currentDateTime();
     this->uid = uid;
     QSqlQuery query(DB);
     QThread::msleep(1000);    //等待GUI相应的时间，以免程序卡顿或崩溃
@@ -22,8 +23,19 @@ void baseInfoWork::loadBaseInfoWorking()
     group = loadGroup(uid);
     department = loadDepartment(uid);
     avatar = loadAvatar(avatarUrl);
+
+    query.exec("SELECT * FROM magic_attendance WHERE a_uid='" + uid + "' AND today='" + curDateTime.date().toString("yyyy-MM-dd") + "';");
+    if(query.next())
+    {
+        isAttend = true;
+        attendBeginTime = query.value("begin_date").toString();
+        attendEndTime = query.value("end_date").toString();
+    }
+    else
+        isAttend = false;
+
     emit baseInfoFinished();
-    qDebug() << "load线程：" << this->thread();
+    qDebug() << "baseInfoLoad线程：" << this->thread();
 }
 
 void baseInfoWork::refreshBaseInfo()
@@ -39,6 +51,21 @@ void baseInfoWork::setUid(QString uid)
 void baseInfoWork::setDB(const QSqlDatabase &DB)
 {
     this->DB = DB;
+}
+
+bool baseInfoWork::getAttendToday()
+{
+    return isAttend;
+}
+
+QString baseInfoWork::getBeginTime()
+{
+    return attendBeginTime;
+}
+
+QString baseInfoWork::getEndTime()
+{
+    return attendEndTime;
 }
 
 QString baseInfoWork::getLoginUid()
@@ -83,14 +110,6 @@ void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
         emit autoAuthRes(false);
 }
 
-void baseInfoWork::setAuthority(QString &uid, QVector<QAction*>& vector)
-{
-    if(service::setAuthority(DB, uid, vector))
-        emit authorityRes(true);
-    else
-        emit authorityRes(false);
-}
-
 void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString& tel)
 {
     QSqlQuery query(DB);
@@ -114,6 +133,11 @@ void baseInfoWork::authAccount(const long long account, const QString &pwd, cons
         emit authRes(true);
     else
         emit authRes(false);
+}
+
+void baseInfoWork::setAuthority(const QString &uid, const QVector<QAction *> &vector)
+{
+    emit authorityRes(service::setAuthority(DB, uid, vector));
 }
 
 QString baseInfoWork::getName()

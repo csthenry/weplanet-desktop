@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->statusbar->addWidget(statusIcon);   //将状态组件添加至statusBar
     ui->statusbar->addWidget(connectStatusLable);
     ui->stackedWidget->setCurrentIndex(0);  //转到首页
-    connect(formLoginWindow, SIGNAL(sendData(QSqlDatabase, QString)), this, SLOT(receiveData(QSqlDatabase, QString)));    //接收登录窗口的信号
+    connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     readOnlyDelegate = new class readOnlyDelegate(this);    //用于tableView只读
 
     //检查更新
@@ -86,13 +86,10 @@ MainWindow::~MainWindow()
     delete readOnlyDelegate;
 }
 
-void MainWindow::receiveData(QSqlDatabase db, QString uid)
+void MainWindow::receiveData(QString uid)
 {
     //权限检测
-    //this->setEnabled(false);
-
-    db.close();
-    //this->db = db;
+    this->setEnabled(false);
     this->uid = uid;
     ui->label_home_uid->setText(uid);
     ui->label_info_uid->setText(uid);
@@ -102,23 +99,29 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
     sqlWork->beginThread();
     connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
     emit startDbWork();
+
     connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
 
     connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
     sqlThread->start();
     connect(this, &MainWindow::startBaseInfoWork, setBaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
 
+    qRegisterMetaType<QVector<QAction*>>("QVector<QAction*>");
+    connect(this, SIGNAL(startSetAuth(const QString&, const QVector<QAction*>&)), setBaseInfoWork, SLOT(setAuthority(const QString&, const QVector<QAction*>&)));
+
+    connect(setBaseInfoWork, &baseInfoWork::authorityRes, this, [=](bool res){
+        if(!res)
+        {
+            QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
+            return;
+        }else this->setEnabled(true);
+    });
+
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
         setBaseInfoWork->setDB(sqlWork->getDb());
         setBaseInfoWork->setUid(uid);
-
-//        if(!service::setAuthority(sqlWork->getDb(), uid, actionList))
-//        {
-//            QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
-//            return;
-//        }else this->setEnabled(true);
-
+        emit startSetAuth(uid, actionList);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
     });
 }
@@ -126,11 +129,17 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
 void MainWindow::setHomePageBaseInfo()
 {   
     ui->label_home_name->setText(setBaseInfoWork->getName());
+    ui->label_info_name->setText(setBaseInfoWork->getName());
     ui->label_home_gender->setText(setBaseInfoWork->getGender());
+    ui->label_info_gender->setText(setBaseInfoWork->getGender());
     ui->label_home_tel->setText(setBaseInfoWork->getTel());
+    ui->label_info_tel->setText(setBaseInfoWork->getTel());
     ui->label_home_mail->setText(setBaseInfoWork->getMail());
+    ui->label_info_mail->setText(setBaseInfoWork->getMail());
     ui->label_home_group->setText(setBaseInfoWork->getGroup());
+    ui->label_info_group->setText(setBaseInfoWork->getGroup());
     ui->label_home_department->setText(setBaseInfoWork->getDepartment());
+    ui->label_info_department->setText(setBaseInfoWork->getDepartment());
 
     if(ui->label_home_gender->text().isEmpty())
     {
@@ -148,6 +157,35 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_info_mail->setText("--");
     }
     ui->avatar->setPixmap(service::setAvatarStyle(setBaseInfoWork->getAvatar()));
+    ui->info_avatar->setPixmap(*ui->avatar->pixmap());
+
+    //考勤页面用户信息
+    ui->label_attendPage_uid->setText(uid);
+    ui->label_attendPage_name->setText(setBaseInfoWork->getName());
+    ui->label_attendPage_group->setText(setBaseInfoWork->getGroup());
+    ui->label_attendPage_dpt->setText(setBaseInfoWork->getDepartment());
+    ui->attendPage_avatar->setPixmap(*ui->avatar->pixmap());
+
+    //首页考勤信息初始化
+    curDateTime = QDateTime::currentDateTime();
+    ui->label_homePage_attendDate->setText(curDateTime.date().toString("yyyy年MM月dd日"));
+
+    if(setBaseInfoWork->getAttendToday())
+    {
+        ui->label_homePage_attendStatus->setText("已签到");
+        ui->label_homePage_beginTime->setText(setBaseInfoWork->getBeginTime());
+        if(setBaseInfoWork->getBeginTime().isNull())
+            ui->label_homePage_endTime->setText("--");
+        else
+            ui->label_homePage_endTime->setText(setBaseInfoWork->getEndTime());
+    }
+    else
+    {
+        ui->label_homePage_attendStatus->setText("未签到");
+        ui->label_homePage_beginTime->setText("--");
+        ui->label_homePage_endTime->setText("--");
+    }
+
     sqlWork->beginThread();
     /*
     QSqlQuery query;
@@ -193,25 +231,6 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_attendPage_dpt->setText(service::getDepartment(uid));
         ui->attendPage_avatar->setPixmap(*ui->avatar->pixmap());
 
-    }
-    //首页考勤信息初始化
-    curDateTime = QDateTime::currentDateTime();
-    ui->label_homePage_attendDate->setText(curDateTime.date().toString("yyyy年MM月dd日"));
-    query.exec("SELECT * FROM magic_attendance WHERE a_uid='" + uid + "' AND today='" + curDateTime.date().toString("yyyy-MM-dd") + "';");
-    if(query.next())
-    {
-        ui->label_homePage_attendStatus->setText("已签到");
-        ui->label_homePage_beginTime->setText(query.value("begin_date").toString());
-        if(query.value("end_date").isNull())
-            ui->label_homePage_endTime->setText("--");
-        else
-            ui->label_homePage_endTime->setText(query.value("end_date").toString());
-    }
-    else
-    {
-        ui->label_homePage_attendStatus->setText("未签到");
-        ui->label_homePage_beginTime->setText("--");
-        ui->label_homePage_endTime->setText("--");
     }
     db.close();     //没有后续操作，可以关闭
     */
@@ -277,14 +296,15 @@ void MainWindow::on_actExit_triggered()
     formLoginWindow = new formLogin();
 
     this->close();
-    connect(formLoginWindow, SIGNAL(sendData(QSqlDatabase, QString)), this, SLOT(receiveData(QSqlDatabase, QString)));    //接收登录窗口的信号
+    connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     if (formLoginWindow->exec() == QDialog::Accepted)
     {
         formLoginWindow->send();    //发送信号
+        emit startSetAuth(uid, actionList);
+        emit startBaseInfoWork();
         ui->stackedWidget->setCurrentIndex(0);  //回到首页
         delete formLoginWindow;
         setBaseInfoWork->setUid(uid);   //重新设置UID
-        emit startBaseInfoWork();   //刷新首页数据
         this->show();
         return;
     }
