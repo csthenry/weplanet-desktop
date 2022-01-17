@@ -52,11 +52,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     updateSoftWare.parse_UpdateJson(ui->notice, this);
 
     //多线程相关
-    sqlWork = new SqlWork();  //sql异步连接
-    sqlThread = new QThread, dbThread = new QThread;
-    curbaseInfoWork = new baseInfoWork;
+    sqlWork = new SqlWork("mainDB");  //sql异步连接
+    setBaseInfoWork = new baseInfoWork();
+    sqlThread = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
-    curbaseInfoWork->moveToThread(sqlThread);
+    setBaseInfoWork->moveToThread(sqlThread);
 }
 
 MainWindow::~MainWindow()
@@ -64,12 +64,13 @@ MainWindow::~MainWindow()
     //在此处等待所有线程停止
     if(sqlThread->isRunning())
     {
-        sqlWork->stopThread();
         sqlThread->quit();
         sqlThread->wait();
     }
     if(dbThread->isRunning())
     {
+        sqlWork->stopThread();
+        sqlWork->quit();
         dbThread->quit();
         dbThread->wait();
     }
@@ -79,7 +80,7 @@ MainWindow::~MainWindow()
     delete sqlWork;
     delete dbThread;
 
-    delete curbaseInfoWork;
+    delete setBaseInfoWork;
     delete sqlThread;
 
     delete readOnlyDelegate;
@@ -88,11 +89,8 @@ MainWindow::~MainWindow()
 void MainWindow::receiveData(QSqlDatabase db, QString uid)
 {
     //权限检测
-    if(!service::setAuthority(uid, actionList))
-    {
-        this->setEnabled(false);
-        QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
-    }
+    //this->setEnabled(false);
+
     db.close();
     //this->db = db;
     this->uid = uid;
@@ -106,26 +104,33 @@ void MainWindow::receiveData(QSqlDatabase db, QString uid)
     emit startDbWork();
     connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
 
-    connect(curbaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
+    connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
     sqlThread->start();
-    connect(this, &MainWindow::startBaseInfoWork, curbaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
+    connect(this, &MainWindow::startBaseInfoWork, setBaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
 
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
-        curbaseInfoWork->setDB(sqlWork->getDb());
-        curbaseInfoWork->setUid(uid);
+        setBaseInfoWork->setDB(sqlWork->getDb());
+        setBaseInfoWork->setUid(uid);
+
+//        if(!service::setAuthority(sqlWork->getDb(), uid, actionList))
+//        {
+//            QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
+//            return;
+//        }else this->setEnabled(true);
+
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
     });
 }
 
 void MainWindow::setHomePageBaseInfo()
 {   
-    ui->label_home_name->setText(curbaseInfoWork->getName());
-    ui->label_home_gender->setText(curbaseInfoWork->getGender());
-    ui->label_home_tel->setText(curbaseInfoWork->getTel());
-    ui->label_home_mail->setText(curbaseInfoWork->getMail());
-    ui->label_home_group->setText(curbaseInfoWork->getGroup());
-    ui->label_home_department->setText(curbaseInfoWork->getDepartment());
+    ui->label_home_name->setText(setBaseInfoWork->getName());
+    ui->label_home_gender->setText(setBaseInfoWork->getGender());
+    ui->label_home_tel->setText(setBaseInfoWork->getTel());
+    ui->label_home_mail->setText(setBaseInfoWork->getMail());
+    ui->label_home_group->setText(setBaseInfoWork->getGroup());
+    ui->label_home_department->setText(setBaseInfoWork->getDepartment());
 
     if(ui->label_home_gender->text().isEmpty())
     {
@@ -142,7 +147,7 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_home_mail->setText("--");
         ui->label_info_mail->setText("--");
     }
-    ui->avatar->setPixmap(service::setAvatarStyle(curbaseInfoWork->getAvatar()));
+    ui->avatar->setPixmap(service::setAvatarStyle(setBaseInfoWork->getAvatar()));
     sqlWork->beginThread();
     /*
     QSqlQuery query;
@@ -268,15 +273,20 @@ void MainWindow::on_actExit_triggered()
     QSettings settings("bytecho", "MagicLightAssistant");
     settings.setValue("isAutoLogin", false);    //注销后自动登录失效
 
+    QSqlDatabase::removeDatabase("loginDB");
     formLoginWindow = new formLogin();
+
     this->close();
     connect(formLoginWindow, SIGNAL(sendData(QSqlDatabase, QString)), this, SLOT(receiveData(QSqlDatabase, QString)));    //接收登录窗口的信号
     if (formLoginWindow->exec() == QDialog::Accepted)
     {
         formLoginWindow->send();    //发送信号
-        //reload函数，用于重载窗口数据
         ui->stackedWidget->setCurrentIndex(0);  //回到首页
+        delete formLoginWindow;
+        setBaseInfoWork->setUid(uid);   //重新设置UID
+        emit startBaseInfoWork();   //刷新首页数据
         this->show();
+        return;
     }
     delete formLoginWindow;
 }
@@ -1165,7 +1175,7 @@ void MainWindow::on_statusChanged(bool status)
     {
         dbStatus = false;
         statusIcon->setPixmap(*statusErrorIcon);
-        connectStatusLable->setText("Database Status: " + db.lastError().text());
+        connectStatusLable->setText("Database Status: " + sqlWork->getDb().lastError().text());
     }
     else
     {

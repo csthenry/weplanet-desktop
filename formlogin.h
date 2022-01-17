@@ -11,7 +11,9 @@
 
 #include <QDialog>
 #include <QMessageBox>
-#include "service.h"
+#include <QThread>
+#include "sqlwork.h"
+#include "baseinfowork.h"
 
 namespace Ui {
 class formLogin;
@@ -27,11 +29,18 @@ public:
     ~formLogin();
 
 private:
+    SqlWork *sqlWork;
+    baseInfoWork *loginWork;
+    QThread *sqlThread, *dbThread;
+
     QString readPwd;    //保存的密码
     QString loginUid;   //登录成功的uid
     void writeLoginSettings();
+    void beforeAccept();
     QString readLoginSettings();
     bool autoLoginSuccess = false;  //自动登录标记
+    bool dbStatus = true;
+    QPixmap *statusOKIcon, *statusErrorIcon;
 
 public:
     bool autoLogin();   //获取自动登录鉴权信息
@@ -47,12 +56,24 @@ private slots:
 
     void on_lineEdit_Pwd_textEdited(const QString &arg1);
 
+    void on_statusChanged(const bool status);
+
+    void on_authAccountRes(bool res);
+
+    void on_autoLoginAuthAccountRes(bool res);
+
+    void on_signUpFinished(bool res);
+
 private:
     Ui::formLogin *ui;
     QSqlDatabase db;
 
 signals:
     void sendData(QSqlDatabase db, QString uid);
+    void startDbWork();
+    void authAccount(const long long account, const QString& pwd, const QString& editPwd);
+    void autoLoginAuthAccount(const long long account, const QString& pwd);
+    void signUp(const QString& pwd, const QString& name, const QString& tel);
 };
 
 #endif // FORMLOGIN_H

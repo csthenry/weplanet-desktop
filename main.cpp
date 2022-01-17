@@ -16,18 +16,18 @@ int main(int argc, char *argv[])
 
     formLogin *formLoginWindow = new formLogin();
 
-    if (formLoginWindow->autoLogin() || formLoginWindow->exec() == QDialog::Accepted)
+    if(formLoginWindow->exec() == QDialog::Accepted)
     {
         MainWindow w(nullptr, formLoginWindow);
-        w.show();
         formLoginWindow->send();    //发送信号
         delete formLoginWindow;
+        w.show();
         return a.exec();
     }
     else
     {
-        delete formLoginWindow;
         return  0;
     }
+    delete formLoginWindow;
     return a.exec();
 }

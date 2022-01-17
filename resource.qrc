@@ -74,5 +74,6 @@
         <file>color_icon/approve_3.svg</file>
         <file>color_icon/arrow.svg</file>
         <file>color_icon/arrow_2.svg</file>
+        <file>color_icon/refresh.svg</file>
     </qresource>
 </RCC>

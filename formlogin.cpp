@@ -19,7 +19,7 @@ formLogin::formLogin(QDialog *parent) :
     ui(new Ui::formLogin)
 {
     ui->setupUi(this);
-
+    this->setEnabled(false);
     //限制登录注册输入
     QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
     QValidator* validator_account = new QRegExpValidator(regx_account), *validator_pwd= new QRegExpValidator(regx_pwd);
@@ -34,32 +34,57 @@ formLogin::formLogin(QDialog *parent) :
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
 
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
-    QPixmap mainicon(":/images/color_icon/main.svg"), statusOKIcon(":/images/color_icon/color-approve.svg"), statusErrorIcon(":/images/color_icon/color-delete.svg");
+    QPixmap mainicon(":/images/color_icon/main.svg");
+    statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
     ui->labelIcon->setMaximumSize(25, 25);
     ui->labelIcon->setScaledContents(true);    //图片自适应大小
     ui->mainIcon->setScaledContents(true);
     ui->mainIcon->setPixmap(mainicon);
 
-    service loginService;
-    loginService.connectDatabase(db);
+    //多线程相关
+    sqlWork = new SqlWork("loginDB");    //sql异步连接
+    loginWork = new baseInfoWork();
+    sqlThread = new QThread(), dbThread = new QThread();
 
-    if (db.isOpen() || db.open())   //打开数据库
-    {
-        ui->labelIcon->setPixmap(statusOKIcon);
-        ui->labelStatus->setText("Database Status: connected");
-    }
-    else
-    {
-        ui->labelIcon->setPixmap(statusErrorIcon);
-        ui->labelStatus->setText("Database Status: " + db.lastError().text());
-    }
-    service::initDatabaseTables(db);
-    readPwd = readLoginSettings();
+    sqlWork->moveToThread(dbThread);
+    loginWork->moveToThread(sqlThread);
+
+    //开启数据库连接线程
+    dbThread->start();
+    sqlWork->beginThread();
+    connect(this, &formLogin::startDbWork, sqlWork, &SqlWork::working);
+    emit startDbWork();
+    connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
+
+    sqlThread->start();
+
+    //登录相关
+    connect(this, SIGNAL(authAccount(const long long, const QString&, const QString&)), loginWork, SLOT(authAccount(const long long, const QString&, const QString&)));
+    connect(this, SIGNAL(autoLoginAuthAccount(const long long, const QString&)), loginWork, SLOT(autoAuthAccount(const long long, const QString&)));
+    connect(loginWork, SIGNAL(authRes(bool)), this, SLOT(on_authAccountRes(bool)));
+    connect(loginWork, SIGNAL(autoAuthRes(bool)), this, SLOT(on_autoLoginAuthAccountRes(bool)));
+    //注册相关
+    connect(this, SIGNAL(signUp(const QString&, const QString&, const QString&)), loginWork, SLOT(signUp(const QString&, const QString&, const QString&)));
+    connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
+    //初始化相关
+    connect(sqlWork, &SqlWork::firstFinished, this, [=](){
+        sqlWork->stopThread();
+        this->setEnabled(true);
+        readPwd = readLoginSettings();
+        loginWork->setDB(sqlWork->getDb());
+    });
+
 }
 
 formLogin::~formLogin()
 {
+    //在此处等待所有线程停止
+
     delete ui;
+    delete loginWork;
+    delete sqlWork;
+    delete dbThread;
+    delete sqlThread;
 }
 
 void formLogin::writeLoginSettings()
@@ -81,6 +106,22 @@ void formLogin::writeLoginSettings()
     }
 }
 
+void formLogin::beforeAccept()
+{
+    if(sqlThread->isRunning())
+    {
+        sqlThread->quit();
+        sqlThread->wait();
+    }
+    if(dbThread->isRunning())
+    {
+        sqlWork->stopThread();
+        sqlWork->quit();
+        dbThread->quit();
+        dbThread->wait();
+    }
+}
+
 QString formLogin::readLoginSettings()
 {
     QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
@@ -93,16 +134,7 @@ QString formLogin::readLoginSettings()
         if(settings.value("isAutoLogin", false).toBool())
         {
             ui->checkBox_autoLogin->setChecked(true);
-            if(service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toLongLong(), settings.value("pwd").toString()))     //自动登录
-            {
-                writeLoginSettings();   //验证成功后，保存账号密码
-                autoLoginSuccess = true;
-            }
-            else
-            {
-                autoLoginSuccess = false;
-                QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
-            }
+            emit autoLoginAuthAccount(ui->lineEdit_Uid->text().toLongLong(), settings.value("pwd").toString());
         }
         return settings.value("pwd").toString();
     }
@@ -118,14 +150,8 @@ void formLogin::on_btn_Login_clicked()
 {
     QString pwd = readPwd;
     QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
-
-    if(service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toLongLong(), pwd) || service::authAccount(db, loginUid, ui->lineEdit_Uid->text().toLongLong(), service::pwdEncrypt(ui->lineEdit_Pwd->text())))
-    {
-        writeLoginSettings();   //验证成功后，保存账号密码
-        this->accept();
-    }
-    else
-        QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+    sqlWork->stopThread();
+    emit authAccount(ui->lineEdit_Uid->text().toLongLong(), pwd, service::pwdEncrypt(ui->lineEdit_Pwd->text()));
 }
 
 void formLogin::on_checkBox_remPwd_clicked(bool checked)
@@ -151,8 +177,6 @@ void formLogin::on_lineEdit_Uid_textEdited(const QString &arg1)
 
 void formLogin::on_btn_Signup_clicked()
 {
-    QSqlQuery query;
-    QString creatTableStr;
     if(ui->lineEdit_SignupName->text().isEmpty() || ui->lineEdit_SignupTel->text().isEmpty() || ui->lineEdit_SignupPwd->text().isEmpty() || ui->lineEdit_SignupPwdAgain->text().isEmpty())
     {
         QMessageBox::warning(this, "警告", "注册失败，请检查是否已经填写全所有注册所需信息。", QMessageBox::Ok);
@@ -168,21 +192,18 @@ void formLogin::on_btn_Signup_clicked()
         QMessageBox::warning(this, "警告", "注册失败，请输入6~16位的密码以确保安全。", QMessageBox::Ok);
         return;
     }
-    creatTableStr =
-            "INSERT INTO magic_users"
-            "(password, name, user_group, user_dpt, telephone )"
-            "VALUES                        "
-            "(:pwd, :name, 2, 1, :phone) ";
-    query.prepare(creatTableStr);
-    query.bindValue(0, service::pwdEncrypt(ui->lineEdit_SignupPwd->text()));
-    query.bindValue(1, ui->lineEdit_SignupName->text());
-    query.bindValue(2, ui->lineEdit_SignupTel->text());
-    if(query.exec())
+    emit signUp(ui->lineEdit_SignupPwd->text(), ui->lineEdit_SignupName->text(), ui->lineEdit_SignupTel->text());
+
+}
+
+void formLogin::on_signUpFinished(bool res)
+{
+    if(res)
     {
-        QMessageBox::information(this, "通知", "注册成功，你的信息如下：\n账号：" + query.lastInsertId().toString()+"\n姓名：" + ui->lineEdit_SignupName->text() +"\n手机号：" +ui->lineEdit_SignupTel->text() + "\n请妥善保管以上信息，可使用手机号登录。", QMessageBox::Ok);
+        QMessageBox::information(this, "通知", "注册成功，你的信息如下：\n账号：" + loginWork->getLastSignupUid() + "\n姓名：" + ui->lineEdit_SignupName->text() +"\n手机号：" + ui->lineEdit_SignupTel->text() + "\n请妥善保管以上信息，可使用手机号登录。", QMessageBox::Ok);
     }
     else
-        QMessageBox::warning(this, "警告", "注册失败，错误信息：" + db.lastError().text() + "\n" + query.lastError().text(), QMessageBox::Ok);
+        QMessageBox::warning(this, "警告", "注册失败，错误信息：" + sqlWork->getDb().lastError().text(), QMessageBox::Ok);
 }
 
 void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)
@@ -193,4 +214,52 @@ void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)
         settings.clear();
         readPwd.clear();
     }
+}
+
+void formLogin::on_statusChanged(const bool status)
+{
+    if(status)
+    {
+        ui->labelIcon->setPixmap(*statusOKIcon);
+        ui->labelStatus->setText("Database Status: connected");
+    }
+    else
+    {
+        ui->labelIcon->setPixmap(*statusErrorIcon);
+        ui->labelStatus->setText("Database Status: " + sqlWork->getDb().lastError().text());
+    }
+}
+
+void formLogin::on_authAccountRes(bool res)
+{
+    if(res)
+    {
+        loginUid = loginWork->getLoginUid();
+        writeLoginSettings();   //验证成功后，保存账号密码
+        beforeAccept();
+        this->accept();
+    }
+    else
+        QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+    sqlWork->beginThread();
+}
+
+void formLogin::on_autoLoginAuthAccountRes(bool res)
+{
+    if(res)     //自动登录
+    {
+        loginUid = loginWork->getLoginUid();
+        writeLoginSettings();   //验证成功后，保存账号密码
+        autoLoginSuccess = true;
+        beforeAccept();
+        this->accept();
+    }
+    else
+    {
+        autoLoginSuccess = false;
+        ui->checkBox_autoLogin->setCheckable(false);
+        QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+        sqlWork->beginThread();
+    }
+    qDebug() << "自动登录验证完成";
 }

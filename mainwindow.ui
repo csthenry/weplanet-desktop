@@ -3923,6 +3923,7 @@ padding: 0px 5px;</string>
    <addaction name="actApplyList"/>
    <addaction name="actApplyItems"/>
    <addaction name="actGroup"/>
+   <addaction name="actRefresh"/>
    <addaction name="separator"/>
    <addaction name="actMore"/>
    <addaction name="actExit"/>
@@ -4096,6 +4097,18 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>活动</string>
+   </property>
+  </action>
+  <action name="actRefresh">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/refresh.svg</normaloff>:/images/color_icon/refresh.svg</iconset>
+   </property>
+   <property name="text">
+    <string>刷新页面</string>
+   </property>
+   <property name="toolTip">
+    <string>刷新页面</string>
    </property>
   </action>
  </widget>

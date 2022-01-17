@@ -228,9 +228,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
 
 bool service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
 {
-    if(!db.isOpen() && !db.open())
-        return false;
-    QSqlQuery query;
+    QSqlQuery query(db);
     //验证UID
     query.exec("SELECT password FROM magic_users WHERE uid = " + QString::number(account));
     if(query.next() && pwd == query.value("password").toString())
@@ -254,9 +252,9 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
     }
 }
 
-bool service::setAuthority(QString &uid, QVector<QAction*>& vector)
+bool service::setAuthority(QSqlDatabase& db, QString &uid, QVector<QAction*>& vector)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     QString groupId;
     query.exec("SELECT user_group FROM magic_users WHERE uid='" + uid + "';");
     query.next();

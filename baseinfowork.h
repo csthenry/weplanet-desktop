@@ -18,6 +18,8 @@ public:
     void setUid(QString uid);
     void setDB(const QSqlDatabase &DB);
 
+    QString getLoginUid();
+    QString getLastSignupUid();
     QString getName();
     QString getGender();
     QString getTel();
@@ -26,10 +28,15 @@ public:
     QString getDepartment();
     QPixmap getAvatar();
 public slots:
-
+    void autoAuthAccount(const long long account, const QString& pwd);
+    void authAccount(const long long account, const QString& pwd, const QString& editPwd);
+    void setAuthority(QString &uid, QVector<QAction*>& vector);
+    void signUp(const QString& pwd, const QString& name, const QString& tel);
 private:
     QSqlDatabase DB;
     QString uid;
+    QString loginUid;
+    QString lastSignupUid;
     QString name;
     QString gender;
     QString telephone;
@@ -44,6 +51,10 @@ private:
 
 signals:
     void baseInfoFinished();
+    void authRes(bool);     //返回账号验证结果
+    void autoAuthRes(bool);
+    void signupRes(bool);   //返回注册结果
+    void authorityRes(bool);    //返回账号权限鉴权结果
 };
 
 #endif // BASEINFOWORK_H

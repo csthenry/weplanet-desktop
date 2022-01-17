@@ -2,37 +2,42 @@
 
 void SqlWork::working()
 {
-    while(!isStop)
+    run = true;
+    while(run)
     {
-        testDbConnection = new QSqlQuery(DB);
-        dbStatus = testDbConnection->exec("select version();");
-        if(!dbStatus)
-            isPaused = false;
-        delete testDbConnection;
-        if(isPaused)
+        while(!isStop)
         {
+            testDbConnection = new QSqlQuery(DB);
+            dbStatus = testDbConnection->exec("select version();");
+            if(!dbStatus)
+                isPaused = false;
+            delete testDbConnection;
+            if(isPaused)
+            {
+                QThread::sleep(5);
+                continue;
+            }
+            qDebug() << "SqlThread线程运行中,db:" << dbStatus << this->thread();
+            if(!dbStatus && !DB.open())
+                status = false;
+            else
+            {
+                status = true;
+                isPaused = true;    //连接成功后暂停线程
+                if(cnt++ == 1)
+                    emit firstFinished();
+            }
+            emit newStatus(status);
             QThread::sleep(5);
-            continue;
         }
-        qDebug() << "SqlThread线程运行中,db:" << dbStatus;
-        if(!dbStatus && !DB.open())
-            status = false;
-        else
-        {
-            status = true;
-            isPaused = true;    //连接成功后暂停线程
-            if(cnt++ == 1)
-                emit firstFinished();
-        }
-        emit newStatus(status);
-        QThread::sleep(5);
     }
 }
 
-SqlWork::SqlWork()
+SqlWork::SqlWork(QString dbName)
 {
+    this->dbName = dbName;
     service dbService;
-    dbService.addDatabase(DB, "sqlWork");
+    dbService.addDatabase(DB, this->dbName);
     moveToThread(this->thread());
 }
 
@@ -46,6 +51,11 @@ void SqlWork::stopThread()    //在对数据库查询时请调用此函数暂停
     isStop = true;
 }
 
+void SqlWork::quit()
+{
+    run = false;
+}
+
 bool SqlWork::getisPaused()
 {
     return isPaused;
@@ -54,5 +64,10 @@ bool SqlWork::getisPaused()
 QSqlDatabase SqlWork::getDb()
 {
     return DB;
+}
+
+QString SqlWork::getDbName()
+{
+    return dbName;
 }
 

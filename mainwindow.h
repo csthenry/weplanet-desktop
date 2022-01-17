@@ -79,7 +79,7 @@ private:
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
 
-    baseInfoWork *curbaseInfoWork;
+    baseInfoWork *setBaseInfoWork;
 
     SqlWork *sqlWork;
 

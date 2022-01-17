@@ -41,6 +41,16 @@ void baseInfoWork::setDB(const QSqlDatabase &DB)
     this->DB = DB;
 }
 
+QString baseInfoWork::getLoginUid()
+{
+    return loginUid;
+}
+
+QString baseInfoWork::getLastSignupUid()
+{
+    return lastSignupUid;
+}
+
 QString baseInfoWork::loadGroup(const QString& uid)
 {
     QSqlQuery query(DB);
@@ -63,6 +73,47 @@ QString baseInfoWork::loadDepartment(const QString& uid)
     if(!query.next())
         return "--";
     return query.value("dpt_name").toString();
+}
+
+void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
+{
+    if(service::authAccount(DB, loginUid, account, pwd))
+        emit autoAuthRes(true);
+    else
+        emit autoAuthRes(false);
+}
+
+void baseInfoWork::setAuthority(QString &uid, QVector<QAction*>& vector)
+{
+    if(service::setAuthority(DB, uid, vector))
+        emit authorityRes(true);
+    else
+        emit authorityRes(false);
+}
+
+void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString& tel)
+{
+    QSqlQuery query(DB);
+    QString creatQueryStr;
+    creatQueryStr =
+            "INSERT INTO magic_users"
+            "(password, name, user_group, user_dpt, telephone )"
+            "VALUES                        "
+            "(:pwd, :name, 2, 1, :phone) ";
+    query.prepare(creatQueryStr);
+    query.bindValue(0, service::pwdEncrypt(pwd));
+    query.bindValue(1, name);
+    query.bindValue(2, tel);
+    emit signupRes(query.exec());
+    lastSignupUid = query.lastInsertId().toString();
+}
+
+void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)
+{
+    if(service::authAccount(DB, loginUid, account, pwd) || service::authAccount(DB, loginUid, account, editPwd))
+        emit authRes(true);
+    else
+        emit authRes(false);
 }
 
 QString baseInfoWork::getName()
