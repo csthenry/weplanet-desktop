@@ -26,6 +26,8 @@ public:
     static QString pwdEncrypt(const QString& str);  //字符串加密
 
     void connectDatabase(QSqlDatabase& db);
+    
+    void addDatabase(QSqlDatabase& db, const QString &flag);
 
     static bool initDatabaseTables(QSqlDatabase& db);
 

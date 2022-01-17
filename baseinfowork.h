@@ -11,16 +11,25 @@ class baseInfoWork : public QObject
     Q_OBJECT
 public:
     explicit baseInfoWork(QObject *parent = nullptr);
-    void loadBaseInfoWorking(QString uid);
+    void loadBaseInfoWorking();
     void loadAvatarPic(QString url);
+
+    void refreshBaseInfo(); //用于刷新数据
+    void setUid(QString uid);
+    void setDB(const QSqlDatabase &DB);
 
     QString getName();
     QString getGender();
     QString getTel();
     QString getMail();
+    QString getGroup();
+    QString getDepartment();
     QPixmap getAvatar();
+public slots:
 
 private:
+    QSqlDatabase DB;
+    QString uid;
     QString name;
     QString gender;
     QString telephone;
@@ -30,16 +39,11 @@ private:
     QString avatarUrl;
     QPixmap avatar;
     QPixmap loadAvatar(const QString& url);
+    QString loadGroup(const QString& uid);
+    QString loadDepartment(const QString& uid);
 
 signals:
     void baseInfoFinished();
-//    void sendName(QString name);
-//    void sendGender(QString gender);
-//    void sendTel(QString telephone);
-//    void sendMail(QString mail);
-//    void sendGroup(QString group);
-//    void sendDpt(QString department);
-//    void sendAvatar(QString avatar);
 };
 
 #endif // BASEINFOWORK_H

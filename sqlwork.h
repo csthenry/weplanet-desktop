@@ -1,17 +1,17 @@
-#ifndef SQLTHREAD_H
-#define SQLTHREAD_H
+#ifndef SQLWORK_H
+#define SQLWORK_H
 
-#include <QThread>
 #include <QtSql>
+#include <QThread>
 #include <QSqlQuery>
 #include "service.h"
 
-class SqlThread : public QThread
+class SqlWork : public QObject
 {
     Q_OBJECT
 private:
     int cnt = 1;
-    QSqlDatabase db;
+    QSqlDatabase DB;
     service dbService;
     QSqlQuery *testDbConnection;
     bool status = false;
@@ -19,11 +19,9 @@ private:
     bool isStop = true; //停止线程
     bool dbStatus = false;  //心跳验证状态
 
-protected:
-    void run() Q_DECL_OVERRIDE;
-
 public:
-    SqlThread();
+    SqlWork();
+    void working();
     void beginThread();
     void stopThread();
     bool getisPaused();
@@ -35,4 +33,4 @@ signals:
 
 };
 
-#endif // SQLTHREAD_H
+#endif // SQLWORK_H

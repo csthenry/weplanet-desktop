@@ -22,7 +22,7 @@
 #include "excelexport.h"
 #include "readOnlyDelegate.h"
 #include "checkupdate.h"
-#include "sqlthread.h"
+#include "sqlwork.h"
 #include "baseinfowork.h"
 
 QT_CHARTS_USE_NAMESPACE
@@ -39,7 +39,7 @@ private:
 
     bool dbStatus = true;
 
-    SqlThread *sqlThread;
+    QThread *dbThread, *sqlThread;
 
     QString uid, removedGroupId, removedDptId;
 
@@ -79,9 +79,9 @@ private:
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
 
-    QThread *loadBaseInfoThread;
-
     baseInfoWork *curbaseInfoWork;
+
+    SqlWork *sqlWork;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -205,6 +205,10 @@ private slots:
 
     void on_actAttendManagerFinished(QSqlRelationalTableModel *curModel);
 
+signals:
+    void startDbWork();
+
+    void startBaseInfoWork();
 private:
     Ui::MainWindow *ui;
 };

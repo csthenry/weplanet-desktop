@@ -38,10 +38,22 @@ void service::connectDatabase(QSqlDatabase& db)
 {
     //如果存在连接名为qt_sql_default_connection（默认连接名）的连接，则不需要addDatabase
     //否则会报出QSqlDatabasePrivate::addDatabase: duplicate connection name 'qt_sql_default_connect...
+    
     if(QSqlDatabase::contains("qt_sql_default_connection"))
         db = QSqlDatabase::database("qt_sql_default_connection");
     else
         db = QSqlDatabase::addDatabase(dataBaseType);
+    db.setHostName(hostName);
+    db.setPort(dataBasePort);
+    db.setDatabaseName(dataBaseName);
+    db.setUserName(dataBaseUserName);
+    db.setPassword(dataBasePassword);
+}
+
+void service::addDatabase(QSqlDatabase& db, const QString &flag)
+{
+
+    db = QSqlDatabase::addDatabase(dataBaseType, flag);
     db.setHostName(hostName);
     db.setPort(dataBasePort);
     db.setDatabaseName(dataBaseName);

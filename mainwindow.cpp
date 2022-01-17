@@ -52,10 +52,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     updateSoftWare.parse_UpdateJson(ui->notice, this);
 
     //多线程相关
-    sqlThread = new SqlThread();  //sql异步连接
-    loadBaseInfoThread = new QThread;
+    sqlWork = new SqlWork();  //sql异步连接
+    sqlThread = new QThread, dbThread = new QThread;
     curbaseInfoWork = new baseInfoWork;
-    curbaseInfoWork->moveToThread(loadBaseInfoThread);
+    sqlWork->moveToThread(dbThread);
+    curbaseInfoWork->moveToThread(sqlThread);
 }
 
 MainWindow::~MainWindow()
@@ -63,72 +64,86 @@ MainWindow::~MainWindow()
     //在此处等待所有线程停止
     if(sqlThread->isRunning())
     {
-        sqlThread->stopThread();
+        sqlWork->stopThread();
+        sqlThread->quit();
         sqlThread->wait();
     }
-    if(loadBaseInfoThread->isRunning())
+    if(dbThread->isRunning())
     {
-        loadBaseInfoThread->quit();
-        loadBaseInfoThread->wait();
+        dbThread->quit();
+        dbThread->wait();
     }
     //析构所有线程
     delete ui;
-    delete sqlThread;
-    delete readOnlyDelegate;
-    delete loadBaseInfoThread;
+
+    delete sqlWork;
+    delete dbThread;
+
     delete curbaseInfoWork;
+    delete sqlThread;
+
+    delete readOnlyDelegate;
 }
 
 void MainWindow::receiveData(QSqlDatabase db, QString uid)
 {
+    //权限检测
+    if(!service::setAuthority(uid, actionList))
+    {
+        this->setEnabled(false);
+        QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
+    }
+    db.close();
     //this->db = db;
     this->uid = uid;
     ui->label_home_uid->setText(uid);
     ui->label_info_uid->setText(uid);
-    //权限检测
-    if(!service::setAuthority(uid, actionList))
-    {
-        QMessageBox::warning(this, "警告", "用户权限校验失败，程序即将关闭。", QMessageBox::Ok);
-        this->close();
-    }
 
+    //开启数据库连接线程
+    dbThread->start();
+    sqlWork->beginThread();
+    connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
+    emit startDbWork();
+    connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
+
+    connect(curbaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
     sqlThread->start();
-    sqlThread->beginThread();
-    db = sqlThread->getDb();
-    connect(sqlThread, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
-    connect(sqlThread, &SqlThread::firstFinished, this, [=](){
-        setHomePageBaseInfo();  //等待数据库第一次连接成功后再调用
+    connect(this, &MainWindow::startBaseInfoWork, curbaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
+
+    connect(sqlWork, &SqlWork::firstFinished, this, [=](){
+        sqlWork->stopThread();
+        curbaseInfoWork->setDB(sqlWork->getDb());
+        curbaseInfoWork->setUid(uid);
+        emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
     });
 }
 
 void MainWindow::setHomePageBaseInfo()
-{
-    sqlThread->stopThread();
-    loadBaseInfoThread->start();
-    connect(curbaseInfoWork, &baseInfoWork::baseInfoFinished, this, [=](){
-        ui->label_home_name->setText(curbaseInfoWork->getName());
-        ui->label_home_gender->setText(curbaseInfoWork->getGender());
-        ui->label_home_tel->setText(curbaseInfoWork->getTel());
-        ui->label_home_mail->setText(curbaseInfoWork->getMail());
-        if(ui->label_home_gender->text().isEmpty())
-        {
-            ui->label_home_gender->setText("--");   //将可能为空的数据设置值
-            ui->label_info_gender->setText("--");
-        }
-        if(ui->label_home_tel->text().isEmpty())
-        {
-            ui->label_home_tel->setText("--");
-            ui->label_info_tel->setText("--");
-        }
-        if(ui->label_home_mail->text().isEmpty())
-        {
-            ui->label_home_mail->setText("--");
-            ui->label_info_mail->setText("--");
-        }
-        ui->avatar->setPixmap(service::setAvatarStyle(curbaseInfoWork->getAvatar()));
-        sqlThread->beginThread();
-    });
-    curbaseInfoWork->loadBaseInfoWorking(uid);
+{   
+    ui->label_home_name->setText(curbaseInfoWork->getName());
+    ui->label_home_gender->setText(curbaseInfoWork->getGender());
+    ui->label_home_tel->setText(curbaseInfoWork->getTel());
+    ui->label_home_mail->setText(curbaseInfoWork->getMail());
+    ui->label_home_group->setText(curbaseInfoWork->getGroup());
+    ui->label_home_department->setText(curbaseInfoWork->getDepartment());
+
+    if(ui->label_home_gender->text().isEmpty())
+    {
+        ui->label_home_gender->setText("--");   //将可能为空的数据设置值
+        ui->label_info_gender->setText("--");
+    }
+    if(ui->label_home_tel->text().isEmpty())
+    {
+        ui->label_home_tel->setText("--");
+        ui->label_info_tel->setText("--");
+    }
+    if(ui->label_home_mail->text().isEmpty())
+    {
+        ui->label_home_mail->setText("--");
+        ui->label_info_mail->setText("--");
+    }
+    ui->avatar->setPixmap(service::setAvatarStyle(curbaseInfoWork->getAvatar()));
+    sqlWork->beginThread();
     /*
     QSqlQuery query;
     query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar FROM magic_users WHERE uid = " + uid);
@@ -248,7 +263,6 @@ void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department)
     userManageModel->setFilter(sqlWhere);
 }
 
-
 void MainWindow::on_actExit_triggered()
 {
     QSettings settings("bytecho", "MagicLightAssistant");
@@ -270,7 +284,11 @@ void MainWindow::on_actExit_triggered()
 void MainWindow::on_actHome_triggered()
 {
     ui->stackedWidget->setCurrentIndex(0);
-    setHomePageBaseInfo();  //刷新首页数据
+    if(sqlWork->getisPaused())
+        sqlWork->stopThread();  //等待sqlWork暂停时再停止，避免数据库未连接的清空
+    else
+        return;
+    emit startBaseInfoWork();   //刷新首页数据
 }
 
 void MainWindow::on_actMyInfo_triggered()
