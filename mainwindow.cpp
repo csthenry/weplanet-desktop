@@ -185,55 +185,7 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_homePage_beginTime->setText("--");
         ui->label_homePage_endTime->setText("--");
     }
-
     sqlWork->beginThread();
-    /*
-    QSqlQuery query;
-    query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar FROM magic_users WHERE uid = " + uid);
-    if(query.next())
-    {
-        ui->label_home_name->setText(query.value("name").toString());
-        ui->label_info_name->setText(query.value("name").toString());
-        ui->label_home_gender->setText(query.value("gender").toString());
-        ui->label_info_gender->setText(query.value("gender").toString());
-        if(ui->label_home_gender->text().isEmpty())
-        {
-            ui->label_home_gender->setText("--");   //将可能为空的数据设置值
-            ui->label_info_gender->setText("--");
-        }
-        ui->label_home_tel->setText(query.value("telephone").toString());
-        ui->label_info_tel->setText(query.value("telephone").toString());
-        if(ui->label_home_tel->text().isEmpty())
-        {
-            ui->label_home_tel->setText("--");
-            ui->label_info_tel->setText("--");
-        }
-        ui->label_home_mail->setText(query.value("mail").toString());
-        ui->label_info_mail->setText(query.value("mail").toString());
-        if(ui->label_home_mail->text().isEmpty())
-        {
-            ui->label_home_mail->setText("--");
-            ui->label_info_mail->setText("--");
-        }
-        ui->avatar->setPixmap(service::setAvatarStyle(service::getAvatar(query.value("user_avatar").toString())));
-        ui->info_avatar->setPixmap(*ui->avatar->pixmap());
-        ui->label_home_group->setText(service::getGroup(uid));
-        ui->label_info_group->setText(service::getGroup(uid));
-        ui->label_home_department->setText(service::getDepartment(uid));
-        ui->label_info_department->setText(service::getDepartment(uid));
-
-        ui->label_verifyIcon->setPixmap(*verifyIcon);
-
-        //同时把考勤页面的数据也初始化
-        ui->label_attendPage_uid->setText(uid);
-        ui->label_attendPage_name->setText(query.value("name").toString());
-        ui->label_attendPage_group->setText(service::getGroup(uid));
-        ui->label_attendPage_dpt->setText(service::getDepartment(uid));
-        ui->attendPage_avatar->setPixmap(*ui->avatar->pixmap());
-
-    }
-    db.close();     //没有后续操作，可以关闭
-    */
 }
 
 void MainWindow::setUsersTypeCombox(QComboBox *group, QComboBox *department)
