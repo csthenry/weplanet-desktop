@@ -57,6 +57,31 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     sqlThread = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
     setBaseInfoWork->moveToThread(sqlThread);
+    //开启数据库连接线程
+    dbThread->start();
+    sqlWork->beginThread();
+    connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
+    emit startDbWork();
+
+    connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
+
+    //个人基本信息信号槽
+    connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
+    sqlThread->start();
+    connect(this, &MainWindow::startBaseInfoWork, setBaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
+    //账号权限验证信号槽
+    qRegisterMetaType<QVector<QAction*>>("QVector<QAction*>");
+    connect(this, SIGNAL(startSetAuth(const QString&, const QVector<QAction*>&)), setBaseInfoWork, SLOT(setAuthority(const QString&, const QVector<QAction*>&)));
+    connect(setBaseInfoWork, &baseInfoWork::authorityRes, this, [=](bool res){
+        if(!res)
+        {
+            QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
+            return;
+        }else this->setEnabled(true);
+    });
+    //个人信息编辑信号槽
+    connect(this, SIGNAL(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)), setBaseInfoWork, SLOT(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)));
+    connect(setBaseInfoWork, SIGNAL(editPersonalInfoRes(int)), this, SLOT(on_editPersonalInfoRes(int)));
 }
 
 MainWindow::~MainWindow()
@@ -93,29 +118,6 @@ void MainWindow::receiveData(QString uid)
     this->uid = uid;
     ui->label_home_uid->setText(uid);
     ui->label_info_uid->setText(uid);
-
-    //开启数据库连接线程
-    dbThread->start();
-    sqlWork->beginThread();
-    connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
-    emit startDbWork();
-
-    connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
-
-    connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
-    sqlThread->start();
-    connect(this, &MainWindow::startBaseInfoWork, setBaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
-
-    qRegisterMetaType<QVector<QAction*>>("QVector<QAction*>");
-    connect(this, SIGNAL(startSetAuth(const QString&, const QVector<QAction*>&)), setBaseInfoWork, SLOT(setAuthority(const QString&, const QVector<QAction*>&)));
-
-    connect(setBaseInfoWork, &baseInfoWork::authorityRes, this, [=](bool res){
-        if(!res)
-        {
-            QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
-            return;
-        }else this->setEnabled(true);
-    });
 
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
@@ -245,6 +247,7 @@ void MainWindow::on_actExit_triggered()
     settings.setValue("isAutoLogin", false);    //注销后自动登录失效
 
     QSqlDatabase::removeDatabase("loginDB");
+    QSqlDatabase::removeDatabase("test_loginDB");
     formLoginWindow = new formLogin();
 
     this->close();
@@ -421,7 +424,7 @@ void MainWindow::on_actAttendManagerFinished(QSqlRelationalTableModel *curModel)
 //    attendManageModel = relTableModel_attend->getrelTableModel();
 //    ui->tableView_attendInfo->setModel(attendManageModel);
 //    ui->tableView_attendInfo->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_attendInfo));
-//    ui->tableView_attendInfo->hideColumn(attendManageModel->fieldIndex("num"));     //隐藏不需要的签到编号
+    //    ui->tableView_attendInfo->hideColumn(attendManageModel->fieldIndex("num"));     //隐藏不需要的签到编号
 }
 
 void MainWindow::on_actManage_triggered()
@@ -1020,8 +1023,6 @@ void MainWindow::on_btn_endAttend_clicked()
 
 void MainWindow::on_btn_personalSubmit_clicked()
 {
-    if(!dbStatus)
-        return;
     QString newPwd, newTel, newMail, newAvatar;
     QSqlQuery query;
     if(ui->lineEdit_checkOldPwd->text().isEmpty())
@@ -1037,46 +1038,37 @@ void MainWindow::on_btn_personalSubmit_clicked()
         newMail = ui->lineEdit_personalMail->text();
     if(!ui->lineEdit_personalAvatar->text().isEmpty())
         newAvatar = ui->lineEdit_personalAvatar->text();
-    if(service::authAccount(db, uid, uid.toLongLong(), service::pwdEncrypt(ui->lineEdit_checkOldPwd->text())))
+    if(newPwd != ui->lineEdit_personalPwdCheck->text())
     {
-        if(!newTel.isEmpty())
-            query.exec("UPDATE magic_users SET telephone='" + newTel +"' WHERE uid='" + uid +"';");
-        if(!newMail.isEmpty())
-            query.exec("UPDATE magic_users SET mail='" + newMail +"' WHERE uid='" + uid +"';");
-        if(!newAvatar.isEmpty())
-            query.exec("UPDATE magic_users SET user_avatar='" + newAvatar +"' WHERE uid='" + uid +"';");
-        if(newPwd != ui->lineEdit_personalPwdCheck->text())
-        {
-            QMessageBox::warning(this, "警告", "两次密码输入不一致。", QMessageBox::Ok);
-            return;
-        }
-        if(!newPwd.isEmpty() && newPwd == ui->lineEdit_personalPwdCheck->text())
-        {
-            if(newPwd.length() < 6)
-            {
-                QMessageBox::warning(this, "警告", "请输入6~16位的密码以确保安全。", QMessageBox::Ok);
-                return;
-            }
-            else
-            {
-                query.exec("UPDATE magic_users SET password='" + service::pwdEncrypt(newPwd) +"' WHERE uid='" + uid +"';");
-                QMessageBox::warning(this, "消息", "由于你的（UID:" + uid + "）密码已经修改，账号即将注销，请重新登录。", QMessageBox::Ok);
-                on_btn_personalClear_clicked();
-                on_actExit_triggered();     //调用注销函数
-                return;
-            }
-        }
-        QMessageBox::warning(this, "消息", "你的个人信息（UID:" + uid + "）已经成功修改。", QMessageBox::Ok);
-        on_btn_personalClear_clicked();
-        setHomePageBaseInfo();      //刷新个人信息
-    }
-    else
-    {
-        QMessageBox::warning(this, "消息", "验证原密码验证失败，请检查原密码是否填写正确。", QMessageBox::Ok);
+        QMessageBox::warning(this, "警告", "两次密码输入不一致。", QMessageBox::Ok);
         return;
     }
-    on_btn_personalClear_clicked();
-    db.close();
+    if(!newPwd.isEmpty() && newPwd.length() < 6)
+    {
+        QMessageBox::warning(this, "警告", "请输入6~16位的密码以确保安全。", QMessageBox::Ok);
+        return;
+    }
+    emit editPersonalInfo(ui->lineEdit_checkOldPwd->text(), newTel, newMail, newAvatar, newPwd);
+}
+
+void MainWindow::on_editPersonalInfoRes(int res)
+{
+    if(res == -1)
+    {
+        QMessageBox::warning(this, "消息", "验证原密码验证失败，请检查原密码是否填写正确。", QMessageBox::Ok);
+    }
+    if(res == 1)
+    {
+        QMessageBox::warning(this, "消息", "你的个人信息（UID:" + uid + "）已经成功修改。", QMessageBox::Ok);
+        on_btn_personalClear_clicked();
+        emit startBaseInfoWork();      //刷新个人信息
+    }
+    if(res == 2)
+    {
+        QMessageBox::warning(this, "消息", "由于你的（UID:" + uid + "）密码已经修改，账号即将注销，请重新登录。", QMessageBox::Ok);
+        on_btn_personalClear_clicked();
+        on_actExit_triggered();     //调用注销函数
+    }
 }
 
 void MainWindow::on_btn_personalClear_clicked()

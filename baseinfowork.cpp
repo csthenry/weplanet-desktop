@@ -127,6 +127,28 @@ void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString
     lastSignupUid = query.lastInsertId().toString();
 }
 
+void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, const QString &mail, const QString &avatar, const QString &pwd)
+{
+    QSqlQuery query(DB);
+    if(service::authAccount(DB, uid, uid.toLongLong(), service::pwdEncrypt(oldPwd)))
+    {
+        if(!tel.isEmpty())
+            query.exec("UPDATE magic_users SET telephone='" + tel +"' WHERE uid='" + uid +"';");
+        if(!mail.isEmpty())
+            query.exec("UPDATE magic_users SET mail='" + mail +"' WHERE uid='" + uid +"';");
+        if(!avatar.isEmpty())
+            query.exec("UPDATE magic_users SET user_avatar='" + avatar +"' WHERE uid='" + uid +"';");
+        if(!pwd.isEmpty())
+        {
+            query.exec("UPDATE magic_users SET password='" + service::pwdEncrypt(pwd) +"' WHERE uid='" + uid +"';");
+            emit editPersonalInfoRes(2);
+        }
+        else emit editPersonalInfoRes(1);
+    }
+    else
+        emit editPersonalInfoRes(-1);
+}
+
 void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)
 {
     if(service::authAccount(DB, loginUid, account, pwd) || service::authAccount(DB, loginUid, account, editPwd))

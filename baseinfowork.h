@@ -37,6 +37,7 @@ public slots:
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
     void setAuthority(const QString &uid, const QVector<QAction *> &vector);
     void signUp(const QString& pwd, const QString& name, const QString& tel);
+    void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
 private:
     bool isAttend;
     QDateTime curDateTime;
@@ -63,6 +64,7 @@ signals:
     void autoAuthRes(bool);
     void signupRes(bool);   //返回注册结果
     void authorityRes(bool);    //返回账号权限鉴权结果
+    void editPersonalInfoRes(int);  //个人信息修改结果：1修改成功（不包含密码），2修改成功（包含密码，需要注销），-1修改失败（旧密码验证失败）
 };
 
 #endif // BASEINFOWORK_H

@@ -205,12 +205,16 @@ private slots:
 
     void on_actAttendManagerFinished(QSqlRelationalTableModel *curModel);
 
+    void on_editPersonalInfoRes(int res);
+
 signals:
     void startDbWork();
 
     void startBaseInfoWork();
 
     void startSetAuth(const QString& uid, const QVector<QAction *> &vector);
+
+    void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
 private:
     Ui::MainWindow *ui;
 };

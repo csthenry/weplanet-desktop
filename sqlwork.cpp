@@ -7,7 +7,7 @@ void SqlWork::working()
     {
         while(!isStop)
         {
-            testDbConnection = new QSqlQuery(DB);
+            testDbConnection = new QSqlQuery(testDB);
             dbStatus = testDbConnection->exec("select version();");
             if(!dbStatus)
                 isPaused = false;
@@ -18,6 +18,8 @@ void SqlWork::working()
                 continue;
             }
             qDebug() << "SqlThread线程运行中,db:" << dbStatus << this->thread();
+            if(!dbStatus)
+                testDB.open();
             if(!dbStatus && !DB.open())
                 status = false;
             else
@@ -38,6 +40,7 @@ SqlWork::SqlWork(QString dbName)
     this->dbName = dbName;
     service dbService;
     dbService.addDatabase(DB, this->dbName);
+    dbService.addDatabase(testDB, "test_" + this->dbName);
     moveToThread(this->thread());
 }
 

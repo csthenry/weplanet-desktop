@@ -12,6 +12,7 @@ class SqlWork : public QObject
 private:
     int cnt = 1;
     QSqlDatabase DB;
+    QSqlDatabase testDB;    //用于测试DB状态，防止query冲突
     QString dbName;
     service dbService;
     QSqlQuery *testDbConnection;
