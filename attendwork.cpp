@@ -33,6 +33,8 @@ void AttendWork::analyseWorkTime()
     int cnt = 0;
     QTime workTime(0, 0, 0, 0), beginTime, endTime;
     QSqlRecord curRecord;
+    for(int i = 0; i < 4; i++)
+        workTimeData[i] = 0;
     do{
         curRecord = relTableModel->record(cnt);
         if(!curRecord.value("begin_date").isNull() && !curRecord.value("end_date").isNull())
