@@ -21,6 +21,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     attendmanagework.cpp \
+    attendwork.cpp \
     baseinfowork.cpp \
     checkupdate.cpp \
     comboboxdelegate.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
 
 HEADERS += \
     attendmanagework.h \
+    attendwork.h \
     baseinfowork.h \
     checkupdate.h \
     comboboxdelegate.h \

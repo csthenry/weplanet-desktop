@@ -81,13 +81,13 @@ QSqlTableModel *queryModel::setActivityPage()
     return tabModel;
 }
 
-QSqlRelationalTableModel *queryModel::setActAttendPage_relationalTableModel()
+QSqlRelationalTableModel* queryModel::setActAttendPage_relationalTableModel()
 {
     relTableModel = new QSqlRelationalTableModel(parent, db);
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnRowChange);  //自动提交
-    //relTableModel->setHeaderData(relTableModel->fieldIndex("num"), Qt::Horizontal,"编号");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("num"), Qt::Horizontal,"编号");
     relTableModel->setHeaderData(relTableModel->fieldIndex("a_uid"), Qt::Horizontal,"账号（UID）");
     relTableModel->setHeaderData(relTableModel->fieldIndex("begin_date"), Qt::Horizontal,"签到时间");
     relTableModel->setHeaderData(relTableModel->fieldIndex("end_date"), Qt::Horizontal,"签退时间");
@@ -97,16 +97,10 @@ QSqlRelationalTableModel *queryModel::setActAttendPage_relationalTableModel()
 
     //建立外键关联
     relTableModel->setRelation(relTableModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
-
-    if(!relTableModel->select())
-        return nullptr;
-
-    if(relTableModel->lastError().isValid())
-        return nullptr;
     return relTableModel;
 }
 
-QSqlRelationalTableModel *queryModel::setActUserPage_relationalTableModel()
+QSqlRelationalTableModel* queryModel::setActUserPage_relationalTableModel()
 {
     relTableModel = new QSqlRelationalTableModel(parent, db);
     relTableModel->setTable("magic_users");
@@ -125,16 +119,10 @@ QSqlRelationalTableModel *queryModel::setActUserPage_relationalTableModel()
     //建立外键关联
     relTableModel->setRelation(relTableModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
     relTableModel->setRelation(relTableModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
-
-    if(!relTableModel->select())
-        return nullptr;
-
-    if(relTableModel->lastError().isValid())
-        return nullptr;
     return relTableModel;
 }
 
-void queryModel::analyseWorkTime(int &data_1, int &data_2, int &data_3, int &data_4)
+void queryModel::analyseWorkTime(int data[])
 {
     int cnt = 0;
     QTime workTime(0, 0, 0, 0), beginTime, endTime;
@@ -147,13 +135,13 @@ void queryModel::analyseWorkTime(int &data_1, int &data_2, int &data_3, int &dat
             endTime = QTime::fromString(curRecord.value("end_date").toString(), "hh:mm:ss");
             workTime = workTime.addSecs(beginTime.secsTo(endTime));
             if(workTime.hour() < 4)
-                data_1++;
+                data[0]++;
             if(workTime.hour() >= 4 && workTime.hour() <= 6)
-                data_2++;
+                data[1]++;
             if(workTime.hour() >= 6 && workTime.hour() <= 8)
-                data_3++;
+                data[2]++;
             if(workTime.hour() > 8)
-                data_4++;
+                data[3]++;
             workTime.setHMS(0, 0, 0, 0);
         }
         cnt ++;

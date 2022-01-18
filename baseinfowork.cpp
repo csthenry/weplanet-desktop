@@ -10,7 +10,7 @@ void baseInfoWork::loadBaseInfoWorking()
     curDateTime = QDateTime::currentDateTime();
     this->uid = uid;
     QSqlQuery query(DB);
-    QThread::msleep(1000);    //等待GUI相应的时间，以免程序卡顿或崩溃
+    QThread::msleep(30);    //等待GUI相应的时间
     query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar FROM magic_users WHERE uid = " + uid);
     if(query.next())
     {

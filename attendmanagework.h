@@ -2,7 +2,7 @@
 #define ATTENDMANAGEWORK_H
 
 #include <QObject>
-#include <QSqlRelationalTableModel>
+#include "querymodel.h"
 
 class attendManageWork : public QObject
 {

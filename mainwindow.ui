@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -1876,7 +1876,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_31">
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
+                  <width>40</width>
                   <height>35</height>
                  </size>
                 </property>
@@ -1902,7 +1902,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_33">
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
+                  <width>40</width>
                   <height>35</height>
                  </size>
                 </property>
@@ -1928,7 +1928,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_27">
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
+                  <width>40</width>
                   <height>35</height>
                  </size>
                 </property>
@@ -1954,7 +1954,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_30">
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
+                  <width>40</width>
                   <height>35</height>
                  </size>
                 </property>
@@ -1984,7 +1984,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_28">
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
+                  <width>40</width>
                   <height>35</height>
                  </size>
                 </property>
@@ -2023,7 +2023,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_29">
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
+                  <width>40</width>
                   <height>35</height>
                  </size>
                 </property>
@@ -2049,7 +2049,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_32">
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
+                  <width>40</width>
                   <height>35</height>
                  </size>
                 </property>

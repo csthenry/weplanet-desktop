@@ -24,6 +24,7 @@
 #include "checkupdate.h"
 #include "sqlwork.h"
 #include "baseinfowork.h"
+#include "attendwork.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -73,15 +74,19 @@ private:
 
     void setHomePageBaseInfo();
 
+    void setAttendPage();
+
     void setUsersTypeCombox(QComboBox* group, QComboBox* department);
 
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
 
+    SqlWork *sqlWork;
+
     baseInfoWork *setBaseInfoWork;
 
-    SqlWork *sqlWork;
+    AttendWork *attendWork;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -89,6 +94,7 @@ public:
 
 
 private slots:
+
     void receiveData(QString uid); //接收登录窗口信号
 
     void on_actExit_triggered();
@@ -215,6 +221,9 @@ signals:
     void startSetAuth(const QString& uid, const QVector<QAction *> &vector);
 
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
+    void attendWorking();
+
+    void attendPageModelSubmitAll(int type);
 private:
     Ui::MainWindow *ui;
 };

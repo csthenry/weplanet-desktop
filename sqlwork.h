@@ -23,7 +23,7 @@ private:
     bool dbStatus = false;  //心跳验证状态
 
 public:
-    SqlWork(QString dbName);
+    explicit SqlWork(QString dbName);
     void working();
     void beginThread();
     void stopThread();

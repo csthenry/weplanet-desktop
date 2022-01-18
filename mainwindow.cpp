@@ -54,9 +54,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //多线程相关
     sqlWork = new SqlWork("mainDB");  //sql异步连接
     setBaseInfoWork = new baseInfoWork();
+    attendWork = new AttendWork();
+
     sqlThread = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
     setBaseInfoWork->moveToThread(sqlThread);
+    attendWork->moveToThread(sqlThread);
+
     //开启数据库连接线程
     dbThread->start();
     sqlWork->beginThread();
@@ -82,6 +86,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //个人信息编辑信号槽
     connect(this, SIGNAL(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)), setBaseInfoWork, SLOT(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)));
     connect(setBaseInfoWork, SIGNAL(editPersonalInfoRes(int)), this, SLOT(on_editPersonalInfoRes(int)));
+    //个人考勤页面信号槽
+    qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
+    connect(this, &MainWindow::attendWorking, attendWork, &AttendWork::working);
+    connect(attendWork, &AttendWork::attendWorkFinished, this, &MainWindow::setAttendPage);
+    connect(this, SIGNAL(attendPageModelSubmitAll(int)), attendWork, SLOT(submitAll(int)));
 }
 
 MainWindow::~MainWindow()
@@ -121,11 +130,21 @@ void MainWindow::receiveData(QString uid)
 
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
+
+        //构造model
+        attendPageModel = new QSqlRelationalTableModel(this, sqlWork->getDb());
+
+        //初始化work
         setBaseInfoWork->setDB(sqlWork->getDb());
         setBaseInfoWork->setUid(uid);
+
+        attendWork->setModel(attendPageModel);
+        attendWork->setDB(sqlWork->getDb());
+        attendWork->setUid(uid);
+
         emit startSetAuth(uid, actionList);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
-    });
+    }, Qt::UniqueConnection);
 }
 
 void MainWindow::setHomePageBaseInfo()
@@ -287,46 +306,45 @@ void MainWindow::on_actMyInfo_triggered()
 
 void MainWindow::on_actAttend_triggered()
 {
-    int data_1 = 0, data_2 = 0, data_3 = 0, data_4 = 0; //工作时间分析数据
-    curDateTime = QDateTime::currentDateTime();
+    //int data_1 = 0, data_2 = 0, data_3 = 0, data_4 = 0; //工作时间分析数据
     ui->stackedWidget->setCurrentIndex(4);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
-    if(!dbStatus)
-        return;
+    emit attendWorking();
+}
+
+void MainWindow::setAttendPage()
+{
+    curDateTime = QDateTime::currentDateTime();
+
+    attendPageModel = attendWork->getModel();
+
+    ui->tableView_attendPage->setModel(attendPageModel);
+    ui->tableView_attendPage->hideColumn(attendWork->fieldIndex("num"));   //隐藏考勤数据编号
+    ui->tableView_attendPage->setEditTriggers(QAbstractItemView::NoEditTriggers); //不可编辑
+    QSqlRecord curRec = attendWork->getRecord(0);     //取最新的一条记录
+    if(curRec.value("today") == curDateTime.date().toString("yyyy-MM-dd"))
+    {
+        ui->label_attendPage_status->setText("已签到");
+        ui->label_attendPage_beginTime->setText(curRec.value("begin_date").toString());
+        ui->label_attendPage_endTime->setText(curRec.value("end_date").toString());
+        if(curRec.value("isSupply") == 1)
+            ui->label_attendPage_isSupply->setText("<补签>");
+        else
+            ui->label_attendPage_isSupply->setText("");
+        if(curRec.value("end_date").toString().isEmpty())
+            ui->label_attendPage_endTime->setText("--");
+    }
     else
     {
-        statusIcon->setPixmap(*statusOKIcon);
-        connectStatusLable->setText("Database Status: connected");
-        queryModel relTableModel(db, this);
-        attendPageModel = relTableModel.setActAttendPage_relationalTableModel();
-        attendPageModel->setFilter("a_uid='" + uid +"'");     //只显示当前用户的考勤数据
-        relTableModel.analyseWorkTime(data_1, data_2, data_3, data_4);  //分析工作时间
-        ui->tableView_attendPage->setModel(attendPageModel);
-        ui->tableView_attendPage->hideColumn(attendPageModel->fieldIndex("num"));   //隐藏考勤数据编号
-        ui->tableView_attendPage->setEditTriggers(QAbstractItemView::NoEditTriggers); //不可编辑
-        QSqlRecord curRec = attendPageModel->record(0);     //取最新的一条记录
-        if(curRec.value("today") == curDateTime.date().toString("yyyy-MM-dd"))
-        {
-            ui->label_attendPage_status->setText("已签到");
-            ui->label_attendPage_beginTime->setText(curRec.value("begin_date").toString());
-            ui->label_attendPage_endTime->setText(curRec.value("end_date").toString());
-            if(curRec.value("isSupply") == 1)
-                ui->label_attendPage_isSupply->setText("<补签>");
-            else
-                ui->label_attendPage_isSupply->setText("");
-            if(curRec.value("end_date").toString().isEmpty())
-                ui->label_attendPage_endTime->setText("--");
-        }
-        else
-        {
-            ui->label_attendPage_status->setText("未签到");
-            ui->label_attendPage_beginTime->setText("--");
-            ui->label_attendPage_endTime->setText("--");
-        }
+        ui->label_attendPage_status->setText("未签到");
+        ui->label_attendPage_beginTime->setText("--");
+        ui->label_attendPage_endTime->setText("--");
     }
-    service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), data_1, data_2, data_3, data_4);  //绘制统计图
-    //后续可能有签到签退操作，不能关闭数据库
+
+    int *workTimeSum = attendWork->getWorkTime();
+    service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), workTimeSum[0], workTimeSum[1], workTimeSum[2], workTimeSum[3]);  //绘制统计图
 }
+
 void MainWindow::on_PieSliceHighlight(bool show)
 { //鼠标移入、移出时触发hovered()信号，动态设置setExploded()效果
     QPieSlice *slice;
@@ -979,46 +997,45 @@ void MainWindow::on_btn_beginAttend_clicked()
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("begin_date")), curDateTime.time().toString("HH:mm:ss"));
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("isSupply")), 0);
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("name")), 1);   //这里要填外键关联的字段！
-    if(attendPageModel->submitAll())
-    {
-        QMessageBox::information(this, "消息", "签到成功，签到时间:\n" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 祝你今天元气满满~",
-                                 QMessageBox::Ok);
-        on_actAttend_triggered();  //刷新基本信息
-    }
-    else
-        QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(),
-                                 QMessageBox::Ok);
+
+    connect(attendWork, &AttendWork::attendDone, this, [=](bool res){
+        if(res)
+        {
+            QMessageBox::information(this, "消息", "签到成功，签到时间:\n" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 祝你今天元气满满~", QMessageBox::Ok);
+            on_actAttend_triggered();  //刷新信息
+        }
+        else
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
+    }, Qt::UniqueConnection);
+    emit attendPageModelSubmitAll(1);
 
 }
 
 void MainWindow::on_btn_endAttend_clicked()
 {
+    curDateTime = QDateTime::currentDateTime();
+    connect(attendWork, &AttendWork::attendOutDone, this, [=](bool res){
+        if(res)
+        {
+            QMessageBox::information(this, "消息", "签退成功，签退时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 累了一天了，休息一下吧~", QMessageBox::Ok);
+            on_actAttend_triggered();  //刷新信息
+        }
+        else
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
+    }, Qt::UniqueConnection);
+
     if(ui->label_attendPage_status->text() != "已签到")
     {
         QMessageBox::warning(this, "消息", "请先签到然后再进行签退哦。", QMessageBox::Ok);
         return;
     }
-    QSqlQuery query;
-    curDateTime = QDateTime::currentDateTime();
-    query.exec("SELECT end_date, today FROM magic_attendance WHERE a_uid = '" + uid + "' AND today = '" + curDateTime.date().toString("yyyy-MM-dd") +"';");
-    query.next();
-    if(!query.value("end_date").isNull())
+
+    if(ui->label_attendPage_endTime->text() != "--")
     {
-        QMessageBox::warning(this, "消息", "你已经在" + query.value("end_date").toString() + "签退过啦，请勿重复签退哦~", QMessageBox::Ok);
+        QMessageBox::warning(this, "消息", "你已经在" + ui->label_attendPage_endTime->text() + "签退过啦，请勿重复签退哦~", QMessageBox::Ok);
         return;
     }
-    else
-    {
-        if(query.exec("UPDATE magic_attendance SET end_date = '" + curDateTime.time().toString("hh:mm:ss") + "' WHERE a_uid = '" + uid +"' AND today = '" + curDateTime.date().toString("yyyy-MM-dd") + "';"))
-        {
-            QMessageBox::information(this, "消息", "签退成功，签退时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 累了一天了，休息一下吧~", QMessageBox::Ok);
-            on_actAttend_triggered();  //刷新基本信息
-            return;
-        }
-        else
-            QMessageBox::warning(this, "消息", "数据更新失败，签退失败。", QMessageBox::Ok);
-    }
-
+    emit attendPageModelSubmitAll(0);
 }
 
 void MainWindow::on_btn_personalSubmit_clicked()

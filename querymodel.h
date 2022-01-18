@@ -21,19 +21,19 @@ class queryModel
 {
 public:
     queryModel();
-    queryModel(QSqlDatabase db, QObject* parent);
+    queryModel(QSqlDatabase db, QObject* parent = nullptr);
     QSqlTableModel* setActGroupPage_departmentModel();
     QSqlTableModel* setActGroupPage_groupModel();
     QSqlTableModel* setActivityPage();
     QSqlRelationalTableModel* setActAttendPage_relationalTableModel();
-    QSqlRelationalTableModel *setActUserPage_relationalTableModel();
-    void analyseWorkTime(int& data_1, int& data_2, int& data_3, int& data_4);
+    QSqlRelationalTableModel* setActUserPage_relationalTableModel();
+    void analyseWorkTime(int data[]);
 
     QSqlTableModel* getTableModel();
-    QSqlRelationalTableModel *getrelTableModel();
+    QSqlRelationalTableModel* getrelTableModel();
 private:
     QString uid;
-    QObject* parent;    //主窗口
+    QObject* parent;
     QSqlDatabase db;
     QSqlTableModel *tabModel;
     QSqlRelationalTableModel *relTableModel;
