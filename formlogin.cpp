@@ -72,7 +72,7 @@ formLogin::formLogin(QDialog *parent) :
         this->setEnabled(true);
         readPwd = readLoginSettings();
         loginWork->setDB(sqlWork->getDb());
-    });
+    }, Qt::UniqueConnection);
 
 }
 
@@ -236,6 +236,7 @@ void formLogin::on_authAccountRes(bool res)
     {
         loginUid = loginWork->getLoginUid();
         writeLoginSettings();   //验证成功后，保存账号密码
+        this->hide();
         beforeAccept();
         this->accept();
     }
@@ -251,6 +252,7 @@ void formLogin::on_autoLoginAuthAccountRes(bool res)
         loginUid = loginWork->getLoginUid();
         writeLoginSettings();   //验证成功后，保存账号密码
         autoLoginSuccess = true;
+        this->hide();
         beforeAccept();
         this->accept();
     }

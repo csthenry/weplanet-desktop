@@ -83,11 +83,6 @@ void AttendWork::setModel(QSqlRelationalTableModel *relTableModel)
     this->relTableModel = relTableModel;
 }
 
-QSqlRelationalTableModel* AttendWork::getModel()
-{
-    return relTableModel;
-}
-
 int AttendWork::fieldIndex(const QString &field)
 {
     return relTableModel->fieldIndex(field);
@@ -96,11 +91,6 @@ int AttendWork::fieldIndex(const QString &field)
 int *AttendWork::getWorkTime()
 {
     return workTimeData;
-}
-
-void AttendWork::setThread(QThread *thread)
-{
-    relTableModel->moveToThread(thread);
 }
 
 void AttendWork::submitAll(int type)

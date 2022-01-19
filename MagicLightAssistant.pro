@@ -32,7 +32,8 @@ SOURCES += \
     querymodel.cpp \
     readOnlyDelegate.cpp \
     service.cpp \
-    sqlwork.cpp
+    sqlwork.cpp \
+    usermanagework.cpp
 
 HEADERS += \
     attendmanagework.h \
@@ -46,7 +47,8 @@ HEADERS += \
     querymodel.h \
     readOnlyDelegate.h \
     service.h \
-    sqlwork.h
+    sqlwork.h \
+    usermanagework.h
 
 FORMS += \
     formlogin.ui \

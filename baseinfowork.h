@@ -32,7 +32,7 @@ public:
     QString getDepartment();
 
     QPixmap getAvatar();
-public slots:
+private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
     void setAuthority(const QString &uid, const QVector<QAction *> &vector);

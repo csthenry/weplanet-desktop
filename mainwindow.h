@@ -25,6 +25,7 @@
 #include "sqlwork.h"
 #include "baseinfowork.h"
 #include "attendwork.h"
+#include "usermanagework.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -76,7 +77,7 @@ private:
 
     void setAttendPage();
 
-    void setUsersTypeCombox(QComboBox* group, QComboBox* department);
+    void setUserManagePage();
 
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
@@ -87,6 +88,8 @@ private:
     baseInfoWork *setBaseInfoWork;
 
     AttendWork *attendWork;
+
+    UserManageWork * userManageWork;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -224,6 +227,14 @@ signals:
     void attendWorking();
 
     void attendPageModelSubmitAll(int type);
+
+    void userManageWorking();
+
+    void userManageModelSubmitAll();
+
+    void userManageGetAvatar();
+
+    void userManageSetCombox();
 private:
     Ui::MainWindow *ui;
 };
