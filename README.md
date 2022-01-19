@@ -39,7 +39,6 @@
 * [ ] 审批功能
 * [ ] 审批流程设计
 * [ ] 信息收发
-* [ ] 个人管理
 * [ ] 登录限制
 * [ ] 活动管理
 * [ ] 更多...
@@ -50,6 +49,7 @@
 ![screenshot_3](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_3.jpg)
 ![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_8.png)
 ![screenshot_5](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_6.png)
+![screenshot_6](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_9.png)
 
 更多截图请查看：https://github.com/CSTHenry/MagicLightAssistant/tree/master/screenshot
 
