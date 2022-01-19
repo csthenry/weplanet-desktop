@@ -13,7 +13,6 @@ class AttendWork : public QObject
 public:
     explicit AttendWork(QObject *parent = nullptr);
     void working();
-    void setModelFilter(const QString& filter);
     void analyseWorkTime();
     QSqlRecord getRecord(const int index);
     void setDB(const QSqlDatabase& db);

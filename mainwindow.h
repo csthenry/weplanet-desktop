@@ -26,6 +26,7 @@
 #include "baseinfowork.h"
 #include "attendwork.h"
 #include "usermanagework.h"
+#include "attendmanagework.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -79,6 +80,8 @@ private:
 
     void setUserManagePage();
 
+    void setAttendManagePage();
+
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
@@ -89,7 +92,9 @@ private:
 
     AttendWork *attendWork;
 
-    UserManageWork * userManageWork;
+    UserManageWork *userManageWork;
+
+    AttendManageWork *attendManageWork;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -212,8 +217,6 @@ private slots:
 
     void on_statusChanged(bool status);
 
-    void on_actAttendManagerFinished(QSqlRelationalTableModel *curModel);
-
     void on_editPersonalInfoRes(int res);
 
 signals:
@@ -235,6 +238,12 @@ signals:
     void userManageGetAvatar();
 
     void userManageSetCombox();
+
+    void attendManageWorking();
+
+    void attendManageGetAvatar();
+
+    void attendManageModelSubmitAll(int type);
 private:
     Ui::MainWindow *ui;
 };

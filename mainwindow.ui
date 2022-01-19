@@ -2245,9 +2245,15 @@ padding: 0px 5px;</string>
             </item>
             <item row="1" column="0">
              <widget class="QGroupBox" name="groupBox_28">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>350</width>
                 <height>130</height>
                </size>
               </property>
@@ -2332,6 +2338,12 @@ padding: 0px 5px;</string>
             </item>
             <item row="1" column="1">
              <widget class="QGroupBox" name="groupBox_29">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="font">
                <font>
                 <family>微软雅黑</family>
@@ -2346,7 +2358,7 @@ padding: 0px 5px;</string>
                 <widget class="QLabel" name="label_18">
                  <property name="maximumSize">
                   <size>
-                   <width>55</width>
+                   <width>65</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -2357,9 +2369,15 @@ padding: 0px 5px;</string>
                </item>
                <item row="0" column="1" colspan="2">
                 <widget class="QComboBox" name="comboBox_group">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>130</width>
                    <height>35</height>
                   </size>
                  </property>
@@ -2385,6 +2403,12 @@ padding: 0px 5px;</string>
                </item>
                <item row="0" column="4">
                 <widget class="QComboBox" name="comboBox_department">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>130</width>
@@ -2815,102 +2839,128 @@ padding: 0px 5px;</string>
              <property name="title">
               <string>用户筛选</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_30">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_21">
-                <property name="text">
-                 <string>搜索UID或姓名：</string>
-                </property>
-               </widget>
-              </item>
+             <layout class="QGridLayout" name="gridLayout_66">
               <item row="0" column="1">
-               <widget class="QLineEdit" name="lineEdit_searchUid_attend">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>35</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>微软雅黑</family>
-                 </font>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">border-radius: 17.4px;/*设置圆角的大小*/
+               <layout class="QGridLayout" name="gridLayout_65">
+                <item row="0" column="0">
+                 <widget class="QComboBox" name="comboBox_group_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>所有用户组</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="comboBox_department_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>所有部门</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QPushButton" name="btn_attendManagePage_recovery">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>重置</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="0">
+               <layout class="QGridLayout" name="gridLayout_30">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_21">
+                  <property name="text">
+                   <string>搜索用户：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="lineEdit_searchUid_attend">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border-radius: 17.4px;/*设置圆角的大小*/
 border: .5px solid rgb(207, 207, 207);
 padding: 0px 5px;</string>
-                </property>
-                <property name="echoMode">
-                 <enum>QLineEdit::Normal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QComboBox" name="comboBox_group_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>110</width>
-                  <height>35</height>
-                 </size>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>所有用户组</string>
-                 </property>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="echoMode">
+                   <enum>QLineEdit::Normal</enum>
+                  </property>
+                  <property name="placeholderText">
+                   <string>请输入UID或姓名</string>
+                  </property>
+                 </widget>
                 </item>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QComboBox" name="comboBox_department_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>110</width>
-                  <height>35</height>
-                 </size>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>所有部门</string>
-                 </property>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QPushButton" name="btn_attendManagePage_search">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>搜索用户</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resource.qrc">
+                    <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
-               </widget>
-              </item>
-              <item row="1" column="0" colspan="2">
-               <widget class="QPushButton" name="btn_attendManagePage_search">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>搜索用户</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resource.qrc">
-                  <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2" colspan="2">
-               <widget class="QPushButton" name="btn_attendManagePage_recovery">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>重置</string>
-                </property>
-               </widget>
+               </layout>
               </item>
              </layout>
             </widget>

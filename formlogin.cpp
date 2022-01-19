@@ -19,7 +19,6 @@ formLogin::formLogin(QDialog *parent) :
     ui(new Ui::formLogin)
 {
     ui->setupUi(this);
-    this->setEnabled(false);
     //限制登录注册输入
     QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
     QValidator* validator_account = new QRegExpValidator(regx_account), *validator_pwd= new QRegExpValidator(regx_pwd);
@@ -69,7 +68,6 @@ formLogin::formLogin(QDialog *parent) :
     //初始化相关
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
-        this->setEnabled(true);
         readPwd = readLoginSettings();
         loginWork->setDB(sqlWork->getDb());
     }, Qt::UniqueConnection);

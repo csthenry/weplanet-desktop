@@ -56,11 +56,6 @@ void AttendWork::analyseWorkTime()
     }while(!curRecord.value("begin_date").isNull());
 }
 
-void AttendWork::setModelFilter(const QString &filter)
-{
-    relTableModel->setFilter(filter);
-}
-
 QSqlRecord AttendWork::getRecord(const int index)
 {
     QSqlRecord record;

@@ -31,7 +31,7 @@ QString service::pwdEncrypt(const QString &str) //字符串MD5算法加密
     hash.addData(btArray);  //添加数据到加密哈希值
     QByteArray resultArray =hash.result();  //返回最终的哈希值
     QString md5 = resultArray.toHex();  //转换为16进制字符串
-    return  md5;
+    return md5;
 }
 
 void service::connectDatabase(QSqlDatabase& db)

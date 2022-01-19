@@ -157,7 +157,7 @@ padding: 0px 5px;</string>
           <string/>
          </property>
          <property name="text">
-          <string extracomment="eeee"/>
+          <string/>
          </property>
          <property name="maxLength">
           <number>32767</number>
@@ -243,6 +243,11 @@ padding: 0px 5px;</string>
          <height>16777215</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius: 17px;/*设置圆角的大小*/
+border: .5px solid rgb(207, 207, 207);
+padding: 0px 5px;</string>
+       </property>
        <property name="maxLength">
         <number>16</number>
        </property>
@@ -261,6 +266,11 @@ padding: 0px 5px;</string>
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius: 17px;/*设置圆角的大小*/
+border: .5px solid rgb(207, 207, 207);
+padding: 0px 5px;</string>
        </property>
        <property name="maxLength">
         <number>16</number>
@@ -283,6 +293,11 @@ padding: 0px 5px;</string>
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius: 17px;/*设置圆角的大小*/
+border: .5px solid rgb(207, 207, 207);
+padding: 0px 5px;</string>
        </property>
        <property name="maxLength">
         <number>16</number>
@@ -328,6 +343,11 @@ padding: 0px 5px;</string>
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius: 17px;/*设置圆角的大小*/
+border: .5px solid rgb(207, 207, 207);
+padding: 0px 5px;</string>
        </property>
        <property name="maxLength">
         <number>16</number>
