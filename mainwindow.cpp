@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     connectStatusLable = new QLabel("Database Status: connecting...");
     connectStatusLable->setMinimumWidth(1100);
+
+    userAvatar = new QPixmap(":/images/color_icon/user.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
 
     verifyIcon = new QPixmap(":/images/color_icon/verify_2.svg");
@@ -256,7 +258,11 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_home_mail->setText("--");
         ui->label_info_mail->setText("--");
     }
-    ui->avatar->setPixmap(service::setAvatarStyle(setBaseInfoWork->getAvatar()));
+
+    if(setBaseInfoWork->getAvatar().isNull())
+        ui->avatar->setPixmap(*userAvatar);
+    else
+        ui->avatar->setPixmap(service::setAvatarStyle(setBaseInfoWork->getAvatar()));
     ui->info_avatar->setPixmap(*ui->avatar->pixmap());
 
     //考勤页面用户信息

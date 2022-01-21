@@ -66,7 +66,7 @@ private:
 
     QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
-    QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon;
+    QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon, *userAvatar;
 
     formLogin *formLoginWindow;
 
