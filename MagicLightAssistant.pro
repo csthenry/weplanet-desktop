@@ -27,6 +27,7 @@ SOURCES += \
     comboboxdelegate.cpp \
     excelexport.cpp \
     formlogin.cpp \
+    groupmanagework.cpp \
     main.cpp \
     mainwindow.cpp \
     querymodel.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     comboboxdelegate.h \
     excelexport.h \
     formlogin.h \
+    groupmanagework.h \
     mainwindow.h \
     querymodel.h \
     readOnlyDelegate.h \

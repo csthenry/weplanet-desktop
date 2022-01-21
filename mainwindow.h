@@ -27,6 +27,7 @@
 #include "attendwork.h"
 #include "usermanagework.h"
 #include "attendmanagework.h"
+#include "groupmanagework.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -82,6 +83,8 @@ private:
 
     void setAttendManagePage();
 
+    void setGroupManagePage();
+
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
@@ -95,6 +98,8 @@ private:
     UserManageWork *userManageWork;
 
     AttendManageWork *attendManageWork;
+
+    GroupManageWork *groupManageWork;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -244,6 +249,12 @@ signals:
     void attendManageGetAvatar();
 
     void attendManageModelSubmitAll(int type);
+
+    void groupManageWorking();
+
+    void groupManageModelSubmitAll(int type);
+
+    void fixUser(int type, const QString& removedId);
 private:
     Ui::MainWindow *ui;
 };

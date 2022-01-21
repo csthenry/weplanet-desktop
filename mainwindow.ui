@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>11</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -987,7 +987,13 @@
               <string notr="true">margin:5px;</string>
              </property>
              <property name="text">
-              <string>avatar</string>
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1871,8 +1877,11 @@ padding: 0px 5px;</string>
               <property name="styleSheet">
                <string notr="true">margin:5px;</string>
               </property>
-              <property name="text">
-               <string>avatar</string>
+              <property name="pixmap">
+               <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2780,8 +2789,11 @@ padding: 0px 5px;</string>
               <property name="styleSheet">
                <string notr="true">margin:5px;</string>
               </property>
-              <property name="text">
-               <string>avatar</string>
+              <property name="pixmap">
+               <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -3072,8 +3084,11 @@ padding: 0px 5px;</string>
              <property name="styleSheet">
               <string notr="true">margin:5px;</string>
              </property>
-             <property name="text">
-              <string>avatar</string>
+             <property name="pixmap">
+              <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
              </property>
             </widget>
            </item>

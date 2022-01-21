@@ -66,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     attendWork = new AttendWork();
     userManageWork = new UserManageWork();
     attendManageWork = new AttendManageWork();
+    groupManageWork = new GroupManageWork();
 
     sqlThread = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
@@ -73,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     attendWork->moveToThread(sqlThread);
     userManageWork->moveToThread(sqlThread);
     attendManageWork->moveToThread(sqlThread);
+    groupManageWork->moveToThread(sqlThread);
 
     //开启数据库连接线程
     dbThread->start();
@@ -94,8 +96,14 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         attendPageModel = new QSqlRelationalTableModel(this, sqlWork->getDb());
         userManageModel = new QSqlRelationalTableModel(this, sqlWork->getDb());
         attendManageModel = new QSqlRelationalTableModel(this, sqlWork->getDb());
+        groupModel = new QSqlTableModel(this, sqlWork->getDb());
+        departmentModel = new QSqlTableModel(this, sqlWork->getDb());
+        activityModel = new QSqlTableModel(this, sqlWork->getDb());
 
         userManagePageSelection = new QItemSelectionModel(userManageModel);
+        groupPageSelection_group = new QItemSelectionModel(groupModel);
+        groupPageSelection_department = new QItemSelectionModel(departmentModel);
+        activitySelection = new QItemSelectionModel(activityModel);
 
         //初始化work
         setBaseInfoWork->setDB(sqlWork->getDb());
@@ -112,13 +120,19 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         attendManageWork->setUserModel(userManageModel);    //直接沿用用户管理界面的model
         attendManageWork->setAttendModel(attendManageModel);
 
+        groupManageWork->setDB(sqlWork->getDb());
+        groupManageWork->setGroupModel(groupModel);
+        groupManageWork->setDepartmentModel(departmentModel);
+
         emit startSetAuth(uid, actionList);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
     }, Qt::UniqueConnection);
+
     //个人基本信息信号槽
     connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
     sqlThread->start();
     connect(this, &MainWindow::startBaseInfoWork, setBaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
+
     //账号权限验证信号槽
     connect(this, SIGNAL(startSetAuth(const QString&, const QVector<QAction*>&)), setBaseInfoWork, SLOT(setAuthority(const QString&, const QVector<QAction*>&)));
     connect(setBaseInfoWork, &baseInfoWork::authorityRes, this, [=](bool res){
@@ -128,13 +142,34 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             return;
         }else this->setEnabled(true);
     });
+
     //个人信息编辑信号槽
     connect(this, SIGNAL(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)), setBaseInfoWork, SLOT(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)));
     connect(setBaseInfoWork, SIGNAL(editPersonalInfoRes(int)), this, SLOT(on_editPersonalInfoRes(int)));
+
     //个人考勤页面信号槽
     connect(this, &MainWindow::attendWorking, attendWork, &AttendWork::working);
     connect(attendWork, &AttendWork::attendWorkFinished, this, &MainWindow::setAttendPage);
     connect(this, SIGNAL(attendPageModelSubmitAll(int)), attendWork, SLOT(submitAll(int)));
+    connect(attendWork, &AttendWork::attendDone, this, [=](bool res){
+        if(res)
+        {
+            QMessageBox::information(this, "消息", "签到成功，签到时间:\n" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 祝你今天元气满满~", QMessageBox::Ok);
+            on_actAttend_triggered();  //刷新信息
+        }
+        else
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
+    }, Qt::UniqueConnection);
+    connect(attendWork, &AttendWork::attendOutDone, this, [=](bool res){
+        if(res)
+        {
+            QMessageBox::information(this, "消息", "签退成功，签退时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 累了一天了，休息一下吧~", QMessageBox::Ok);
+            on_actAttend_triggered();  //刷新信息
+        }
+        else
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
+    }, Qt::UniqueConnection);
+
     //用户管理信号槽
     connect(this, &MainWindow::userManageWorking, userManageWork, &UserManageWork::working);
     connect(userManageWork, &UserManageWork::userManageWorkFinished, this, &MainWindow::setUserManagePage);
@@ -152,10 +187,20 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     }, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar){
         if(avatar.isNull())
-            ui->userManagePage_avatar->setText("无头像");
+            ui->userManagePage_avatar->setPixmap(*userAvatar);
         else
             ui->userManagePage_avatar->setPixmap(service::setAvatarStyle(avatar));
     }, Qt::UniqueConnection);
+    connect(userManageWork, &UserManageWork::submitAllFinished, this, [=](bool res){
+        if(!res)
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + userManageModel->lastError().text(),
+                                     QMessageBox::Ok);
+        else{
+            ui->btn_editUser_check->setEnabled(false);
+            ui->btn_editUser_cancel->setEnabled(false);
+        }
+    }, Qt::UniqueConnection);
+
     //考勤管理信号槽
     connect(this, &MainWindow::attendManageWorking, attendManageWork, &AttendManageWork::working);
     connect(this, &MainWindow::attendManageGetAvatar, attendManageWork, &AttendManageWork::loadAvatar);
@@ -163,7 +208,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(attendManageWork, &AttendManageWork::attendManageWorkFinished, this, &MainWindow::setAttendManagePage);
     connect(attendManageWork, &AttendManageWork::avatarFinished, this, [=](QPixmap avatar){
         if(avatar.isNull())
-            ui->attendManagePage_avatar->setText("无头像");
+            ui->attendManagePage_avatar->setPixmap(*userAvatar);
         else
             ui->attendManagePage_avatar->setPixmap(service::setAvatarStyle(avatar));
     }, Qt::UniqueConnection);
@@ -188,8 +233,44 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendManageModel->lastError().text(),
                                      QMessageBox::Ok);
     });
-}
 
+    //组织架构管理信号槽
+    connect(this, &MainWindow::groupManageWorking, groupManageWork, &GroupManageWork::working);
+    connect(this, &MainWindow::groupManageModelSubmitAll, groupManageWork, &GroupManageWork::submitAll);
+    connect(groupManageWork, &GroupManageWork::groupManageWorkFinished, this, &MainWindow::setGroupManagePage);
+    connect(this, &MainWindow::fixUser, groupManageWork, &GroupManageWork::fixUser);
+    connect(groupManageWork, &GroupManageWork::submitFinished_0, this, [=](bool res){
+        if (!res)
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + departmentModel->lastError().text(),
+                                     QMessageBox::Ok);
+        else
+        {
+            ui->btn_editDpt_check->setEnabled(departmentModel->isDirty());
+            ui->btn_editDpt_cancel->setEnabled(departmentModel->isDirty());
+            if(!removedDptId.isEmpty())
+            {
+                emit fixUser(0, removedDptId);
+                removedDptId.clear();
+            }
+        }
+    });
+
+    connect(groupManageWork, &GroupManageWork::submitFinished_1, this, [=](bool res){
+        if (!res)
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + groupModel->lastError().text(),
+                                     QMessageBox::Ok);
+        else
+        {
+            ui->btn_editGroup_check->setEnabled(false);
+            ui->btn_editGroup_cancel->setEnabled(false);
+            if(!removedGroupId.isEmpty())
+            {
+                emit fixUser(1, removedGroupId);
+                removedGroupId.clear();
+            }
+        }
+    });
+}
 MainWindow::~MainWindow()
 {
     //在此处等待所有线程停止
@@ -214,6 +295,7 @@ MainWindow::~MainWindow()
     delete setBaseInfoWork;
     delete userManageWork;
     delete attendManageWork;
+    delete groupManageWork;
     delete sqlThread;
 
     delete readOnlyDelegate;
@@ -471,7 +553,6 @@ void MainWindow::setAttendManagePage()
     ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("user_avatar"));
     ui->tableView_attendUsers->hideColumn(userManageModel->fieldIndex("gender"));
 
-    userManagePageSelection = new QItemSelectionModel(userManageModel);     //套用用户管理页的selection
     ui->tableView_attendUsers->setSelectionModel(userManagePageSelection);
 
     //当前行变化时触发currentRowChanged信号
@@ -521,7 +602,6 @@ void MainWindow::on_actManage_triggered()
         //活动列表
         ui->tableView_actList->setModel(activityModel);
 
-        activitySelection = new QItemSelectionModel(activityModel);
         ui->tableView_actList->setSelectionModel(activitySelection);
         //当前行变化时触发currentChanged信号
         connect(activitySelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
@@ -542,7 +622,9 @@ void MainWindow::on_actApplyItems_triggered()
 void MainWindow::on_actGroup_triggered()
 {
     ui->stackedWidget->setCurrentIndex(11);
-    bool isEditable = false;
+    ui->stackedWidget->currentWidget()->setEnabled(false);
+
+    emit groupManageWorking();      //开始加载model
 
     //tableView显示属性设置
     ui->tableView_group->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -557,47 +639,38 @@ void MainWindow::on_actGroup_triggered()
     ui->tableView_department->setItemDelegateForColumn(0, readOnlyDelegate);    //第一列不可编辑
     ui->tableView_group->setItemDelegateForColumn(0, readOnlyDelegate);
 
-    if(!dbStatus)
-        return;
-    else
-    {
-        statusIcon->setPixmap(*statusOKIcon);
-        connectStatusLable->setText("Database Status: connected");
+    //当前项变化时触发currentChanged信号
+    connect(groupPageSelection_group, SIGNAL(currentChanged(QModelIndex, QModelIndex)),
+                this, SLOT(on_groupPageGroupcurrentChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+    //选择行变化时
+    connect(groupPageSelection_department, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+                this, SLOT(on_groupPageDptcurrentChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
-        queryModel tableModel(db, this);
-        groupModel = tableModel.setActGroupPage_groupModel(), departmentModel = tableModel.setActGroupPage_departmentModel();
+    ui->tableView_group->setRowHidden(0, true);
 
-        ui->tableView_group->setModel(groupModel);
-        ui->tableView_department->setModel(departmentModel);
+}
 
-        groupPageSelection_group = new QItemSelectionModel(groupModel);
-        groupPageSelection_department = new QItemSelectionModel(departmentModel);
+void MainWindow::setGroupManagePage()
+{
+    bool isEditable = false;
+    ui->stackedWidget->currentWidget()->setEnabled(true);
+    ui->tableView_group->setModel(groupModel);
+    ui->tableView_department->setModel(departmentModel);
 
-        //当前项变化时触发currentChanged信号
-        connect(groupPageSelection_group, SIGNAL(currentChanged(QModelIndex, QModelIndex)),
-                    this, SLOT(on_groupPageGroupcurrentChanged(QModelIndex, QModelIndex)));
-        //选择行变化时
-        connect(groupPageSelection_department, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-                    this, SLOT(on_groupPageDptcurrentChanged(QModelIndex, QModelIndex)));
+    //权限设置combox
+    comboxList.clear();
+    comboxList << "0" << "1";
+    comboxDelegateAuthority.setItems(comboxList, isEditable);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("users_manage"), &comboxDelegateAuthority);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("attend_manage"), &comboxDelegateAuthority);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("apply_manage"), &comboxDelegateAuthority);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("applyItem_manage"), &comboxDelegateAuthority);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("group_manage"), &comboxDelegateAuthority);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("activity_manage"), &comboxDelegateAuthority);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("send_message"), &comboxDelegateAuthority);
 
-        ui->tableView_group->setSelectionModel(groupPageSelection_group);
-        ui->tableView_department->setSelectionModel(groupPageSelection_department);
-
-        ui->tableView_group->setRowHidden(0, true);
-
-        //权限设置combox
-        comboxList.clear();
-        comboxList << "0" << "1";
-        comboxDelegateAuthority.setItems(comboxList, isEditable);
-        ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("users_manage"), &comboxDelegateAuthority);
-        ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("attend_manage"), &comboxDelegateAuthority);
-        ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("apply_manage"), &comboxDelegateAuthority);
-        ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("applyItem_manage"), &comboxDelegateAuthority);
-        ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("group_manage"), &comboxDelegateAuthority);
-        ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("activity_manage"), &comboxDelegateAuthority);
-        ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("send_message"), &comboxDelegateAuthority);
-    }
-    //可能有操作，不关闭数据库
+    ui->tableView_group->setSelectionModel(groupPageSelection_group);
+    ui->tableView_department->setSelectionModel(groupPageSelection_department);
 }
 
 void MainWindow::on_actMore_triggered()
@@ -743,21 +816,7 @@ void MainWindow::on_btn_addGroup_clicked()
 
 void MainWindow::on_btn_editGroup_check_clicked()
 {
-    bool res = groupModel->submitAll();
-    QSqlQuery query;
-    if (!res)
-        QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + groupModel->lastError().text(),
-                                 QMessageBox::Ok);
-    else
-    {
-        ui->btn_editGroup_check->setEnabled(false);
-        ui->btn_editGroup_cancel->setEnabled(false);
-        if(!removedGroupId.isEmpty())
-        {
-            query.exec("UPDATE magic_users SET user_group='2' WHERE user_group='" + removedGroupId + "';");   //将已经删除的用户组恢复至默认普通用户
-            removedGroupId.clear();
-        }
-    }
+    emit groupManageModelSubmitAll(1);
 }
 
 void MainWindow::on_btn_editGroup_cancel_clicked()
@@ -802,21 +861,7 @@ void MainWindow::on_btn_delGroup_clicked()
 
 void MainWindow::on_btn_editDpt_check_clicked()
 {
-    bool res = departmentModel->submitAll();
-    QSqlQuery query;
-    if (!res)
-        QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + departmentModel->lastError().text(),
-                                 QMessageBox::Ok);
-    else
-    {
-        ui->btn_editDpt_check->setEnabled(false);
-        ui->btn_editDpt_cancel->setEnabled(false);
-        if(!removedDptId.isEmpty())
-        {
-            query.exec("UPDATE magic_users SET user_dpt='1' WHERE user_dpt='" + removedDptId + "';");   //将已经删除的部门恢复至默认部门
-            removedDptId.clear();
-        }
-    }
+    emit groupManageModelSubmitAll(0);
 }
 
 void MainWindow::on_btn_editDpt_cancel_clicked()
@@ -851,15 +896,6 @@ void MainWindow::on_btn_delUser_clicked()
 void MainWindow::on_btn_editUser_check_clicked()
 {
     emit userManageModelSubmitAll();
-    connect(userManageWork, &UserManageWork::submitAllFinished, this, [=](bool res){
-        if(!res)
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + userManageModel->lastError().text(),
-                                     QMessageBox::Ok);
-        else{
-            ui->btn_editUser_check->setEnabled(false);
-            ui->btn_editUser_cancel->setEnabled(false);
-        }
-    }, Qt::UniqueConnection);
 }
 
 void MainWindow::on_btn_editUser_cancel_clicked()
@@ -1036,15 +1072,6 @@ void MainWindow::on_btn_beginAttend_clicked()
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("isSupply")), 0);
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("name")), 1);   //这里要填外键关联的字段！
 
-    connect(attendWork, &AttendWork::attendDone, this, [=](bool res){
-        if(res)
-        {
-            QMessageBox::information(this, "消息", "签到成功，签到时间:\n" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 祝你今天元气满满~", QMessageBox::Ok);
-            on_actAttend_triggered();  //刷新信息
-        }
-        else
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
-    }, Qt::UniqueConnection);
     emit attendPageModelSubmitAll(1);
 
 }
@@ -1052,15 +1079,6 @@ void MainWindow::on_btn_beginAttend_clicked()
 void MainWindow::on_btn_endAttend_clicked()
 {
     curDateTime = QDateTime::currentDateTime();
-    connect(attendWork, &AttendWork::attendOutDone, this, [=](bool res){
-        if(res)
-        {
-            QMessageBox::information(this, "消息", "签退成功，签退时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 累了一天了，休息一下吧~", QMessageBox::Ok);
-            on_actAttend_triggered();  //刷新信息
-        }
-        else
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
-    }, Qt::UniqueConnection);
 
     if(ui->label_attendPage_status->text() != "已签到")
     {
