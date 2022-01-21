@@ -33,7 +33,7 @@ void baseInfoWork::loadBaseInfoWorking()
     }
     else
         isAttend = false;
-
+    query.clear();
     emit baseInfoFinished();
     qDebug() << "baseInfoLoad线程：" << this->thread();
 }

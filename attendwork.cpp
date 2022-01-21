@@ -97,6 +97,7 @@ void AttendWork::submitAll(int type)
     {
         QSqlQuery query(DB);
         bool res = query.exec("UPDATE magic_attendance SET end_date = '" + cur.time().toString("hh:mm:ss") + "' WHERE a_uid = '" + uid +"' AND today = '" + cur.date().toString("yyyy-MM-dd") + "';");
+        query.clear();
         emit attendOutDone(res);
     }
 }

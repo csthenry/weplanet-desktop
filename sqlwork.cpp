@@ -9,9 +9,9 @@ void SqlWork::working()
         {
             testDbConnection = new QSqlQuery(testDB);
             dbStatus = testDbConnection->exec("select version();");
+            delete testDbConnection;
             if(!dbStatus)
                 isPaused = false;
-            delete testDbConnection;
             if(isPaused)
             {
                 QThread::sleep(5);

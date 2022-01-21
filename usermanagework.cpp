@@ -36,7 +36,7 @@ void UserManageWork::working()
     comboxGroup.exec("SELECT * FROM magic_department");
     while(comboxGroup.next())
         comboxItems_department << comboxGroup.value("dpt_name").toString();
-
+    comboxGroup.clear();
     emit userManageWorkFinished();
 }
 
