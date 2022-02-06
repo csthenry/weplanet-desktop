@@ -71,3 +71,6 @@ Thumbs.db
 *.dll
 *.exe
 
+/release
+/debug
+/.vs/MagicLightAssistant

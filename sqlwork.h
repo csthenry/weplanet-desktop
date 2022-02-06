@@ -1,3 +1,6 @@
+﻿#pragma once
+#pragma execution_character_set("utf-8")
+
 #ifndef SQLWORK_H
 #define SQLWORK_H
 

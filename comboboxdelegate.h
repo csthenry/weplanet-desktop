@@ -1,4 +1,7 @@
-﻿#ifndef COMBOBOXDELEGATE_H
+﻿#pragma once
+#pragma execution_character_set("utf-8")
+
+#ifndef COMBOBOXDELEGATE_H
 #define COMBOBOXDELEGATE_H
 
 #include <QStyledItemDelegate>

@@ -1,7 +1,11 @@
+﻿#pragma once
+#pragma execution_character_set("utf-8")
+
 #ifndef GROUPMANAGEWORK_H
 #define GROUPMANAGEWORK_H
 
 #include <QObject>
+#include <QMutex>
 #include <QSqlQuery>
 #include "querymodel.h"
 
@@ -17,6 +21,7 @@ public:
     void submitAll(int type);   //1代表提交用户组model，0为部门
     void fixUser(int type, const QString& removedId);
 private:
+    bool isFirst = true;
     QSqlDatabase DB;
     QSqlTableModel *groupModel, *departmentModel;
 

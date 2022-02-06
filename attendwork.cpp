@@ -1,4 +1,4 @@
-#include "attendwork.h"
+﻿#include "attendwork.h"
 
 AttendWork::AttendWork(QObject *parent) : QObject(parent)
 {
@@ -7,6 +7,13 @@ AttendWork::AttendWork(QObject *parent) : QObject(parent)
 
 void AttendWork::working()
 {
+    if(!isFirst)
+    {
+        relTableModel->select();
+        analyseWorkTime();
+        emit attendWorkFinished();
+        return;
+    }
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -25,6 +32,8 @@ void AttendWork::working()
 
     //分析工作时间
     analyseWorkTime();
+
+    isFirst = false;
     emit attendWorkFinished();
 }
 

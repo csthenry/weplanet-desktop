@@ -1,4 +1,4 @@
-/***************************************************/
+﻿/***************************************************/
 /*              Magic Light Assistant              */
 /* Copyright (c) 2017-2021 by bytecho.net          */
 /* Written by Henry                                */
@@ -26,8 +26,9 @@ int main(int argc, char *argv[])
     }
     else
     {
-        return  0;
+        delete formLoginWindow;
+        return a.exec();
     }
-    delete formLoginWindow;
-    return a.exec();
+	return  0;
+
 }

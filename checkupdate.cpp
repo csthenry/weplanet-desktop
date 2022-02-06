@@ -1,4 +1,4 @@
-#include "checkupdate.h"
+﻿#include "checkupdate.h"
 
 checkUpdate::checkUpdate()
 {

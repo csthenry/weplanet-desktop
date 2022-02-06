@@ -1,4 +1,4 @@
-/***************************************************/
+﻿/***************************************************/
 /*              Magic Light Assistant              */
 /* Copyright (c) 2017-2021 by bytecho.net          */
 /* Written by Henry                                */
@@ -77,6 +77,18 @@ formLogin::formLogin(QDialog *parent) :
 formLogin::~formLogin()
 {
     //在此处等待所有线程停止
+    if (sqlThread->isRunning())
+    {
+        sqlThread->quit();
+        sqlThread->wait();
+    }
+    if (dbThread->isRunning())
+    {
+        sqlWork->stopThread();
+        sqlWork->quit();
+        dbThread->quit();
+        dbThread->wait();
+    }
 
     delete ui;
     delete loginWork;

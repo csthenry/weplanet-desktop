@@ -1,3 +1,6 @@
+﻿#pragma once
+#pragma execution_character_set("utf-8")
+
 #ifndef USERMANAGEWORK_H
 #define USERMANAGEWORK_H
 
@@ -17,19 +20,21 @@ public:
     void loadAvatar();
     void setUsersTypeCombox();
     void setCurAvatarUrl(const QString& url);
+    void getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department);
 private slots:
 
 private:
+    bool isFirst = true;
     QSqlDatabase DB;
     QString avatarUrl;
     QPixmap curPix;
     QSqlRelationalTableModel *relTableModel;
     QStringList comboxItems_group, comboxItems_department;
+    void getComboxItems();
 signals:
     void userManageWorkFinished();
     void submitAllFinished(bool);
     void avatarFinished(QPixmap curPix);
-    void comboxSetFinished(QStringList comboxItems_group, QStringList comboxItems_department);
 };
 
 #endif // USERMANAGEWORK_H

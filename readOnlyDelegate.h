@@ -1,3 +1,6 @@
+﻿#pragma once
+#pragma execution_character_set("utf-8")
+
 #ifndef READONLYDELEGATE_H
 #define READONLYDELEGATE_H
 #include <QItemDelegate>

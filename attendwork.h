@@ -1,8 +1,12 @@
+﻿#pragma once
+#pragma execution_character_set("utf-8")
+
 #ifndef ATTENDWORK_H
 #define ATTENDWORK_H
 
 #include <QObject>
 #include <QDebug>
+#include <QMutex>
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include "querymodel.h"
@@ -23,6 +27,7 @@ public:
 private slots:
     void submitAll(int type);   //1代表签到，0代表签退
 private:
+    bool isFirst = true;
     int workTimeData[4] = {0};
     QString uid;
     QSqlDatabase DB;

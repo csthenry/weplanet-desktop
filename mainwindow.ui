@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>11</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -2505,7 +2505,7 @@ padding: 0px 5px;</string>
                </size>
               </property>
               <property name="text">
-               <string/>
+               <string>--</string>
               </property>
              </widget>
             </item>
@@ -2531,7 +2531,7 @@ padding: 0px 5px;</string>
                </size>
               </property>
               <property name="text">
-               <string/>
+               <string>--</string>
               </property>
              </widget>
             </item>
@@ -2733,7 +2733,7 @@ padding: 0px 5px;</string>
                </size>
               </property>
               <property name="text">
-               <string/>
+               <string>--</string>
               </property>
               <property name="wordWrap">
                <bool>false</bool>
@@ -2749,7 +2749,7 @@ padding: 0px 5px;</string>
                </size>
               </property>
               <property name="text">
-               <string/>
+               <string>--</string>
               </property>
              </widget>
             </item>

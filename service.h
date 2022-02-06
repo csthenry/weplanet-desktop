@@ -1,10 +1,12 @@
-/***************************************************/
+﻿/***************************************************/
 /*              Magic Light Assistant              */
 /* Copyright (c) 2017-2021 by bytecho.net          */
 /* Written by Henry                                */
 /* Function:                                       */
 /* Communication, activity, management and approval*/
 /***************************************************/
+#pragma once
+#pragma execution_character_set("utf-8")
 
 #ifndef SERVICE_H
 #define SERVICE_H

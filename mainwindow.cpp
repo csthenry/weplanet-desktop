@@ -1,4 +1,4 @@
-/***************************************************/
+﻿/***************************************************/
 /*              Magic Light Assistant              */
 /* Copyright (c) 2017-2021 by bytecho.net          */
 /* Written by Henry                                */
@@ -174,17 +174,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::userManageWorking, userManageWork, &UserManageWork::working);
     connect(userManageWork, &UserManageWork::userManageWorkFinished, this, &MainWindow::setUserManagePage);
     connect(this, &MainWindow::userManageGetAvatar, userManageWork, &UserManageWork::loadAvatar);
-    connect(this, &MainWindow::userManageSetCombox, userManageWork, &UserManageWork::setUsersTypeCombox);
     connect(this, &MainWindow::userManageModelSubmitAll, userManageWork, &UserManageWork::submitAll);
-    connect(userManageWork, &UserManageWork::comboxSetFinished, this, [=](QStringList group, QStringList department){
-        ui->comboBox_group->clear();
-        ui->comboBox_group->addItem("所有用户组");
-        ui->comboBox_group->addItems(group);
-
-        ui->comboBox_department->clear();
-        ui->comboBox_department->addItem("所有部门");
-        ui->comboBox_department->addItems(department);
-    }, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar){
         if(avatar.isNull())
             ui->userManagePage_avatar->setPixmap(*userAvatar);
@@ -392,7 +382,7 @@ void MainWindow::setUsersFilter_group(QComboBox *group, QComboBox *department)
     userManageModel->setFilter(sqlWhere);
 }
 
-void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department)
+void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department) const
 {
     QString sqlWhere = "dpt_name='" + department->currentText() + "'";
     if(group->currentIndex() != 0)
@@ -405,6 +395,23 @@ void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department)
             sqlWhere.clear();
     }
     userManageModel->setFilter(sqlWhere);
+}
+
+void MainWindow::reloadModelBefore()    //已弃用
+{
+    //此函数用于在刷新model前，对所有model clear，避免发生跨线程冲突
+    if(mutex.tryLock())
+    {
+        attendPageModel->clear();
+        userManageModel->clear();
+        attendManageModel->clear();
+        groupModel->clear();
+        departmentModel->clear();
+        activityModel->clear();
+
+        mutex.unlock();
+    }
+
 }
 
 void MainWindow::on_actExit_triggered()
@@ -453,8 +460,13 @@ void MainWindow::on_actMyInfo_triggered()
 
 void MainWindow::on_actAttend_triggered()
 {
+    if (!ui->stackedWidget->currentWidget()->isEnabled())
+        return;
     ui->stackedWidget->setCurrentIndex(4);
+    ui->stackedWidget->currentWidget()->setEnabled(false);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    //reloadModelBefore();
     emit attendWorking();
 }
 
@@ -484,7 +496,7 @@ void MainWindow::setAttendPage()
         ui->label_attendPage_beginTime->setText("--");
         ui->label_attendPage_endTime->setText("--");
     }
-
+    ui->stackedWidget->currentWidget()->setEnabled(true);
     int *workTimeSum = attendWork->getWorkTime();
     service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), workTimeSum[0], workTimeSum[1], workTimeSum[2], workTimeSum[3]);  //绘制统计图
 }
@@ -496,24 +508,27 @@ void MainWindow::on_PieSliceHighlight(bool show)
 //    slice->setLabelVisible(show);
     slice->setExploded(show);
 }
-void MainWindow::on_actApply_triggered()
+void MainWindow::on_actApply_triggered() const
 {
     ui->stackedWidget->setCurrentIndex(5);
 }
 
 void MainWindow::on_actUserManager_triggered()
 {
+    if(!ui->stackedWidget->currentWidget()->isEnabled())
+        return;
     ui->stackedWidget->setCurrentIndex(6);
     ui->stackedWidget->currentWidget()->setEnabled(false);
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_userManage->setItemDelegateForColumn(0, readOnlyDelegate);    //UID不可编辑
+
+    //reloadModelBefore();
     emit userManageWorking();
 }
 
-void MainWindow::setUserManagePage()
+void MainWindow::setUserManagePage() const
 {
-
     ui->tableView_userManage->setModel(userManageModel);
     ui->tableView_userManage->hideColumn(userManageModel->fieldIndex("password"));  //隐藏密码列
 
@@ -528,12 +543,23 @@ void MainWindow::setUserManagePage()
     ui->tableView_userManage->setSelectionModel(userManagePageSelection);
 
     //初始化数据过滤模块combox
-    emit userManageSetCombox();
+    QStringList group, department;
+    userManageWork->getComboxItems(group, department);
+    ui->comboBox_group->clear();
+    ui->comboBox_group->addItem("所有用户组");
+    ui->comboBox_group->addItems(group);
+
+    ui->comboBox_department->clear();
+    ui->comboBox_department->addItem("所有部门");
+    ui->comboBox_department->addItems(department);
+
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
 
 void MainWindow::on_actAttendManager_triggered()
 {
+    if(!ui->stackedWidget->currentWidget()->isEnabled())
+        return;
     ui->stackedWidget->setCurrentIndex(7);
     ui->stackedWidget->currentWidget()->setEnabled(false);
     ui->tableView_attendUsers->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -542,10 +568,11 @@ void MainWindow::on_actAttendManager_triggered()
     ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
     ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    //reloadModelBefore();
     emit attendManageWorking();
 }
 
-void MainWindow::setAttendManagePage()
+void MainWindow::setAttendManagePage() const
 {
     //用户列表
     ui->tableView_attendUsers->setModel(userManageModel);
@@ -609,21 +636,24 @@ void MainWindow::on_actManage_triggered()
     }
 }
 
-void MainWindow::on_actApplyList_triggered()
+void MainWindow::on_actApplyList_triggered() const
 {
     ui->stackedWidget->setCurrentIndex(9);
 }
 
-void MainWindow::on_actApplyItems_triggered()
+void MainWindow::on_actApplyItems_triggered() const
 {
     ui->stackedWidget->setCurrentIndex(10);
 }
 
 void MainWindow::on_actGroup_triggered()
 {
+    if (!ui->stackedWidget->currentWidget()->isEnabled())
+        return;
     ui->stackedWidget->setCurrentIndex(11);
     ui->stackedWidget->currentWidget()->setEnabled(false);
 
+    //reloadModelBefore();
     emit groupManageWorking();      //开始加载model
 
     //tableView显示属性设置
@@ -673,12 +703,12 @@ void MainWindow::setGroupManagePage()
     ui->tableView_department->setSelectionModel(groupPageSelection_department);
 }
 
-void MainWindow::on_actMore_triggered()
+void MainWindow::on_actMore_triggered() const
 {
     ui->stackedWidget->setCurrentIndex(12);
 }
 
-void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous)
+void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const
 {
     Q_UNUSED(previous);
     ui->btn_editDpt_cancel->setEnabled(departmentModel->isDirty());
@@ -689,7 +719,7 @@ void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const
         ui->btn_delDpt->setEnabled(false);  //不能删除默认部门
 }
 
-void MainWindow::on_groupPageGroupcurrentChanged(const QModelIndex &current, const QModelIndex &previous)
+void MainWindow::on_groupPageGroupcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const
 {
     Q_UNUSED(previous);
     Q_UNUSED(current);
@@ -701,7 +731,7 @@ void MainWindow::on_groupPageGroupcurrentChanged(const QModelIndex &current, con
         ui->btn_delGroup->setEnabled(false);  //不能删除默认用户组
 }
 
-void MainWindow::on_userManagePagecurrentChanged(const QModelIndex &current, const QModelIndex &previous)
+void MainWindow::on_userManagePagecurrentChanged(const QModelIndex &current, const QModelIndex &previous) const
 {
     Q_UNUSED(previous);
     Q_UNUSED(current);

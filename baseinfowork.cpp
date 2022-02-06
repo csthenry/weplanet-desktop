@@ -1,4 +1,4 @@
-#include "baseinfowork.h"
+﻿#include "baseinfowork.h"
 
 baseInfoWork::baseInfoWork(QObject *parent) : QObject(parent)
 {
@@ -80,6 +80,7 @@ QString baseInfoWork::getLastSignupUid()
 
 QString baseInfoWork::loadGroup(const QString& uid)
 {
+    QString res;
     QSqlQuery query(DB);
     query.exec("SELECT user_group FROM magic_users WHERE uid = " + uid);
     if(!query.next())
@@ -87,11 +88,14 @@ QString baseInfoWork::loadGroup(const QString& uid)
     query.exec("SELECT group_name FROM magic_group WHERE group_id = " + query.value("user_group").toString());
     if(!query.next())
         return "--";
-    return query.value("group_name").toString();
+    res = query.value("group_name").toString();
+    query.clear();
+    return res;
 }
 
 QString baseInfoWork::loadDepartment(const QString& uid)
 {
+    QString res;
     QSqlQuery query(DB);
     query.exec("SELECT user_dpt FROM magic_users WHERE uid = " + uid);
     if(!query.next())
@@ -99,7 +103,9 @@ QString baseInfoWork::loadDepartment(const QString& uid)
     query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id = " + query.value("user_dpt").toString());
     if(!query.next())
         return "--";
-    return query.value("dpt_name").toString();
+    res = query.value("dpt_name").toString();
+    query.clear();
+    return res;
 }
 
 void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
@@ -125,6 +131,7 @@ void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString
     query.bindValue(2, tel);
     emit signupRes(query.exec());
     lastSignupUid = query.lastInsertId().toString();
+    query.clear();
 }
 
 void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, const QString &mail, const QString &avatar, const QString &pwd)
@@ -147,6 +154,7 @@ void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, c
     }
     else
         emit editPersonalInfoRes(-1);
+    query.clear();
 }
 
 void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)

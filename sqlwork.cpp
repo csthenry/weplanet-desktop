@@ -1,4 +1,4 @@
-#include "sqlwork.h"
+﻿#include "sqlwork.h"
 
 void SqlWork::working()
 {

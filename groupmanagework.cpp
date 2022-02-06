@@ -1,4 +1,4 @@
-#include "groupmanagework.h"
+﻿#include "groupmanagework.h"
 
 GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
 {
@@ -7,6 +7,14 @@ GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
 
 void GroupManageWork::working()
 {
+    if(!isFirst)
+    {
+        groupModel->select();
+        departmentModel->select();
+
+        emit groupManageWorkFinished();
+        return;
+    }
     groupModel->setTable("magic_group");
     groupModel->setSort(groupModel->fieldIndex("group_id"), Qt::AscendingOrder);    //升序排列
     groupModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -28,6 +36,7 @@ void GroupManageWork::working()
     departmentModel->setHeaderData(departmentModel->fieldIndex("dpt_name"),Qt::Horizontal,"部门名称");
     departmentModel->select();
 
+    isFirst = false;
     emit groupManageWorkFinished();
 }
 

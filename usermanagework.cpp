@@ -1,4 +1,4 @@
-#include "usermanagework.h"
+﻿#include "usermanagework.h"
 
 UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 {
@@ -7,6 +7,14 @@ UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 
 void UserManageWork::working()
 {
+    if(!isFirst)
+    {
+        relTableModel->select();
+        getComboxItems();
+
+        emit userManageWorkFinished();
+        return;
+    }
     relTableModel->setTable("magic_users");
     relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
@@ -27,23 +35,26 @@ void UserManageWork::working()
     relTableModel->select();
 
     //获取用户组和部门
-    QSqlQuery comboxGroup(DB);
-    comboxItems_group.clear();
-    comboxGroup.exec("SELECT * FROM magic_group");
-    while(comboxGroup.next())
-        comboxItems_group << comboxGroup.value("group_name").toString();
-    comboxItems_department.clear();
-    comboxGroup.exec("SELECT * FROM magic_department");
-    while(comboxGroup.next())
-        comboxItems_department << comboxGroup.value("dpt_name").toString();
-    comboxGroup.clear();
+    getComboxItems();
+
+    isFirst = false;
     emit userManageWorkFinished();
 }
 
-void UserManageWork::setUsersTypeCombox()
+void UserManageWork::getComboxItems()
 {
-    //初始化数据过滤模块combox
-    emit comboxSetFinished(comboxItems_group, comboxItems_department);
+    //获取用户组和部门
+    QSqlQuery comboxGroup(DB);
+    comboxItems_group.clear();
+    comboxGroup.exec("SELECT * FROM magic_group");
+    while (comboxGroup.next())
+        comboxItems_group << comboxGroup.value("group_name").toString();
+    comboxGroup.clear();
+    comboxItems_department.clear();
+    comboxGroup.exec("SELECT * FROM magic_department");
+    while (comboxGroup.next())
+        comboxItems_department << comboxGroup.value("dpt_name").toString();
+    comboxGroup.clear();
 }
 
 void UserManageWork::setDB(const QSqlDatabase &DB)
@@ -71,4 +82,10 @@ void UserManageWork::loadAvatar()
 void UserManageWork::setCurAvatarUrl(const QString &url)
 {
     avatarUrl = url;
+}
+
+void UserManageWork::getComboxItems(QStringList &comboxItems_group, QStringList &comboxItems_department)
+{
+    comboxItems_group = this->comboxItems_group;
+    comboxItems_department = this->comboxItems_department;
 }

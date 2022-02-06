@@ -1,10 +1,13 @@
-/***************************************************/
+﻿/***************************************************/
 /*              Magic Light Assistant              */
 /* Copyright (c) 2017-2021 by bytecho.net          */
 /* Written by Henry                                */
 /* Function:                                       */
 /* Communication, activity, management and approval*/
 /***************************************************/
+#pragma once
+#pragma execution_character_set("utf-8")
+
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
@@ -40,6 +43,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    QMutex mutex;
 
     bool dbStatus = true;
 
@@ -79,15 +83,17 @@ private:
 
     void setAttendPage();
 
-    void setUserManagePage();
+    void setUserManagePage() const;
 
-    void setAttendManagePage();
+    void setAttendManagePage() const;
 
     void setGroupManagePage();
 
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
-    void setUsersFilter_dpt(QComboBox* group, QComboBox* department);
+    void setUsersFilter_dpt(QComboBox* group, QComboBox* department) const;
+
+    void reloadModelBefore();   //已弃用
 
     SqlWork *sqlWork;
 
@@ -118,25 +124,25 @@ private slots:
 
     void on_actAttend_triggered();
 
-    void on_actApply_triggered();
+    void on_actApply_triggered() const;
 
     void on_actUserManager_triggered();
 
     void on_actAttendManager_triggered();
 
-    void on_actApplyList_triggered();
+    void on_actApplyList_triggered() const;
 
-    void on_actApplyItems_triggered();
+    void on_actApplyItems_triggered() const;
 
     void on_actGroup_triggered();
 
-    void on_actMore_triggered();
+    void on_actMore_triggered() const;
 
-    void on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const;
 
-    void on_groupPageGroupcurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void on_groupPageGroupcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const;
 
-    void on_userManagePagecurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void on_userManagePagecurrentChanged(const QModelIndex &current, const QModelIndex &previous) const;
 
     void on_userManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 

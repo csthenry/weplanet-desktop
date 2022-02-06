@@ -1,3 +1,6 @@
+﻿#pragma once
+#pragma execution_character_set("utf-8")
+
 #ifndef BASEINFOWORK_H
 #define BASEINFOWORK_H
 
