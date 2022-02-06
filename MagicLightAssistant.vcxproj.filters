@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="attendmanagework.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="attendwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="baseinfowork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="checkupdate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="comboboxdelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excelexport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="formlogin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="groupmanagework.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="querymodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="readOnlyDelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="service.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="usermanagework.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="attendmanagework.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="attendwork.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="baseinfowork.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="checkupdate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="comboboxdelegate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="excelexport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="formlogin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="groupmanagework.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="mainwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="querymodel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="readOnlyDelegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="service.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="sqlwork.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="usermanagework.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="formlogin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="mainwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="color_icon\approve.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\approve_2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\approve_3.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\arrow.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\arrow_2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-account.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-add.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-addtag.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-app.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-approve.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-auth.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-cloud_download.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-code.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-code_2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-collection.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-copy.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-date.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-debug.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-defender.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-delete.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-download.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-enlarge.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-error.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-event.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-exp.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-file.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-flag.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-funnel.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-help.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-idea.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-image.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-inf.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-info.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-ini.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-input.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-launch.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-layer.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-mail.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-menu.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-new.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-newProj.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-new_message.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-open.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-paste.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-proj.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-reserve.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-reviews.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-script.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-search.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-searchfile.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-setting.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-setting_2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-setting_3.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-shrink.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-star.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-stop.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-structure.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-support.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-switch.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-terminal.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-test.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-time.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-tips.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-tools.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-trash.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-upload_cloud.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-warning.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-warning_2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-way.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-web.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\color-widget.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\main.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\refresh.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="resource.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="color_icon\user.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\verify.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="color_icon\verify_2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\MagicLightAssistant_resource.rc" />
+  </ItemGroup>
+</Project>

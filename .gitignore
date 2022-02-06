@@ -45,19 +45,17 @@ Thumbs.db
 .*.swp
 
 # Visual Studio generated files
+/release
+/debug
+/.vs
 *.ib_pdb_index
 *.idb
 *.ilk
 *.pdb
-*.sln
 *.suo
-*.vcproj
-*vcproj.*.*.user
 *.ncb
 *.sdf
 *.opensdf
-*.vcxproj
-*vcxproj.*
 
 # MinGW generated files
 *.Debug
@@ -70,7 +68,3 @@ Thumbs.db
 # --------
 *.dll
 *.exe
-
-/release
-/debug
-/.vs/MagicLightAssistant
