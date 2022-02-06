@@ -11,6 +11,7 @@
   交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic <Light\> Assistant**。
 
 - 平台：Windows x64
+- 开发环境：Visual Studio 2022
 - 类型：Qt桌面应用程序
 - 数据库：MySQL
 - 语言：C++ 11
@@ -55,8 +56,9 @@
 
 ### 注意：
 
-在添加项目前，请先阅读：https://www.bytecho.net/archives/qt_mysql.html
+项目已转换为Visual Studio项目，开发环境Visual Studio 2022， 请使用Visual Studio 2017+添加此项目。
 
+在添加项目前，请先阅读：https://www.bytecho.net/archives/qt_mysql.html
 
 ### LICENSE
 
