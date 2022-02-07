@@ -9,7 +9,9 @@ void AttendWork::working()
 {
     if(!isFirst)
     {
+        relTableModel->setRelation(relTableModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
         relTableModel->select();
+        relTableModel->setFilter("a_uid='" + uid + "'");
         analyseWorkTime();
         emit attendWorkFinished();
         return;

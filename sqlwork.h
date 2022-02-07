@@ -14,7 +14,7 @@ class SqlWork : public QObject
     Q_OBJECT
 private:
     int cnt = 1;
-    QSqlDatabase DB;
+    QSqlDatabase DB;    //在主窗口中已弃用，仅用于登录窗口
     QSqlDatabase testDB;    //用于测试DB状态，防止query冲突
     QString dbName;
     service dbService;
@@ -33,6 +33,7 @@ public:
     void quit();    //用于结束working函数，结束后需重新emit触发working
     bool getisPaused();
     QSqlDatabase getDb();
+    QSqlDatabase getTestDb();
     QString getDbName();
 
 signals:

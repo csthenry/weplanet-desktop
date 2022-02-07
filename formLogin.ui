@@ -434,7 +434,7 @@ padding: 0px 5px;</string>
     </font>
    </property>
    <property name="text">
-    <string>Database Status:</string>
+    <string>Database Status: connecting...</string>
    </property>
   </widget>
   <widget class="QLabel" name="labelIcon">

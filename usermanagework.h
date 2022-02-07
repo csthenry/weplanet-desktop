@@ -12,6 +12,7 @@ class UserManageWork : public QObject
 {
     Q_OBJECT
 public:
+    bool isFirst = true;
     explicit UserManageWork(QObject *parent = nullptr);
     void working();
     void setDB(const QSqlDatabase& DB);
@@ -24,7 +25,6 @@ public:
 private slots:
 
 private:
-    bool isFirst = true;
     QSqlDatabase DB;
     QString avatarUrl;
     QPixmap curPix;

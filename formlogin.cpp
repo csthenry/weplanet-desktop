@@ -19,6 +19,7 @@ formLogin::formLogin(QDialog *parent) :
     ui(new Ui::formLogin)
 {
     ui->setupUi(this);
+
     //限制登录注册输入
     QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
     QValidator* validator_account = new QRegExpValidator(regx_account), *validator_pwd= new QRegExpValidator(regx_pwd);
@@ -39,6 +40,7 @@ formLogin::formLogin(QDialog *parent) :
     ui->labelIcon->setScaledContents(true);    //图片自适应大小
     ui->mainIcon->setScaledContents(true);
     ui->mainIcon->setPixmap(mainicon);
+    ui->labelIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
 
     //多线程相关
     sqlWork = new SqlWork("loginDB");    //sql异步连接
@@ -67,7 +69,6 @@ formLogin::formLogin(QDialog *parent) :
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
-        sqlWork->stopThread();
         readPwd = readLoginSettings();
         loginWork->setDB(sqlWork->getDb());
     }, Qt::UniqueConnection);
@@ -236,7 +237,7 @@ void formLogin::on_statusChanged(const bool status)
     else
     {
         ui->labelIcon->setPixmap(*statusErrorIcon);
-        ui->labelStatus->setText("Database Status: " + sqlWork->getDb().lastError().text());
+        ui->labelStatus->setText("Database Status: " + sqlWork->getTestDb().lastError().text());
     }
 }
 

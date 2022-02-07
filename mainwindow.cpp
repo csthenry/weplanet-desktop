@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     statusIcon = new QLabel(this);     //用于显示状态图标的label
     statusIcon->setMaximumSize(25, 25);
+    statusIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
 
     statusIcon->setScaledContents(true);    //图片自适应大小
     ui->avatar->setScaledContents(true);
@@ -240,6 +241,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             if(!removedDptId.isEmpty())
             {
                 emit fixUser(0, removedDptId);
+
+                //由于以下model与组织表有外键关系，故需要重建model以刷新外键关系
+                userManageModel->clear();
+                attendManageModel->clear();
+                userManageWork->isFirst = true;
+                attendManageWork->isFirst = true;
+
                 removedDptId.clear();
             }
         }
@@ -256,6 +264,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             if(!removedGroupId.isEmpty())
             {
                 emit fixUser(1, removedGroupId);
+
+                //由于以下model与组织表有外键关系，故需要重建model以刷新外键关系
+                userManageModel->clear();
+                attendManageModel->clear();
+                userManageWork->isFirst = true;
+                attendManageWork->isFirst = true;
+
                 removedGroupId.clear();
             }
         }
@@ -530,6 +545,7 @@ void MainWindow::on_actUserManager_triggered()
 void MainWindow::setUserManagePage() const
 {
     ui->tableView_userManage->setModel(userManageModel);
+    ui->tableView_userManage->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_userManage));
     ui->tableView_userManage->hideColumn(userManageModel->fieldIndex("password"));  //隐藏密码列
 
     //当前项变化时触发currentChanged信号
@@ -565,6 +581,8 @@ void MainWindow::on_actAttendManager_triggered()
     ui->tableView_attendUsers->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_attendUsers->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_attendInfo->setItemDelegateForColumn(1, readOnlyDelegate);     //第一列不可编辑，因为隐藏了第一列，所以列号是1不是0
+    ui->tableView_attendInfo->setItemDelegateForColumn(5, readOnlyDelegate);
+    ui->tableView_attendInfo->setItemDelegateForColumn(6, readOnlyDelegate);
     ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
     ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -1242,7 +1260,7 @@ void MainWindow::on_statusChanged(bool status)
     {
         dbStatus = false;
         statusIcon->setPixmap(*statusErrorIcon);
-        connectStatusLable->setText("Database Status: " + sqlWork->getDb().lastError().text());
+        connectStatusLable->setText("Database Status: " + sqlWork->getTestDb().lastError().text());
     }
     else
     {

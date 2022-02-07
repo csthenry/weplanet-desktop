@@ -24,11 +24,6 @@ int main(int argc, char *argv[])
         w.show();
         return a.exec();
     }
-    else
-    {
-        delete formLoginWindow;
-        return a.exec();
-    }
-	return  0;
-
+    delete formLoginWindow;
+    return 0;
 }

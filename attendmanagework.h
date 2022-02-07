@@ -13,6 +13,7 @@ class AttendManageWork : public QObject
     Q_OBJECT
 public:
     explicit AttendManageWork(QObject *parent = nullptr);
+    bool isFirst = true;    //是否为首次加载model
     void working();
     void setDB(const QSqlDatabase& db);
     void setCurAvatarUrl(const QString url);
@@ -22,7 +23,6 @@ public:
     void submitAll(int type);   //1补签 0退签
     void loadAvatar();
 private:
-    bool isFirst = true;    //是否为首次加载model
     QPixmap curPix;
     QString avatarUrl;
     QSqlDatabase DB;

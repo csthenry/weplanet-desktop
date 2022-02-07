@@ -9,6 +9,11 @@ void AttendManageWork::working()
 {
     if(!isFirst)
     {
+        //建立外键关联
+        userModel->setRelation(userModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
+        userModel->setRelation(userModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
+        attendModel->setRelation(attendModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
+
         userModel->select();
         attendModel->select();
         getComboxItems();

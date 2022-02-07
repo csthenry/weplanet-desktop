@@ -7,11 +7,13 @@ void SqlWork::working()
     {
         while(!isStop)
         {
+            if(!dbStatus)
+                isPaused = false;
+            if(!dbStatus || !testDB.isOpen())
+				testDB.open();
             testDbConnection = new QSqlQuery(testDB);
             dbStatus = testDbConnection->exec("select version();");
             delete testDbConnection;
-            if(!dbStatus)
-                isPaused = false;
             if(isPaused)
             {
                 QThread::sleep(5);
@@ -19,15 +21,15 @@ void SqlWork::working()
             }
             qDebug() << "SqlThread线程运行中,db:" << dbStatus << this->thread();
             if(!dbStatus)
-                testDB.open();
-            if(!dbStatus && !DB.open())
-                status = false;
+	            status = false;
             else
             {
-                status = true;
-                isPaused = true;    //连接成功后暂停线程
-                if(cnt++ == 1)
-                    emit firstFinished();
+	            if(dbName != "mainDB" && !DB.isOpen())
+		            DB.open();
+	            status = true;
+	            isPaused = true;    //连接成功后暂停线程
+	            if(cnt++ == 1)
+		            emit firstFinished();
             }
             emit newStatus(status);
             QThread::sleep(5);
@@ -39,8 +41,15 @@ SqlWork::SqlWork(QString dbName)
 {
     this->dbName = dbName;
     service dbService;
-    dbService.addDatabase(DB, this->dbName);
-    dbService.addDatabase(testDB, "test_" + this->dbName);
+    if(dbName == "mainDB")
+    {
+        dbService.addDatabase(testDB, "test_" + this->dbName);  //如果是主窗口，则该类的DB弃用，DB由各个工作对象自行添加并连接
+    }
+    else
+    {
+        dbService.addDatabase(DB, this->dbName);
+        dbService.addDatabase(testDB, "test_" + this->dbName);
+    }
     moveToThread(this->thread());
 }
 
@@ -67,6 +76,11 @@ bool SqlWork::getisPaused()
 QSqlDatabase SqlWork::getDb()
 {
     return DB;
+}
+
+QSqlDatabase SqlWork::getTestDb()
+{
+    return testDB;
 }
 
 QString SqlWork::getDbName()
