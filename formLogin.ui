@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Magic Light Assistant</string>
   </property>
   <widget class="QLabel" name="mainIcon">
    <property name="geometry">
