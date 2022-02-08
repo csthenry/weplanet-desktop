@@ -461,8 +461,9 @@ void MainWindow::on_actHome_triggered()
 void MainWindow::on_actMyInfo_triggered()
 {
     ui->stackedWidget->setCurrentIndex(1);
-    QRegExp regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
-    QValidator *validator_pwd= new QRegExpValidator(regx_pwd);
+    QRegExp regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$"), regx_num("[0-9]{1,11}$");
+    QValidator* validator_pwd = new QRegExpValidator(regx_pwd), * validator_tel = new QRegExpValidator(regx_num);
+    ui->lineEdit_personalTel->setValidator(validator_tel);
     ui->lineEdit_personalPwd->setValidator(validator_pwd);
     ui->lineEdit_editPwdCheck->setValidator(validator_pwd);
 }
