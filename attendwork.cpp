@@ -2,11 +2,12 @@
 
 AttendWork::AttendWork(QObject *parent) : QObject(parent)
 {
-
+    db_service.addDatabase(DB, "AttendWork_DB");
 }
 
 void AttendWork::working()
 {
+    DB.open();
     if(!isFirst)
     {
         relTableModel->setRelation(relTableModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
@@ -74,11 +75,6 @@ QSqlRecord AttendWork::getRecord(const int index)
     return record;
 }
 
-void AttendWork::setDB(const QSqlDatabase &db)
-{
-    DB = db;
-}
-
 void AttendWork::setUid(const QString &uid)
 {
     this->uid = uid;
@@ -99,8 +95,14 @@ int *AttendWork::getWorkTime()
     return workTimeData;
 }
 
+QSqlDatabase AttendWork::getDB()
+{
+    return DB;
+}
+
 void AttendWork::submitAll(int type)
 {
+    DB.open();
     QDateTime cur = QDateTime::currentDateTime();
     if(type == 1)
         emit attendDone(relTableModel->submitAll());

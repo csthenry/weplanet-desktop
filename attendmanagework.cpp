@@ -2,11 +2,12 @@
 
 AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
 {
-
+    db_service.addDatabase(DB, "AttendManageWork_DB");
 }
 
 void AttendManageWork::working()
 {
+    DB.open();
     if(!isFirst)
     {
         userModel->select();
@@ -78,11 +79,6 @@ void AttendManageWork::getComboxItems()
     comboxGroup.clear();
 }
 
-void AttendManageWork::setDB(const QSqlDatabase &db)
-{
-    DB = db;
-}
-
 void AttendManageWork::setCurAvatarUrl(const QString url)
 {
     avatarUrl = url;
@@ -96,6 +92,11 @@ void AttendManageWork::setUserModel(QSqlRelationalTableModel *relTableModel)
 void AttendManageWork::setAttendModel(QSqlRelationalTableModel *relTableModel)
 {
     attendModel = relTableModel;
+}
+
+QSqlDatabase AttendManageWork::getDB()
+{
+    return DB;
 }
 
 void AttendManageWork::getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department)

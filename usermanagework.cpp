@@ -2,16 +2,16 @@
 
 UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 {
-
+    db_service.addDatabase(DB, "UserManageWork_DB");
 }
 
 void UserManageWork::working()
 {
+    DB.open();  //使用model时，数据库应保持开启
     if(!isFirst)
     {
         relTableModel->select();
         getComboxItems();
-
         emit userManageWorkFinished();
         return;
     }
@@ -40,7 +40,6 @@ void UserManageWork::working()
         relTableModel->select();
     //获取用户组和部门
     getComboxItems();
-
     isFirst = false;
     emit userManageWorkFinished();
 }
@@ -59,11 +58,6 @@ void UserManageWork::getComboxItems()
     while (comboxGroup.next())
         comboxItems_department << comboxGroup.value("dpt_name").toString();
     comboxGroup.clear();
-}
-
-void UserManageWork::setDB(const QSqlDatabase &DB)
-{
-    this->DB = DB;
 }
 
 void UserManageWork::setModel(QSqlRelationalTableModel *model)
@@ -92,4 +86,9 @@ void UserManageWork::getComboxItems(QStringList &comboxItems_group, QStringList 
 {
     comboxItems_group = this->comboxItems_group;
     comboxItems_department = this->comboxItems_department;
+}
+
+QSqlDatabase UserManageWork::getDB()
+{
+    return DB;
 }

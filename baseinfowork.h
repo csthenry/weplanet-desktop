@@ -20,7 +20,6 @@ public:
 
     void refreshBaseInfo(); //用于刷新数据
     void setUid(QString uid);
-    void setDB(const QSqlDatabase &DB);
 
     bool getAttendToday();
     QString getBeginTime();
@@ -44,6 +43,7 @@ private slots:
 private:
     bool isAttend;
     QDateTime curDateTime;
+    service db_service;
     QSqlDatabase DB;
     QString uid;
     QString loginUid;

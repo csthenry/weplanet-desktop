@@ -2,11 +2,12 @@
 
 GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
 {
-
+    db_service.addDatabase(DB, "GroupManageWork_DB");
 }
 
 void GroupManageWork::working()
 {
+    DB.open();
     if(!isFirst)
     {
         groupModel->select();
@@ -40,11 +41,6 @@ void GroupManageWork::working()
     emit groupManageWorkFinished();
 }
 
-void GroupManageWork::setDB(const QSqlDatabase &db)
-{
-    DB = db;
-}
-
 void GroupManageWork::setGroupModel(QSqlTableModel *group)
 {
     groupModel = group;
@@ -53,6 +49,11 @@ void GroupManageWork::setGroupModel(QSqlTableModel *group)
 void GroupManageWork::setDepartmentModel(QSqlTableModel *department)
 {
     departmentModel = department;
+}
+
+QSqlDatabase GroupManageWork::getDB()
+{
+    return DB;
 }
 
 void GroupManageWork::submitAll(int type)

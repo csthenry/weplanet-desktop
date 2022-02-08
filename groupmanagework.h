@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QMutex>
 #include <QSqlQuery>
+#include "service.h"
 #include "querymodel.h"
 
 class GroupManageWork : public QObject
@@ -15,12 +16,13 @@ class GroupManageWork : public QObject
 public:
     explicit GroupManageWork(QObject *parent = nullptr);
     void working();
-    void setDB(const QSqlDatabase& db);
     void setGroupModel(QSqlTableModel* group);
+    QSqlDatabase getDB();
     void setDepartmentModel(QSqlTableModel* department);
     void submitAll(int type);   //1代表提交用户组model，0为部门
     void fixUser(int type, const QString& removedId);
 private:
+    service db_service;
     bool isFirst = true;
     QSqlDatabase DB;
     QSqlTableModel *groupModel, *departmentModel;

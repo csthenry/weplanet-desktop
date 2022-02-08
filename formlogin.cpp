@@ -70,7 +70,6 @@ formLogin::formLogin(QDialog *parent) :
     //初始化相关
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         readPwd = readLoginSettings();
-        loginWork->setDB(sqlWork->getDb());
     }, Qt::UniqueConnection);
 
 }

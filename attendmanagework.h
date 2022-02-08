@@ -15,14 +15,15 @@ public:
     explicit AttendManageWork(QObject *parent = nullptr);
     bool isFirst = true;    //是否为首次加载model
     void working();
-    void setDB(const QSqlDatabase& db);
     void setCurAvatarUrl(const QString url);
     void setUserModel(QSqlRelationalTableModel *relTableModel);
     void setAttendModel(QSqlRelationalTableModel *relTableModel);
     void getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department);
     void submitAll(int type);   //1补签 0退签
     void loadAvatar();
+    QSqlDatabase getDB();
 private:
+    service db_service;
     QPixmap curPix;
     QString avatarUrl;
     QSqlDatabase DB;

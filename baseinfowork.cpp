@@ -2,11 +2,12 @@
 
 baseInfoWork::baseInfoWork(QObject *parent) : QObject(parent)
 {
-
+    db_service.addDatabase(DB, "baseInfoWork_DB");
 }
 
 void baseInfoWork::loadBaseInfoWorking()
 {
+    DB.open();
     curDateTime = QDateTime::currentDateTime();
     this->uid = uid;
     QSqlQuery query(DB);
@@ -34,6 +35,7 @@ void baseInfoWork::loadBaseInfoWorking()
     else
         isAttend = false;
     query.clear();
+    DB.close();
     emit baseInfoFinished();
     qDebug() << "baseInfoLoad线程：" << this->thread();
 }
@@ -46,11 +48,6 @@ void baseInfoWork::refreshBaseInfo()
 void baseInfoWork::setUid(QString uid)
 {
     this->uid = uid;
-}
-
-void baseInfoWork::setDB(const QSqlDatabase &DB)
-{
-    this->DB = DB;
 }
 
 bool baseInfoWork::getAttendToday()
@@ -110,14 +107,17 @@ QString baseInfoWork::loadDepartment(const QString& uid)
 
 void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
 {
+    DB.open();
     if(service::authAccount(DB, loginUid, account, pwd))
         emit autoAuthRes(true);
     else
         emit autoAuthRes(false);
+    DB.close();
 }
 
 void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString& tel)
 {
+    DB.open();
     QSqlQuery query(DB);
     QString creatQueryStr;
     creatQueryStr =
@@ -132,10 +132,12 @@ void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString
     emit signupRes(query.exec());
     lastSignupUid = query.lastInsertId().toString();
     query.clear();
+    DB.close();
 }
 
 void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, const QString &mail, const QString &avatar, const QString &pwd)
 {
+    DB.open();
     QSqlQuery query(DB);
     if(service::authAccount(DB, uid, uid.toLongLong(), service::pwdEncrypt(oldPwd)))
     {
@@ -155,19 +157,24 @@ void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, c
     else
         emit editPersonalInfoRes(-1);
     query.clear();
+    DB.close();
 }
 
 void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)
 {
+    DB.open();
     if(service::authAccount(DB, loginUid, account, pwd) || service::authAccount(DB, loginUid, account, editPwd))
         emit authRes(true);
     else
         emit authRes(false);
+    DB.close();
 }
 
 void baseInfoWork::setAuthority(const QString &uid, const QVector<QAction *> &vector)
 {
+    DB.open();
     emit authorityRes(service::setAuthority(DB, uid, vector));
+    DB.close();
 }
 
 QString baseInfoWork::getName()

@@ -15,8 +15,8 @@ public:
     bool isFirst = true;
     explicit UserManageWork(QObject *parent = nullptr);
     void working();
-    void setDB(const QSqlDatabase& DB);
     void setModel(QSqlRelationalTableModel* model);
+    QSqlDatabase getDB();
     void submitAll();
     void loadAvatar();
     void setUsersTypeCombox();
@@ -25,6 +25,7 @@ public:
 private slots:
 
 private:
+    service db_service;
     QSqlDatabase DB;
     QString avatarUrl;
     QPixmap curPix;

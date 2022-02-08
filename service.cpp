@@ -52,8 +52,10 @@ void service::connectDatabase(QSqlDatabase& db)
 
 void service::addDatabase(QSqlDatabase& db, const QString &flag)
 {
-
-    db = QSqlDatabase::addDatabase(dataBaseType, flag);
+    if (QSqlDatabase::contains(flag))
+        db = QSqlDatabase::database(flag);
+    else
+        db = QSqlDatabase::addDatabase(dataBaseType, flag);
     db.setHostName(hostName);
     db.setPort(dataBasePort);
     db.setDatabaseName(dataBaseName);
@@ -255,10 +257,9 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
 bool service::setAuthority(QSqlDatabase& db, const QString &uid, const QVector<QAction*>& vector)
 {
     QSqlQuery query(db);
-    QString groupId;
     query.exec("SELECT user_group FROM magic_users WHERE uid='" + uid + "';");
     query.next();
-    groupId = query.value(0).toString();
+    QString groupId = query.value(0).toString();
     query.exec("SELECT * FROM magic_group WHERE group_id='" + groupId + "';");
     if(query.next())
     {
@@ -393,25 +394,32 @@ QString service::getDepartment(const QString& uid)
 
 void service::buildAttendChart(QChartView *chartView_attend, const QWidget *parent, const QFont &font, int data_1, int data_2, int data_3, int data_4)
 {
-    //绘制工作时间饼图
-    QChart *attendChart = new QChart;
-    attendChart->setTitle("工作时长统计（作息时间很不错~）");
-    attendChart->setAnimationOptions(QChart::SeriesAnimations);
+    QChart* attendChart = new QChart();
+	QChart* oldChart = chartView_attend->chart();
+
     chartView_attend->setChart(attendChart);
     chartView_attend->setRenderHint(QPainter::Antialiasing);
-    QPieSeries *series = new QPieSeries(); //创建饼图序列
+
+    if (oldChart != nullptr)
+    {
+        delete oldChart;
+        oldChart = nullptr;
+    }
+
+    attendChart->setTitle("工作时长统计（作息时间很不错~）");
+    attendChart->setAnimationOptions(QChart::SeriesAnimations);
+    QPieSeries *series = new QPieSeries(attendChart); //创建饼图序列
     series->setHoleSize(0.1);   //饼图空心大小
     //添加分块数据 6- 6-8 8-10 10+
     series->append("4h以下", data_1); //添加一个饼图分块数据,标签，数值
     series->append("4~6h", data_2);
     series->append("6~8h", data_3);
     series->append("8h以上", data_4);
-    QPieSlice *slice; //饼图分块
 
-    //设置每个分块的标签文字
+	//设置每个分块的标签文字
     for(int i = 0; i < 4; i++)
     {
-        slice = series->slices().at(i);  //获取分块
+        QPieSlice* slice = series->slices().at(i);  //获取分块
         slice->setLabel(slice->label() + QString::asprintf(":%.0f次", slice->value()));    //设置分块的标签
         //信号与槽函数关联，鼠标落在某个分块上时，此分块弹出
         slice->setLabelFont(font);

@@ -94,12 +94,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         sqlWork->stopThread();
 
         //构造model
-        attendPageModel = new QSqlRelationalTableModel(this, sqlWork->getDb());
-        userManageModel = new QSqlRelationalTableModel(this, sqlWork->getDb());
-        attendManageModel = new QSqlRelationalTableModel(this, sqlWork->getDb());
-        groupModel = new QSqlTableModel(this, sqlWork->getDb());
-        departmentModel = new QSqlTableModel(this, sqlWork->getDb());
-        activityModel = new QSqlTableModel(this, sqlWork->getDb());
+        attendPageModel = new QSqlRelationalTableModel(this, attendWork->getDB());
+        userManageModel = new QSqlRelationalTableModel(this, userManageWork->getDB());
+        attendManageModel = new QSqlRelationalTableModel(this, attendManageWork->getDB());
+        groupModel = new QSqlTableModel(this, groupManageWork->getDB());
+        departmentModel = new QSqlTableModel(this, groupManageWork->getDB());
+        activityModel = new QSqlTableModel(this);
 
         userManagePageSelection = new QItemSelectionModel(userManageModel);
         groupPageSelection_group = new QItemSelectionModel(groupModel);
@@ -107,21 +107,16 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         activitySelection = new QItemSelectionModel(activityModel);
 
         //初始化work
-        setBaseInfoWork->setDB(sqlWork->getDb());
         setBaseInfoWork->setUid(uid);
 
         attendWork->setModel(attendPageModel);
-        attendWork->setDB(sqlWork->getDb());
         attendWork->setUid(uid);
 
-        userManageWork->setDB(sqlWork->getDb());
         userManageWork->setModel(userManageModel);
 
-        attendManageWork->setDB(sqlWork->getDb());
         attendManageWork->setUserModel(userManageModel);    //直接沿用用户管理界面的model
         attendManageWork->setAttendModel(attendManageModel);
 
-        groupManageWork->setDB(sqlWork->getDb());
         groupManageWork->setGroupModel(groupModel);
         groupManageWork->setDepartmentModel(departmentModel);
 
@@ -308,7 +303,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::receiveData(QString uid)
 {
-    //权限检测
     this->setEnabled(false);
     this->uid = uid;
     ui->label_home_uid->setText(uid);
@@ -434,8 +428,8 @@ void MainWindow::on_actExit_triggered()
     QSettings settings("bytecho", "MagicLightAssistant");
     settings.setValue("isAutoLogin", false);    //注销后自动登录失效
 
-    QSqlDatabase::removeDatabase("loginDB");
-    QSqlDatabase::removeDatabase("test_loginDB");
+    // QSqlDatabase::removeDatabase("loginDB");
+    // QSqlDatabase::removeDatabase("test_loginDB");
     formLoginWindow = new formLogin();
 
     this->close();
@@ -865,6 +859,12 @@ void MainWindow::on_btn_addGroup_clicked()
 void MainWindow::on_btn_editGroup_check_clicked()
 {
     emit groupManageModelSubmitAll(1);
+    //由于以下model与组织表有外键关系，故需要重建model以刷新外键关系
+    userManageModel->clear();
+    attendManageModel->clear();
+    userManageWork->isFirst = true;
+    attendManageWork->isFirst = true;
+
 }
 
 void MainWindow::on_btn_editGroup_cancel_clicked()
@@ -910,6 +910,11 @@ void MainWindow::on_btn_delGroup_clicked()
 void MainWindow::on_btn_editDpt_check_clicked()
 {
     emit groupManageModelSubmitAll(0);
+    //由于以下model与组织表有外键关系，故需要重建model以刷新外键关系
+    userManageModel->clear();
+    attendManageModel->clear();
+    userManageWork->isFirst = true;
+    attendManageWork->isFirst = true;
 }
 
 void MainWindow::on_btn_editDpt_cancel_clicked()

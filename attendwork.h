@@ -9,6 +9,7 @@
 #include <QMutex>
 #include <QSqlRecord>
 #include <QSqlQuery>
+#include "service.h"
 #include "querymodel.h"
 
 class AttendWork : public QObject
@@ -19,7 +20,7 @@ public:
     void working();
     void analyseWorkTime();
     QSqlRecord getRecord(const int index);
-    void setDB(const QSqlDatabase& db);
+    QSqlDatabase getDB();
     void setUid(const QString& uid);
     void setModel(QSqlRelationalTableModel *relTableModel);
     int fieldIndex(const QString &field);
@@ -29,6 +30,7 @@ private slots:
 private:
     bool isFirst = true;
     int workTimeData[4] = {0};
+    service db_service;
     QString uid;
     QSqlDatabase DB;
     QSqlRelationalTableModel *relTableModel;
