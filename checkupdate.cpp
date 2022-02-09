@@ -1,4 +1,5 @@
 ﻿#include "checkupdate.h"
+#include <QMessageBox>
 
 checkUpdate::checkUpdate()
 {
@@ -12,7 +13,7 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
     QEventLoop loop;
 
     quest.setUrl(QUrl("https://www.bytecho.net/software_update.json"));
-    quest.setHeader(QNetworkRequest::UserAgentHeader, "RT-Thread ART");
+    quest.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36");
     reply = manager.get(quest);
 
     //请求结束并下载完成后，退出子事件循环
@@ -26,9 +27,10 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
 
     if(err_rpt.error != QJsonParseError::NoError)
     {
-        //QMessageBox::critical(this, "检查失败", "服务器地址错误或JSON格式错误!");
+        QMessageBox::critical(parent, "检查失败", "服务器地址错误或JSON格式错误!\n错误信息：" + reply->errorString());
         return false;
     }
+
     if(root_Doc.isObject())
     {
         QJsonObject  root_Obj = root_Doc.object();   //创建JSON对象

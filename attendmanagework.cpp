@@ -19,8 +19,7 @@ void AttendManageWork::working()
     }
     if (userModel->tableName() != "magic_users")
     {
-        if(!userModel->database().isOpen())
-			userModel->database().open();   //该model数据库和AttendManageWork中不一致
+		userModel->database().open();   //该model数据库和AttendManageWork中不一致
         userModel->setTable("magic_users");
         userModel->setSort(userModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
         userModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交

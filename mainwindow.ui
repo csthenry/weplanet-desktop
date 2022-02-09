@@ -29,7 +29,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -112,7 +112,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -160,7 +160,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -208,7 +208,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -231,7 +231,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -279,7 +279,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -352,7 +352,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -375,7 +375,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -457,7 +457,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -775,7 +775,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -836,7 +836,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -909,7 +909,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -932,7 +932,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -1014,7 +1014,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -1062,7 +1062,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
                <property name="wordWrap">
                 <bool>true</bool>
@@ -1138,7 +1138,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>NaN</string>
+                <string>--</string>
                </property>
               </widget>
              </item>
@@ -1909,7 +1909,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>--</string>
                 </property>
                </widget>
               </item>
@@ -1935,7 +1935,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>--</string>
                 </property>
                </widget>
               </item>
@@ -1961,7 +1961,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>--</string>
                 </property>
                </widget>
               </item>
@@ -1987,7 +1987,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>--</string>
                 </property>
                </widget>
               </item>
@@ -2017,7 +2017,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>--</string>
                 </property>
                </widget>
               </item>
@@ -2056,7 +2056,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>--</string>
                 </property>
                </widget>
               </item>
@@ -2082,7 +2082,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>--</string>
                 </property>
                </widget>
               </item>
@@ -3067,7 +3067,7 @@ padding: 0px 5px;</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>--</string>
                  </property>
                 </widget>
                </item>
@@ -3080,7 +3080,7 @@ padding: 0px 5px;</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>--</string>
                  </property>
                 </widget>
                </item>
@@ -3159,7 +3159,7 @@ padding: 0px 5px;</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>--</string>
                  </property>
                 </widget>
                </item>
@@ -3188,7 +3188,7 @@ padding: 0px 5px;</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>--</string>
                  </property>
                 </widget>
                </item>
@@ -3201,7 +3201,7 @@ padding: 0px 5px;</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>--</string>
                  </property>
                 </widget>
                </item>
@@ -3214,7 +3214,7 @@ padding: 0px 5px;</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>--</string>
                  </property>
                 </widget>
                </item>
@@ -3346,7 +3346,7 @@ padding: 0px 5px;</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>--</string>
                  </property>
                 </widget>
                </item>
