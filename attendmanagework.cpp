@@ -39,7 +39,10 @@ void AttendManageWork::working()
         userModel->select();
     }
     else
+    {
+        userModel->database().open();   //该model数据库和AttendManageWork中不一致
         userModel->select();
+    }
 
     attendModel->setTable("magic_attendance");
     attendModel->setSort(attendModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
