@@ -18,6 +18,7 @@
 #include <QPixmap>
 #include <QDateTime>
 #include <QLabel>
+#include <QMovie>
 #include "service.h"
 #include "formlogin.h"
 #include "querymodel.h"
@@ -31,6 +32,7 @@
 #include "usermanagework.h"
 #include "attendmanagework.h"
 #include "groupmanagework.h"
+#include "activitymanagework.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -43,6 +45,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    QMovie *loadingMovie;
+    
     QMutex mutex;
 
     bool dbStatus = true;
@@ -89,6 +93,8 @@ private:
 
     void setGroupManagePage();
 
+    void setActivityManagePage();
+
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department) const;
@@ -106,6 +112,8 @@ private:
     AttendManageWork *attendManageWork;
 
     GroupManageWork *groupManageWork;
+
+    ActivityManageWork* activityManageWork;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -259,6 +267,10 @@ signals:
     void groupManageWorking();
 
     void groupManageModelSubmitAll(int type);
+
+    void activityManageWorking();
+
+    void activityManageModelSubmitAll();
 
     void fixUser(int type, const QString& removedId);
 private:

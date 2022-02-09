@@ -3,7 +3,7 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "0.0.4";   //在此处定义软件当前版本
+    CurVersion = "0.0.6";   //在此处定义软件当前版本
 }
 
 bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
@@ -46,7 +46,7 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
         qDebug() << Version;
         if(Version > CurVersion)
         {
-            QString warningStr =  "检测到新版本：\n版本号：" + Version + "\n" + "发布时间：" + UpdateTime + "\n" + "更新说明：" + ReleaseNote;
+            QString warningStr =  "检测到新版本：\n软件版本号：" + Version + "\n" + "发布时间：" + UpdateTime + "\n" + "更新说明：" + ReleaseNote;
             int ret = QMessageBox::warning(parent, "检查更新",  warningStr, "前往下载", "暂不更新");
             if(ret == 0)
                 QDesktopServices::openUrl(QUrl(Url));

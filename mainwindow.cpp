@@ -57,6 +57,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->tableView_userManage->setItemDelegateForColumn(3, &comboxDelegateGender);
     ui->tableView_userManage->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_userManage));
 
+    //加载动画
+    loadingMovie = new QMovie(":/images/color_icon/loading.gif");
+    ui->label_loading->setMovie(loadingMovie);
+    loadingMovie->start();
+
     //检查更新
     checkUpdate updateSoftWare;
     updateSoftWare.parse_UpdateJson(ui->notice, this);
@@ -68,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     userManageWork = new UserManageWork();
     attendManageWork = new AttendManageWork();
     groupManageWork = new GroupManageWork();
+    activityManageWork = new ActivityManageWork();
 
     sqlThread = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
@@ -76,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     userManageWork->moveToThread(sqlThread);
     attendManageWork->moveToThread(sqlThread);
     groupManageWork->moveToThread(sqlThread);
+    activityManageWork->moveToThread(sqlThread);
 
     //开启数据库连接线程
     dbThread->start();
@@ -99,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         attendManageModel = new QSqlRelationalTableModel(this, attendManageWork->getDB());
         groupModel = new QSqlTableModel(this, groupManageWork->getDB());
         departmentModel = new QSqlTableModel(this, groupManageWork->getDB());
-        activityModel = new QSqlTableModel(this);
+        activityModel = new QSqlTableModel(this, activityManageWork->getDB());
 
         userManagePageSelection = new QItemSelectionModel(userManageModel);
         groupPageSelection_group = new QItemSelectionModel(groupModel);
@@ -119,6 +126,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
         groupManageWork->setGroupModel(groupModel);
         groupManageWork->setDepartmentModel(departmentModel);
+
+        activityManageWork->setModel(activityModel);
 
         emit startSetAuth(uid, actionList);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
@@ -219,6 +228,22 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendManageModel->lastError().text(),
                                      QMessageBox::Ok);
     });
+    //活动管理信号槽
+    connect(this, &MainWindow::activityManageWorking, activityManageWork, &ActivityManageWork::working);
+    connect(this, &MainWindow::activityManageModelSubmitAll, activityManageWork, &ActivityManageWork::submitAll);
+    connect(activityManageWork, &ActivityManageWork::activityManageWorkFinished, this, &MainWindow::setActivityManagePage);
+    connect(activityManageWork, &ActivityManageWork::submitAllFinished, this, [=](bool res) {
+        if (!res)
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + activityModel->lastError().text(),
+                QMessageBox::Ok);
+        else
+        {
+            QMessageBox::information(this, "消息", "活动【" + ui->lineEdit_actName->text() + "】发布成功，请注意审核活动报名成员。"
+                , QMessageBox::Ok);
+            ui->lineEdit_actName->clear();
+            ui->textEdit_activity->clear();
+        }
+     });
 
     //组织架构管理信号槽
     connect(this, &MainWindow::groupManageWorking, groupManageWork, &GroupManageWork::working);
@@ -286,17 +311,22 @@ MainWindow::~MainWindow()
         dbThread->quit();
         dbThread->wait();
     }
+
+    loadingMovie->stop();
+    delete loadingMovie;
+
     //析构所有工作对象和线程
     delete ui;
 
     delete sqlWork;
-    delete dbThread;
-
     delete setBaseInfoWork;
     delete userManageWork;
     delete attendManageWork;
     delete groupManageWork;
+    delete activityManageWork;
+
     delete sqlThread;
+    delete dbThread;
 
     delete readOnlyDelegate;
 }
@@ -361,7 +391,7 @@ void MainWindow::setHomePageBaseInfo()
     {
         ui->label_homePage_attendStatus->setText("已签到");
         ui->label_homePage_beginTime->setText(setBaseInfoWork->getBeginTime());
-        if(setBaseInfoWork->getBeginTime().isNull())
+        if(setBaseInfoWork->getEndTime().isNull())
             ui->label_homePage_endTime->setText("--");
         else
             ui->label_homePage_endTime->setText(setBaseInfoWork->getEndTime());
@@ -470,10 +500,9 @@ void MainWindow::on_actMyInfo_triggered()
 
 void MainWindow::on_actAttend_triggered()
 {
-    if (!ui->stackedWidget->currentWidget()->isEnabled())
+    if (ui->stackedWidget->currentIndex() == 13)
         return;
-    ui->stackedWidget->setCurrentIndex(4);
-    ui->stackedWidget->currentWidget()->setEnabled(false);
+    ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     //reloadModelBefore();
@@ -506,7 +535,9 @@ void MainWindow::setAttendPage()
         ui->label_attendPage_beginTime->setText("--");
         ui->label_attendPage_endTime->setText("--");
     }
+    ui->stackedWidget->setCurrentIndex(4);
     ui->stackedWidget->currentWidget()->setEnabled(true);
+
     int *workTimeSum = attendWork->getWorkTime();
     service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), workTimeSum[0], workTimeSum[1], workTimeSum[2], workTimeSum[3]);  //绘制统计图
 }
@@ -525,10 +556,9 @@ void MainWindow::on_actApply_triggered() const
 
 void MainWindow::on_actUserManager_triggered()
 {
-    if(!ui->stackedWidget->currentWidget()->isEnabled())
+    if (ui->stackedWidget->currentIndex() == 13)
         return;
-    ui->stackedWidget->setCurrentIndex(6);
-    ui->stackedWidget->currentWidget()->setEnabled(false);
+    ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_userManage->setItemDelegateForColumn(0, readOnlyDelegate);    //UID不可编辑
@@ -564,15 +594,15 @@ void MainWindow::setUserManagePage() const
     ui->comboBox_department->addItem("所有部门");
     ui->comboBox_department->addItems(department);
 
+    ui->stackedWidget->setCurrentIndex(6);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
 
 void MainWindow::on_actAttendManager_triggered()
 {
-    if(!ui->stackedWidget->currentWidget()->isEnabled())
+    if (ui->stackedWidget->currentIndex() == 13)
         return;
-    ui->stackedWidget->setCurrentIndex(7);
-    ui->stackedWidget->currentWidget()->setEnabled(false);
+    ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_attendUsers->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_attendUsers->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_attendInfo->setItemDelegateForColumn(1, readOnlyDelegate);     //第一列不可编辑，因为隐藏了第一列，所以列号是1不是0
@@ -614,11 +644,32 @@ void MainWindow::setAttendManagePage() const
     ui->tableView_attendInfo->setModel(attendManageModel);
     ui->tableView_attendInfo->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_attendInfo));
     ui->tableView_attendInfo->hideColumn(attendManageModel->fieldIndex("num"));     //隐藏不需要的签到编号
+
+    ui->stackedWidget->setCurrentIndex(7);
+    ui->stackedWidget->currentWidget()->setEnabled(true);
+}
+
+void MainWindow::setActivityManagePage()
+{
+    //活动列表
+    ui->tableView_actList->setModel(activityModel);
+    ui->tableView_actList->setSelectionModel(activitySelection);
+
+    //当前行变化时触发currentChanged信号
+    connect(activitySelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+        this, SLOT(on_activityPagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+
+    ui->stackedWidget->setCurrentIndex(8);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
 
 void MainWindow::on_actManage_triggered()
 {
+    if (ui->stackedWidget->currentIndex() == 13)
+        return;
+    ui->stackedWidget->setCurrentIndex(13);
+
+    emit activityManageWorking();
     curDateTime = QDateTime::currentDateTime();
     ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
     ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
@@ -627,26 +678,8 @@ void MainWindow::on_actManage_triggered()
     ui->tableView_actList->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_actList->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    ui->stackedWidget->setCurrentIndex(8);
     ui->tableView_actList->setItemDelegateForColumn(0, readOnlyDelegate);
     ui->tableView_actList->setItemDelegateForColumn(6, readOnlyDelegate);
-
-    if(!dbStatus)
-        return;
-    else
-    {
-        statusIcon->setPixmap(*statusOKIcon);
-        connectStatusLable->setText("Database Status: connected");
-        queryModel tabModel(db, this);
-        activityModel = tabModel.setActivityPage();
-        //活动列表
-        ui->tableView_actList->setModel(activityModel);
-
-        ui->tableView_actList->setSelectionModel(activitySelection);
-        //当前行变化时触发currentChanged信号
-        connect(activitySelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-                    this, SLOT(on_activityPagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
-    }
 }
 
 void MainWindow::on_actApplyList_triggered() const
@@ -661,12 +694,10 @@ void MainWindow::on_actApplyItems_triggered() const
 
 void MainWindow::on_actGroup_triggered()
 {
-    if (!ui->stackedWidget->currentWidget()->isEnabled())
+    if (ui->stackedWidget->currentIndex() == 13)
         return;
-    ui->stackedWidget->setCurrentIndex(11);
-    ui->stackedWidget->currentWidget()->setEnabled(false);
+    ui->stackedWidget->setCurrentIndex(13);
 
-    //reloadModelBefore();
     emit groupManageWorking();      //开始加载model
 
     //tableView显示属性设置
@@ -696,7 +727,6 @@ void MainWindow::on_actGroup_triggered()
 void MainWindow::setGroupManagePage()
 {
     bool isEditable = false;
-    ui->stackedWidget->currentWidget()->setEnabled(true);
     ui->tableView_group->setModel(groupModel);
     ui->tableView_department->setModel(departmentModel);
 
@@ -714,6 +744,9 @@ void MainWindow::setGroupManagePage()
 
     ui->tableView_group->setSelectionModel(groupPageSelection_group);
     ui->tableView_department->setSelectionModel(groupPageSelection_department);
+
+    ui->stackedWidget->setCurrentIndex(11);
+    ui->stackedWidget->currentWidget()->setEnabled(true);
 }
 
 void MainWindow::on_actMore_triggered() const
@@ -1239,13 +1272,7 @@ void MainWindow::on_btn_actPush_clicked()
         activityModel->setData(activityModel->index(currow, 4), ui->dateTimeEdit_actBegin->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
         activityModel->setData(activityModel->index(currow, 5), ui->dateTimeEdit_actEnd->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
         activityModel->setData(activityModel->index(currow, 6), uid);
-        if(activityModel->submitAll())
-        {
-            QMessageBox::information(this, "消息", "活动【" + ui->lineEdit_actName->text() + "】发布成功，请注意审核活动报名成员。"
-                                                  , QMessageBox::Ok);
-            ui->lineEdit_actName->clear();
-            ui->textEdit_activity->clear();
-        }
+        emit activityManageModelSubmitAll();
     }
 }
 

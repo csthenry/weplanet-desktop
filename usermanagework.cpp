@@ -67,8 +67,10 @@ void UserManageWork::setModel(QSqlRelationalTableModel *model)
 
 void UserManageWork::submitAll()
 {
-    DB.open();
-    emit submitAllFinished(relTableModel->submitAll());
+    bool res = true;
+    if (relTableModel->isDirty())
+        res = relTableModel->submitAll();
+    emit submitAllFinished(res);
 }
 
 void UserManageWork::loadAvatar()

@@ -203,6 +203,7 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="activitymanagework.cpp" />
     <ClCompile Include="attendmanagework.cpp" />
     <ClCompile Include="attendwork.cpp" />
     <ClCompile Include="baseinfowork.cpp" />
@@ -226,6 +227,7 @@
     </QtMoc>
     <QtMoc Include="baseinfowork.h">
     </QtMoc>
+    <QtMoc Include="activitymanagework.h" />
     <ClInclude Include="checkupdate.h" />
     <QtMoc Include="comboboxdelegate.h">
     </QtMoc>

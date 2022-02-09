@@ -243,6 +243,12 @@ padding: 0px 5px;</string>
          <height>16777215</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">border-radius: 17px;/*设置圆角的大小*/
 border: .5px solid rgb(207, 207, 207);
@@ -266,6 +272,12 @@ padding: 0px 5px;</string>
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="styleSheet">
         <string notr="true">border-radius: 17px;/*设置圆角的大小*/
@@ -294,10 +306,19 @@ padding: 0px 5px;</string>
          <height>16777215</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">border-radius: 17px;/*设置圆角的大小*/
 border: .5px solid rgb(207, 207, 207);
 padding: 0px 5px;</string>
+       </property>
+       <property name="text">
+        <string/>
        </property>
        <property name="maxLength">
         <number>16</number>
@@ -326,7 +347,7 @@ padding: 0px 5px;</string>
         </size>
        </property>
        <property name="text">
-        <string>密        码：</string>
+        <string>密       码：</string>
        </property>
       </widget>
      </item>
@@ -343,6 +364,12 @@ padding: 0px 5px;</string>
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>9</pointsize>
+        </font>
        </property>
        <property name="styleSheet">
         <string notr="true">border-radius: 17px;/*设置圆角的大小*/
@@ -366,7 +393,7 @@ padding: 0px 5px;</string>
         </size>
        </property>
        <property name="text">
-        <string>姓        名：</string>
+        <string>姓       名：</string>
        </property>
       </widget>
      </item>

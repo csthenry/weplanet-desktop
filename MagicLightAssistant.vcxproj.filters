@@ -92,6 +92,9 @@
     <ClCompile Include="usermanagework.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="activitymanagework.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -134,6 +137,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="usermanagework.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="activitymanagework.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
