@@ -67,6 +67,7 @@ void UserManageWork::setModel(QSqlRelationalTableModel *model)
 
 void UserManageWork::submitAll()
 {
+    DB.open();
     emit submitAllFinished(relTableModel->submitAll());
 }
 

@@ -107,6 +107,7 @@ void AttendManageWork::getComboxItems(QStringList& comboxItems_group, QStringLis
 
 void AttendManageWork::submitAll(int type)
 {
+    DB.open();
     if(type == 1)
         emit submitAddFinished(attendModel->submitAll());
     else
