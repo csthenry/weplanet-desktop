@@ -32,7 +32,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_40">
@@ -705,7 +705,7 @@
            </font>
           </property>
           <property name="title">
-           <string>公告栏</string>
+           <string>版本公告</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_61">
            <item row="0" column="0">

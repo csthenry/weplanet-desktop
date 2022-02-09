@@ -26,6 +26,8 @@ public:
 
     bool parse_UpdateJson(QLabel* label, QWidget* parent);
 
+    QString getCurVersion();
+
 private:
     QNetworkAccessManager manager;		//定义网络请求对象
 

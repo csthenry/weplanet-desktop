@@ -54,3 +54,8 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
     }
     return true;
 }
+
+QString checkUpdate::getCurVersion()
+{
+    return CurVersion;
+}

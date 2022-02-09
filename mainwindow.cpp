@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //检查更新
     checkUpdate updateSoftWare;
     updateSoftWare.parse_UpdateJson(ui->notice, this);
+    ui->groupBox_33->setTitle("版本公告（软件版本：Ver " + updateSoftWare.getCurVersion() + "）");
 
     //多线程相关
     sqlWork = new SqlWork("mainDB");  //sql异步连接
