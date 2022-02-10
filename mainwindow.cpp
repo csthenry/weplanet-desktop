@@ -1262,6 +1262,11 @@ void MainWindow::on_btn_actClear_clicked()
     QMessageBox::StandardButton res;
     QModelIndex curIndex = activitySelection->currentIndex();//获取当前选择单元格的模型索引
     QSqlRecord curRecord = activityModel->record(curIndex.row());
+    if (curRecord.value("act_name").toString() == "")
+    {
+        QMessageBox::information(this, "提示", "请选择有效的活动。");
+        return;
+    }
     res = QMessageBox::warning(this, "警告", "确认要删除【" + curRecord.value("act_name").toString() + "】活动吗？", QMessageBox::Yes|QMessageBox::No);
     if(res == QMessageBox::Yes)
         activityModel->removeRow(curIndex.row()); //删除
