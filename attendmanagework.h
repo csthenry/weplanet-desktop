@@ -18,12 +18,14 @@ public:
     void setCurAvatarUrl(const QString url);
     void setUserModel(QSqlRelationalTableModel *relTableModel);
     void setAttendModel(QSqlRelationalTableModel *relTableModel);
-    void getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department);
+    void getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department);  //已弃用
     void submitAll(int type);   //1补签 0退签
     void loadAvatar();
+    void setCombox(QComboBox* group, QComboBox* department);
     QSqlDatabase getDB();
 private:
     service db_service;
+    QComboBox *m_group, *m_department;
     QPixmap curPix;
     QString avatarUrl;
     QSqlDatabase DB;

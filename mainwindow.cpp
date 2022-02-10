@@ -121,9 +121,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         attendWork->setUid(uid);
 
         userManageWork->setModel(userManageModel);
+        userManageWork->setCombox(ui->comboBox_group, ui->comboBox_department);
 
         attendManageWork->setUserModel(userManageModel);    //直接沿用用户管理界面的model
         attendManageWork->setAttendModel(attendManageModel);
+        attendManageWork->setCombox(ui->comboBox_group_2, ui->comboBox_department_2);
 
         groupManageWork->setGroupModel(groupModel);
         groupManageWork->setDepartmentModel(departmentModel);
@@ -584,17 +586,6 @@ void MainWindow::setUserManagePage() const
 
     ui->tableView_userManage->setSelectionModel(userManagePageSelection);
 
-    //初始化数据过滤模块combox
-    QStringList group, department;
-    userManageWork->getComboxItems(group, department);
-    ui->comboBox_group->clear();
-    ui->comboBox_group->addItem("所有用户组");
-    ui->comboBox_group->addItems(group);
-
-    ui->comboBox_department->clear();
-    ui->comboBox_department->addItem("所有部门");
-    ui->comboBox_department->addItems(department);
-
     ui->stackedWidget->setCurrentIndex(6);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
@@ -629,17 +620,6 @@ void MainWindow::setAttendManagePage() const
     //当前行变化时触发currentRowChanged信号
     connect(userManagePageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
                 this, SLOT(on_attendManagePageUserscurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
-
-    //初始化数据过滤comBox
-    QStringList group, department;
-    attendManageWork->getComboxItems(group, department);
-    ui->comboBox_group_2->clear();
-    ui->comboBox_group_2->addItem("所有用户组");
-    ui->comboBox_group_2->addItems(group);
-
-    ui->comboBox_department_2->clear();
-    ui->comboBox_department_2->addItem("所有部门");
-    ui->comboBox_department_2->addItems(department);
 
     //签到列表
     ui->tableView_attendInfo->setModel(attendManageModel);

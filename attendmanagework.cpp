@@ -81,6 +81,17 @@ void AttendManageWork::getComboxItems()
     while (comboxGroup.next())
         comboxItems_department << comboxGroup.value("dpt_name").toString();
     comboxGroup.clear();
+
+    //初始化数据过滤comBox
+    for (int i = m_group->count() - 1; i >= 1; i--)
+        m_group->removeItem(i);
+    //m_group->addItem("所有用户组");
+    m_group->addItems(comboxItems_group);
+
+    for (int i = m_department->count() - 1; i >= 1; i--)
+        m_department->removeItem(i);
+    //m_department->addItem("所有部门");
+    m_department->addItems(comboxItems_department);
 }
 
 void AttendManageWork::setCurAvatarUrl(const QString url)
@@ -122,4 +133,10 @@ void AttendManageWork::loadAvatar()
     curPix = service::getAvatar(avatarUrl);
     service::setAvatarStyle(curPix);
     emit avatarFinished(curPix);
+}
+
+void AttendManageWork::setCombox(QComboBox *group, QComboBox *department)
+{
+    m_group = group;
+    m_department = department;
 }

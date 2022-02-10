@@ -21,11 +21,13 @@ public:
     void loadAvatar();
     void setUsersTypeCombox();
     void setCurAvatarUrl(const QString& url);
-    void getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department);
+    void setCombox(QComboBox* group, QComboBox* department);
+    void getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department);   //已弃用
 private slots:
 
 private:
     service db_service;
+    QComboBox *m_group, *m_department;
     QSqlDatabase DB;
     QString avatarUrl;
     QPixmap curPix;
