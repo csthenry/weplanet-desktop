@@ -10,6 +10,7 @@ void AttendManageWork::working()
     DB.open();
     if(!isFirst)
     {
+        userModel->database().open();   //该model数据库和AttendManageWork中不一致
         userModel->select();
         attendModel->select();
         getComboxItems();
