@@ -525,7 +525,7 @@ void MainWindow::setAttendPage()
         ui->label_attendPage_status->setText("已签到");
         ui->label_attendPage_beginTime->setText(curRec.value("begin_date").toString());
         ui->label_attendPage_endTime->setText(curRec.value("end_date").toString());
-        if(curRec.value("isSupply") == 1)
+        if(curRec.value("isSupply") == "是")
             ui->label_attendPage_isSupply->setText("<补签>");
         else
             ui->label_attendPage_isSupply->setText("");
@@ -535,6 +535,7 @@ void MainWindow::setAttendPage()
     else
     {
         ui->label_attendPage_status->setText("未签到");
+        ui->label_attendPage_isSupply->setText("");
         ui->label_attendPage_beginTime->setText("--");
         ui->label_attendPage_endTime->setText("--");
     }
@@ -1066,7 +1067,7 @@ void MainWindow::on_btn_attendManage_reAttend_clicked()
     attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("today")), curDateTime.date().toString("yyyy-MM-dd"));
     attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("begin_date")), curDateTime.time().toString("HH:mm:ss"));
     attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("end_date")), curDateTime.time().toString("HH:mm:ss"));
-    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("isSupply")), 1);
+    attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("isSupply")), "是");
     attendManageModel->setData(attendManageModel->index(currow, attendManageModel->fieldIndex("name")), uid);   //这里要填外键关联的字段！
     emit attendManageModelSubmitAll(1);
 }
@@ -1117,7 +1118,7 @@ void MainWindow::on_btn_expAttend_clicked()
     QSqlRecord re = attendPageModel->record();
     curDateTime = QDateTime::currentDateTime();
     QString filePath = QFileDialog::getSaveFileName(this, "导出数据", "考勤数据_" + curDateTime.toString("yyyy-MM-dd_hh-mm-ss"), "Microsoft Excel(*.xlsx)");
-    if(expExcel.WriteExcel(filePath, attendPageModel, ui->label_attendPage_uid->text(), 1))     //因为已经按uid过滤，所以用type1即可
+    if(expExcel.WriteExcel(filePath, attendPageModel, ui->label_attendPage_uid->text(), 3))
         QMessageBox::information(this, "消息", "考勤数据已成功导出到：" + filePath, QMessageBox::Ok);
     else
         QMessageBox::warning(this, "消息", "考勤数据导出失败，请检查文件路径。", QMessageBox::Ok);
@@ -1137,7 +1138,7 @@ void MainWindow::on_btn_beginAttend_clicked()
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("a_uid")), uid);
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("today")), curDateTime.date().toString("yyyy-MM-dd"));
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("begin_date")), curDateTime.time().toString("HH:mm:ss"));
-    attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("isSupply")), 0);
+    attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("isSupply")), "否");
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("name")), 1);   //这里要填外键关联的字段！
 
     emit attendPageModelSubmitAll(1);

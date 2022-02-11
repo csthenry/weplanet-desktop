@@ -137,7 +137,7 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "begin_date datetime,"
                   "end_date   datetime,"
                   "today      date,"
-                  "isSupply   tinyint(1)  NOT NUll,"
+                  "isSupply   tinytext     NOT NUll,"
                   "operator   int(10),"
                   "PRIMARY KEY (num, a_uid)"
                   ")ENGINE=InnoDB;";
@@ -219,24 +219,28 @@ bool service::initDatabaseTables(QSqlDatabase& db)
                   "(actm_id      int(10)      NOT NULL    AUTO_INCREMENT,"
                   "actm_uid      int(10)      NOT NUll,"
                   "actm_joinDate datetime     NOT NUll,"
-                  "status        tinyint(1)   NOT NUll,"
+                  "status        tinytext     NOT NUll,"
                   "PRIMARY KEY (actm_id)"
                   ")ENGINE=InnoDB;";
         query.exec(creatTableStr);
-        //登录窗口可能注册，不能关闭数据库
+        query.clear();
+        db.close();
         return true;
     }
 }
 
 bool service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
 {
+    db.open();
     QSqlQuery query(db);
+
     //验证UID
     query.exec("SELECT password FROM magic_users WHERE uid = " + QString::number(account));
     if(query.next() && pwd == query.value("password").toString())
     {
         uid = QString::number(account);
         qDebug() << uid << "登录方式：账号登录";
+        db.close();
         return true;
     }
     else
@@ -248,8 +252,10 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
             {
                 uid = query.value("uid").toString();
                 qDebug() << uid << "登录方式：手机号登录";
+                db.close();
                 return true;
             }
+        db.close();
         return false;
     }
 }

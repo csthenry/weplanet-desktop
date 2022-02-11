@@ -26,7 +26,6 @@ class ExcelExport {
 public:
     ExcelExport(QObject* parent);
     ~ExcelExport();
-
     bool WriteExcel(const QString& filePath, QSqlTableModel* tableModel, const QString& uid, int type);
 
 private:

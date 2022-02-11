@@ -102,7 +102,6 @@ QSqlDatabase AttendWork::getDB()
 
 void AttendWork::submitAll(int type)
 {
-    DB.open();
     QDateTime cur = QDateTime::currentDateTime();
     if(type == 1)
         emit attendDone(relTableModel->submitAll());

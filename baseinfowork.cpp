@@ -162,12 +162,10 @@ void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, c
 
 void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)
 {
-    DB.open();
     if(service::authAccount(DB, loginUid, account, pwd) || service::authAccount(DB, loginUid, account, editPwd))
         emit authRes(true);
     else
         emit authRes(false);
-    DB.close();
 }
 
 void baseInfoWork::setAuthority(const QString &uid, const QVector<QAction *> &vector)
