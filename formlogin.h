@@ -31,6 +31,7 @@ public:
     ~formLogin();
 
 private:
+    QSettings* config_ini;
     SqlWork *sqlWork;
     baseInfoWork *loginWork;
     QThread *sqlThread, *dbThread;
@@ -75,6 +76,7 @@ signals:
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
     void autoLoginAuthAccount(const long long account, const QString& pwd);
     void signUp(const QString& pwd, const QString& name, const QString& tel);
+    void initDatabase();
 };
 
 #endif // FORMLOGIN_H

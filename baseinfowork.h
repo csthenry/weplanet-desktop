@@ -20,6 +20,7 @@ public:
 
     void refreshBaseInfo(); //用于刷新数据
     void setUid(QString uid);
+    void initDatabaseTables();
 
     bool getAttendToday();
     QString getBeginTime();
@@ -44,7 +45,7 @@ private:
     bool isAttend;
     QDateTime curDateTime;
     service db_service;
-    QSqlDatabase DB;
+    QSqlDatabase DB, initDB;
     QString uid;
     QString loginUid;
     QString lastSignupUid;
@@ -68,6 +69,7 @@ signals:
     void signupRes(bool);   //返回注册结果
     void authorityRes(bool);    //返回账号权限鉴权结果
     void editPersonalInfoRes(int);  //个人信息修改结果：1修改成功（不包含密码），2修改成功（包含密码，需要注销），-1修改失败（旧密码验证失败）
+    void initDatabaseFinished(bool);
 };
 
 #endif // BASEINFOWORK_H

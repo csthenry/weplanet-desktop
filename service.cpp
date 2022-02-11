@@ -63,170 +63,164 @@ void service::addDatabase(QSqlDatabase& db, const QString &flag)
     db.setPassword(dataBasePassword);
 }
 
-bool service::initDatabaseTables(QSqlDatabase& db)
+bool service::initDatabaseTables(QSqlDatabase db)
 {
+    qDebug() << "initDatabaseTables()...";
+    QSqlQuery query(db);
+    //创建magic_users表
+    //初始化root用户数据，登录名100000，密码123456
+    QString creatTableStr = "CREATE TABLE IF NOT EXISTS magic_users "
+        "(                                                     "
+        "uid           int(10)      NOT NULL AUTO_INCREMENT,   "
+        "password      varchar(64)  NOT NULL ,"
+        "name          varchar(32)  NOT NULL ,"
+        "gender        tinytext     NULL ,"
+        "telephone     varchar(64)  NULL ,"
+        "mail          varchar(128) NULL ,"
+        "user_group    int(10) NOT  NULL ,"
+        "user_dpt      int(10) NOT  NULL ,"
+        "user_avatar   varchar(64)  NULL ,"
+        "PRIMARY KEY (uid)                "
+        ")ENGINE=InnoDB;                  "
+        "INSERT INTO magic_users          "
+        "(uid, password, name, user_group, user_dpt)"
+        "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1);"
+        "INSERT INTO magic_users          "
+        "(uid, password, name, user_group, user_dpt)"
+        "VALUES                           "
+        "(                                "
+        "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1');";
+    query.exec(creatTableStr);
 
-    if(!db.isOpen() && !db.open()){
-        qDebug() << "error info :" << db.lastError();
-        return false;
-    }
-    else{
-        QSqlQuery query;
-        //创建magic_users表
-        //初始化root用户数据，登录名100000，密码123456
-        QString creatTableStr = "CREATE TABLE IF NOT EXISTS magic_users "
-                 "(                                                     "
-                 "uid           int(10)      NOT NULL AUTO_INCREMENT,   "
-                 "password      varchar(64)  NOT NULL ,"
-                 "name          varchar(32)  NOT NULL ,"
-                 "gender        tinytext     NULL ,"
-                 "telephone     varchar(64)  NULL ,"
-                 "mail          varchar(128) NULL ,"
-                 "user_group    int(10) NOT  NULL ,"
-                 "user_dpt      int(10) NOT  NULL ,"
-                 "user_avatar   varchar(64)  NULL ,"
-                 "PRIMARY KEY (uid)                "
-                 ")ENGINE=InnoDB;                  "
-                 "INSERT INTO magic_users          "
-                 "(uid, password, name, user_group, user_dpt)"
-                 "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1);"
-                 "INSERT INTO magic_users          "
-                 "(uid, password, name, user_group, user_dpt)"
-                 "VALUES                           "
-                 "(                                "
-                 "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1');";
-        query.exec(creatTableStr);
+    //用户组权限分配表，默认有管理员和普通用户
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_group"
+        "(group_id        int(10)     NOT NULL    AUTO_INCREMENT,"
+        "group_name      varchar(32)  NOT NULL,"
+        "users_manage     tinyint(1)  NOT NUll,"
+        "attend_manage    tinyint(1)  NOT NUll,"
+        "apply_manage     tinyint(1)  NOT NUll,"
+        "applyItem_manage tinyint(1)  NOT NUll,"
+        "group_manage     tinyint(1)  NOT NUll,"
+        "activity_manage  tinyint(1)  NOT NUll,"
+        "send_message     tinyint(1)  NOT NUll,"
+        "PRIMARY KEY (group_id)) ENGINE=InnoDB;"
+        "INSERT INTO magic_group"
+        "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
+        "VALUES(1, '超级管理员', 1, 1, 1, 1, 1, 1, 1);"
+        "INSERT INTO magic_group"
+        "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
+        "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1);";
+    query.exec(creatTableStr);
 
-        //用户组权限分配表，默认有管理员和普通用户
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_group"
-                  "(group_id        int(10)     NOT NULL    AUTO_INCREMENT,"
-                  "group_name      varchar(32)  NOT NULL,"
-                  "users_manage     tinyint(1)  NOT NUll,"
-                  "attend_manage    tinyint(1)  NOT NUll,"
-                  "apply_manage     tinyint(1)  NOT NUll,"
-                  "applyItem_manage tinyint(1)  NOT NUll,"
-                  "group_manage     tinyint(1)  NOT NUll,"
-                  "activity_manage  tinyint(1)  NOT NUll,"
-                  "send_message     tinyint(1)  NOT NUll,"
-                  "PRIMARY KEY (group_id)) ENGINE=InnoDB;"
-                  "INSERT INTO magic_group"
-                  "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
-                  "VALUES(1, '超级管理员', 1, 1, 1, 1, 1, 1, 1);"
-                  "INSERT INTO magic_group"
-                  "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
-                  "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1);";
-        query.exec(creatTableStr);
+    //组织架构表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_department"
+        "(dpt_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+        "dpt_name     varchar(32)  NOT NUll,"
+        "PRIMARY KEY (dpt_id))ENGINE=InnoDB;"
+        "INSERT INTO magic_department"
+        "(dpt_id, dpt_name)"
+        "VALUES(1, '默认部门');";
+    query.exec(creatTableStr);
 
-        //组织架构表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_department"
-                  "(dpt_id      int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "dpt_name     varchar(32)  NOT NUll,"
-                  "PRIMARY KEY (dpt_id))ENGINE=InnoDB;"
-                  "INSERT INTO magic_department"
-                  "(dpt_id, dpt_name)"
-                  "VALUES(1, '默认部门');";
-        query.exec(creatTableStr);
+    //考勤表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_attendance"
+        "(num       int(10)      NOT NULL    AUTO_INCREMENT,"
+        "a_uid      int(10)      NOT NUll,"
+        "begin_date datetime,"
+        "end_date   datetime,"
+        "today      date,"
+        "isSupply   tinytext     NOT NUll,"
+        "operator   int(10),"
+        "PRIMARY KEY (num, a_uid)"
+        ")ENGINE=InnoDB;";
+    query.exec(creatTableStr);
 
-        //考勤表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_attendance"
-                  "(num       int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "a_uid      int(10)      NOT NUll,"
-                  "begin_date datetime,"
-                  "end_date   datetime,"
-                  "today      date,"
-                  "isSupply   tinytext     NOT NUll,"
-                  "operator   int(10),"
-                  "PRIMARY KEY (num, a_uid)"
-                  ")ENGINE=InnoDB;";
-        query.exec(creatTableStr);
+    //申请表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_apply"
+        "(apply_id       int(10)      NOT NULL    AUTO_INCREMENT,"
+        "apply_uid       int(10)      NOT NUll,"
+        "alist_id        int(10)      NOT NUll,"
+        "op1_text        text,"
+        "op2_text        text,"
+        "op3_text        text,"
+        "process_uidList varchar(64),"
+        "status          tinyint(1)   NOT NUll,"
+        "check_uidList   varchar(64),"
+        "reject_uid      int(10),"
+        "PRIMARY KEY (apply_id, apply_uid)"
+        ")ENGINE=InnoDB;";
+    query.exec(creatTableStr);
 
-        //申请表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_apply"
-                  "(apply_id       int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "apply_uid       int(10)      NOT NUll,"
-                  "alist_id        int(10)      NOT NUll,"
-                  "op1_text        text,"
-                  "op2_text        text,"
-                  "op3_text        text,"
-                  "process_uidList varchar(64),"
-                  "status          tinyint(1)   NOT NUll,"
-                  "check_uidList   varchar(64),"
-                  "reject_uid      int(10),"
-                  "PRIMARY KEY (apply_id, apply_uid)"
-                  ")ENGINE=InnoDB;";
-        query.exec(creatTableStr);
+    //审批流程项目表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_applyList"
+        "(alist_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+        "title          varchar(32)  NOT NUll,"
+        "op1_title      varchar(32),"
+        "op2_title      varchar(32),"
+        "op3_title      varchar(32),"
+        "option_num     tinyint(1), "
+        "PRIMARY KEY (alist_id)"
+        ")ENGINE=InnoDB;";
+    query.exec(creatTableStr);
 
-        //审批流程项目表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_applyList"
-                  "(alist_id      int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "title          varchar(32)  NOT NUll,"
-                  "op1_title      varchar(32),"
-                  "op2_title      varchar(32),"
-                  "op3_title      varchar(32),"
-                  "option_num     tinyint(1), "
-                  "PRIMARY KEY (alist_id)"
-                  ")ENGINE=InnoDB;";
-        query.exec(creatTableStr);
+    //用户认证信息表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_verify"
+        "(v_uid          int(10)      NOT NULL    AUTO_INCREMENT,"
+        "vid             int(10)  NOT NUll,"
+        "info            varchar(32),"
+        "PRIMARY KEY (v_uid)"
+        ")ENGINE=InnoDB;";
+    query.exec(creatTableStr);
 
-        //用户认证信息表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_verify"
-                  "(v_uid          int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "vid             int(10)  NOT NUll,"
-                  "info            varchar(32),"
-                  "PRIMARY KEY (v_uid)"
-                  ")ENGINE=InnoDB;";
-        query.exec(creatTableStr);
+    //用户认证类型表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_verifyList"
+        "(v_id           int(10)      NOT NULL    AUTO_INCREMENT,"
+        "verify_name     varchar(32)  NOT NUll,"
+        "icon            tinyint(1)   NOT NUll,"
+        "PRIMARY KEY (v_id)"
+        ")ENGINE=InnoDB;"
+        "INSERT INTO magic_verifyList"
+        "(v_id, verify_name, icon)"
+        "VALUES (1, '个人认证', 0);"
+        "INSERT INTO magic_verifyList"
+        "(v_id, verify_name, icon)"
+        "VALUES (2, '机构认证', 1);";
+    query.exec(creatTableStr);
 
-        //用户认证类型表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_verifyList"
-                  "(v_id           int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "verify_name     varchar(32)  NOT NUll,"
-                  "icon            tinyint(1)   NOT NUll,"
-                  "PRIMARY KEY (v_id)"
-                  ")ENGINE=InnoDB;"
-                  "INSERT INTO magic_verifyList"
-                  "(v_id, verify_name, icon)"
-                  "VALUES (1, '个人认证', 0);"
-                  "INSERT INTO magic_verifyList"
-                  "(v_id, verify_name, icon)"
-                  "VALUES (2, '机构认证', 1);";
-        query.exec(creatTableStr);
+    //活动表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_activity"
+        "(act_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+        "act_name     varchar(32)  NOT NUll,"
+        "act_des      text         NUll,"
+        "joinDate     datetime     NOT NUll,"
+        "beginDate    datetime     NOT NUll,"
+        "endDate      datetime     NOT NUll,"
+        "editUid      int(10)      NOT NUll,"
+        "PRIMARY KEY (act_id)"
+        ")ENGINE=InnoDB;";
+    query.exec(creatTableStr);
 
-        //活动表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_activity"
-                  "(act_id      int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "act_name     varchar(32)  NOT NUll,"
-                  "act_des      text         NUll,"
-                  "joinDate     datetime     NOT NUll,"
-                  "beginDate    datetime     NOT NUll,"
-                  "endDate      datetime     NOT NUll,"
-                  "editUid      int(10)      NOT NUll,"
-                  "PRIMARY KEY (act_id)"
-                  ")ENGINE=InnoDB;";
-        query.exec(creatTableStr);
-
-        //活动成员表
-        creatTableStr =
-                  "CREATE TABLE IF NOT EXISTS magic_activityMembers"
-                  "(actm_id      int(10)      NOT NULL    AUTO_INCREMENT,"
-                  "actm_uid      int(10)      NOT NUll,"
-                  "actm_joinDate datetime     NOT NUll,"
-                  "status        tinytext     NOT NUll,"
-                  "PRIMARY KEY (actm_id)"
-                  ")ENGINE=InnoDB;";
-        query.exec(creatTableStr);
-        query.clear();
-        db.close();
-        return true;
-    }
+    //活动成员表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_activityMembers"
+        "(actm_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+        "actm_uid      int(10)      NOT NUll,"
+        "actm_joinDate datetime     NOT NUll,"
+        "status        tinytext     NOT NUll,"
+        "PRIMARY KEY (actm_id)"
+        ")ENGINE=InnoDB;";
+    bool res = query.exec(creatTableStr);
+    query.clear();
+    
+    return res;
 }
 
 bool service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)

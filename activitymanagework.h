@@ -17,12 +17,16 @@ public:
 	QSqlDatabase getDB();
 	void submitAll();
 	void setModel(QSqlTableModel* model);
+	void setMemberModel(QSqlTableModel* model);
+	void apply(QString& uid);
+	void setType(int t);
 
 private:
+	int type;
 	service db_service;
 	QSqlDatabase DB;
-	QSqlTableModel* tabModel;
+	QSqlTableModel* tabModel, *memberTabModel;
 signals:
-	void activityManageWorkFinished();
+	void activityManageWorkFinished(int type);
 	void submitAllFinished(bool);
 };

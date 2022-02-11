@@ -108,11 +108,15 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         groupModel = new QSqlTableModel(this, groupManageWork->getDB());
         departmentModel = new QSqlTableModel(this, groupManageWork->getDB());
         activityModel = new QSqlTableModel(this, activityManageWork->getDB());
+        activityMemModel = new QSqlTableModel(this, activityManageWork->getDB());
 
         userManagePageSelection = new QItemSelectionModel(userManageModel);
         groupPageSelection_group = new QItemSelectionModel(groupModel);
         groupPageSelection_department = new QItemSelectionModel(departmentModel);
         activitySelection = new QItemSelectionModel(activityModel);
+        activityMemSelection = new QItemSelectionModel(activityMemModel);
+        myActListSelection = new QItemSelectionModel(activityModel);
+        myActSelection = new QItemSelectionModel(activityMemModel);
 
         //初始化work
         setBaseInfoWork->setUid(uid);
@@ -131,6 +135,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         groupManageWork->setDepartmentModel(departmentModel);
 
         activityManageWork->setModel(activityModel);
+        activityManageWork->setMemberModel(activityMemModel);
 
         emit startSetAuth(uid, actionList);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
@@ -234,7 +239,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //活动管理信号槽
     connect(this, &MainWindow::activityManageWorking, activityManageWork, &ActivityManageWork::working);
     connect(this, &MainWindow::activityManageModelSubmitAll, activityManageWork, &ActivityManageWork::submitAll);
-    connect(activityManageWork, &ActivityManageWork::activityManageWorkFinished, this, &MainWindow::setActivityManagePage);
+    connect(activityManageWork, &ActivityManageWork::activityManageWorkFinished, this, [=](int type)
+    {
+	    if(type == 1)
+            setActivityPage();
+        else
+            setActivityManagePage();
+    }, Qt::UniqueConnection);
     connect(activityManageWork, &ActivityManageWork::submitAllFinished, this, [=](bool res) {
         if (!res)
             QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + activityModel->lastError().text(),
@@ -247,6 +258,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->textEdit_activity->clear();
         }
      });
+
+    //活动页信号槽
 
     //组织架构管理信号槽
     connect(this, &MainWindow::groupManageWorking, groupManageWork, &GroupManageWork::working);
@@ -636,12 +649,46 @@ void MainWindow::setActivityManagePage()
     //活动列表
     ui->tableView_actList->setModel(activityModel);
     ui->tableView_actList->setSelectionModel(activitySelection);
+    ui->tableView_actMember->setModel(activityMemModel);
+    ui->tableView_actMember->setSelectionModel(activityMemSelection);
 
     //当前行变化时触发currentChanged信号
     connect(activitySelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-        this, SLOT(on_activityPagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+        this, SLOT(on_activityManagePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
     ui->stackedWidget->setCurrentIndex(8);
+    ui->stackedWidget->currentWidget()->setEnabled(true);
+}
+
+void MainWindow::on_action_triggered()
+{
+    if (ui->stackedWidget->currentIndex() == 13)
+        return;
+    ui->stackedWidget->setCurrentIndex(13);
+
+    activityManageWork->setType(1);
+    emit activityManageWorking();
+
+    ui->tableView_activity->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_activity->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_myActivity->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_myActivity->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_activity->setItemDelegate(readOnlyDelegate);
+    ui->tableView_myActivity->setItemDelegate(readOnlyDelegate);
+    
+}
+
+void MainWindow::setActivityPage()
+{
+    ui->tableView_activity->setModel(activityModel);
+    ui->tableView_myActivity->setModel(activityMemModel);
+
+    ui->tableView_activity->setSelectionModel(myActListSelection);
+    //当前行变化时触发currentRowChanged信号
+    connect(myActListSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+        this, SLOT(on_activityPagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+
+    ui->stackedWidget->setCurrentIndex(3);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
 
@@ -651,6 +698,7 @@ void MainWindow::on_actManage_triggered()
         return;
     ui->stackedWidget->setCurrentIndex(13);
 
+    activityManageWork->setType(2);
     emit activityManageWorking();
     curDateTime = QDateTime::currentDateTime();
     ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
@@ -854,7 +902,38 @@ void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &cu
     ui->label_attendManagePage_dpt->setText(curRecord.value("dpt_name").toString());
 }
 
-void MainWindow::on_activityPagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
+void MainWindow::on_activityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+    Q_UNUSED(previous);
+    QSqlRecord curRecord = activityModel->record(current.row());
+    if (curRecord.value("act_name").toString().isEmpty())
+        ui->label_actName->setText("--");
+    else
+        ui->label_actName->setText(curRecord.value("act_name").toString());
+    if (curRecord.value("editUid").toString().isEmpty())
+        ui->label_actAuthor->setText("--");
+    else
+        ui->label_actAuthor->setText(curRecord.value("editUid").toString());
+    if (curRecord.value("joinDate").toString().isEmpty())
+        ui->label_actJoin->setText("--");
+    else
+        ui->label_actJoin->setText(curRecord.value("joinDate").toDateTime().toString("yyyy-MM-dd hh:mm"));
+    if (curRecord.value("beginDate").toString().isEmpty())
+        ui->label_actBegin->setText("--");
+    else
+        ui->label_actBegin->setText(curRecord.value("beginDate").toDateTime().toString("yyyy-MM-dd hh:mm"));
+    if (curRecord.value("endDate").toString().isEmpty())
+        ui->label_actEnd->setText("--");
+    else
+        ui->label_actEnd->setText(curRecord.value("endDate").toDateTime().toString("yyyy-MM-dd hh:mm"));
+    if (curRecord.value("act_des").toString().isEmpty())
+        ui->textBrowser_actInfo->setText("--");
+    else
+        ui->textBrowser_actInfo->setText(curRecord.value("act_des").toString());
+
+}
+
+void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     Q_UNUSED(current);
     Q_UNUSED(previous);
@@ -1226,11 +1305,6 @@ void MainWindow::on_btn_personalClear_clicked()
 void MainWindow::on_actMessage_triggered()
 {
     ui->stackedWidget->setCurrentIndex(2);
-}
-
-void MainWindow::on_action_triggered()
-{
-    ui->stackedWidget->setCurrentIndex(3);
 }
 
 void MainWindow::on_btn_actPush_clicked()

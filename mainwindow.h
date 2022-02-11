@@ -65,11 +65,11 @@ private:
 
     QLabel *connectStatusLable, *statusIcon;
 
-    QSqlTableModel *groupModel, *departmentModel, *activityModel;  //数据模型
+    QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel;  //数据模型
 
     QSqlRelationalTableModel *userManageModel, *attendManageModel, *attendPageModel;
 
-    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection; //选择模型
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection; //选择模型
 
     queryModel *relTableModel, *relTableModel_attend;
 
@@ -94,6 +94,8 @@ private:
     void setGroupManagePage();
 
     void setActivityManagePage();
+
+    void setActivityPage();
 
     void setUsersFilter_group(QComboBox* group, QComboBox* department);
 
@@ -156,7 +158,9 @@ private slots:
 
     void on_attendManagePageUserscurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 
-    void on_activityPagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
+    void on_activityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
+
+    void on_activityManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 
     void on_btn_addGroup_clicked();
 

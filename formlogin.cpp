@@ -56,8 +56,18 @@ formLogin::formLogin(QDialog *parent) :
     connect(this, &formLogin::startDbWork, sqlWork, &SqlWork::working);
     emit startDbWork();
     connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
-
     sqlThread->start();
+
+    //config.ini 初始化数据库
+    config_ini = new QSettings("config.ini", QSettings::IniFormat);
+    connect(this, &formLogin::initDatabase, loginWork, &baseInfoWork::initDatabaseTables);
+    connect(loginWork, &baseInfoWork::initDatabaseFinished, this, [=](bool res)
+        {
+            if (res)
+                config_ini->setValue("/Database/init", true);
+            else
+                config_ini->setValue("/Database/init", false);
+        }, Qt::UniqueConnection);
 
     //登录相关
     connect(this, SIGNAL(authAccount(const long long, const QString&, const QString&)), loginWork, SLOT(authAccount(const long long, const QString&, const QString&)));
@@ -70,8 +80,12 @@ formLogin::formLogin(QDialog *parent) :
     //初始化相关
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         readPwd = readLoginSettings();
-    }, Qt::UniqueConnection);
+        if (!config_ini->value("/Database/init").toBool())
+        {
+            emit initDatabase();    //初始化数据库
+        }
 
+    }, Qt::UniqueConnection);
 }
 
 formLogin::~formLogin()

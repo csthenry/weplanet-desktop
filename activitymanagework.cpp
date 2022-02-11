@@ -16,7 +16,8 @@ void ActivityManageWork::working()
     if (!isFirst)
     {
         tabModel->select();
-        emit activityManageWorkFinished();
+        memberTabModel->select();
+        emit activityManageWorkFinished(type);
         return;
     }
     tabModel->setTable("magic_activity");
@@ -31,8 +32,15 @@ void ActivityManageWork::working()
     tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal, "发布者UID");
     tabModel->select();
 
+    memberTabModel->setTable("magic_activityMembers");
+    memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_id"), Qt::Horizontal, "报名号");
+    memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_uid"), Qt::Horizontal, "用户UID");
+    memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_joinDate"), Qt::Horizontal, "报名时间");
+    memberTabModel->setHeaderData(memberTabModel->fieldIndex("status"), Qt::Horizontal, "录取状态");
+    memberTabModel->select();
+
     isFirst = false;
-    emit activityManageWorkFinished();
+    emit activityManageWorkFinished(type);
 }
 
 QSqlDatabase ActivityManageWork::getDB()
@@ -51,4 +59,18 @@ void ActivityManageWork::submitAll()
 void ActivityManageWork::setModel(QSqlTableModel* model)
 {
     tabModel = model;
+}
+
+void ActivityManageWork::setMemberModel(QSqlTableModel* model)
+{
+    memberTabModel = model;
+}
+
+void ActivityManageWork::apply(QString& uid)
+{
+}
+
+void ActivityManageWork::setType(int t)
+{
+    type = t;
 }

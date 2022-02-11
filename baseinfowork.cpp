@@ -3,6 +3,7 @@
 baseInfoWork::baseInfoWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "baseInfoWork_DB");
+    db_service.addDatabase(initDB, "baseInfoWork_initDB");
 }
 
 void baseInfoWork::loadBaseInfoWorking()
@@ -48,6 +49,13 @@ void baseInfoWork::refreshBaseInfo()
 void baseInfoWork::setUid(QString uid)
 {
     this->uid = uid;
+}
+
+void baseInfoWork::initDatabaseTables()
+{
+    initDB.open();
+	emit initDatabaseFinished(service::initDatabaseTables(initDB));
+    initDB.close();
 }
 
 bool baseInfoWork::getAttendToday()

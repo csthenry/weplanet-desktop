@@ -31,7 +31,7 @@ public:
     
     void addDatabase(QSqlDatabase& db, const QString &flag);
 
-    static bool initDatabaseTables(QSqlDatabase& db);
+    static bool initDatabaseTables(QSqlDatabase db);
 
     static bool authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd);
 
