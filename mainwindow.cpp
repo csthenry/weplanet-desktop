@@ -152,6 +152,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::actHomeWorking, activityManageWork, &ActivityManageWork::homeWorking);
     connect(activityManageWork, &ActivityManageWork::actHomeWorkFinished, this, [=]()
         {
+            ui->tableView_activityHome->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
             ui->tableView_activityHome->setModel(activityModel);
             ui->tableView_activityHome->hideColumn(3);
             ui->tableView_activityHome->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -698,7 +699,9 @@ void MainWindow::on_action_triggered()
 
 void MainWindow::setActivityPage()
 {
+    ui->tableView_activity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView_activity->setModel(activityModel);
+    ui->tableView_myActivity->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//填充整个view
     ui->tableView_myActivity->setModel(activityMemModel);
     ui->tableView_myActivity->hideColumn(2);
 
@@ -785,6 +788,7 @@ void MainWindow::on_actGroup_triggered()
 void MainWindow::setGroupManagePage()
 {
     bool isEditable = false;
+    ui->tableView_department->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView_group->setModel(groupModel);
     ui->tableView_department->setModel(departmentModel);
 
