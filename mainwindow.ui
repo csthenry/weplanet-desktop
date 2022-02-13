@@ -20,8 +20,8 @@
    <string>Magic Light Assistant</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>mainWindow_favicon_x64.ico</normaloff>mainWindow_favicon_x64.ico</iconset>
+   <iconset resource="resource.qrc">
+    <normaloff>:/images/logo/MagicLightAssistant.png</normaloff>:/images/logo/MagicLightAssistant.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">

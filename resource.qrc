@@ -76,6 +76,7 @@
         <file>color_icon/arrow_2.svg</file>
         <file>color_icon/refresh.svg</file>
         <file>color_icon/user.svg</file>
+        <file>logo/MagicLightAssistant.png</file>
         <file>color_icon/loading.gif</file>
     </qresource>
 </RCC>
