@@ -7,6 +7,9 @@
 /***************************************************/
 
 #include "formlogin.h"
+
+#include <xlocale>
+
 #include "ui_formlogin.h"
 
 void formLogin::send()
@@ -173,8 +176,36 @@ bool formLogin::autoLogin()
 void formLogin::on_btn_Login_clicked()
 {
     QString pwd = readPwd;
-    QSettings settings("bytecho", "MagicLightAssistant");  //公司名称和应用名称
+    QInputDialog input(this);
+    input.setFont(this->font());
+    input.setWindowTitle("请输入验证码");
+    input.setLabelText("你尝试登录的失败次数过多，请输入验证码：");
+    input.setTextEchoMode(QLineEdit::Password);
+
     sqlWork->stopThread();
+    if(loginErrCnt >= 3)
+    {
+        curTime = QTime::currentTime();
+        qsrand(curTime.msec() + curTime.second() * 1000);
+        QString tmpKey = QString::number(qrand() % 8999 + 1000);    //产生随机验证码(1000~9999)
+        input.setLabelText("你尝试登录的失败次数过多，请输入验证码：" + tmpKey);
+        input.setTextValue("");
+        bool res = input.exec();
+        QString text = input.textValue();
+        while(!res || text != tmpKey)
+        {
+            curTime = QTime::currentTime();
+            qsrand(curTime.msec() + curTime.second() * 1000);
+            tmpKey = QString::number(qrand() % 8999 + 1000);    //产生随机验证码(1000~9999)
+            input.setLabelText("验证码错误，请重新输入验证码：" + tmpKey);
+            input.setTextValue("");
+            res = input.exec();
+            text = input.textValue();
+        }
+        loginErrCnt--;
+        emit authAccount(ui->lineEdit_Uid->text().toLongLong(), pwd, service::pwdEncrypt(ui->lineEdit_Pwd->text()));
+        return;
+    }
     emit authAccount(ui->lineEdit_Uid->text().toLongLong(), pwd, service::pwdEncrypt(ui->lineEdit_Pwd->text()));
 }
 
@@ -265,7 +296,10 @@ void formLogin::on_authAccountRes(bool res)
         this->accept();
     }
     else
+    {
         QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+        loginErrCnt++;  //登录失败的次数，大于3次需要输入验证码
+    }
     sqlWork->beginThread();
 }
 

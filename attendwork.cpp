@@ -8,15 +8,7 @@ AttendWork::AttendWork(QObject *parent) : QObject(parent)
 void AttendWork::working()
 {
     DB.open();
-    if(!isFirst)
-    {
-        relTableModel->setRelation(relTableModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
-        relTableModel->select();
-        relTableModel->setFilter("a_uid='" + uid + "'");
-        analyseWorkTime();
-        emit attendWorkFinished();
-        return;
-    }
+
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -36,7 +28,6 @@ void AttendWork::working()
     //分析工作时间
     analyseWorkTime();
 
-    isFirst = false;
     emit attendWorkFinished();
 }
 

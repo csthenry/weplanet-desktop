@@ -13,10 +13,15 @@
   <property name="font">
    <font>
     <family>微软雅黑</family>
+    <pointsize>9</pointsize>
    </font>
   </property>
   <property name="windowTitle">
    <string>Magic Light Assistant</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>mainWindow_favicon_x64.ico</normaloff>mainWindow_favicon_x64.ico</iconset>
   </property>
   <widget class="QLabel" name="mainIcon">
    <property name="geometry">
@@ -76,6 +81,7 @@
    <property name="font">
     <font>
      <family>微软雅黑</family>
+     <pointsize>9</pointsize>
     </font>
    </property>
    <property name="currentIndex">

@@ -14,6 +14,7 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QThread>
+#include <QTime>
 #include "sqlwork.h"
 #include "baseinfowork.h"
 
@@ -31,6 +32,8 @@ public:
     ~formLogin();
 
 private:
+    int loginErrCnt = 0;
+    QTime curTime;
     QSettings* config_ini;
     SqlWork *sqlWork;
     baseInfoWork *loginWork;

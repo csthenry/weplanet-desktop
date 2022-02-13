@@ -240,6 +240,7 @@
     </QtMoc>
     <ClInclude Include="querymodel.h" />
     <ClInclude Include="readOnlyDelegate.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="service.h" />
     <QtMoc Include="sqlwork.h">
     </QtMoc>
@@ -352,6 +353,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\MagicLightAssistant_resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon2.ico" />
+    <Image Include="mainWindow_favicon_x32.ico" />
+    <Image Include="mainWindow_favicon_x64.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

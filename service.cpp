@@ -212,6 +212,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
     creatTableStr =
         "CREATE TABLE IF NOT EXISTS magic_activityMembers"
         "(actm_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+        "act_id      int(10)      NOT NUll,"
         "actm_uid      int(10)      NOT NUll,"
         "actm_joinDate datetime     NOT NUll,"
         "status        tinytext     NOT NUll,"

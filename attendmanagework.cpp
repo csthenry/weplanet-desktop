@@ -8,42 +8,25 @@ AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
 void AttendManageWork::working()
 {
     DB.open();
-    if(!isFirst)
-    {
-        userModel->database().open();   //该model数据库和AttendManageWork中不一致
-        userModel->select();
-        attendModel->select();
-        getComboxItems();
+    userModel->database().open();   //该model数据库和AttendManageWork中不一致
+    
+    userModel->setTable("magic_users");
+    userModel->setSort(userModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
+    userModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
 
-        emit attendManageWorkFinished();
-        return;
-    }
-    if (userModel->tableName() != "magic_users")
-    {
-		userModel->database().open();   //该model数据库和AttendManageWork中不一致
-        userModel->setTable("magic_users");
-        userModel->setSort(userModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
-        userModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
-        
-        userModel->setHeaderData(userModel->fieldIndex("uid"), Qt::Horizontal, "账号（UID）");
-        userModel->setHeaderData(userModel->fieldIndex("name"), Qt::Horizontal, "姓名");
-        userModel->setHeaderData(userModel->fieldIndex("gender"), Qt::Horizontal, "性别");
-        userModel->setHeaderData(userModel->fieldIndex("telephone"), Qt::Horizontal, "手机号");
-        userModel->setHeaderData(userModel->fieldIndex("mail"), Qt::Horizontal, "邮箱");
-        userModel->setHeaderData(userModel->fieldIndex("user_group"), Qt::Horizontal, "用户组");
-        userModel->setHeaderData(userModel->fieldIndex("user_dpt"), Qt::Horizontal, "所在部门");
-        userModel->setHeaderData(userModel->fieldIndex("user_avatar"), Qt::Horizontal, "头像地址");
-        
-        //建立外键关联
-        userModel->setRelation(userModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
-        userModel->setRelation(userModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
-        userModel->select();
-    }
-    else
-    {
-        userModel->database().open();   //该model数据库和AttendManageWork中不一致
-        userModel->select();
-    }
+    userModel->setHeaderData(userModel->fieldIndex("uid"), Qt::Horizontal, "账号（UID）");
+    userModel->setHeaderData(userModel->fieldIndex("name"), Qt::Horizontal, "姓名");
+    userModel->setHeaderData(userModel->fieldIndex("gender"), Qt::Horizontal, "性别");
+    userModel->setHeaderData(userModel->fieldIndex("telephone"), Qt::Horizontal, "手机号");
+    userModel->setHeaderData(userModel->fieldIndex("mail"), Qt::Horizontal, "邮箱");
+    userModel->setHeaderData(userModel->fieldIndex("user_group"), Qt::Horizontal, "用户组");
+    userModel->setHeaderData(userModel->fieldIndex("user_dpt"), Qt::Horizontal, "所在部门");
+    userModel->setHeaderData(userModel->fieldIndex("user_avatar"), Qt::Horizontal, "头像地址");
+
+    //建立外键关联
+    userModel->setRelation(userModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
+    userModel->setRelation(userModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
+    userModel->select();
 
     attendModel->setTable("magic_attendance");
     attendModel->setSort(attendModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
@@ -59,6 +42,11 @@ void AttendManageWork::working()
     //建立外键关联
     attendModel->setRelation(attendModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
     attendModel->select();
+
+    //将未签退的考勤项签退，签退时间23:59:59
+    QDateTime curDateTime = QDateTime::currentDateTime();
+    QSqlQuery query(DB);
+    query.exec("UPDATE magic_attendance SET end_date='23:59:59' WHERE today<'" + curDateTime.date().toString("yyyy-MM-dd") + "' AND end_date IS NULL");
 
     //获取用户组和部门
     getComboxItems();

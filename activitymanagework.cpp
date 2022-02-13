@@ -13,15 +13,9 @@ ActivityManageWork::~ActivityManageWork()
 void ActivityManageWork::working()
 {
     DB.open();
-    if (!isFirst)
-    {
-        tabModel->select();
-        memberTabModel->select();
-        emit activityManageWorkFinished(type);
-        return;
-    }
+
     tabModel->setTable("magic_activity");
-    tabModel->setSort(tabModel->fieldIndex("act_id"), Qt::AscendingOrder);
+    tabModel->setSort(tabModel->fieldIndex("joinDate"), Qt::DescendingOrder);
     tabModel->setEditStrategy(QSqlTableModel::OnRowChange);
     tabModel->setHeaderData(tabModel->fieldIndex("act_id"), Qt::Horizontal, "编号");
     tabModel->setHeaderData(tabModel->fieldIndex("act_name"), Qt::Horizontal, "活动名称");
@@ -33,14 +27,35 @@ void ActivityManageWork::working()
     tabModel->select();
 
     memberTabModel->setTable("magic_activityMembers");
+    memberTabModel->setSort(memberTabModel->fieldIndex("actm_joinDate"), Qt::DescendingOrder);
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_id"), Qt::Horizontal, "报名号");
+    memberTabModel->setHeaderData(memberTabModel->fieldIndex("act_id"), Qt::Horizontal, "活动编号");
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_uid"), Qt::Horizontal, "用户UID");
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_joinDate"), Qt::Horizontal, "报名时间");
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("status"), Qt::Horizontal, "录取状态");
     memberTabModel->select();
 
-    isFirst = false;
     emit activityManageWorkFinished(type);
+}
+
+void ActivityManageWork::homeWorking()
+{
+    DB.open();
+    QDateTime m_curDateTime = QDateTime::currentDateTime();
+    QString curDateTime = m_curDateTime.toString("yyyy-MM-dd hh:mm:ss");
+    tabModel->clear();
+    tabModel->setTable("magic_activity");
+    tabModel->setSort(tabModel->fieldIndex("joinDate"), Qt::DescendingOrder);
+    tabModel->setEditStrategy(QSqlTableModel::OnRowChange);
+    tabModel->setHeaderData(tabModel->fieldIndex("act_id"), Qt::Horizontal, "活动编号");
+    tabModel->setHeaderData(tabModel->fieldIndex("act_name"), Qt::Horizontal, "活动名称");
+    tabModel->setHeaderData(tabModel->fieldIndex("act_des"), Qt::Horizontal, "活动描述");
+    tabModel->setHeaderData(tabModel->fieldIndex("beginDate"), Qt::Horizontal, "开始时间");
+    tabModel->setHeaderData(tabModel->fieldIndex("endDate"), Qt::Horizontal, "结束时间");
+    tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal, "发布者UID");
+    tabModel->select();
+    tabModel->setFilter("beginDate <='" + curDateTime + "' AND endDate >='" + curDateTime + "'");
+    emit actHomeWorkFinished();
 }
 
 QSqlDatabase ActivityManageWork::getDB()
@@ -66,8 +81,67 @@ void ActivityManageWork::setMemberModel(QSqlTableModel* model)
     memberTabModel = model;
 }
 
-void ActivityManageWork::apply(QString& uid)
+void ActivityManageWork::apply(const QString aid, const QString& uid)
 {
+    QDateTime curDateTime;
+    curDateTime = QDateTime::currentDateTime();
+    QSqlQuery query(DB);
+    query.exec("INSERT INTO magic_activityMembers (act_id, actm_uid, actm_joinDate, status) VALUES (" + aid + ", " + uid + ", '" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + "', '待审核')");
+    QString res = query.lastError().text();
+    query.clear();
+    emit operateFinished(res);
+}
+
+void ActivityManageWork::cancel(const QString aid, const QString& uid)
+{
+    QSqlQuery query(DB);
+    query.exec("DELETE FROM magic_activityMembers WHERE act_id=" + aid + " AND actm_uid=" + uid);
+    QString res = query.lastError().text();
+    query.clear();
+    emit operateFinished(res);
+}
+
+void ActivityManageWork::delActivity(const QString aid)
+{
+    QSqlQuery query(DB);
+    query.exec("DELETE FROM magic_activity WHERE act_id=" + aid);
+    QString res = query.lastError().text();
+    if(res.isEmpty())
+    {
+        query.exec("DELETE FROM magic_activityMembers WHERE act_id=" + aid);
+        QString res = query.lastError().text();
+    }
+    query.clear();
+    emit manageOperateFinished(res);
+}
+
+void ActivityManageWork::m_approve(const QString actm_id)
+{
+    QSqlQuery query(DB);
+    query.exec("UPDATE magic_activityMembers SET status='已录取' WHERE actm_id=" + actm_id);
+    QString res = query.lastError().text();
+    query.clear();
+    emit manageOperateFinished(res);
+}
+
+void ActivityManageWork::m_reject(const QString actm_id)
+{
+    QSqlQuery query(DB);
+    query.exec("UPDATE magic_activityMembers SET status='未录取' WHERE actm_id=" + actm_id);
+    QString res = query.lastError().text();
+    query.clear();
+    emit manageOperateFinished(res);
+}
+
+void ActivityManageWork::m_delete(const QString actm_id)
+{
+    QSqlQuery query(DB);
+    query.exec("DELETE FROM magic_activityMembers WHERE actm_id=" + actm_id);
+    if (query.lastError().text().isEmpty())
+        query.exec("DELETE FROM magic_activityMembers WHERE actm_id=" + actm_id);
+    QString res = query.lastError().text();
+    query.clear();
+    emit manageOperateFinished(res);
 }
 
 void ActivityManageWork::setType(int t)

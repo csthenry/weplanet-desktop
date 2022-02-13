@@ -12,7 +12,6 @@ class UserManageWork : public QObject
 {
     Q_OBJECT
 public:
-    bool isFirst = true;
     explicit UserManageWork(QObject *parent = nullptr);
     void working();
     void setModel(QSqlRelationalTableModel* model);

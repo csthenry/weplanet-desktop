@@ -8,39 +8,25 @@ UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 void UserManageWork::working()
 {
     DB.open();  //使用model时，数据库应保持开启
-    if(!isFirst)
-    {
-        relTableModel->select();
-        getComboxItems();
-        emit userManageWorkFinished();
-        return;
-    }
-    if (relTableModel->tableName() != "magic_users")
-    {
-        relTableModel->setTable("magic_users");
-        relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
-        relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
+    relTableModel->setTable("magic_users");
+    relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
+    relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
 
-        relTableModel->setHeaderData(relTableModel->fieldIndex("uid"), Qt::Horizontal, "账号（UID）");
-        relTableModel->setHeaderData(relTableModel->fieldIndex("name"), Qt::Horizontal, "姓名");
-        relTableModel->setHeaderData(relTableModel->fieldIndex("gender"), Qt::Horizontal, "性别");
-        relTableModel->setHeaderData(relTableModel->fieldIndex("telephone"), Qt::Horizontal, "手机号");
-        relTableModel->setHeaderData(relTableModel->fieldIndex("mail"), Qt::Horizontal, "邮箱");
-        relTableModel->setHeaderData(relTableModel->fieldIndex("user_group"), Qt::Horizontal, "用户组");
-        relTableModel->setHeaderData(relTableModel->fieldIndex("user_dpt"), Qt::Horizontal, "所在部门");
-        relTableModel->setHeaderData(relTableModel->fieldIndex("user_avatar"), Qt::Horizontal, "头像地址");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("uid"), Qt::Horizontal, "账号（UID）");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("name"), Qt::Horizontal, "姓名");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("gender"), Qt::Horizontal, "性别");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("telephone"), Qt::Horizontal, "手机号");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("mail"), Qt::Horizontal, "邮箱");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("user_group"), Qt::Horizontal, "用户组");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("user_dpt"), Qt::Horizontal, "所在部门");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("user_avatar"), Qt::Horizontal, "头像地址");
+    //建立外键关联
+    relTableModel->setRelation(relTableModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
+    relTableModel->setRelation(relTableModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
+    relTableModel->select();
 
-        //建立外键关联
-        relTableModel->setRelation(relTableModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
-        relTableModel->setRelation(relTableModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
-
-        relTableModel->select();
-    }
-    else
-        relTableModel->select();
     //获取用户组和部门
     getComboxItems();
-    isFirst = false;
     emit userManageWorkFinished();
 }
 

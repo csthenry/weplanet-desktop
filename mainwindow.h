@@ -101,7 +101,7 @@ private:
 
     void setUsersFilter_dpt(QComboBox* group, QComboBox* department) const;
 
-    void reloadModelBefore();   //已弃用
+    void reloadModelBefore();   //用于relationModel跨线程刷新，一般model似乎线程安全！
 
     SqlWork *sqlWork;
 
@@ -160,9 +160,25 @@ private slots:
 
     void on_activityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
 
+    void on_myActivityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
+
     void on_activityManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 
+    void on_comboBox_activity_currentIndexChanged(const QString& arg1);
+
+    void on_comboBox_myAct_currentIndexChanged(const QString& arg1);
+
     void on_btn_addGroup_clicked();
+
+    void on_btn_actApprove_clicked();
+
+    void on_btn_actReject_clicked();
+
+    void on_btn_actDel_clicked();
+
+    void on_btn_actJoin_clicked();
+
+    void on_btn_actCancel_clicked();
 
     void on_btn_editGroup_check_clicked();
 
@@ -272,9 +288,23 @@ signals:
 
     void groupManageModelSubmitAll(int type);
 
+    void actHomeWorking();
+
     void activityManageWorking();
 
     void activityManageModelSubmitAll();
+
+    void applyActivity(const QString aid, const QString& uid);
+
+    void cancelActivity(const QString aid, const QString& uid);
+
+    void approveActivity(const QString actm_id);
+
+    void rejectActivity(const QString actm_id);
+
+    void delActivityMem(const QString actm_id);
+
+    void delActivity(const QString actm_id);
 
     void fixUser(int type, const QString& removedId);
 private:

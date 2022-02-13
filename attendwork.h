@@ -28,7 +28,6 @@ public:
 private slots:
     void submitAll(int type);   //1代表签到，0代表签退
 private:
-    bool isFirst = true;
     int workTimeData[4] = {0};
     service db_service;
     QString uid;
