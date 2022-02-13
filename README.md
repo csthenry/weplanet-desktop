@@ -11,7 +11,7 @@
   交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic <Light\> Assistant**。
 
 - 平台：Windows x64
-- 开发环境：Visual Studio 2022
+- 开发环境：Visual Studio 2022 MSVC
 - 类型：Qt桌面应用程序
 - 数据库：MySQL
 - 语言：C++ 11
@@ -28,24 +28,26 @@
 * [x] 个人信息管理
 * [x] 用户管理
 * [x] 公告系统
+* [x] 活动系统
 * [x] 用户权限系统
 * [x] 组织架构管理
 * [x] 具有时效性的考勤系统
 * [x] 数据统计图表
 * [x] 数据分类导出
 * [x] 更新检测
+* [x] 异常登录限制
 
 **进行中：**
 
 * [ ] 审批功能
 * [ ] 审批流程设计
-* [ ] 信息收发
-* [ ] 登录限制
-* [ ] 活动管理
+* [ ] 信箱功能
+* [ ] 公告系统
 * [ ] 更多...
 
 ### 开发进度截图
 
+![screenshot_1](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_10.png)
 ![screenshot_2](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_2.jpg)
 ![screenshot_3](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_3.jpg)
 ![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_8.png)
