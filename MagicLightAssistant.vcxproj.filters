@@ -403,6 +403,5 @@
   <ItemGroup>
     <Image Include="mainWindow_favicon_x32.ico" />
     <Image Include="mainWindow_favicon_x64.ico" />
-    <Image Include="icon2.ico" />
   </ItemGroup>
 </Project>

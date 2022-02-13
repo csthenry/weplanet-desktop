@@ -355,7 +355,6 @@
     <ResourceCompile Include=".\MagicLightAssistant_resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon2.ico" />
     <Image Include="mainWindow_favicon_x32.ico" />
     <Image Include="mainWindow_favicon_x64.ico" />
   </ItemGroup>
