@@ -164,6 +164,8 @@ private slots:
 
     void on_activityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
 
+    void on_activityManagePageMemcurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
+
     void on_myActivityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
 
     void on_activityManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
@@ -222,6 +224,12 @@ private slots:
 
     void on_rBtn_all_clicked();
 
+    void on_rBtn_actAll_clicked();
+
+    void on_rBtn_actFinished_clicked();
+
+    void on_rBtn_actPending_clicked();
+
     void on_comboBox_group_2_currentIndexChanged(const QString &arg1);
 
     void on_comboBox_department_2_currentIndexChanged(const QString &arg1);
@@ -261,6 +269,8 @@ private slots:
     void on_statusChanged(bool status);
 
     void on_editPersonalInfoRes(int res);
+
+    void loadActMemAccountInfo(QSqlRecord rec);
 
 signals:
     void startDbWork();
@@ -309,6 +319,8 @@ signals:
     void delActivityMem(const QString actm_id);
 
     void delActivity(const QString actm_id);
+
+    void queryAccount(const QString& uid);
 
     void fixUser(int type, const QString& removedId);
 private:

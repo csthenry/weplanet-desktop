@@ -77,6 +77,23 @@ void UserManageWork::loadAvatar()
     emit avatarFinished(curPix);
 }
 
+void UserManageWork::queryAccount(const QString& account)
+{
+    DB.open();
+    QSqlQuery query(DB);
+    QSqlRecord res;
+    query.exec("SELECT * FROM magic_users WHERE uid=" + account);
+    query.next();
+    res = query.record();
+    query.exec("SELECT group_name FROM magic_group WHERE group_id=" + res.value("user_group").toString());
+    query.next();
+    res.setValue("user_group", query.value(0));
+    query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id=" + res.value("user_dpt").toString());
+    query.next();
+    res.setValue("user_dpt", query.value(0));
+    emit queryAccountFinished(res);
+}
+
 void UserManageWork::setCurAvatarUrl(const QString &url)
 {
     avatarUrl = url;

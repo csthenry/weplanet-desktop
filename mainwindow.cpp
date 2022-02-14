@@ -100,7 +100,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
 
     //注册一些信号槽所需
-    qRegisterMetaType<QSqlRecord>("QSqlRecord");
+    qRegisterMetaType<QSqlRecord>("QSqlRecord"); 
+    qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
     //sqlWork firstFinished信号槽
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
@@ -265,6 +266,18 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::rejectActivity, activityManageWork, &ActivityManageWork::m_reject);
     connect(this, &MainWindow::delActivityMem, activityManageWork, &ActivityManageWork::m_delete);
     connect(this, &MainWindow::delActivity, activityManageWork, &ActivityManageWork::delActivity);
+    connect(this, &MainWindow::queryAccount, userManageWork, &UserManageWork::queryAccount);
+    connect(userManageWork, &UserManageWork::queryAccountFinished, this, &MainWindow::loadActMemAccountInfo);
+    connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar) {
+        if (ui->stackedWidget->currentIndex() == 8)
+        {
+            if (avatar.isNull())
+                ui->activityManage_avatar->setPixmap(*userAvatar);
+            else
+                ui->activityManage_avatar->setPixmap(service::setAvatarStyle(avatar));
+            ui->userManagePage_avatar->setPixmap(*userAvatar);  //避免影响用户管理页面的头像，因为avatarFinished绑定了两个槽
+        }
+        }, Qt::UniqueConnection);
     connect(activityManageWork, &ActivityManageWork::activityManageWorkFinished, this, [=](int type)
     {
 	    if(type == 1)
@@ -685,10 +698,49 @@ void MainWindow::setActivityManagePage()
     //当前行变化时触发currentChanged信号
     connect(activitySelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
         this, SLOT(on_activityManagePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+    connect(activityMemSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+        this, SLOT(on_activityManagePageMemcurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
     activityMemModel->setFilter("");
     ui->stackedWidget->setCurrentIndex(8);
     ui->stackedWidget->currentWidget()->setEnabled(true);
+}
+
+void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
+{
+    if (rec.value("uid").toString().isEmpty())
+        ui->label_actMemUid->setText("--");
+    else
+        ui->label_actMemUid->setText(rec.value("uid").toString());
+
+    if (rec.value("name").toString().isEmpty())
+        ui->label_actMemName->setText("--");
+    else
+        ui->label_actMemName->setText(rec.value("name").toString());
+
+    if (rec.value("user_group").toString().isEmpty())
+        ui->label_actMemGroup->setText("--");
+    else
+        ui->label_actMemGroup->setText(rec.value("user_group").toString());
+
+    if (rec.value("user_dpt").toString().isEmpty())
+        ui->label_actMemDpt->setText("--");
+    else
+        ui->label_actMemDpt->setText(rec.value("user_dpt").toString());
+
+    if (rec.value("telephone").toString().isEmpty())
+        ui->label_actTel->setText("--");
+    else
+        ui->label_actTel->setText(rec.value("telephone").toString());
+
+    if (rec.value("mail").toString().isEmpty())
+        ui->label_actMail->setText("--");
+    else
+        ui->label_actMail->setText(rec.value("mail").toString());
+
+    //子线程加载头像
+    userManageWork->setCurAvatarUrl(rec.value("user_avatar").toString());
+    emit userManageGetAvatar();
 }
 
 void MainWindow::on_action_triggered()
@@ -979,6 +1031,12 @@ void MainWindow::on_activityPagecurrentRowChanged(const QModelIndex& current, co
 
 }
 
+void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+    Q_UNUSED(previous);
+    emit queryAccount(activityMemModel->record(current.row()).value("actm_uid").toString());
+}
+
 void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
@@ -1018,6 +1076,8 @@ void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &curre
     Q_UNUSED(previous);
     QSqlRecord curRec = activityModel->record(current.row());
     activityMemModel->setFilter("act_id=" + curRec.value("act_id").toString());
+    ui->lcdNumber_actMem->display(activityMemModel->rowCount());
+    ui->rBtn_actAll->setChecked(true);
 }
 
 void MainWindow::on_comboBox_activity_currentIndexChanged(const QString& arg1)
@@ -1248,6 +1308,48 @@ void MainWindow::on_rBtn_all_clicked()
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
     userManageModel->setFilter("");
+}
+
+void MainWindow::on_rBtn_actAll_clicked()
+{
+    int idx = -1;
+	QString pre_filter = activityMemModel->filter();
+    idx = pre_filter.indexOf("AND");
+    if (idx != -1)
+        pre_filter = pre_filter.mid(0, idx-1);
+    if (idx == -1 && pre_filter.indexOf("status") != -1)
+        pre_filter.clear();
+    activityMemModel->setFilter(pre_filter);
+}
+
+void MainWindow::on_rBtn_actFinished_clicked()
+{
+    int idx = -1;
+    QString pre_filter = activityMemModel->filter();
+    idx = pre_filter.indexOf("AND");
+    if (idx != -1)
+        pre_filter = pre_filter.mid(0, idx-1);
+    if (idx == -1 && pre_filter.indexOf("status") != -1)
+        pre_filter.clear();
+    if(pre_filter == "")
+        activityMemModel->setFilter("status = '已录取' OR status = '未录取'");
+    else
+		activityMemModel->setFilter(pre_filter + " AND (status='已录取' OR status='未录取')");
+}
+
+void MainWindow::on_rBtn_actPending_clicked()
+{
+    int idx = -1;
+    QString pre_filter = activityMemModel->filter();
+    idx = pre_filter.indexOf("AND");
+    if (idx != -1)
+        pre_filter = pre_filter.mid(0, idx-1);
+    if (idx == -1 && pre_filter.indexOf("status") != -1)
+        pre_filter.clear();
+    if (pre_filter == "")
+        activityMemModel->setFilter("status = '待审核'");
+    else
+        activityMemModel->setFilter(pre_filter + " AND status = '待审核'");
 }
 
 void MainWindow::on_btn_userManagePage_search_clicked()

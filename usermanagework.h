@@ -18,6 +18,7 @@ public:
     QSqlDatabase getDB();
     void submitAll();
     void loadAvatar();
+    void queryAccount(const QString& account);
     void setUsersTypeCombox();
     void setCurAvatarUrl(const QString& url);
     void setCombox(QComboBox* group, QComboBox* department);
@@ -35,6 +36,7 @@ private:
     void getComboxItems();
 signals:
     void userManageWorkFinished();
+    void queryAccountFinished(QSqlRecord);
     void submitAllFinished(bool);
     void avatarFinished(QPixmap curPix);
 };
