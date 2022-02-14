@@ -38,7 +38,7 @@ public:
 private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
-    void setAuthority(const QString &uid, const QVector<QAction *> &vector);
+    void setAuthority(const QString &uid);
     void signUp(const QString& pwd, const QString& name, const QString& tel);
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
 private:
@@ -67,7 +67,7 @@ signals:
     void authRes(bool);     //返回账号验证结果
     void autoAuthRes(bool);
     void signupRes(bool);   //返回注册结果
-    void authorityRes(bool);    //返回账号权限鉴权结果
+    void authorityRes(QSqlRecord);    //返回账号权限鉴权结果
     void editPersonalInfoRes(int);  //个人信息修改结果：1修改成功（不包含密码），2修改成功（包含密码，需要注销），-1修改失败（旧密码验证失败）
     void initDatabaseFinished(bool);
 };

@@ -104,13 +104,14 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "group_manage     tinyint(1)  NOT NUll,"
         "activity_manage  tinyint(1)  NOT NUll,"
         "send_message     tinyint(1)  NOT NUll,"
+        "notice_manage    tinyint(1)  NOT NUll,"
         "PRIMARY KEY (group_id)) ENGINE=InnoDB;"
         "INSERT INTO magic_group"
-        "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
-        "VALUES(1, '超级管理员', 1, 1, 1, 1, 1, 1, 1);"
+        "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message, notice_manage)"
+        "VALUES(1, '超级管理员', 1, 1, 1, 1, 1, 1, 1, 1);"
         "INSERT INTO magic_group"
-        "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message)"
-        "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1);";
+        "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message, notice_manage)"
+        "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1, 0);";
     query.exec(creatTableStr);
 
     //组织架构表
@@ -235,7 +236,6 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
     {
         uid = QString::number(account);
         qDebug() << uid << "登录方式：账号登录";
-        db.close();
         return true;
     }
     else
@@ -247,10 +247,8 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
             {
                 uid = query.value("uid").toString();
                 qDebug() << uid << "登录方式：手机号登录";
-                db.close();
                 return true;
             }
-        db.close();
         return false;
     }
 }
@@ -262,6 +260,7 @@ bool service::setAuthority(QSqlDatabase& db, const QString &uid, const QVector<Q
     query.next();
     QString groupId = query.value(0).toString();
     query.exec("SELECT * FROM magic_group WHERE group_id='" + groupId + "';");
+
     if(query.next())
     {
         if(query.value("send_message").toString() == '0')

@@ -28,10 +28,14 @@ public:
 
     QString getCurVersion();
 
+    QString getLatestVersion();
+
 private:
     QNetworkAccessManager manager;		//定义网络请求对象
 
     QString CurVersion;	//定义当前软件的版本号
+
+    QString LatestVersion;
 
 };
 

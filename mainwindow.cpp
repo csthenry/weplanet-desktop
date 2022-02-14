@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->attendPage_avatar->setScaledContents(true);
     ui->info_avatar->setScaledContents(true);
 
-    //用户权限设置（共7个）
+    //用户权限设置（共8个）
     actionList.append(ui->actMessage);
     actionList.append(ui->actUserManager);
     actionList.append(ui->actAttendManager);
@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     actionList.append(ui->actApplyList);
     actionList.append(ui->actApplyItems);
     actionList.append(ui->actGroup);
+    actionList.append(ui->actNoticeManage);
 
     connectStatusLable = new QLabel("Database Status: connecting...");
     connectStatusLable->setMinimumWidth(1100);
@@ -46,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     ui->statusbar->addWidget(statusIcon);   //将状态组件添加至statusBar
     ui->statusbar->addWidget(connectStatusLable);
-    ui->stackedWidget->setCurrentIndex(0);  //转到首页
+    ui->stackedWidget->setCurrentIndex(13);  //转到加载首页
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     readOnlyDelegate = new class readOnlyDelegate(this);    //用于tableView只读
 
@@ -67,6 +68,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     updateSoftWare.parse_UpdateJson(ui->notice, this);
     ui->groupBox_33->setTitle("版本公告（软件版本：Ver " + updateSoftWare.getCurVersion() + "）");
     ui->label_homeVer->setText("Ver " + updateSoftWare.getCurVersion());
+    if (updateSoftWare.getLatestVersion().isEmpty())
+        ui->label_LatestVersion->setText("--");
+    else
+        ui->label_LatestVersion->setText(updateSoftWare.getLatestVersion());
 
     //多线程相关
     sqlWork = new SqlWork("mainDB");  //sql异步连接
@@ -95,9 +100,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(sqlWork, SIGNAL(newStatus(bool)), this, SLOT(on_statusChanged(bool)));    //数据库心跳验证 5s
 
     //注册一些信号槽所需
-    qRegisterMetaType<QVector<QAction*>>("QVector<QAction*>");
-    qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
-    qRegisterMetaType<QVector<int>>("QVector<int>");
+    qRegisterMetaType<QSqlRecord>("QSqlRecord");
     //sqlWork firstFinished信号槽
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
@@ -121,7 +124,6 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
         //初始化work
         setBaseInfoWork->setUid(uid);
-
         attendWork->setModel(attendPageModel);
         attendWork->setUid(uid);
 
@@ -138,7 +140,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         activityManageWork->setModel(activityModel);
         activityManageWork->setMemberModel(activityMemModel);
 
-        emit startSetAuth(uid, actionList);
+        emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
         emit actHomeWorking();
     }, Qt::UniqueConnection);
@@ -150,26 +152,30 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //首页活动信号槽
     connect(this, &MainWindow::actHomeWorking, activityManageWork, &ActivityManageWork::homeWorking);
-    connect(activityManageWork, &ActivityManageWork::actHomeWorkFinished, this, [=]()
-        {
-            ui->tableView_activityHome->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-            ui->tableView_activityHome->setModel(activityModel);
-            ui->tableView_activityHome->hideColumn(3);
-            ui->tableView_activityHome->setSelectionBehavior(QAbstractItemView::SelectRows);
-            ui->tableView_activityHome->setSelectionMode(QAbstractItemView::SingleSelection);
-			ui->tableView_activityHome->setAlternatingRowColors(true);
-            ui->tableView_activityHome->setEditTriggers(QAbstractItemView::NoEditTriggers);
-            ui->stackedWidget->setCurrentIndex(0);
-        });
+     connect(activityManageWork, &ActivityManageWork::actHomeWorkFinished, this, [=]()
+         {
+             ui->tableView_activityHome->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+             ui->tableView_activityHome->setModel(activityModel);
+             ui->tableView_activityHome->hideColumn(3);
+             ui->tableView_activityHome->setSelectionBehavior(QAbstractItemView::SelectRows);
+             ui->tableView_activityHome->setSelectionMode(QAbstractItemView::SingleSelection);
+			 ui->tableView_activityHome->setAlternatingRowColors(true);
+             ui->tableView_activityHome->setEditTriggers(QAbstractItemView::NoEditTriggers);
+             ui->stackedWidget->setCurrentIndex(0);
+         });
     //账号权限验证信号槽
-    connect(this, SIGNAL(startSetAuth(const QString&, const QVector<QAction*>&)), setBaseInfoWork, SLOT(setAuthority(const QString&, const QVector<QAction*>&)));
-    connect(setBaseInfoWork, &baseInfoWork::authorityRes, this, [=](bool res){
-        if(!res)
+    connect(this, SIGNAL(startSetAuth(const QString&)), setBaseInfoWork, SLOT(setAuthority(const QString&)));
+    connect(setBaseInfoWork, &baseInfoWork::authorityRes, this, [=](QSqlRecord res){
+        if(res.value(0).toString().isEmpty())
         {
             QMessageBox::warning(this, "警告", "用户权限校验失败，请关闭程序后重试。", QMessageBox::Ok);
             this->setEnabled(false);
-            return;
-        }else this->setEnabled(true);
+        }
+        else
+        {
+            initToolbar(res);
+            this->setEnabled(true);
+        }
     });
 
     //个人信息编辑信号槽
@@ -488,6 +494,13 @@ void MainWindow::reloadModelBefore()
     attendManageModel->clear();
 }
 
+void MainWindow::resetUID()
+{
+    attendWork->setUid(uid);
+    setBaseInfoWork->setUid(uid);
+}
+
+
 void MainWindow::on_actExit_triggered()
 {
     QSettings settings("bytecho", "MagicLightAssistant");
@@ -502,12 +515,12 @@ void MainWindow::on_actExit_triggered()
     if (formLoginWindow->exec() == QDialog::Accepted)
     {
         formLoginWindow->send();    //发送信号
-        emit startSetAuth(uid, actionList);
+        resetUID();
+        emit startSetAuth(uid);
         emit startBaseInfoWork();
         emit actHomeWorking();
-        ui->stackedWidget->setCurrentIndex(0);  //回到首页
+        ui->stackedWidget->setCurrentIndex(13);  //回到首页
         delete formLoginWindow;
-        setBaseInfoWork->setUid(uid);   //重新设置UID
         this->show();
         return;
     }
@@ -803,6 +816,7 @@ void MainWindow::setGroupManagePage()
     ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("group_manage"), &comboxDelegateAuthority);
     ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("activity_manage"), &comboxDelegateAuthority);
     ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("send_message"), &comboxDelegateAuthority);
+    ui->tableView_group->setItemDelegateForColumn(groupModel->fieldIndex("notice_manage"), &comboxDelegateAuthority);
 
     ui->tableView_group->setSelectionModel(groupPageSelection_group);
     ui->tableView_department->setSelectionModel(groupPageSelection_department);
@@ -1104,18 +1118,24 @@ void MainWindow::on_btn_actJoin_clicked()
 
 void MainWindow::on_btn_actCancel_clicked()
 {
-    QSqlRecord rec = activityModel->record(myActListSelection->currentIndex().row());
+    curDateTime = QDateTime::currentDateTime();
+    QSqlRecord rec = activityModel->record(myActListSelection->currentIndex().row()), memRec;
     QString select_id = rec.value("act_id").toString();
     QString pre_filter = activityMemModel->filter();
     activityMemModel->setFilter("actm_uid = " + uid + " AND act_id = " + rec.value("act_id").toString());
-    rec = activityMemModel->record(0);
+    memRec = activityMemModel->record(0);
     activityMemModel->setFilter(pre_filter);
-    if (rec.value(0).toString().isEmpty())
+    if (memRec.value(0).toString().isEmpty())
     {
         QMessageBox::warning(this, "错误", "你还没有报名此活动呢，无法取消哦。");
         return;
     }
-    emit cancelActivity(rec.value("act_id").toString(), uid);
+    if(rec.value("beginDate").toDateTime() <= curDateTime)
+    {
+        QMessageBox::warning(this, "错误", "该活动已经开始或者结束，无法取消报名哦。");
+        return;
+    }
+    emit cancelActivity(memRec.value("act_id").toString(), uid);
 }
 
 void MainWindow::on_btn_editGroup_check_clicked()
@@ -1522,5 +1542,88 @@ void MainWindow::on_statusChanged(bool status)
         dbStatus = true;
         statusIcon->setPixmap(*statusOKIcon);
         connectStatusLable->setText("Database Status: connected");
+    }
+}
+
+void MainWindow::initToolbar(QSqlRecord rec)
+{
+    if (rec.value("send_message").toString() == '0')
+    {
+        actionList[0]->setEnabled(false);
+        actionList[0]->setVisible(false);
+    }
+    else {
+        actionList[0]->setEnabled(true);
+        actionList[0]->setVisible(true);
+    }
+    if (rec.value("users_manage").toString() == '0')
+    {
+        actionList[1]->setEnabled(false);
+        actionList[1]->setVisible(false);
+
+    }
+    else {
+        actionList[1]->setEnabled(true);
+        actionList[1]->setVisible(true);
+    }
+    if (rec.value("attend_manage").toString() == '0')
+    {
+        actionList[2]->setEnabled(false);
+        actionList[2]->setVisible(false);
+
+    }
+    else {
+        actionList[2]->setEnabled(true);
+        actionList[2]->setVisible(true);
+    }
+    if (rec.value("activity_manage").toString() == '0')
+    {
+        actionList[3]->setEnabled(false);
+        actionList[3]->setVisible(false);
+
+    }
+    else {
+        actionList[3]->setEnabled(true);
+        actionList[3]->setVisible(true);
+    }
+    if (rec.value("apply_manage").toString() == '0')
+    {
+        actionList[4]->setEnabled(false);
+        actionList[4]->setVisible(false);
+
+    }
+    else {
+        actionList[4]->setEnabled(true);
+        actionList[4]->setVisible(true);
+    }
+    if (rec.value("applyItem_manage").toString() == '0')
+    {
+        actionList[5]->setEnabled(false);
+        actionList[5]->setVisible(false);
+
+    }
+    else {
+        actionList[5]->setEnabled(true);
+        actionList[5]->setVisible(true);
+    }
+    if (rec.value("group_manage").toString() == '0')
+    {
+        actionList[6]->setEnabled(false);
+        actionList[6]->setVisible(false);
+
+    }
+    else {
+        actionList[6]->setEnabled(true);
+        actionList[6]->setVisible(true);
+    }
+    if (rec.value("notice_manage").toString() == '0')
+    {
+        actionList[7]->setEnabled(false);
+        actionList[7]->setVisible(false);
+
+    }
+    else {
+        actionList[7]->setEnabled(true);
+        actionList[7]->setVisible(true);
     }
 }

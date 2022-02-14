@@ -103,6 +103,10 @@ private:
 
     void reloadModelBefore();   //用于relationModel跨线程刷新，一般model似乎线程安全！
 
+    void resetUID();    //用于切换用户后重新设置Work对象中的uid
+
+    void initToolbar(QSqlRecord rec);
+
     SqlWork *sqlWork;
 
     baseInfoWork *setBaseInfoWork;
@@ -263,7 +267,7 @@ signals:
 
     void startBaseInfoWork();
 
-    void startSetAuth(const QString& uid, const QVector<QAction *> &vector);
+    void startSetAuth(const QString& uid);
 
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
     void attendWorking();

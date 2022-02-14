@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1199</width>
+    <width>1280</width>
     <height>712</height>
    </rect>
   </property>
@@ -702,7 +702,7 @@
           <property name="title">
            <string/>
           </property>
-          <layout class="QGridLayout" name="gridLayout_76">
+          <layout class="QGridLayout" name="gridLayout_78">
            <item row="0" column="0">
             <layout class="QGridLayout" name="gridLayout_75">
              <item row="0" column="0">
@@ -711,6 +711,12 @@
                 <size>
                  <width>120</width>
                  <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>120</width>
+                 <height>16777215</height>
                 </size>
                </property>
                <property name="font">
@@ -731,6 +737,12 @@
                  <height>0</height>
                 </size>
                </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <pointsize>11</pointsize>
@@ -744,17 +756,56 @@
             </layout>
            </item>
            <item row="0" column="1">
-            <spacer name="horizontalSpacer_9">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>906</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            <layout class="QGridLayout" name="gridLayout_76">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_73">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>最新版本：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_LatestVersion">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>120</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_71">
@@ -764,11 +815,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Github：@csthenry</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Github：&lt;a href=&quot;https://github.com/csthenry&quot;&gt;&lt;span style=&quot; text-decoration: underline; color: #000000!important;&quot;&gt;@csthenry&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="1" column="2">
             <widget class="QLabel" name="label_72">
              <property name="enabled">
               <bool>false</bool>
@@ -4588,6 +4639,7 @@ padding: 0px 5px;</string>
    <addaction name="actApplyList"/>
    <addaction name="actApplyItems"/>
    <addaction name="actGroup"/>
+   <addaction name="actRefresh"/>
    <addaction name="separator"/>
    <addaction name="actMore"/>
    <addaction name="actExit"/>
@@ -4664,10 +4716,10 @@ padding: 0px 5px;</string>
      <normaloff>:/images/color_icon/color-script.svg</normaloff>:/images/color_icon/color-script.svg</iconset>
    </property>
    <property name="text">
-    <string>审批列表</string>
+    <string>审批队列</string>
    </property>
    <property name="toolTip">
-    <string>审批列表</string>
+    <string>审批队列</string>
    </property>
   </action>
   <action name="actApplyItems">

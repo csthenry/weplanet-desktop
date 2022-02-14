@@ -94,18 +94,8 @@ formLogin::formLogin(QDialog *parent) :
 formLogin::~formLogin()
 {
     //在此处等待所有线程停止
-    if (sqlThread->isRunning())
-    {
-        sqlThread->quit();
-        sqlThread->wait();
-    }
-    if (dbThread->isRunning())
-    {
-        sqlWork->stopThread();
-        sqlWork->quit();
-        dbThread->quit();
-        dbThread->wait();
-    }
+    if (!isQuit)
+        beforeAccept();
 
     delete ui;
     delete loginWork;
@@ -147,6 +137,7 @@ void formLogin::beforeAccept()
         dbThread->quit();
         dbThread->wait();
     }
+    isQuit = true;
 }
 
 QString formLogin::readLoginSettings()

@@ -176,11 +176,20 @@ void baseInfoWork::authAccount(const long long account, const QString &pwd, cons
         emit authRes(false);
 }
 
-void baseInfoWork::setAuthority(const QString &uid, const QVector<QAction *> &vector)
+void baseInfoWork::setAuthority(const QString &uid)
 {
     DB.open();
-    emit authorityRes(service::setAuthority(DB, uid, vector));
+    qDebug() << "校验用户权限...";
+    QSqlQuery query(DB);
+    QSqlRecord res;
+    query.exec("SELECT user_group FROM magic_users WHERE uid='" + uid + "';");
+    query.next();
+    QString groupId = query.value(0).toString();
+    query.exec("SELECT * FROM magic_group WHERE group_id='" + groupId + "';");
+    query.next();
+    res = query.record();
     DB.close();
+    emit authorityRes(res);
 }
 
 QString baseInfoWork::getName()

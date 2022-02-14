@@ -28,6 +28,7 @@ void GroupManageWork::working()
     groupModel->setHeaderData(groupModel->fieldIndex("group_manage"), Qt::Horizontal,"组织架构管理权");
     groupModel->setHeaderData(groupModel->fieldIndex("activity_manage"), Qt::Horizontal,"活动管理权");
     groupModel->setHeaderData(groupModel->fieldIndex("send_message"), Qt::Horizontal,"信息收发权限");
+    groupModel->setHeaderData(groupModel->fieldIndex("notice_manage"), Qt::Horizontal, "公告管理权限");
     groupModel->select();
 
     departmentModel->setTable("magic_department");

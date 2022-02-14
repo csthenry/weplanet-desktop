@@ -32,6 +32,7 @@ public:
     ~formLogin();
 
 private:
+    bool isQuit = false;    //标记线程已停止
     int loginErrCnt = 0;
     QTime curTime;
     QSettings* config_ini;
@@ -52,6 +53,7 @@ public:
     bool autoLogin();   //获取自动登录鉴权信息
 
 private slots:
+
     void on_btn_Login_clicked();
 
     void on_checkBox_remPwd_clicked(bool checked);

@@ -44,6 +44,7 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
 
         label->setText(Notice);
         qDebug() << Version;
+        LatestVersion = Version;
         if(Version > CurVersion)
         {
             QString warningStr =  "检测到新版本：\n软件版本号：" + Version + "\n" + "发布时间：" + UpdateTime + "\n" + "更新说明：" + ReleaseNote;
@@ -58,4 +59,9 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
 QString checkUpdate::getCurVersion()
 {
     return CurVersion;
+}
+
+QString checkUpdate::getLatestVersion()
+{
+    return LatestVersion;
 }
