@@ -401,7 +401,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="mainWindow_favicon_x32.ico" />
-    <Image Include="mainWindow_favicon_x64.ico" />
+    <Image Include="MagicLightAssistant.ico" />
   </ItemGroup>
 </Project>

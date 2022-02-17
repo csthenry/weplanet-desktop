@@ -823,7 +823,9 @@
 #define VK_F6                           0x75
 #define LANG_HAWAIIAN                   0x75
 #define VK_F7                           0x76
+#define IDB_PNG1                        118
 #define VK_F8                           0x77
+#define IDI_ICON2                       119
 #define VK_F9                           0x78
 #define WHEEL_DELTA                     120
 #define LANG_YI                         0x78
@@ -1610,7 +1612,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        118
+#define _APS_NEXT_RESOURCE_VALUE        120
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101

@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
-    <normaloff>:/images/logo/MagicLightAssistant.png</normaloff>:/images/logo/MagicLightAssistant.png</iconset>
+    <normaloff>:/images/logo/planet.svg</normaloff>:/images/logo/planet.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_80">

@@ -355,8 +355,7 @@
     <ResourceCompile Include=".\MagicLightAssistant_resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="mainWindow_favicon_x32.ico" />
-    <Image Include="mainWindow_favicon_x64.ico" />
+    <Image Include="MagicLightAssistant.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

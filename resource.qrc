@@ -78,5 +78,8 @@
         <file>color_icon/user.svg</file>
         <file>logo/MagicLightAssistant.png</file>
         <file>color_icon/loading.gif</file>
+        <file>logo/heart.svg</file>
+        <file>logo/planet.svg</file>
+        <file>logo/rain.svg</file>
     </qresource>
 </RCC>
