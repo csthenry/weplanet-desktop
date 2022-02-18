@@ -81,5 +81,16 @@
         <file>logo/heart.svg</file>
         <file>logo/planet.svg</file>
         <file>logo/rain.svg</file>
+        <file>color_icon/color-chart.svg</file>
+        <file>color_icon/color-neterror.svg</file>
+        <file>color_icon/color-update.svg</file>
+        <file>color_icon/color-computer.svg</file>
+        <file>color_icon/color-license.svg</file>
+        <file>color_icon/color-contact.svg</file>
+        <file>color_icon/color-delivery.svg</file>
+        <file>color_icon/color-idcard.svg</file>
+        <file>color_icon/color-star_2.svg</file>
+        <file>color_icon/color-mail_2.svg</file>
+        <file>color_icon/color-reply.svg</file>
     </qresource>
 </RCC>

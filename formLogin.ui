@@ -17,7 +17,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Magic Light Assistant</string>
+   <string>MagicLight Assistant</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">

@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Magic Light Assistant</string>
+   <string>MagicLight Assistant</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
@@ -3913,6 +3913,10 @@ padding: 0px 5px;</string>
              <property name="text">
               <string>录取成员</string>
              </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-approve.svg</normaloff>:/images/color_icon/color-approve.svg</iconset>
+             </property>
             </widget>
            </item>
            <item row="1" column="1">
@@ -3925,6 +3929,10 @@ padding: 0px 5px;</string>
              </property>
              <property name="text">
               <string>拒绝成员</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
              </property>
             </widget>
            </item>
@@ -5262,7 +5270,7 @@ padding: 0px 5px;</string>
   <action name="actApply">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-add.svg</normaloff>:/images/color_icon/color-add.svg</iconset>
+     <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
    </property>
    <property name="text">
     <string>申请</string>
@@ -5355,7 +5363,7 @@ padding: 0px 5px;</string>
   <action name="actMessage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-tools.svg</normaloff>:/images/color_icon/color-tools.svg</iconset>
+     <normaloff>:/images/color_icon/color-mail_2.svg</normaloff>:/images/color_icon/color-mail_2.svg</iconset>
    </property>
    <property name="text">
     <string>信箱</string>
