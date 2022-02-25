@@ -45,6 +45,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    QTimer *refTimer;
+
     QMovie *loadingMovie;
     
     QMutex mutex;
@@ -151,6 +153,8 @@ private slots:
     void on_actGroup_triggered();
 
     void on_actMore_triggered() const;
+
+    void on_actRefresh_triggered();
 
     void on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const;
 

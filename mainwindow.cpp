@@ -73,6 +73,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     else
         ui->label_LatestVersion->setText(updateSoftWare.getLatestVersion());
 
+    //心跳query
+    refTimer = new QTimer(this);
+    connect(refTimer, &QTimer::timeout, this, [=]()
+        {
+            on_actRefresh_triggered();
+        });
+
     //多线程相关
     sqlWork = new SqlWork("mainDB");  //sql异步连接
     setBaseInfoWork = new baseInfoWork();
@@ -144,6 +151,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
         emit actHomeWorking();
+        refTimer->start(3*60*1000);  //开启心跳query定时器（3分钟心跳）
     }, Qt::UniqueConnection);
 
     //个人基本信息信号槽
@@ -374,7 +382,7 @@ MainWindow::~MainWindow()
         dbThread->quit();
         dbThread->wait();
     }
-
+    refTimer->stop();
     loadingMovie->stop();
     delete loadingMovie;
 
@@ -702,6 +710,7 @@ void MainWindow::setActivityManagePage()
         this, SLOT(on_activityManagePageMemcurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
     activityMemModel->setFilter("");
+    activityModel->setFilter("editUid=" + uid);     //仅能管理自己发布的活动
     ui->stackedWidget->setCurrentIndex(8);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
@@ -880,6 +889,30 @@ void MainWindow::setGroupManagePage()
 void MainWindow::on_actMore_triggered() const
 {
     ui->stackedWidget->setCurrentIndex(12);
+}
+
+void MainWindow::on_actRefresh_triggered()
+{
+    qDebug() << "心跳query...";
+    int index = ui->stackedWidget->currentIndex();
+    switch (index)
+    {
+    case 0: on_actHome_triggered(); break;
+    case 1: on_actMyInfo_triggered(); break;
+    case 2: break;
+    case 3: on_action_triggered(); break;
+    case 4: on_actAttend_triggered(); break;
+    case 5: break;
+    case 6: on_actUserManager_triggered(); break;
+    case 7: on_actAttendManager_triggered(); break;
+    case 8: on_actManage_triggered(); break;
+    case 9: break;
+    case 10: break;
+    case 11: on_actGroup_triggered(); break;
+
+    default:
+        break;
+    }
 }
 
 void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const
