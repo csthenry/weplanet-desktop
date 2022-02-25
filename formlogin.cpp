@@ -260,11 +260,11 @@ void formLogin::on_signUpFinished(bool res)
     ui->btn_Login->setIcon(QIcon());
     if(res)
     {
+        QMessageBox::information(this, "通知", "注册成功，你的信息如下：\n账号：" + loginWork->getLastSignupUid() + "\n姓名：" + ui->lineEdit_SignupName->text() +"\n手机号：" + ui->lineEdit_SignupTel->text() + "\n请妥善保管以上信息，可使用手机号登录。", QMessageBox::Ok);
         ui->lineEdit_SignupName->clear();
         ui->lineEdit_SignupTel->clear();
         ui->lineEdit_SignupPwd->clear();
         ui->lineEdit_SignupPwdAgain->clear();
-        QMessageBox::information(this, "通知", "注册成功，你的信息如下：\n账号：" + loginWork->getLastSignupUid() + "\n姓名：" + ui->lineEdit_SignupName->text() +"\n手机号：" + ui->lineEdit_SignupTel->text() + "\n请妥善保管以上信息，可使用手机号登录。", QMessageBox::Ok);
     }
     else
         QMessageBox::warning(this, "警告", "注册失败，错误信息：" + sqlWork->getDb().lastError().text(), QMessageBox::Ok);
