@@ -79,7 +79,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "mail          varchar(128) NULL ,"
         "user_group    int(10) NOT  NULL ,"
         "user_dpt      int(10) NOT  NULL ,"
-        "user_avatar   varchar(64)  NULL ,"
+        "user_avatar   varchar(256) NULL ,"
         "PRIMARY KEY (uid)                "
         ")ENGINE=InnoDB;                  "
         "INSERT INTO magic_users          "
