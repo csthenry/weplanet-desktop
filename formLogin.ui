@@ -211,11 +211,17 @@
      </item>
      <item row="3" column="0" colspan="3">
       <widget class="QPushButton" name="btn_Login">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
          <height>35</height>
         </size>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
        </property>
        <property name="text">
         <string>登     录</string>
@@ -515,11 +521,17 @@ padding: 0px 5px;</string>
      </item>
      <item row="5" column="0" colspan="5">
       <widget class="QPushButton" name="btn_Signup">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
          <height>35</height>
         </size>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
        </property>
        <property name="text">
         <string>注     册</string>
