@@ -530,7 +530,7 @@ void MainWindow::on_actExit_triggered()
     // QSqlDatabase::removeDatabase("loginDB");
     // QSqlDatabase::removeDatabase("test_loginDB");
     formLoginWindow = new formLogin();
-
+    refTimer->stop();
     this->close();
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     if (formLoginWindow->exec() == QDialog::Accepted)
@@ -541,6 +541,7 @@ void MainWindow::on_actExit_triggered()
         emit startBaseInfoWork();
         emit actHomeWorking();
         ui->stackedWidget->setCurrentIndex(13);  //回到首页
+        refTimer->start(3 * 60 * 1000);  //开启心跳query定时器（3分钟心跳）
         delete formLoginWindow;
         this->show();
         return;
