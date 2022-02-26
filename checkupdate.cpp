@@ -3,7 +3,7 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "0.1.1";   //在此处定义软件当前版本
+    CurVersion = "0.1.2";   //在此处定义软件当前版本
 }
 
 bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)

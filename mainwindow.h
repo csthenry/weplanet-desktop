@@ -19,6 +19,7 @@
 #include <QDateTime>
 #include <QLabel>
 #include <QMovie>
+#include <QSystemTrayIcon>
 #include "service.h"
 #include "formlogin.h"
 #include "querymodel.h"
@@ -56,6 +57,12 @@ private:
     QThread *dbThread, *sqlThread;
 
     QString uid, removedGroupId, removedDptId;
+
+    QSystemTrayIcon* trayIcon;
+
+    QMenu *trayIconMenu;
+
+    QAction* mShowMainAction, *mExitAppAction;
 
     QDateTime curDateTime;
 
@@ -109,6 +116,10 @@ private:
 
     void initToolbar(QSqlRecord rec);
 
+    void createActions();
+
+    void closeEvent(QCloseEvent* event);    //重写void closeEvent(QCloseEvent *event); 
+
     SqlWork *sqlWork;
 
     baseInfoWork *setBaseInfoWork;
@@ -155,6 +166,8 @@ private slots:
     void on_actMore_triggered() const;
 
     void on_actRefresh_triggered();
+
+    void on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason action);
 
     void on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const;
 

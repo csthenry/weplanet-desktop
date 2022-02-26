@@ -80,6 +80,20 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             on_actRefresh_triggered();
         });
 
+    //托盘事件
+    trayIconMenu = new QMenu(this);
+    createActions();
+    trayIconMenu->addAction(mShowMainAction);
+    trayIconMenu->addSeparator();    //分割线
+    trayIconMenu->addAction(mExitAppAction);
+    trayIcon = new QSystemTrayIcon(this);
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason)));
+    QIcon icon(":/images/logo/MagicLightAssistant.png");
+    trayIcon->setIcon(icon);
+    trayIcon->setToolTip("MagicLight Assistant - 后台运行中");
+    trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->show();
+
     //多线程相关
     sqlWork = new SqlWork("mainDB");  //sql异步连接
     setBaseInfoWork = new baseInfoWork();
@@ -531,6 +545,7 @@ void MainWindow::on_actExit_triggered()
     // QSqlDatabase::removeDatabase("test_loginDB");
     formLoginWindow = new formLogin();
     refTimer->stop();
+    trayIcon->hide();
     this->close();
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     if (formLoginWindow->exec() == QDialog::Accepted)
@@ -543,7 +558,10 @@ void MainWindow::on_actExit_triggered()
         ui->stackedWidget->setCurrentIndex(13);  //回到首页
         refTimer->start(3 * 60 * 1000);  //开启心跳query定时器（3分钟心跳）
         delete formLoginWindow;
-        this->show();
+        this->showMinimized();
+        QThread::msleep(150);
+        this->showNormal();
+        trayIcon->show();
         return;
     }
     delete formLoginWindow;
@@ -895,6 +913,7 @@ void MainWindow::on_actMore_triggered() const
 void MainWindow::on_actRefresh_triggered()
 {
     qDebug() << "心跳query...";
+    trayIcon->setToolTip("MagicLight Assistant - 后台运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
     int index = ui->stackedWidget->currentIndex();
     switch (index)
     {
@@ -1762,4 +1781,55 @@ void MainWindow::initToolbar(QSqlRecord rec)
         actionList[7]->setEnabled(true);
         actionList[7]->setVisible(true);
     }
+}
+
+void MainWindow::createActions()
+{
+    mShowMainAction = new QAction("显示主界面", this);
+    connect(mShowMainAction, &QAction::triggered, this, [=]()
+		{
+            if (this->isHidden())
+            {
+                this->showMinimized();
+                QThread::msleep(150);
+                this->showNormal();
+                this->setWindowState(Qt::WindowActive);
+                this->activateWindow();
+            }
+            if (this->isMinimized())
+                this->showNormal();
+		});
+
+    mExitAppAction = new QAction("退出", this);
+    connect(mExitAppAction, &QAction::triggered, this, [=]()
+		{
+            trayIcon->hide();
+            this->close();
+            QApplication::exit(0);
+		});
+}
+
+void MainWindow::on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason action)
+{
+    switch (action) {
+    case QSystemTrayIcon::Trigger:
+        if (this->isHidden())
+        {
+            this->showMinimized();
+            QThread::msleep(150);
+            this->showNormal();
+            this->setWindowState(Qt::WindowActive);
+            this->activateWindow();
+        }
+        if(this->isMinimized())
+            this->showNormal();
+        break;
+    default: break;
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    this->hide();
+    event->ignore();
 }
