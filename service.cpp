@@ -229,7 +229,7 @@ bool service::authAccount(QSqlDatabase& db, QString& uid, const long long accoun
 {
     db.open();
     QSqlQuery query(db);
-    qDebug() << QString::number(account) << QString::number(account).isEmpty();
+
     if (account == 0 || QString::number(account).isEmpty() || pwd.isEmpty())
         return false;
     //验证UID

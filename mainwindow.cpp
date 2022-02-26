@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason)));
     QIcon icon(":/images/logo/MagicLightAssistant.png");
     trayIcon->setIcon(icon);
-    trayIcon->setToolTip("MagicLight Assistant - 后台运行中");
+    trayIcon->setToolTip("MagicLight Assistant - 运行中");
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->show();
 
@@ -143,6 +143,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         activityMemSelection = new QItemSelectionModel(activityMemModel);
         myActListSelection = new QItemSelectionModel(activityModel);
         myActSelection = new QItemSelectionModel(activityMemModel);
+
+        //构造mapper
+        actEditMapper = new QDataWidgetMapper(this);
 
         //初始化work
         setBaseInfoWork->setUid(uid);
@@ -317,6 +320,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
                 , QMessageBox::Ok);
             ui->lineEdit_actName->clear();
             ui->textEdit_activity->clear();
+            on_actManage_triggered();
         }
      });
     connect(activityManageWork, &ActivityManageWork::manageOperateFinished, this, [=](QString res)
@@ -722,13 +726,22 @@ void MainWindow::setActivityManagePage()
     ui->tableView_actMember->setModel(activityMemModel);
     ui->tableView_actMember->setSelectionModel(activityMemSelection);
 
+    actEditMapper->setModel(activityModel);
+    actEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+    actEditMapper->addMapping(ui->lineEdit_actName_2, 1);
+    actEditMapper->addMapping(ui->textEdit_activity_2, 2);
+    actEditMapper->addMapping(ui->dateTimeEdit_actJoin_2, 3);
+    actEditMapper->addMapping(ui->dateTimeEdit_actBegin_2, 4);
+    actEditMapper->addMapping(ui->dateTimeEdit_actEnd_2, 5);
+    //actEditMapper->toFirst();
+
     //当前行变化时触发currentChanged信号
     connect(activitySelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
         this, SLOT(on_activityManagePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
     connect(activityMemSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
         this, SLOT(on_activityManagePageMemcurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
-    activityMemModel->setFilter("");
+    activityMemModel->setFilter("act_id='--'");
     activityModel->setFilter("editUid=" + uid);     //仅能管理自己发布的活动
     ui->stackedWidget->setCurrentIndex(8);
     ui->stackedWidget->currentWidget()->setEnabled(true);
@@ -913,7 +926,7 @@ void MainWindow::on_actMore_triggered() const
 void MainWindow::on_actRefresh_triggered()
 {
     qDebug() << "心跳query...";
-    trayIcon->setToolTip("MagicLight Assistant - 后台运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
+    trayIcon->setToolTip("MagicLight Assistant - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
     int index = ui->stackedWidget->currentIndex();
     switch (index)
     {
@@ -1056,6 +1069,7 @@ void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &cu
 void MainWindow::on_activityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
+
     QSqlRecord curRecord = activityModel->record(current.row());
     if (curRecord.value("act_name").toString().isEmpty())
         ui->label_actName->setText("--");
@@ -1127,6 +1141,7 @@ void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, 
 void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     Q_UNUSED(previous);
+    actEditMapper->setCurrentIndex(current.row());  //将映射移动到对应行
     QSqlRecord curRec = activityModel->record(current.row());
     activityMemModel->setFilter("act_id=" + curRec.value("act_id").toString());
     ui->lcdNumber_actMem->display(activityMemModel->rowCount());
@@ -1200,6 +1215,24 @@ void MainWindow::on_btn_actDel_clicked()
         return;
     }
     emit delActivityMem(curRec.value("actm_id").toString());
+}
+
+void MainWindow::on_btn_actClearEdit_clicked()
+{
+    ui->lineEdit_actName->clear();
+    ui->textEdit_activity->clear();
+    ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
+    ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
+    ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
+}
+
+void MainWindow::on_btn_actUpdate_clicked()
+{
+    bool res = actEditMapper->submit();
+    if(res)
+        QMessageBox::information(this, "消息", "活动信息更新成功。", QMessageBox::Ok);
+    else
+        QMessageBox::warning(this, "警告", "活动信息更新失败，错误信息：" + activityModel->lastError().text(), QMessageBox::Ok);
 }
 
 void MainWindow::on_btn_actJoin_clicked()

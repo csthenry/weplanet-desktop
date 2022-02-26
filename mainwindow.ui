@@ -36,7 +36,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>8</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -100,7 +100,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>星球认证：</string>
+                <string>认证信息：</string>
                </property>
               </widget>
              </item>
@@ -4136,6 +4136,9 @@ padding: 0px 5px;</string>
               <property name="displayFormat">
                <string>yyyy-MM-dd H:mm</string>
               </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="4" column="0">
@@ -4190,6 +4193,9 @@ padding: 0px 5px;</string>
               </property>
               <property name="displayFormat">
                <string>yyyy-MM-dd H:mm</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -4246,6 +4252,9 @@ padding: 0px 5px;</string>
               <property name="displayFormat">
                <string>yyyy-MM-dd H:mm</string>
               </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="5" column="0" colspan="2">
@@ -4263,6 +4272,330 @@ padding: 0px 5px;</string>
               </property>
               <property name="text">
                <string>发布活动</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2" colspan="2">
+             <widget class="QPushButton" name="btn_actClearEdit">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>清空内容</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_4">
+           <attribute name="title">
+            <string>编辑活动</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_81">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_83">
+              <property name="minimumSize">
+               <size>
+                <width>85</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>活动名称：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="3">
+             <widget class="QLineEdit" name="lineEdit_actName_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string/>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="echoMode">
+               <enum>QLineEdit::Normal</enum>
+              </property>
+              <property name="placeholderText">
+               <string>在此编辑活动名称...</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_87">
+              <property name="minimumSize">
+               <size>
+                <width>85</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>活动内容：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" rowspan="2" colspan="3">
+             <widget class="QTextEdit" name="textEdit_activity_2">
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="tabChangesFocus">
+               <bool>false</bool>
+              </property>
+              <property name="placeholderText">
+               <string>在此编辑活动内容（支持HTML）...</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <spacer name="verticalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>181</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_84">
+              <property name="minimumSize">
+               <size>
+                <width>85</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>报名时间：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDateTimeEdit" name="dateTimeEdit_actJoin_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="date">
+               <date>
+                <year>2021</year>
+                <month>12</month>
+                <day>23</day>
+               </date>
+              </property>
+              <property name="displayFormat">
+               <string>yyyy-MM-dd H:mm</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_86">
+              <property name="minimumSize">
+               <size>
+                <width>85</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>开始时间：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QDateTimeEdit" name="dateTimeEdit_actBegin_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="date">
+               <date>
+                <year>2021</year>
+                <month>12</month>
+                <day>23</day>
+               </date>
+              </property>
+              <property name="displayFormat">
+               <string>yyyy-MM-dd H:mm</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLabel" name="label_85">
+              <property name="minimumSize">
+               <size>
+                <width>85</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>结束时间：</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="3">
+             <widget class="QDateTimeEdit" name="dateTimeEdit_actEnd_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="date">
+               <date>
+                <year>2021</year>
+                <month>12</month>
+                <day>23</day>
+               </date>
+              </property>
+              <property name="displayFormat">
+               <string>yyyy-MM-dd H:mm</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" colspan="2">
+             <widget class="QPushButton" name="btn_actUpdate">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>40</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>更新活动</string>
               </property>
              </widget>
             </item>
@@ -4288,7 +4621,7 @@ padding: 0px 5px;</string>
           </widget>
           <widget class="QWidget" name="tab_3">
            <attribute name="title">
-            <string>成员信息</string>
+            <string>报名成员信息</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_84">
             <item row="0" column="0">

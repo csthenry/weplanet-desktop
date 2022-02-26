@@ -78,6 +78,8 @@ private:
 
     QSqlRelationalTableModel *userManageModel, *attendManageModel, *attendPageModel;
 
+    QDataWidgetMapper* actEditMapper;
+
     QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection; //选择模型
 
     queryModel *relTableModel, *relTableModel_attend;
@@ -198,6 +200,10 @@ private slots:
     void on_btn_actReject_clicked();
 
     void on_btn_actDel_clicked();
+
+    void on_btn_actClearEdit_clicked();
+
+    void on_btn_actUpdate_clicked();
 
     void on_btn_actJoin_clicked();
 

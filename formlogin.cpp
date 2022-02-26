@@ -85,7 +85,7 @@ formLogin::formLogin(QDialog *parent) :
     connect(loginWork, SIGNAL(authRes(bool)), this, SLOT(on_authAccountRes(bool)));
     connect(loginWork, SIGNAL(autoAuthRes(bool)), this, SLOT(on_autoLoginAuthAccountRes(bool)));
     //注册相关
-    connect(this, SIGNAL(signUp(const QString&, const QString&, const QString&)), loginWork, SLOT(signUp(const QString&, const QString&, const QString&)));
+    connect(this, SIGNAL(signUp(const QString&, const QString&, const QString&, const QString&)), loginWork, SLOT(signUp(const QString&, const QString&, const QString&, const QString&)));
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
@@ -234,7 +234,7 @@ void formLogin::on_lineEdit_Uid_textEdited(const QString &arg1)
 
 void formLogin::on_btn_Signup_clicked()
 {
-    if(ui->lineEdit_SignupName->text().isEmpty() || ui->lineEdit_SignupTel->text().isEmpty() || ui->lineEdit_SignupPwd->text().isEmpty() || ui->lineEdit_SignupPwdAgain->text().isEmpty())
+    if(ui->lineEdit_SignupName->text().isEmpty() || ui->lineEdit_SignupTel->text().isEmpty() || ui->lineEdit_SignupPwd->text().isEmpty() || ui->lineEdit_SignupPwdAgain->text().isEmpty() || ui->comBox_gender->currentIndex() == 0)
     {
         QMessageBox::warning(this, "警告", "注册失败，请检查是否已经填写全所有注册所需信息。", QMessageBox::Ok);
         return;
@@ -250,7 +250,7 @@ void formLogin::on_btn_Signup_clicked()
         return;
     }
     loadingMovie->start();
-    emit signUp(ui->lineEdit_SignupPwd->text(), ui->lineEdit_SignupName->text(), ui->lineEdit_SignupTel->text());
+    emit signUp(ui->lineEdit_SignupPwd->text(), ui->lineEdit_SignupName->text(), ui->lineEdit_SignupTel->text(), ui->comBox_gender->currentText());
 }
 
 void formLogin::on_signUpFinished(bool res)
@@ -265,6 +265,7 @@ void formLogin::on_signUpFinished(bool res)
         ui->lineEdit_SignupTel->clear();
         ui->lineEdit_SignupPwd->clear();
         ui->lineEdit_SignupPwdAgain->clear();
+        ui->comBox_gender->setCurrentIndex(0);
     }
     else
         QMessageBox::warning(this, "警告", "注册失败，错误信息：" + sqlWork->getDb().lastError().text(), QMessageBox::Ok);

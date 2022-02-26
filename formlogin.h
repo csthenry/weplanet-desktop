@@ -81,7 +81,7 @@ signals:
     void startDbWork();
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
     void autoLoginAuthAccount(const long long account, const QString& pwd);
-    void signUp(const QString& pwd, const QString& name, const QString& tel);
+    void signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender);
     void initDatabase();
 };
 

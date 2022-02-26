@@ -39,7 +39,7 @@ private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
     void setAuthority(const QString &uid);
-    void signUp(const QString& pwd, const QString& name, const QString& tel);
+    void signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender);
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
 private:
     bool isAttend;
