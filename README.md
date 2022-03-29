@@ -69,5 +69,6 @@
 [![Stargazers over time](https://starchart.cc/CSTHenry/MagicLightAssistant.svg)](https://starchart.cc/CSTHenry/MagicLightAssistant)
 
 ---
+该项目已同步至Gitee：https://gitee.com/csthenry/MagicLightAssistant
 
 Copyright (C) 2017-2021 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
