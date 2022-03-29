@@ -63,6 +63,69 @@ bool baseInfoWork::getAttendToday()
     return isAttend;
 }
 
+void baseInfoWork::bindQQAvatar(QString qqMail)
+{
+    DB.open();
+    QSqlQuery query(DB);
+    int pos = 0;
+    QNetworkRequest quest;
+    QNetworkReply* reply;
+    QNetworkAccessManager manager;
+    QEventLoop loop;
+
+    QString qqNum, avatarSdk, avatar_api = "https://ptlogin2.qq.com/getface?&imgtype=1&uin=", avatarUrl = "https://thirdqq.qlogo.cn/g?b=sdk&s=100&t=0&k=";
+    QRegExp qqMailExp("[0-9]{5,11}@qq+\\.com"); //qq邮箱正则
+    QRegExpValidator qqMailExpValidator(qqMailExp);
+    if (qqMailExpValidator.validate(qqMail, pos) == QValidator::Acceptable)
+    {
+        qqNum = qqMail.mid(0, qqMail.indexOf("@"));
+        if (!qqNum.isEmpty())
+        {
+            avatar_api += qqNum;
+            quest.setUrl(QUrl(avatar_api));     //调用api获取QQ头像SDK
+            quest.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36");
+            reply = manager.get(quest);
+
+            //请求结束并下载完成后，退出子事件循环
+            QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+            //开启子事件循环
+            loop.exec();
+
+            QString res = reply->readAll();
+            qDebug() << "这是请求到的头像地址Header" << res;
+            if (res.isEmpty())
+            {
+                qDebug() << "QQ头像地址获取失败：服务器错误!\n错误信息：" + reply->errorString();
+                emit bindQQAvatarFinished(-1);
+                return;
+            }
+            int leftIdx = res.indexOf(qqNum) + qqNum.length() + 3, rightIdx = res.lastIndexOf("&s");
+            avatarSdk = res.mid(leftIdx, rightIdx - leftIdx);
+            avatarSdk = avatarSdk.mid(avatarSdk.indexOf("&k=") + 3, -1);
+            avatarUrl += avatarSdk;
+            qDebug() << "头像SDK" << avatarSdk << " 头像地址" + avatarUrl;
+
+            query.exec("UPDATE magic_users SET user_avatar='" + avatarUrl + "' WHERE uid='" + uid + "';");
+            if (!query.lastError().text().isEmpty())
+            {
+                emit bindQQAvatarFinished(-1);
+                return;
+            }
+        }
+        else
+        {
+            emit bindQQAvatarFinished(-1);
+            return;
+        }
+    }
+    else
+    {
+        emit bindQQAvatarFinished(0);   //不是QQ邮箱
+        return;
+    }
+    emit bindQQAvatarFinished(1);
+}
+
 QString baseInfoWork::getBeginTime()
 {
     return attendBeginTime;

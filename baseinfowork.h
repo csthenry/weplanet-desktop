@@ -21,6 +21,7 @@ public:
     void refreshBaseInfo(); //用于刷新数据
     void setUid(QString uid);
     void initDatabaseTables();
+    void bindQQAvatar(QString qqNumber);   //tag==0该邮箱不是qq邮箱，tag==1获取头像成功，tag==-1其他错误
 
     bool getAttendToday();
     QString getBeginTime();
@@ -70,6 +71,7 @@ signals:
     void authorityRes(QSqlRecord);    //返回账号权限鉴权结果
     void editPersonalInfoRes(int);  //个人信息修改结果：1修改成功（不包含密码），2修改成功（包含密码，需要注销），-1修改失败（旧密码验证失败）
     void initDatabaseFinished(bool);
+    void bindQQAvatarFinished(int);
 };
 
 #endif // BASEINFOWORK_H

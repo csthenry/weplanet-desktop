@@ -59,7 +59,7 @@
     <rect>
      <x>110</x>
      <y>30</y>
-     <width>311</width>
+     <width>561</width>
      <height>41</height>
     </rect>
    </property>
@@ -650,7 +650,7 @@ padding: 0px 5px;</string>
     </font>
    </property>
    <property name="text">
-    <string>Database Status: connecting...</string>
+    <string>数据库服务状态: 正在连接...</string>
    </property>
   </widget>
   <widget class="QLabel" name="labelIcon">

@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     actionList.append(ui->actGroup);
     actionList.append(ui->actNoticeManage);
 
-    connectStatusLable = new QLabel("Database Status: connecting...");
+    connectStatusLable = new QLabel("数据库服务状态: 正在连接...");
     connectStatusLable->setMinimumWidth(1100);
 
     userAvatar = new QPixmap(":/images/color_icon/user.svg");
@@ -168,7 +168,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
         emit actHomeWorking();
-        refTimer->start(3*60*1000);  //开启心跳query定时器（3分钟心跳）
+        refTimer->start(5*60*1000);  //开启心跳query定时器（5分钟心跳）
     }, Qt::UniqueConnection);
 
     //个人基本信息信号槽
@@ -207,6 +207,19 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //个人信息编辑信号槽
     connect(this, SIGNAL(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)), setBaseInfoWork, SLOT(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)));
     connect(setBaseInfoWork, SIGNAL(editPersonalInfoRes(int)), this, SLOT(on_editPersonalInfoRes(int)));
+    connect(this, &MainWindow::bindQQAvatar, setBaseInfoWork, &baseInfoWork::bindQQAvatar);
+    connect(setBaseInfoWork, &baseInfoWork::bindQQAvatarFinished, this, [=](int tag)
+    {
+    	if (tag == 1)
+    	{
+    		emit startBaseInfoWork();      //刷新个人信息
+    		QMessageBox::information(this, "消息", "QQ头像绑定成功，之前的头像将被覆盖。", QMessageBox::Ok);
+    	}
+        else if(tag == 0)
+            QMessageBox::warning(this, "错误", "我们很想获取你的QQ头像，但不可思议的是，你的邮箱竟然不是QQ邮箱...请更换QQ邮箱后再试吧~", QMessageBox::Ok);
+        else
+            QMessageBox::warning(this, "错误", "未知错误，请检查网络情况或联系管理员。", QMessageBox::Ok);
+    });
 
     //个人考勤页面信号槽
     connect(this, &MainWindow::attendWorking, attendWork, &AttendWork::working);
@@ -835,9 +848,9 @@ void MainWindow::on_actManage_triggered()
     activityManageWork->setType(2);
     emit activityManageWorking();
     curDateTime = QDateTime::currentDateTime();
-    ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
-    ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
-    ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
+    // ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
+    // ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
+    // ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
 
     ui->tableView_actList->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_actList->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1101,6 +1114,8 @@ void MainWindow::on_activityPagecurrentRowChanged(const QModelIndex& current, co
 void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
+    if (ui->tabWidget_2->currentIndex() != 2)   //切换至报名成员信息页
+        ui->tabWidget_2->setCurrentIndex(2);
     emit queryAccount(activityMemModel->record(current.row()).value("actm_uid").toString());
 }
 
@@ -1282,6 +1297,19 @@ void MainWindow::on_btn_actCancel_clicked()
         return;
     }
     emit cancelActivity(memRec.value("act_id").toString(), uid);
+}
+
+void MainWindow::on_btn_actSearch_clicked()
+{
+    if (ui->comboBox_activity->currentIndex())
+        ui->comboBox_activity->setCurrentIndex(0);
+    activityModel->setFilter("act_name LIKE '%" + ui->lineEdit_actSearch->text() + "%' OR act_id = '" + ui->lineEdit_actSearch->text() + "'");
+}
+
+void MainWindow::on_btn_actSearchClear_clicked()
+{
+    ui->lineEdit_actSearch->clear();
+    activityModel->setFilter("");
 }
 
 void MainWindow::on_btn_editGroup_check_clicked()
@@ -1610,6 +1638,7 @@ void MainWindow::on_btn_personalSubmit_clicked()
 {
     QString newPwd, newTel, newMail, newAvatar;
     QSqlQuery query;
+
     if(ui->lineEdit_checkOldPwd->text().isEmpty())
     {
         QMessageBox::warning(this, "消息", "请先验证原密码再提交修改。", QMessageBox::Ok);
@@ -1621,7 +1650,7 @@ void MainWindow::on_btn_personalSubmit_clicked()
         newTel = ui->lineEdit_personalTel->text();
     if(!ui->lineEdit_personalMail->text().isEmpty())
         newMail = ui->lineEdit_personalMail->text();
-    if(!ui->lineEdit_personalAvatar->text().isEmpty())
+    if (!ui->lineEdit_personalAvatar->text().isEmpty())
         newAvatar = ui->lineEdit_personalAvatar->text();
     if(newPwd != ui->lineEdit_personalPwdCheck->text())
     {
@@ -1654,6 +1683,11 @@ void MainWindow::on_editPersonalInfoRes(int res)
         on_btn_personalClear_clicked();
         on_actExit_triggered();     //调用注销函数
     }
+}
+
+void MainWindow::on_btn_getQQAvatar_clicked()
+{
+    emit bindQQAvatar(ui->label_info_mail->text());
 }
 
 void MainWindow::on_btn_personalClear_clicked()
@@ -1723,13 +1757,13 @@ void MainWindow::on_statusChanged(bool status)
     {
         dbStatus = false;
         statusIcon->setPixmap(*statusErrorIcon);
-        connectStatusLable->setText("Database Status: " + sqlWork->getTestDb().lastError().text());
+        connectStatusLable->setText("数据库服务状态: " + sqlWork->getTestDb().lastError().text());
     }
     else
     {
         dbStatus = true;
         statusIcon->setPixmap(*statusOKIcon);
-        connectStatusLable->setText("Database Status: connected");
+        connectStatusLable->setText("数据库服务状态: 已连接数据库");
     }
 }
 

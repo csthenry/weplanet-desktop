@@ -209,6 +209,10 @@ private slots:
 
     void on_btn_actCancel_clicked();
 
+    void on_btn_actSearch_clicked();
+
+    void on_btn_actSearchClear_clicked();
+
     void on_btn_editGroup_check_clicked();
 
     void on_btn_editGroup_cancel_clicked();
@@ -293,6 +297,8 @@ private slots:
 
     void on_editPersonalInfoRes(int res);
 
+    void on_btn_getQQAvatar_clicked();
+
     void loadActMemAccountInfo(QSqlRecord rec);
 
 signals:
@@ -346,6 +352,8 @@ signals:
     void queryAccount(const QString& uid);
 
     void fixUser(int type, const QString& removedId);
+
+    void bindQQAvatar(QString qqMail);
 private:
     Ui::MainWindow *ui;
 };
