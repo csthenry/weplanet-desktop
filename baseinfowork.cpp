@@ -13,7 +13,7 @@ void baseInfoWork::loadBaseInfoWorking()
     this->uid = uid;
     QSqlQuery query(DB);
     QThread::msleep(30);    //等待GUI相应的时间
-    query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar FROM magic_users WHERE uid = " + uid);
+    query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar, score FROM magic_users WHERE uid = " + uid);
     if(query.next())
     {
         name = query.value("name").toString();
@@ -21,6 +21,7 @@ void baseInfoWork::loadBaseInfoWorking()
         telephone = query.value("telephone").toString();
         mail = query.value("mail").toString();
         avatarUrl = query.value("user_avatar").toString();
+        score = query.value("score").toString();
     }
     group = loadGroup(uid);
     department = loadDepartment(uid);
@@ -193,9 +194,9 @@ void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString
     QString creatQueryStr;
     creatQueryStr =
             "INSERT INTO magic_users"
-            "(password, name, user_group, user_dpt, telephone, gender)"
+            "(password, name, user_group, user_dpt, telephone, gender, score)"
             "VALUES                        "
-            "(:pwd, :name, 2, 1, :phone, :gender) ";
+            "(:pwd, :name, 2, 1, :phone, :gender, 0) ";
     query.prepare(creatQueryStr);
     query.bindValue(0, service::pwdEncrypt(pwd));
     query.bindValue(1, name);
@@ -256,6 +257,14 @@ void baseInfoWork::setAuthority(const QString &uid)
     emit authorityRes(res);
 }
 
+void baseInfoWork::updateScore(float score)
+{
+    DB.open();
+    qDebug() << "正在将已完成活动学时写入数据库...";
+    QSqlQuery query(DB);
+    query.exec("UPDATE magic_users SET score ='" + QString::number(score) + "' + score WHERE uid = '" + uid + "'");
+}
+
 QString baseInfoWork::getName()
 {
     return name;
@@ -284,6 +293,11 @@ QString baseInfoWork::getGroup()
 QString baseInfoWork::getDepartment()
 {
     return department;
+}
+
+QString baseInfoWork::getScore()
+{
+    return score;
 }
 
 QPixmap baseInfoWork::getAvatar()

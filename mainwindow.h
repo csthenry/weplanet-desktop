@@ -354,6 +354,10 @@ signals:
     void fixUser(int type, const QString& removedId);
 
     void bindQQAvatar(QString qqMail);
+
+    void updateActStatus();
+
+    void updateScore(float score);
 private:
     Ui::MainWindow *ui;
 };

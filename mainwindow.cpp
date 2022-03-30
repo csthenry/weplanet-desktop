@@ -122,6 +122,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //注册一些信号槽所需
     qRegisterMetaType<QSqlRecord>("QSqlRecord"); 
+	qRegisterMetaType<QVector<int>>("QVector<int>");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
     //sqlWork firstFinished信号槽
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
@@ -213,7 +214,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     	if (tag == 1)
     	{
     		emit startBaseInfoWork();      //刷新个人信息
-    		QMessageBox::information(this, "消息", "QQ头像绑定成功，之前的头像将被覆盖。", QMessageBox::Ok);
+    		QMessageBox::information(this, "消息", "QQ头像绑定成功，你的头像将会随QQ头像更新。", QMessageBox::Ok);
     	}
         else if(tag == 0)
             QMessageBox::warning(this, "错误", "我们很想获取你的QQ头像，但不可思议的是，你的邮箱竟然不是QQ邮箱...请更换QQ邮箱后再试吧~", QMessageBox::Ok);
@@ -350,6 +351,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //活动页信号槽
     connect(this, &MainWindow::applyActivity, activityManageWork, &ActivityManageWork::apply);
     connect(this, &MainWindow::cancelActivity, activityManageWork, &ActivityManageWork::cancel);
+    connect(this, &MainWindow::updateActStatus, activityManageWork, &ActivityManageWork::updateActStatus);
+    connect(this, &MainWindow::updateScore, setBaseInfoWork, &baseInfoWork::updateScore);
     connect(activityManageWork, &ActivityManageWork::operateFinished, this, [=](QString res)
         {
             if (res.isEmpty())
@@ -455,6 +458,7 @@ void MainWindow::setHomePageBaseInfo()
     ui->label_info_group->setText(setBaseInfoWork->getGroup());
     ui->label_home_department->setText(setBaseInfoWork->getDepartment());
     ui->label_info_department->setText(setBaseInfoWork->getDepartment());
+    ui->label_home_score->setText(setBaseInfoWork->getScore());
 
     if(ui->label_home_gender->text().isEmpty())
     {
@@ -471,6 +475,8 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_home_mail->setText("--");
         ui->label_info_mail->setText("--");
     }
+    if (ui->label_home_score->text().isEmpty())
+        ui->label_home_score->setText("--");
 
     if(setBaseInfoWork->getAvatar().isNull())
         ui->avatar->setPixmap(*userAvatar);
@@ -746,6 +752,7 @@ void MainWindow::setActivityManagePage()
     actEditMapper->addMapping(ui->dateTimeEdit_actJoin_2, 3);
     actEditMapper->addMapping(ui->dateTimeEdit_actBegin_2, 4);
     actEditMapper->addMapping(ui->dateTimeEdit_actEnd_2, 5);
+    actEditMapper->addMapping(ui->spinBox_actScore_2, 7);
     //actEditMapper->toFirst();
 
     //当前行变化时触发currentChanged信号
@@ -802,10 +809,12 @@ void MainWindow::on_action_triggered()
     if (ui->stackedWidget->currentIndex() == 13)
         return;
     ui->stackedWidget->setCurrentIndex(13);
-
+    ui->lineEdit_actSearch->clear();
+    if(ui->comboBox_activity->currentIndex() != 0)
+		ui->comboBox_activity->setCurrentIndex(0);
     activityManageWork->setType(1);
+    activityManageWork->setUid(uid);
     emit activityManageWorking();
-
     ui->tableView_activity->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_activity->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_activity->setAlternatingRowColors(true);
@@ -834,6 +843,10 @@ void MainWindow::setActivityPage()
     activityMemModel->setFilter("actm_uid=" + uid);
     ui->comboBox_myAct->setCurrentIndex(0);
     ui->comboBox_activity->setCurrentIndex(0);
+
+    float score = activityManageWork->getCurScore();    //getCurScore()会清空当前待添加学时
+    if (score > 0)
+        emit updateScore(score);    //如果待添加学时不为0，则写入用户数据库
 
     ui->stackedWidget->setCurrentIndex(3);
     ui->stackedWidget->currentWidget()->setEnabled(true);
@@ -1108,7 +1121,7 @@ void MainWindow::on_activityPagecurrentRowChanged(const QModelIndex& current, co
         ui->textBrowser_actInfo->setText("--");
     else
         ui->textBrowser_actInfo->setText(curRecord.value("act_des").toString());
-
+    ui->label_actScore->setText(curRecord.value("act_score").toString());
 }
 
 void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -1143,7 +1156,7 @@ void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, 
         ui->textBrowser_activityDsc->setText("--");
     else
         ui->textBrowser_activityDsc->setText(curActRec.value("act_des").toString());
-
+    ui->label_actScore_2->setText(curActRec.value("act_score").toString());
     if (curRecord.value("status").toString() == "未录取")
     {
         ui->label_curActStatus->setText("<font color=red>" + curRecord.value("status").toString() + "</font>");
@@ -1730,6 +1743,7 @@ void MainWindow::on_btn_actPush_clicked()
         activityModel->setData(activityModel->index(currow, 3), ui->dateTimeEdit_actJoin->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
         activityModel->setData(activityModel->index(currow, 4), ui->dateTimeEdit_actBegin->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
         activityModel->setData(activityModel->index(currow, 5), ui->dateTimeEdit_actEnd->dateTime().toString("yyyy/MM/dd HH:mm:ss"));
+        activityModel->setData(activityModel->index(currow, 7), ui->spinBox_actScore->value());
         activityModel->setData(activityModel->index(currow, 6), uid);
         emit activityManageModelSubmitAll();
     }

@@ -22,6 +22,7 @@ public:
     void setUid(QString uid);
     void initDatabaseTables();
     void bindQQAvatar(QString qqNumber);   //tag==0该邮箱不是qq邮箱，tag==1获取头像成功，tag==-1其他错误
+    void updateScore(float score);
 
     bool getAttendToday();
     QString getBeginTime();
@@ -34,8 +35,9 @@ public:
     QString getMail();
     QString getGroup();
     QString getDepartment();
-
+    QString getScore();
     QPixmap getAvatar();
+
 private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
     void authAccount(const long long account, const QString& pwd, const QString& editPwd);
@@ -57,6 +59,7 @@ private:
     QString group;
     QString department;
     QString avatarUrl;
+    QString score;
     QPixmap avatar;
     QString attendBeginTime, attendEndTime;
     QPixmap loadAvatar(const QString& url);

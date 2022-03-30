@@ -80,16 +80,17 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "user_group    int(10) NOT  NULL ,"
         "user_dpt      int(10) NOT  NULL ,"
         "user_avatar   varchar(256) NULL ,"
+        "score     float(5,2)       NUll,"
         "PRIMARY KEY (uid)                "
         ")ENGINE=InnoDB;                  "
         "INSERT INTO magic_users          "
-        "(uid, password, name, user_group, user_dpt)"
-        "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1);"
+        "(uid, password, name, user_group, user_dpt, score)"
+        "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1, 0);"
         "INSERT INTO magic_users          "
         "(uid, password, name, user_group, user_dpt)"
         "VALUES                           "
         "(                                "
-        "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1');";
+        "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1', '0');";
     query.exec(creatTableStr);
 
     //用户组权限分配表，默认有管理员和普通用户
@@ -205,6 +206,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "beginDate    datetime     NOT NUll,"
         "endDate      datetime     NOT NUll,"
         "editUid      int(10)      NOT NUll,"
+        "act_score    float(5,2)   NOT NUll,"
         "PRIMARY KEY (act_id)"
         ")ENGINE=InnoDB;";
     query.exec(creatTableStr);
@@ -213,7 +215,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
     creatTableStr =
         "CREATE TABLE IF NOT EXISTS magic_activityMembers"
         "(actm_id      int(10)      NOT NULL    AUTO_INCREMENT,"
-        "act_id      int(10)      NOT NUll,"
+        "act_id        int(10)      NOT NUll,"
         "actm_uid      int(10)      NOT NUll,"
         "actm_joinDate datetime     NOT NUll,"
         "status        tinytext     NOT NUll,"

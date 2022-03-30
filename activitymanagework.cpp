@@ -24,6 +24,7 @@ void ActivityManageWork::working()
     tabModel->setHeaderData(tabModel->fieldIndex("beginDate"), Qt::Horizontal, "开始时间");
     tabModel->setHeaderData(tabModel->fieldIndex("endDate"), Qt::Horizontal, "结束时间");
     tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal, "发布者UID");
+    tabModel->setHeaderData(tabModel->fieldIndex("act_score"), Qt::Horizontal, "活动学时");
     tabModel->select();
 
     memberTabModel->setTable("magic_activityMembers");
@@ -34,8 +35,37 @@ void ActivityManageWork::working()
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_joinDate"), Qt::Horizontal, "报名时间");
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("status"), Qt::Horizontal, "录取状态");
     memberTabModel->select();
-
+    if (type == 1)
+        updateActStatus();  //更新已报名活动状态并统计学时
     emit activityManageWorkFinished(type);
+}
+
+void ActivityManageWork::updateActStatus()
+{
+    QDateTime curDataTime = QDateTime::currentDateTime();
+    QSqlRecord curRec, actRec;
+
+    memberTabModel->setFilter("actm_uid = '" + uid + "' AND status = '已录取'");
+    for (int i = 0; !memberTabModel->record(i).value(0).toString().isEmpty(); i++)
+    {
+        curRec = memberTabModel->record(i);
+        tabModel->setFilter("act_id = '" + curRec.value("act_id").toString() + "'");
+        actRec = tabModel->record(0);
+        if (actRec.value("endDate").toDateTime() <= curDataTime)
+        {
+            memberTabModel->setData(memberTabModel->index(i, 4), "已完成");
+            memberTabModel->submitAll();
+            if(!memberTabModel->lastError().isValid())
+            {
+                curScore += actRec.value("act_score").toFloat();
+                qDebug() << "正在统计[" + actRec.value("act_name").toString() + "]学时：" << actRec.value("act_score").toFloat();
+            }
+        }
+        tabModel->setFilter("");
+    }
+    memberTabModel->setFilter("actm_uid=" + uid);
+
+    qDebug() << "当前待新增的总学时:" + QString::number(curScore);
 }
 
 void ActivityManageWork::homeWorking()
@@ -53,6 +83,7 @@ void ActivityManageWork::homeWorking()
     tabModel->setHeaderData(tabModel->fieldIndex("beginDate"), Qt::Horizontal, "开始时间");
     tabModel->setHeaderData(tabModel->fieldIndex("endDate"), Qt::Horizontal, "结束时间");
     tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal, "发布者UID");
+    tabModel->setHeaderData(tabModel->fieldIndex("act_score"), Qt::Horizontal, "活动学时");
     tabModel->select();
     tabModel->setFilter("beginDate <='" + curDateTime + "' AND endDate >='" + curDateTime + "'");
     emit actHomeWorkFinished();
@@ -69,6 +100,11 @@ void ActivityManageWork::submitAll()
     if(tabModel->isDirty())
 		res = tabModel->submitAll();
     emit submitAllFinished(res);
+}
+
+void ActivityManageWork::setUid(QString uid)
+{
+    this->uid = uid;
 }
 
 void ActivityManageWork::setModel(QSqlTableModel* model)
@@ -147,4 +183,11 @@ void ActivityManageWork::m_delete(const QString actm_id)
 void ActivityManageWork::setType(int t)
 {
     type = t;
+}
+
+float ActivityManageWork::getCurScore()
+{
+    float tmp = curScore;
+    curScore = 0;   //清空待添加的学时
+    return tmp;
 }

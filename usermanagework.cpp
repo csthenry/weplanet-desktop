@@ -20,6 +20,7 @@ void UserManageWork::working()
     relTableModel->setHeaderData(relTableModel->fieldIndex("user_group"), Qt::Horizontal, "用户组");
     relTableModel->setHeaderData(relTableModel->fieldIndex("user_dpt"), Qt::Horizontal, "所在部门");
     relTableModel->setHeaderData(relTableModel->fieldIndex("user_avatar"), Qt::Horizontal, "头像地址");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("score"), Qt::Horizontal, "活动学时");
     //建立外键关联
     relTableModel->setRelation(relTableModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
     relTableModel->setRelation(relTableModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
