@@ -442,6 +442,10 @@ void MainWindow::receiveData(QString uid)
     this->uid = uid;
     ui->label_home_uid->setText(uid);
     ui->label_info_uid->setText(uid);
+    curDateTime = QDateTime::currentDateTime();
+    ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
+    ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
+    ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
 }
 
 void MainWindow::setHomePageBaseInfo()
