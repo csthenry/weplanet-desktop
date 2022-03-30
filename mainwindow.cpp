@@ -722,6 +722,7 @@ void MainWindow::setAttendManagePage() const
     ui->tableView_attendUsers->setModel(userManageModel);
     ui->tableView_attendUsers->hideColumn(1);  //隐藏密码
     ui->tableView_attendUsers->hideColumn(8);  //头像地址
+    ui->tableView_attendUsers->hideColumn(9);  //学时
     
     ui->tableView_attendUsers->setSelectionModel(userManagePageSelection);
     
