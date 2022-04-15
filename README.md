@@ -6,7 +6,7 @@
 ![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicLightAssistant?include_prereleases&style=flat-square)
 ![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicLightAssistant/total?style=flat-square)
 
-🚀MagicLight Assistant - 适用于小型团体的交互系统
+🚀MagicLight Assistant - 适用于小型团体的协作系统
 
   交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic<Light\> Assistant**。
 
