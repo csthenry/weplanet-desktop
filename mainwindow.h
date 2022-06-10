@@ -231,6 +231,8 @@ private slots:
 
     void on_btn_delUser_clicked();
 
+    void on_btn_banUser_clicked();
+
     void on_btn_editUser_check_clicked();
 
     void on_btn_editUser_cancel_clicked();

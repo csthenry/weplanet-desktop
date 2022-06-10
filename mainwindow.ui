@@ -3497,7 +3497,7 @@ padding: 0px 5px;</string>
                    </size>
                   </property>
                   <property name="text">
-                   <string>封禁账号</string>
+                   <string>封禁/解封 账号</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resource.qrc">
@@ -6212,10 +6212,10 @@ padding: 0px 5px;</string>
      <normaloff>:/images/color_icon/color-launch.svg</normaloff>:/images/color_icon/color-launch.svg</iconset>
    </property>
    <property name="text">
-    <string>注销</string>
+    <string>退出</string>
    </property>
    <property name="toolTip">
-    <string>注销</string>
+    <string>退出</string>
    </property>
   </action>
   <action name="actMore">

@@ -1022,10 +1022,16 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     
     if(curRecord.value("uid") == "1")
         ui->tableView_userManage->setItemDelegateForRow(current.row(), readOnlyDelegate);   //禁止编辑系统账号
-    if(curRecord.value("uid") != "100000" && curRecord.value("uid") != "1" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
+    if (curRecord.value("uid") != "100000" && curRecord.value("uid") != "1" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
+    {
         ui->btn_delUser->setEnabled(current.isValid());
+        ui->btn_banUser->setEnabled(current.isValid());
+    }
     else
+    {
         ui->btn_delUser->setEnabled(false);
+        ui->btn_banUser->setEnabled(false);
+    }
     ui->lineEdit_editPwd->setEnabled(curRecord.value("uid") != "1");
     ui->lineEdit_editPwdCheck->setEnabled(curRecord.value("uid") != "1");
 
@@ -1408,12 +1414,40 @@ void MainWindow::on_btn_addUser_clicked()
     int currow = curIndex.row(); //获得当前行
     userManageModel->setData(userManageModel->index(currow, userManageModel->fieldIndex("password")), service::pwdEncrypt("123456")); //自动生成密码
     userManageModel->setData(userManageModel->index(currow, userManageModel->fieldIndex("group_name")), 2);
+    userManageModel->setData(userManageModel->index(currow, userManageModel->fieldIndex("dpt_name")), 1);
+    userManageModel->setData(userManageModel->index(currow, userManageModel->fieldIndex("score")), 0);
+    userManageModel->setData(userManageModel->index(currow, userManageModel->fieldIndex("user_status")), 1);
 }
 
 void MainWindow::on_btn_delUser_clicked()
 {
     QModelIndex curIndex = userManagePageSelection->currentIndex();//获取当前选择单元格的模型索引
+    QString uid = userManageModel->record(curIndex.row()).value("uid").toString();
+    QString name = userManageModel->record(curIndex.row()).value("name").toString();
+
     userManageModel->removeRow(curIndex.row()); //删除
+    QMessageBox::information(this, "消息", "用户 [" + uid + " " + name + "] 待注销，点击[确认修改]以确认操作。\n注意：该操作会将该用户数据删除，请谨慎操作，如误操作，请点击[取消操作]以撤销。", QMessageBox::Ok);
+
+    ui->btn_editUser_check->setEnabled(true);
+    ui->btn_editUser_cancel->setEnabled(true);
+}
+
+void MainWindow::on_btn_banUser_clicked()
+{
+    QModelIndex curIndex = userManagePageSelection->currentIndex();//获取当前选择单元格的模型索引
+    QString uid = userManageModel->record(curIndex.row()).value("uid").toString();
+    QString name = userManageModel->record(curIndex.row()).value("name").toString();
+
+    if (userManageModel->record(curIndex.row()).value("user_status").toInt() == 1)
+    {
+        userManageModel->setData(userManageModel->index(curIndex.row(), 10), 0, Qt::EditRole);
+        QMessageBox::information(this, "消息", "用户 [" + uid + " " + name + "] 待封禁，点击[确认修改]以确认操作。", QMessageBox::Ok);
+    }
+    else
+    {
+        userManageModel->setData(userManageModel->index(curIndex.row(), 10), 1, Qt::EditRole);
+        QMessageBox::information(this, "消息", "用户 [" + uid + " " + name + "] 待解封，点击[确认修改]以确认操作。", QMessageBox::Ok);
+    }
     ui->btn_editUser_check->setEnabled(true);
     ui->btn_editUser_cancel->setEnabled(true);
 }
