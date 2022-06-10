@@ -32,6 +32,7 @@ public:
     ~formLogin();
 
 private:
+    bool isAutoLogin;
     bool isQuit = false;    //标记线程已停止
     int loginErrCnt = 0;
     QTime curTime;

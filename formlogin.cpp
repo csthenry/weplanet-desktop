@@ -90,7 +90,7 @@ formLogin::formLogin(QDialog *parent) :
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
-        if (!readPwd.isEmpty())
+        if (!readPwd.isEmpty() && isAutoLogin)
         {
             loadingMovie->start();
             emit autoLoginAuthAccount(ui->lineEdit_Uid->text().toLongLong(), readPwd);
@@ -162,7 +162,8 @@ QString formLogin::readLoginSettings()
     {
         ui->checkBox_remPwd->setChecked(true);
         ui->lineEdit_Pwd->setText("kH9bV0rP5dF8oW7g");  //填入伪密码，代表密码读取成功
-        if(settings.value("isAutoLogin", false).toBool())
+        isAutoLogin = settings.value("isAutoLogin", false).toBool();
+        if(isAutoLogin)
             ui->checkBox_autoLogin->setChecked(true);
 
         return settings.value("pwd").toString();
