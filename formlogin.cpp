@@ -88,8 +88,8 @@ formLogin::formLogin(QDialog *parent) :
     connect(this, SIGNAL(signUp(const QString&, const QString&, const QString&, const QString&)), loginWork, SLOT(signUp(const QString&, const QString&, const QString&, const QString&)));
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
+    readPwd = readLoginSettings();  //载入保存的账号信息
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
-        readPwd = readLoginSettings();
         if (!config_ini->value("/Database/init").toBool())
         {
             emit initDatabase();    //初始化数据库

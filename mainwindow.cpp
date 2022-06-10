@@ -211,6 +211,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::bindQQAvatar, setBaseInfoWork, &baseInfoWork::bindQQAvatar);
     connect(setBaseInfoWork, &baseInfoWork::bindQQAvatarFinished, this, [=](int tag)
     {
+    	disconnect(loadingMovie, &QMovie::frameChanged, this, 0);
+    	ui->btn_getQQAvatar->setIcon(QIcon(QPixmap(":/images/color_icon/user.svg")));
     	if (tag == 1)
     	{
     		emit startBaseInfoWork();      //刷新个人信息
@@ -334,6 +336,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
                 , QMessageBox::Ok);
             ui->lineEdit_actName->clear();
             ui->textEdit_activity->clear();
+            ui->spinBox_actScore->setValue(0);
             on_actManage_triggered();
         }
      });
@@ -1254,6 +1257,7 @@ void MainWindow::on_btn_actClearEdit_clicked()
 {
     ui->lineEdit_actName->clear();
     ui->textEdit_activity->clear();
+    ui->spinBox_actScore->setValue(0);
     ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
     ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
     ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
@@ -1705,6 +1709,12 @@ void MainWindow::on_editPersonalInfoRes(int res)
 
 void MainWindow::on_btn_getQQAvatar_clicked()
 {
+    connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
+        {
+            Q_UNUSED(tmp);
+            ui->btn_getQQAvatar->setIcon(QIcon(loadingMovie->currentPixmap()));
+        });
+
     emit bindQQAvatar(ui->label_info_mail->text());
 }
 
