@@ -33,7 +33,8 @@ public:
 
     static bool initDatabaseTables(QSqlDatabase db);
 
-    static bool authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd);
+    //验证返回状态码：200验证成功；400账号封禁；403账号密码不匹配；500网络错误
+    static int authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd);
 
     static bool setAuthority(QSqlDatabase& db, const QString& uid, const QVector<QAction *> &vector);
 

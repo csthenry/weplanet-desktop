@@ -693,6 +693,7 @@ void MainWindow::setUserManagePage() const
 {
     ui->tableView_userManage->setModel(userManageModel);
     ui->tableView_userManage->hideColumn(1);  //隐藏密码列
+    ui->tableView_userManage->hideColumn(10);  //隐藏用户状态
 	ui->tableView_userManage->setSelectionModel(userManagePageSelection);
     //当前项变化时触发currentChanged信号
     connect(userManagePageSelection, SIGNAL(currentChanged(QModelIndex, QModelIndex)),
@@ -730,6 +731,7 @@ void MainWindow::setAttendManagePage() const
     ui->tableView_attendUsers->hideColumn(1);  //隐藏密码
     ui->tableView_attendUsers->hideColumn(8);  //头像地址
     ui->tableView_attendUsers->hideColumn(9);  //学时
+    ui->tableView_attendUsers->hideColumn(10); //用户状态
     
     ui->tableView_attendUsers->setSelectionModel(userManagePageSelection);
     
@@ -1034,7 +1036,10 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
         ui->label_userManagePage_name->setText(curRecord.value("name").toString());
     ui->label_userManagePage_group->setText(curRecord.value("group_name").toString());    //这里应该填写关联的外键字段名
     ui->label_userManagePage_dpt->setText(curRecord.value("dpt_name").toString());
-    
+    if (curRecord.value("user_status").toInt() == 1)
+        ui->label_userStatus->setText("账号状态：正常");
+    else
+        ui->label_userStatus->setText("账号状态：封禁");
     //子线程加载头像
     userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
     emit userManageGetAvatar();

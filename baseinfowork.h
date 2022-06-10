@@ -68,8 +68,8 @@ private:
 
 signals:
     void baseInfoFinished();
-    void authRes(bool);     //返回账号验证结果
-    void autoAuthRes(bool);
+    void authRes(int);     //返回账号验证结果
+    void autoAuthRes(int);
     void signupRes(bool);   //返回注册结果
     void authorityRes(QSqlRecord);    //返回账号权限鉴权结果
     void editPersonalInfoRes(int);  //个人信息修改结果：1修改成功（不包含密码），2修改成功（包含密码，需要注销），-1修改失败（旧密码验证失败）

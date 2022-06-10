@@ -82,14 +82,19 @@ formLogin::formLogin(QDialog *parent) :
     //登录相关
     connect(this, SIGNAL(authAccount(const long long, const QString&, const QString&)), loginWork, SLOT(authAccount(const long long, const QString&, const QString&)));
     connect(this, SIGNAL(autoLoginAuthAccount(const long long, const QString&)), loginWork, SLOT(autoAuthAccount(const long long, const QString&)));
-    connect(loginWork, SIGNAL(authRes(bool)), this, SLOT(on_authAccountRes(bool)));
-    connect(loginWork, SIGNAL(autoAuthRes(bool)), this, SLOT(on_autoLoginAuthAccountRes(bool)));
+    connect(loginWork, SIGNAL(authRes(int)), this, SLOT(on_authAccountRes(int)));
+    connect(loginWork, SIGNAL(autoAuthRes(int)), this, SLOT(on_autoLoginAuthAccountRes(int)));
     //注册相关
     connect(this, SIGNAL(signUp(const QString&, const QString&, const QString&, const QString&)), loginWork, SLOT(signUp(const QString&, const QString&, const QString&, const QString&)));
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
+        if (!readPwd.isEmpty())
+        {
+            loadingMovie->start();
+            emit autoLoginAuthAccount(ui->lineEdit_Uid->text().toLongLong(), readPwd);
+        }
         if (!config_ini->value("/Database/init").toBool())
         {
             emit initDatabase();    //初始化数据库
@@ -158,11 +163,8 @@ QString formLogin::readLoginSettings()
         ui->checkBox_remPwd->setChecked(true);
         ui->lineEdit_Pwd->setText("kH9bV0rP5dF8oW7g");  //填入伪密码，代表密码读取成功
         if(settings.value("isAutoLogin", false).toBool())
-        {
             ui->checkBox_autoLogin->setChecked(true);
-            loadingMovie->start();
-            emit autoLoginAuthAccount(ui->lineEdit_Uid->text().toLongLong(), settings.value("pwd").toString());
-        }
+
         return settings.value("pwd").toString();
     }
     return "";
@@ -297,9 +299,9 @@ void formLogin::on_statusChanged(const bool status)
     }
 }
 
-void formLogin::on_authAccountRes(bool res)
+void formLogin::on_authAccountRes(int res)
 {
-    if(res)
+    if(res == 200)
     {
         loginUid = loginWork->getLoginUid();
         writeLoginSettings();   //验证成功后，保存账号密码
@@ -312,15 +314,22 @@ void formLogin::on_authAccountRes(bool res)
         loadingMovie->stop();
         ui->btn_Signup->setIcon(QIcon());
         ui->btn_Login->setIcon(QIcon());
-        QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
-        loginErrCnt++;  //登录失败的次数，大于3次需要输入验证码
+        if (res == 403)
+        {
+            QMessageBox::warning(this, "登录失败", "错误代码：403\n用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+            loginErrCnt++;  //登录失败的次数，大于3次需要输入验证码
+        } else if(res == 500)
+            QMessageBox::warning(this, "登录失败", "错误代码：500\n连接服务器失败，请检查网络连接或联系管理员。", QMessageBox::Yes);
+        else if(res == 400)
+			QMessageBox::warning(this, "登录失败", "错误代码：400\n由于你违反用户协议，你的账号已被封禁，请联系管理员。", QMessageBox::Yes);
+        sqlWork->beginThread();
     }
-    sqlWork->beginThread();
+    qDebug() << "登录验证状态码：" << res;
 }
 
-void formLogin::on_autoLoginAuthAccountRes(bool res)
+void formLogin::on_autoLoginAuthAccountRes(int res)
 {
-    if(res)     //自动登录
+    if(res == 200)     //自动登录
     {
         loginUid = loginWork->getLoginUid();
         writeLoginSettings();   //验证成功后，保存账号密码
@@ -336,7 +345,15 @@ void formLogin::on_autoLoginAuthAccountRes(bool res)
         loadingMovie->stop();
         ui->btn_Signup->setIcon(QIcon());
         ui->btn_Login->setIcon(QIcon());
-        QMessageBox::warning(this, "登录失败", "用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+        if (res == 403)
+        {
+            QMessageBox::warning(this, "登录失败", "错误代码：403\n用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
+            loginErrCnt++;  //登录失败的次数，大于3次需要输入验证码
+        }
+        else if (res == 500)
+            QMessageBox::warning(this, "登录失败", "错误代码：500\n连接服务器失败，请检查网络连接或联系管理员。", QMessageBox::Yes);
+        else if (res == 400)
+            QMessageBox::warning(this, "登录失败", "错误代码：400\n由于你违反用户协议，你的账号已被封禁，请联系管理员。", QMessageBox::Yes);
         sqlWork->beginThread();
     }
     qDebug() << "自动登录验证完成";

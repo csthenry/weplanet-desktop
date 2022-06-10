@@ -80,17 +80,18 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "user_group    int(10) NOT  NULL ,"
         "user_dpt      int(10) NOT  NULL ,"
         "user_avatar   varchar(256) NULL ,"
-        "score     float(5,2)       NUll,"
+        "score         float(5,2)   NUll ,"
+        "user_status   tinyint(1)   NOT NULL ,"
         "PRIMARY KEY (uid)                "
         ")ENGINE=InnoDB;                  "
         "INSERT INTO magic_users          "
-        "(uid, password, name, user_group, user_dpt, score)"
-        "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1, 0);"
+        "(uid, password, name, user_group, user_dpt, score, user_status)"
+        "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1, 0, 0);"
         "INSERT INTO magic_users          "
-        "(uid, password, name, user_group, user_dpt)"
+        "(uid, password, name, user_group, user_dpt, score, user_status)"
         "VALUES                           "
         "(                                "
-        "100000, '" + service::pwdEncrypt("123456") + "', 'Henry', '1', '1', '0');";
+        "100000, '" + service::pwdEncrypt("123456") + "', 'admin', 1, 1, 0, 1);";
     query.exec(creatTableStr);
 
     //用户组权限分配表，默认有管理员和普通用户
@@ -227,33 +228,41 @@ bool service::initDatabaseTables(QSqlDatabase db)
     return res;
 }
 
-bool service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
+int service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
 {
     db.open();
     QSqlQuery query(db);
 
     if (account == 0 || QString::number(account).isEmpty() || pwd.isEmpty())
-        return false;
+        return 403;
     //验证UID
-    query.exec("SELECT password FROM magic_users WHERE uid = " + QString::number(account));
+    bool net = query.exec("SELECT password, user_status FROM magic_users WHERE uid = " + QString::number(account));
+    if (!net)
+        return 500;
     if(query.next() && pwd == query.value("password").toString())
     {
         uid = QString::number(account);
         qDebug() << uid << "登录方式：账号登录";
-        return true;
+        if (query.value("user_status").toInt() == 0)    //账号状态检测
+            return 400;
+        return 200;
     }
     else
     {
         //验证手机号，可能有重复的手机号，所以用while
-        query.exec("SELECT uid, password FROM magic_users WHERE telephone = " + QString::number(account));
+        net = query.exec("SELECT uid, password, user_status FROM magic_users WHERE telephone = " + QString::number(account));
+        if (!net)
+            return 500;
         while(query.next())
             if(pwd == query.value("password").toString())
             {
                 uid = query.value("uid").toString();
                 qDebug() << uid << "登录方式：手机号登录";
-                return true;
+                if (query.value("user_status").toInt() == 0)    //账号状态检测
+                    return 400;
+                return 200;
             }
-        return false;
+        return 403;
     }
 }
 

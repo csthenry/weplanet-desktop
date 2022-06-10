@@ -180,10 +180,7 @@ QString baseInfoWork::loadDepartment(const QString& uid)
 void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
 {
     DB.open();
-    if(service::authAccount(DB, loginUid, account, pwd))
-        emit autoAuthRes(true);
-    else
-        emit autoAuthRes(false);
+        emit autoAuthRes(service::authAccount(DB, loginUid, account, pwd));
     DB.close();
 }
 
@@ -194,9 +191,9 @@ void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString
     QString creatQueryStr;
     creatQueryStr =
             "INSERT INTO magic_users"
-            "(password, name, user_group, user_dpt, telephone, gender, score)"
+            "(password, name, user_group, user_dpt, telephone, gender, score, user_status)"
             "VALUES                        "
-            "(:pwd, :name, 2, 1, :phone, :gender, 0) ";
+            "(:pwd, :name, 2, 1, :phone, :gender, 0, 1) ";
     query.prepare(creatQueryStr);
     query.bindValue(0, service::pwdEncrypt(pwd));
     query.bindValue(1, name);
@@ -235,10 +232,12 @@ void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, c
 
 void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)
 {
-    if(service::authAccount(DB, loginUid, account, pwd) || service::authAccount(DB, loginUid, account, editPwd))
-        emit authRes(true);
-    else
-        emit authRes(false);
+    int res = service::authAccount(DB, loginUid, account, pwd);
+    if(res == 403)
+    {
+        res = service::authAccount(DB, loginUid, account, editPwd);
+    }
+    emit authRes(res);
 }
 
 void baseInfoWork::setAuthority(const QString &uid)

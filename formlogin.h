@@ -67,9 +67,9 @@ private slots:
 
     void on_statusChanged(const bool status);
 
-    void on_authAccountRes(bool res);
+    void on_authAccountRes(int res);
 
-    void on_autoLoginAuthAccountRes(bool res);
+    void on_autoLoginAuthAccountRes(int res);
 
     void on_signUpFinished(bool res);
 
