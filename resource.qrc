@@ -93,5 +93,8 @@
         <file>color_icon/color-mail_2.svg</file>
         <file>color_icon/color-reply.svg</file>
         <file>MagicLightAssistant.ico</file>
+        <file>index.html</file>
+        <file>3rdparty/markdown.css</file>
+        <file>3rdparty/marked.js</file>
     </qresource>
 </RCC>

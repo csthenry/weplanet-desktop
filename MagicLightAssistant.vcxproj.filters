@@ -95,6 +95,12 @@
     <ClCompile Include="activitymanagework.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="document.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previewpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -140,6 +146,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="activitymanagework.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="document.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="previewpage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

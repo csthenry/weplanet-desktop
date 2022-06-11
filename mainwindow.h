@@ -20,6 +20,8 @@
 #include <QLabel>
 #include <QMovie>
 #include <QSystemTrayIcon>
+#include <QTextStream>
+#include <QWebChannel>
 #include "service.h"
 #include "formlogin.h"
 #include "querymodel.h"
@@ -34,6 +36,8 @@
 #include "attendmanagework.h"
 #include "groupmanagework.h"
 #include "activitymanagework.h"
+#include "document.h"
+#include "previewpage.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -46,6 +50,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    Document m_content;
+
     QTimer *refTimer;
 
     QMovie *loadingMovie;
@@ -290,6 +296,10 @@ private slots:
     void on_action_triggered();
 
     void on_actManage_triggered();
+
+    void on_actNoticeManage_triggered();
+
+    void on_actNotice_triggered();
 
     void on_btn_actPush_clicked();
 

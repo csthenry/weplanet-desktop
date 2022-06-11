@@ -36,7 +36,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>14</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -5980,8 +5980,8 @@ padding: 0px 5px;</string>
        </layout>
       </widget>
       <widget class="QWidget" name="page_2">
-       <layout class="QGridLayout" name="gridLayout_85">
-        <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_94">
+        <item row="0" column="0" rowspan="2">
          <widget class="QGroupBox" name="groupBox_44">
           <property name="minimumSize">
            <size>
@@ -5995,16 +5995,296 @@ padding: 0px 5px;</string>
             <height>16777215</height>
            </size>
           </property>
-          <property name="title">
-           <string>公告栏</string>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
           </property>
+          <property name="title">
+           <string>通知/动态栏</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_95">
+           <item row="0" column="0" colspan="2">
+            <widget class="QTableView" name="tableView"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_96">
+             <property name="maximumSize">
+              <size>
+               <width>80</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>发布时间：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="label_98">
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_97">
+             <property name="maximumSize">
+              <size>
+               <width>80</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>最后修改：</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_99">
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox_45">
-          <property name="title">
-           <string>公告详情</string>
+         <widget class="QTabWidget" name="tabWidget_4">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
           </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab_7">
+           <attribute name="title">
+            <string>编辑（Markdown）</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_93">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_48">
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_97">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_100">
+                 <property name="maximumSize">
+                  <size>
+                   <width>50</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>标题：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="lineEdit">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="groupBox_45">
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_96">
+               <item row="0" column="0">
+                <widget class="QRadioButton" name="radioButton">
+                 <property name="text">
+                  <string>通知</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QRadioButton" name="radioButton_2">
+                 <property name="text">
+                  <string>动态</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QCheckBox" name="checkBox">
+                 <property name="text">
+                  <string>隐藏</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QGroupBox" name="groupBox_49">
+              <property name="title">
+               <string>正文</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_98">
+               <item row="0" column="0">
+                <widget class="QPlainTextEdit" name="notice_editor">
+                 <property name="placeholderText">
+                  <string>在此输入内容，支持Markdown语法...</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_8">
+           <attribute name="title">
+            <string>当前内容预览</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_92">
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="groupBox_51">
+              <property name="title">
+               <string>正文</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_100">
+               <item row="0" column="0">
+                <widget class="QWebEngineView" name="notice_preview">
+                 <property name="contextMenuPolicy">
+                  <enum>Qt::NoContextMenu</enum>
+                 </property>
+                 <property name="url">
+                  <url>
+                   <string>about:blank</string>
+                  </url>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_50">
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_99">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_101">
+                 <property name="maximumSize">
+                  <size>
+                   <width>50</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>标题：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_102">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>--</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="groupBox_27">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>通知/动态管理</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_85">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButton">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>新增 通知/动态</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>删除 通知/动态</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>更新 通知/动态</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>放弃修改</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -6284,10 +6564,10 @@ padding: 0px 5px;</string>
      <normaloff>:/images/color_icon/color-date.svg</normaloff>:/images/color_icon/color-date.svg</iconset>
    </property>
    <property name="text">
-    <string>公告栏</string>
+    <string>通知动态</string>
    </property>
    <property name="toolTip">
-    <string>公告栏</string>
+    <string>通知动态</string>
    </property>
   </action>
   <action name="actNoticeManage">
@@ -6296,14 +6576,19 @@ padding: 0px 5px;</string>
      <normaloff>:/images/color_icon/color-addtag.svg</normaloff>:/images/color_icon/color-addtag.svg</iconset>
    </property>
    <property name="text">
-    <string>公告管理</string>
+    <string>动态管理</string>
    </property>
    <property name="toolTip">
-    <string>公告管理</string>
+    <string>动态管理</string>
    </property>
   </action>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
   <customwidget>
    <class>QChartView</class>
    <extends>QGraphicsView</extends>

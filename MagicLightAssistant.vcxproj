@@ -67,11 +67,11 @@
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtInstall>5.14.2_msvc2017_64</QtInstall>
-    <QtModules>core;sql;network;gui;axcontainer;widgets;charts</QtModules>
+    <QtModules>core;sql;network;gui;axcontainer;widgets;webchannel;webenginewidgets;charts</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>5.14.2_msvc2017_64</QtInstall>
-    <QtModules>core;sql;network;gui;axcontainer;widgets;charts</QtModules>
+    <QtModules>core;sql;network;gui;axcontainer;widgets;webchannel;webenginewidgets;charts</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -209,11 +209,13 @@
     <ClCompile Include="baseinfowork.cpp" />
     <ClCompile Include="checkupdate.cpp" />
     <ClCompile Include="comboboxdelegate.cpp" />
+    <ClCompile Include="document.cpp" />
     <ClCompile Include="excelexport.cpp" />
     <ClCompile Include="formlogin.cpp" />
     <ClCompile Include="groupmanagework.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
+    <ClCompile Include="previewpage.cpp" />
     <ClCompile Include="querymodel.cpp" />
     <ClCompile Include="readOnlyDelegate.cpp" />
     <ClCompile Include="service.cpp" />
@@ -231,6 +233,7 @@
     <ClInclude Include="checkupdate.h" />
     <QtMoc Include="comboboxdelegate.h">
     </QtMoc>
+    <QtMoc Include="document.h" />
     <ClInclude Include="excelexport.h" />
     <QtMoc Include="formlogin.h">
     </QtMoc>
@@ -238,6 +241,7 @@
     </QtMoc>
     <QtMoc Include="mainwindow.h">
     </QtMoc>
+    <QtMoc Include="previewpage.h" />
     <ClInclude Include="querymodel.h" />
     <ClInclude Include="readOnlyDelegate.h" />
     <ClInclude Include="resource.h" />

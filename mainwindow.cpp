@@ -885,6 +885,38 @@ void MainWindow::on_actManage_triggered()
     ui->tableView_actMember->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
+void MainWindow::on_actMessage_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_actNotice_triggered()
+{
+    // if (ui->stackedWidget->currentIndex() == 13)
+    //     return;
+    // ui->stackedWidget->setCurrentIndex(13);
+}
+
+void MainWindow::on_actNoticeManage_triggered()
+{
+    // if (ui->stackedWidget->currentIndex() == 13)
+    //     return;
+    // ui->stackedWidget->setCurrentIndex(13);
+    ui->stackedWidget->setCurrentIndex(14);
+    PreviewPage* notice_page = new PreviewPage(this);
+    ui->notice_preview->setPage(notice_page);
+
+    connect(ui->notice_editor, &QPlainTextEdit::textChanged,
+        [this]() { m_content.setText(ui->notice_editor->toPlainText()); });
+
+    QWebChannel* channel = new QWebChannel(this);
+    channel->registerObject(QStringLiteral("content"), &m_content);
+    notice_page->setWebChannel(channel);
+
+    ui->notice_preview->setUrl(QUrl("qrc:/images/index.html"));
+
+}
+
 void MainWindow::on_actApplyList_triggered() const
 {
     ui->stackedWidget->setCurrentIndex(9);
@@ -1765,11 +1797,6 @@ void MainWindow::on_btn_personalClear_clicked()
     ui->lineEdit_checkOldPwd->clear();
     ui->lineEdit_personalMail->clear();
     ui->lineEdit_personalAvatar->clear();
-}
-
-void MainWindow::on_actMessage_triggered()
-{
-    ui->stackedWidget->setCurrentIndex(2);
 }
 
 void MainWindow::on_btn_actPush_clicked()
