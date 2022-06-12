@@ -66,6 +66,7 @@ void service::addDatabase(QSqlDatabase& db, const QString &flag)
 bool service::initDatabaseTables(QSqlDatabase db)
 {
     qDebug() << "initDatabaseTables()...";
+    bool res = true;
     QSqlQuery query(db);
     //创建magic_users表
     //初始化root用户数据，登录名100000，密码123456
@@ -92,7 +93,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "VALUES                           "
         "(                                "
         "100000, '" + service::pwdEncrypt("123456") + "', 'admin', 1, 1, 0, 1);";
-    query.exec(creatTableStr);
+    res = query.exec(creatTableStr);
 
     //用户组权限分配表，默认有管理员和普通用户
     creatTableStr =
@@ -114,7 +115,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "INSERT INTO magic_group"
         "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message, notice_manage)"
         "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1, 0);";
-    query.exec(creatTableStr);
+    if(res)
+        res = query.exec(creatTableStr);
 
     //组织架构表
     creatTableStr =
@@ -125,7 +127,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "INSERT INTO magic_department"
         "(dpt_id, dpt_name)"
         "VALUES(1, '默认部门');";
-    query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
 
     //考勤表
     creatTableStr =
@@ -139,7 +142,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "operator   int(10),"
         "PRIMARY KEY (num, a_uid)"
         ")ENGINE=InnoDB;";
-    query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
 
     //申请表
     creatTableStr =
@@ -156,7 +160,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "reject_uid      int(10),"
         "PRIMARY KEY (apply_id, apply_uid)"
         ")ENGINE=InnoDB;";
-    query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
 
     //审批流程项目表
     creatTableStr =
@@ -169,7 +174,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "option_num     tinyint(1), "
         "PRIMARY KEY (alist_id)"
         ")ENGINE=InnoDB;";
-    query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
 
     //用户认证信息表
     creatTableStr =
@@ -179,7 +185,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "info            varchar(32),"
         "PRIMARY KEY (v_uid)"
         ")ENGINE=InnoDB;";
-    query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
 
     //用户认证类型表
     creatTableStr =
@@ -195,7 +202,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "INSERT INTO magic_verifyList"
         "(v_id, verify_name, icon)"
         "VALUES (2, '机构认证', 1);";
-    query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
 
     //活动表
     creatTableStr =
@@ -210,7 +218,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "act_score    float(5,2)   NOT NUll,"
         "PRIMARY KEY (act_id)"
         ")ENGINE=InnoDB;";
-    query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
 
     //活动成员表
     creatTableStr =
@@ -222,7 +231,23 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "status        tinytext     NOT NUll,"
         "PRIMARY KEY (actm_id)"
         ")ENGINE=InnoDB;";
-    bool res = query.exec(creatTableStr);
+    if (res)
+        res = query.exec(creatTableStr);
+    //通知动态表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_contents"
+        "(c_id         int(10)      NOT NULL    AUTO_INCREMENT,"
+        "title         varchar(32)  NUll,"
+        "text          mediumtext   NUll,"
+        "created       datetime     NOT NUll,"
+        "modified      datetime     NOT NUll,"
+        "c_type        tinytext     NOT NUll,"
+        "isHide        tinytext     NOT NUll,"
+        "author_id     int(10)      NOT NUll,"
+        "PRIMARY KEY (c_id)"
+        ")ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
     query.clear();
     
     return res;

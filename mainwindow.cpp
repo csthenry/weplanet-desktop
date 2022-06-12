@@ -102,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     attendManageWork = new AttendManageWork();
     groupManageWork = new GroupManageWork();
     activityManageWork = new ActivityManageWork();
+    posterWork = new PosterWork();
 
     sqlThread = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
@@ -111,6 +112,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     attendManageWork->moveToThread(sqlThread);
     groupManageWork->moveToThread(sqlThread);
     activityManageWork->moveToThread(sqlThread);
+    posterWork->moveToThread(sqlThread);
 
     //开启数据库连接线程
     dbThread->start();
@@ -136,6 +138,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         departmentModel = new QSqlTableModel(this, groupManageWork->getDB());
         activityModel = new QSqlTableModel(this, activityManageWork->getDB());
         activityMemModel = new QSqlTableModel(this, activityManageWork->getDB());
+        noticeModel = new QSqlTableModel(this, posterWork->getDB());
+        noticeManageModel = new QSqlTableModel(this, posterWork->getDB());
 
         userManagePageSelection = new QItemSelectionModel(userManageModel);
         groupPageSelection_group = new QItemSelectionModel(groupModel);
@@ -144,9 +148,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         activityMemSelection = new QItemSelectionModel(activityMemModel);
         myActListSelection = new QItemSelectionModel(activityModel);
         myActSelection = new QItemSelectionModel(activityMemModel);
+        noticeManagerSelection = new QItemSelectionModel(noticeManageModel);
 
         //构造mapper
         actEditMapper = new QDataWidgetMapper(this);
+        noticeEditMapper = new QDataWidgetMapper(this);
 
         //初始化work
         setBaseInfoWork->setUid(uid);
@@ -165,6 +171,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
         activityManageWork->setModel(activityModel);
         activityManageWork->setMemberModel(activityMemModel);
+
+        posterWork->setManageModel(noticeManageModel);
+        posterWork->setModel(noticeModel);
+
 
         emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
@@ -366,6 +376,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
                     , QMessageBox::Ok);
             on_action_triggered();  //刷新页面
         });
+
+    //通知动态信号槽
+    connect(this, &MainWindow::posterWorking, posterWork, &PosterWork::working);
+    connect(posterWork, &PosterWork::contentsManageWorkFinished, this, &MainWindow::setNoticeManagePage);
 
     //组织架构管理信号槽
     connect(this, &MainWindow::groupManageWorking, groupManageWork, &GroupManageWork::working);
@@ -777,6 +791,24 @@ void MainWindow::setActivityManagePage()
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
 
+void MainWindow::setNoticeManagePage()
+{
+    ui->stackedWidget->setCurrentIndex(14);
+
+    ui->tableView_mContents->setModel(noticeManageModel);
+    ui->tableView_mContents->setSelectionModel(noticeManagerSelection);
+    noticeEditMapper->setModel(noticeManageModel);
+    noticeEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+
+    ui->tableView_mContents->hideColumn(2);  //隐藏一些列
+    ui->tableView_mContents->hideColumn(3);
+    ui->tableView_mContents->hideColumn(4);
+    ui->tableView_mContents->hideColumn(5);
+    ui->tableView_mContents->hideColumn(6);
+    ui->tableView_mContents->hideColumn(7);
+
+}
+
 void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
 {
     if (rec.value("uid").toString().isEmpty())
@@ -892,28 +924,35 @@ void MainWindow::on_actMessage_triggered()
 
 void MainWindow::on_actNotice_triggered()
 {
-    // if (ui->stackedWidget->currentIndex() == 13)
-    //     return;
-    // ui->stackedWidget->setCurrentIndex(13);
+    if (ui->stackedWidget->currentIndex() == 13)
+        return;
+    ui->stackedWidget->setCurrentIndex(13);
 }
 
 void MainWindow::on_actNoticeManage_triggered()
 {
-    // if (ui->stackedWidget->currentIndex() == 13)
-    //     return;
-    // ui->stackedWidget->setCurrentIndex(13);
-    ui->stackedWidget->setCurrentIndex(14);
-    PreviewPage* notice_page = new PreviewPage(this);
-    ui->notice_preview->setPage(notice_page);
+    if (ui->stackedWidget->currentIndex() == 13)
+        return;
+    ui->stackedWidget->setCurrentIndex(13);
+    posterWork->setWorkType(1);
+    emit posterWorking();
 
-    connect(ui->notice_editor, &QPlainTextEdit::textChanged,
-        [this]() { m_content.setText(ui->notice_editor->toPlainText()); });
+	//初始化Markdown解析
+    PreviewPage* notice_page = new PreviewPage(this);
+    ui->mContents_preview->setPage(notice_page);
+
+    connect(ui->contents_editor, &QPlainTextEdit::textChanged,
+        [this]() { m_content.setText(ui->contents_editor->toPlainText()); });
 
     QWebChannel* channel = new QWebChannel(this);
     channel->registerObject(QStringLiteral("content"), &m_content);
     notice_page->setWebChannel(channel);
 
-    ui->notice_preview->setUrl(QUrl("qrc:/images/index.html"));
+    ui->mContents_preview->setUrl(QUrl("qrc:/images/index.html"));
+
+    ui->tableView_mContents->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_mContents->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_mContents->setEditTriggers(QAbstractItemView::NoEditTriggers);    //禁止编辑
 
 }
 

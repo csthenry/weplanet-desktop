@@ -38,6 +38,7 @@
 #include "activitymanagework.h"
 #include "document.h"
 #include "previewpage.h"
+#include "posterwork.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -80,13 +81,13 @@ private:
 
     QLabel *connectStatusLable, *statusIcon;
 
-    QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel;  //数据模型
+    QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel, *noticeModel, *noticeManageModel;  //数据模型
 
     QSqlRelationalTableModel *userManageModel, *attendManageModel, *attendPageModel;
 
-    QDataWidgetMapper* actEditMapper;
+    QDataWidgetMapper* actEditMapper, *noticeEditMapper;
 
-    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection; //选择模型
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManagerSelection; //选择模型
 
     queryModel *relTableModel, *relTableModel_attend;
 
@@ -111,6 +112,8 @@ private:
     void setGroupManagePage();
 
     void setActivityManagePage();
+
+    void setNoticeManagePage();
 
     void setActivityPage();
 
@@ -141,6 +144,8 @@ private:
     GroupManageWork *groupManageWork;
 
     ActivityManageWork* activityManageWork;
+
+    PosterWork* posterWork;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -370,6 +375,10 @@ signals:
     void updateActStatus();
 
     void updateScore(float score);
+
+    void posterWorking();
+
+    void posterSubmitAll();
 private:
     Ui::MainWindow *ui;
 };

@@ -215,6 +215,7 @@
     <ClCompile Include="groupmanagework.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
+    <ClCompile Include="posterwork.cpp" />
     <ClCompile Include="previewpage.cpp" />
     <ClCompile Include="querymodel.cpp" />
     <ClCompile Include="readOnlyDelegate.cpp" />
@@ -242,6 +243,7 @@
     <QtMoc Include="mainwindow.h">
     </QtMoc>
     <QtMoc Include="previewpage.h" />
+    <QtMoc Include="posterwork.h" />
     <ClInclude Include="querymodel.h" />
     <ClInclude Include="readOnlyDelegate.h" />
     <ClInclude Include="resource.h" />

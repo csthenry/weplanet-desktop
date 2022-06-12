@@ -33,7 +33,7 @@ void ActivityManageWork::working()
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("act_id"), Qt::Horizontal, "活动编号");
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_uid"), Qt::Horizontal, "用户UID");
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_joinDate"), Qt::Horizontal, "报名时间");
-    memberTabModel->setHeaderData(memberTabModel->fieldIndex("status"), Qt::Horizontal, "录取状态");
+    memberTabModel->setHeaderData(memberTabModel->fieldIndex("status"), Qt::Horizontal, "活动状态");
     memberTabModel->select();
     if (type == 1)
         updateActStatus();  //更新已报名活动状态并统计学时

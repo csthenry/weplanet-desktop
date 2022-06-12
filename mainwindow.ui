@@ -6005,7 +6005,7 @@ padding: 0px 5px;</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_95">
            <item row="0" column="0" colspan="2">
-            <widget class="QTableView" name="tableView"/>
+            <widget class="QTableView" name="tableView_mContents"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_96">
@@ -6021,7 +6021,7 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLabel" name="label_98">
+            <widget class="QLabel" name="label_mContentCreated">
              <property name="text">
               <string>--</string>
              </property>
@@ -6041,7 +6041,7 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLabel" name="label_99">
+            <widget class="QLabel" name="label_mContentModified">
              <property name="text">
               <string>--</string>
              </property>
@@ -6085,7 +6085,7 @@ padding: 0px 5px;</string>
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="lineEdit">
+                <widget class="QLineEdit" name="lineEdit_manageContents">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -6104,7 +6104,7 @@ padding: 0px 5px;</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_96">
                <item row="0" column="0">
-                <widget class="QRadioButton" name="radioButton">
+                <widget class="QRadioButton" name="rBtn_mCNotice">
                  <property name="text">
                   <string>通知</string>
                  </property>
@@ -6114,14 +6114,14 @@ padding: 0px 5px;</string>
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QRadioButton" name="radioButton_2">
+                <widget class="QRadioButton" name="rBtn_mCPost">
                  <property name="text">
                   <string>动态</string>
                  </property>
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QCheckBox" name="checkBox">
+                <widget class="QCheckBox" name="checkBox_mCisHide">
                  <property name="text">
                   <string>隐藏</string>
                  </property>
@@ -6137,7 +6137,7 @@ padding: 0px 5px;</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_98">
                <item row="0" column="0">
-                <widget class="QPlainTextEdit" name="notice_editor">
+                <widget class="QPlainTextEdit" name="contents_editor">
                  <property name="placeholderText">
                   <string>在此输入内容，支持Markdown语法...</string>
                  </property>
@@ -6153,29 +6153,14 @@ padding: 0px 5px;</string>
             <string>当前内容预览</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_92">
-            <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_51">
-              <property name="title">
-               <string>正文</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_100">
-               <item row="0" column="0">
-                <widget class="QWebEngineView" name="notice_preview">
-                 <property name="contextMenuPolicy">
-                  <enum>Qt::NoContextMenu</enum>
-                 </property>
-                 <property name="url">
-                  <url>
-                   <string>about:blank</string>
-                  </url>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_50">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
               <property name="title">
                <string/>
               </property>
@@ -6201,7 +6186,7 @@ padding: 0px 5px;</string>
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLabel" name="label_102">
+                <widget class="QLabel" name="label_mCTitle">
                  <property name="font">
                   <font>
                    <pointsize>12</pointsize>
@@ -6211,6 +6196,27 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="text">
                   <string>--</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="groupBox_51">
+              <property name="title">
+               <string>正文</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_100">
+               <item row="0" column="0">
+                <widget class="QWebEngineView" name="mContents_preview">
+                 <property name="contextMenuPolicy">
+                  <enum>Qt::NoContextMenu</enum>
+                 </property>
+                 <property name="url">
+                  <url>
+                   <string>about:blank</string>
+                  </url>
                  </property>
                 </widget>
                </item>
@@ -6233,7 +6239,7 @@ padding: 0px 5px;</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_85">
            <item row="0" column="0">
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="btn_addContent">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -6246,7 +6252,7 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="btn_delContent">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -6259,7 +6265,7 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="0" column="2">
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="btn_updateContent">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -6272,7 +6278,7 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="0" column="3">
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QPushButton" name="btn_cancelContent">
              <property name="minimumSize">
               <size>
                <width>0</width>

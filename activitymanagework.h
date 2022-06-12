@@ -2,7 +2,6 @@
 #pragma execution_character_set("utf-8")
 
 #include <QObject>
-#include "querymodel.h"
 #include "service.h"
 
 class ActivityManageWork : public QObject

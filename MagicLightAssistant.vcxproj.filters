@@ -101,6 +101,9 @@
     <ClCompile Include="previewpage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="posterwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -152,6 +155,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="previewpage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="posterwork.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
