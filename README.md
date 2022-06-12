@@ -23,7 +23,6 @@
 
 **已完成：**
 
-* [x] 数据库设计
 * [x] 注册，登录
 * [x] 考勤系统
 * [x] 个人信息管理
@@ -39,10 +38,10 @@
 
 **进行中：**
 
+* [ ] Markdown通知动态系统
 * [ ] 审批功能
 * [ ] 审批流程设计
 * [ ] 信箱功能
-* [ ] 公告系统
 * [ ] 更多...
 
 ### 开发进度截图
@@ -71,4 +70,4 @@
 ---
 该项目已同步至Gitee：https://gitee.com/csthenry/MagicLightAssistant
 
-Copyright (C) 2017-2021 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
+Copyright (C) 2017-2022 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
