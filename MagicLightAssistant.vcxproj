@@ -231,7 +231,7 @@
     <QtMoc Include="baseinfowork.h">
     </QtMoc>
     <QtMoc Include="activitymanagework.h" />
-    <ClInclude Include="checkupdate.h" />
+    <QtMoc Include="checkupdate.h" />
     <QtMoc Include="comboboxdelegate.h">
     </QtMoc>
     <QtMoc Include="document.h" />

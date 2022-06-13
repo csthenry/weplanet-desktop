@@ -129,7 +129,9 @@ private:
 
     void createActions();
 
-    void closeEvent(QCloseEvent* event);    //重写void closeEvent(QCloseEvent *event); 
+    void closeEvent(QCloseEvent* event);    //重写void closeEvent(QCloseEvent *event);
+
+    void updateFinished();
 
     SqlWork *sqlWork;
 
@@ -146,6 +148,8 @@ private:
     ActivityManageWork* activityManageWork;
 
     PosterWork* posterWork;
+
+    checkUpdate updateSoftWare;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -379,6 +383,8 @@ signals:
     void posterWorking();
 
     void posterSubmitAll();
+
+    void beginUpdate(QLabel* label, QWidget* parent);
 private:
     Ui::MainWindow *ui;
 };

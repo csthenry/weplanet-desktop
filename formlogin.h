@@ -17,6 +17,7 @@
 #include <QTime>
 #include "sqlwork.h"
 #include "baseinfowork.h"
+#include "checkupdate.h"
 
 namespace Ui {
 class formLogin;
@@ -50,6 +51,8 @@ private:
     bool autoLoginSuccess = false;  //自动登录标记
     bool dbStatus = true;
     QPixmap *statusOKIcon, *statusErrorIcon;
+    checkUpdate updateSoftWare;
+    void updateFinished(bool res);
 
 public:
     bool autoLogin();   //获取自动登录鉴权信息
@@ -84,6 +87,7 @@ signals:
     void autoLoginAuthAccount(const long long account, const QString& pwd);
     void signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender);
     void initDatabase();
+    void beginUpdate();
 };
 
 #endif // FORMLOGIN_H

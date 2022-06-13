@@ -63,16 +63,6 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->label_loading->setMovie(loadingMovie);
     loadingMovie->start();
 
-    //检查更新
-    checkUpdate updateSoftWare;
-    updateSoftWare.parse_UpdateJson(ui->notice, this);
-    ui->groupBox_33->setTitle("版本公告（软件版本：Ver " + updateSoftWare.getCurVersion() + "）");
-    ui->label_homeVer->setText("Ver " + updateSoftWare.getCurVersion());
-    if (updateSoftWare.getLatestVersion().isEmpty())
-        ui->label_LatestVersion->setText("--");
-    else
-        ui->label_LatestVersion->setText(updateSoftWare.getLatestVersion());
-
     //心跳query
     refTimer = new QTimer(this);
     connect(refTimer, &QTimer::timeout, this, [=]()
@@ -113,6 +103,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     groupManageWork->moveToThread(sqlThread);
     activityManageWork->moveToThread(sqlThread);
     posterWork->moveToThread(sqlThread);
+    
+    //检查更新
+    updateSoftWare.moveToThread(sqlThread);
+
+    connect(this, &MainWindow::beginUpdate, &updateSoftWare, &checkUpdate::parse_UpdateJson);
+    connect(&updateSoftWare, &checkUpdate::finished, this, &MainWindow::updateFinished);
+    emit beginUpdate(ui->notice, this);
 
     //开启数据库连接线程
     dbThread->start();
@@ -463,6 +460,16 @@ void MainWindow::receiveData(QString uid)
     ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
     ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
     ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
+}
+
+void MainWindow::updateFinished()
+{
+    ui->groupBox_33->setTitle("版本公告（软件版本：Ver " + updateSoftWare.getCurVersion() + "）");
+    ui->label_homeVer->setText("Ver " + updateSoftWare.getCurVersion());
+    if (updateSoftWare.getLatestVersion().isEmpty())
+        ui->label_LatestVersion->setText("--");
+    else
+        ui->label_LatestVersion->setText(updateSoftWare.getLatestVersion());
 }
 
 void MainWindow::setHomePageBaseInfo()

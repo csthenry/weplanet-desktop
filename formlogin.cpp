@@ -59,6 +59,7 @@ formLogin::formLogin(QDialog *parent) :
 
     sqlWork->moveToThread(dbThread);
     loginWork->moveToThread(sqlThread);
+    updateSoftWare.moveToThread(sqlThread);
 
     //开启数据库连接线程
     dbThread->start();
@@ -89,6 +90,8 @@ formLogin::formLogin(QDialog *parent) :
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
+    connect(this, &formLogin::beginUpdate, &updateSoftWare, &checkUpdate::homeCheckUpdate);
+    connect(&updateSoftWare, &checkUpdate::homeCheckUpdateFinished, this, &formLogin::updateFinished);
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         if (!readPwd.isEmpty() && isAutoLogin)
         {
@@ -99,7 +102,10 @@ formLogin::formLogin(QDialog *parent) :
         {
             emit initDatabase();    //初始化数据库
         }
+        //更新检测
+        emit beginUpdate();
     }, Qt::UniqueConnection);
+
 }
 
 formLogin::~formLogin()
@@ -169,6 +175,19 @@ QString formLogin::readLoginSettings()
         return settings.value("pwd").toString();
     }
     return "";
+}
+
+void formLogin::updateFinished(bool res)
+{
+    if(!res)
+        QMessageBox::critical(this, "检查失败", "服务器地址错误或JSON格式错误！\n错误信息：" + updateSoftWare.getErrorInfo());
+    else if(updateSoftWare.getLatestVersion() > updateSoftWare.getCurVersion())
+    {
+        QString str = updateSoftWare.getUpdateString();
+        int ret = QMessageBox::warning(this, "检查更新", str, "前往下载", "暂不更新");
+        if (ret == 0)
+            QDesktopServices::openUrl(updateSoftWare.getUrl());
+    }
 }
 
 bool formLogin::autoLogin()

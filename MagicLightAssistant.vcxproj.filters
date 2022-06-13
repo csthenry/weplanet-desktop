@@ -115,9 +115,6 @@
     <QtMoc Include="baseinfowork.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="checkupdate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="comboboxdelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -158,6 +155,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="posterwork.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="checkupdate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

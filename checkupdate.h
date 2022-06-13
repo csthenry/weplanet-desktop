@@ -19,9 +19,13 @@
 #include <QJsonArray>
 
 
-class checkUpdate
+class checkUpdate : public QObject
 {
+
+    Q_OBJECT
+
 public:
+
     checkUpdate();
 
     bool parse_UpdateJson(QLabel* label, QWidget* parent);
@@ -30,12 +34,42 @@ public:
 
     QString getLatestVersion();
 
+    void homeCheckUpdate();
+
+    bool getUpdateInfo();
+
+    QString getErrorInfo();
+
+    QUrl getUrl();
+
+    QString getUpdateString();
+
 private:
+
     QNetworkAccessManager manager;		//定义网络请求对象
 
     QString CurVersion;	//定义当前软件的版本号
 
     QString LatestVersion;
+
+    QString Version;
+
+    QString Url;
+
+    QString Notice;
+
+    QString UpdateTime;
+
+    QString ReleaseNote;
+
+    QString errorInfo;
+
+    QString updateStr;
+
+signals:
+
+	void finished();
+    void homeCheckUpdateFinished(bool res);
 
 };
 

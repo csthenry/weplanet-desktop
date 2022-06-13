@@ -8,8 +8,32 @@ checkUpdate::checkUpdate()
 
 bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
 {
+    if (!getUpdateInfo())
+        return false;
+    else
+    {
+        label->setText(Notice);
+        emit finished();
+    }
+    return true;
+}
+
+void checkUpdate::homeCheckUpdate()
+{
+    if (getUpdateInfo())
+    {
+        if (Version > CurVersion)
+            updateStr = "检测到新版本：\n软件版本号：" + Version + "\n" + "发布时间：" + UpdateTime + "\n" + "更新说明：" + ReleaseNote;
+        emit homeCheckUpdateFinished(true);
+    }
+    else 
+        emit homeCheckUpdateFinished(false);
+}
+
+bool checkUpdate::getUpdateInfo()
+{
     QNetworkRequest quest;
-    QNetworkReply *reply;
+    QNetworkReply* reply;
     QEventLoop loop;
 
     quest.setUrl(QUrl("https://www.bytecho.net/software_update.json"));
@@ -25,36 +49,44 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
     QJsonParseError err_rpt;
     QJsonDocument root_Doc = QJsonDocument::fromJson(res.toUtf8(), &err_rpt);//字符串格式化为JSON
 
-    if(err_rpt.error != QJsonParseError::NoError)
+    if (err_rpt.error != QJsonParseError::NoError)
     {
-        QMessageBox::critical(parent, "检查失败", "服务器地址错误或JSON格式错误!\n错误信息：" + reply->errorString());
+        errorInfo = reply->errorString();
         return false;
     }
-
-    if(root_Doc.isObject())
+    if (root_Doc.isObject())
     {
         QJsonObject  root_Obj = root_Doc.object();   //创建JSON对象
         QJsonObject PulseValue = root_Obj.value("MagicLightAssistant").toObject();
 
-        QString Version = PulseValue.value("LatestVersion").toString();
-        QString Url = PulseValue.value("Url").toString();
-        QString Notice = PulseValue.value("Notice").toString();
-        QString UpdateTime = PulseValue.value("UpdateTime").toString();
-        QString ReleaseNote = PulseValue.value("ReleaseNote").toString();
-
-        label->setText(Notice);
+        Version = PulseValue.value("LatestVersion").toString();
+        Url = PulseValue.value("Url").toString();
+        Notice = PulseValue.value("Notice").toString();
+        UpdateTime = PulseValue.value("UpdateTime").toString();
+        ReleaseNote = PulseValue.value("ReleaseNote").toString();
         qDebug() << Version;
         LatestVersion = Version;
-        if(Version > CurVersion)
-        {
-            QString warningStr =  "检测到新版本：\n软件版本号：" + Version + "\n" + "发布时间：" + UpdateTime + "\n" + "更新说明：" + ReleaseNote;
-            int ret = QMessageBox::warning(parent, "检查更新",  warningStr, "前往下载", "暂不更新");
-            if(ret == 0)
-                QDesktopServices::openUrl(QUrl(Url));
-        }
+
+        return true;
     }
-    return true;
+    return false;
 }
+
+QString checkUpdate::getErrorInfo()
+{
+    return errorInfo;
+}
+
+QUrl checkUpdate::getUrl()
+{
+    return QUrl(Url);
+}
+
+QString checkUpdate::getUpdateString()
+{
+    return updateStr;
+}
+
 
 QString checkUpdate::getCurVersion()
 {
