@@ -933,9 +933,9 @@ void MainWindow::on_actMessage_triggered()
 
 void MainWindow::on_actNotice_triggered()
 {
-    if (ui->stackedWidget->currentIndex() == 13)
-        return;
-    ui->stackedWidget->setCurrentIndex(13);
+    // if (ui->stackedWidget->currentIndex() == 13)
+    //     return;
+    ui->stackedWidget->setCurrentIndex(15);
 }
 
 void MainWindow::on_actNoticeManage_triggered()

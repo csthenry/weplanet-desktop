@@ -33,10 +33,11 @@
       <property name="font">
        <font>
         <family>微软雅黑</family>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="currentIndex">
-       <number>14</number>
+       <number>15</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -785,12 +786,6 @@
                  <height>0</height>
                 </size>
                </property>
-               <property name="maximumSize">
-                <size>
-                 <width>190</width>
-                 <height>16777215</height>
-                </size>
-               </property>
                <property name="font">
                 <font>
                  <pointsize>11</pointsize>
@@ -835,12 +830,6 @@
                 <size>
                  <width>80</width>
                  <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>150</width>
-                 <height>16777215</height>
                 </size>
                </property>
                <property name="font">
@@ -3766,7 +3755,7 @@ padding: 0px 5px;</string>
                     <enum>QLineEdit::Normal</enum>
                    </property>
                    <property name="placeholderText">
-                    <string>请输入UID或姓名</string>
+                    <string>请输入UID或姓名...</string>
                    </property>
                   </widget>
                  </item>
@@ -5847,7 +5836,7 @@ padding: 0px 5px;</string>
           </property>
           <property name="maximumSize">
            <size>
-            <width>300</width>
+            <width>400</width>
             <height>16777215</height>
            </size>
           </property>
@@ -5857,24 +5846,18 @@ padding: 0px 5px;</string>
            </font>
           </property>
           <property name="title">
-           <string>通知/动态栏</string>
+           <string>通知·动态列表</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_95">
-           <item row="0" column="0" colspan="2">
-            <widget class="QTableView" name="tableView_mContents"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_96">
-             <property name="maximumSize">
-              <size>
-               <width>100</width>
-               <height>16777215</height>
-              </size>
-             </property>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_mContentModified">
              <property name="text">
-              <string>发布时间：</string>
+              <string>--</string>
              </property>
             </widget>
+           </item>
+           <item row="0" column="0" colspan="2">
+            <widget class="QTableView" name="tableView_mContents"/>
            </item>
            <item row="1" column="1">
             <widget class="QLabel" name="label_mContentCreated">
@@ -5896,10 +5879,16 @@ padding: 0px 5px;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="label_mContentModified">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_96">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="text">
-              <string>--</string>
+              <string>发布时间：</string>
              </property>
             </widget>
            </item>
@@ -5953,6 +5942,22 @@ padding: 0px 5px;</string>
               </layout>
              </widget>
             </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QGroupBox" name="groupBox_49">
+              <property name="title">
+               <string>正文</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_98">
+               <item row="0" column="0">
+                <widget class="QPlainTextEdit" name="contents_editor">
+                 <property name="placeholderText">
+                  <string>在此输入内容，支持Markdown语法...</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
             <item row="0" column="1">
              <widget class="QGroupBox" name="groupBox_45">
               <property name="title">
@@ -5980,22 +5985,6 @@ padding: 0px 5px;</string>
                 <widget class="QCheckBox" name="checkBox_mCisHide">
                  <property name="text">
                   <string>隐藏</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="0" colspan="2">
-             <widget class="QGroupBox" name="groupBox_49">
-              <property name="title">
-               <string>正文</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_98">
-               <item row="0" column="0">
-                <widget class="QPlainTextEdit" name="contents_editor">
-                 <property name="placeholderText">
-                  <string>在此输入内容，支持Markdown语法...</string>
                  </property>
                 </widget>
                </item>
@@ -6094,8 +6083,8 @@ padding: 0px 5px;</string>
            <string>通知/动态管理</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_85">
-           <item row="0" column="0">
-            <widget class="QPushButton" name="btn_addContent">
+           <item row="0" column="2">
+            <widget class="QPushButton" name="btn_updateContent">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -6103,7 +6092,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>新增 通知/动态</string>
+              <string>更新 通知·动态</string>
              </property>
             </widget>
            </item>
@@ -6116,12 +6105,12 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>删除 通知/动态</string>
+              <string>删除 通知·动态</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="btn_updateContent">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="btn_addContent">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -6129,7 +6118,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>更新 通知/动态</string>
+              <string>新增 通知·动态</string>
              </property>
             </widget>
            </item>
@@ -6152,8 +6141,8 @@ padding: 0px 5px;</string>
        </layout>
       </widget>
       <widget class="QWidget" name="page_3">
-       <layout class="QGridLayout" name="gridLayout_86">
-        <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_107">
+        <item row="0" column="0" rowspan="2">
          <widget class="QGroupBox" name="groupBox_46">
           <property name="minimumSize">
            <size>
@@ -6168,15 +6157,246 @@ padding: 0px 5px;</string>
            </size>
           </property>
           <property name="title">
-           <string>当前公告</string>
+           <string>通知·动态列表</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_102">
+           <item row="1" column="0">
+            <layout class="QGridLayout" name="gridLayout_86">
+             <item row="0" column="0" colspan="2">
+              <widget class="QLineEdit" name="lineEdit_searchContents">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border-radius: 17.4px;/*设置圆角的大小*/
+border: .5px solid rgb(207, 207, 207);
+padding: 0px 5px;</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="echoMode">
+                <enum>QLineEdit::Normal</enum>
+               </property>
+               <property name="placeholderText">
+                <string>请输入编号或主题...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="btn_searchContents">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>搜索</string>
+               </property>
+               <property name="icon">
+                <iconset resource="resource.qrc">
+                 <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="btn_recoveryContents">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>重置</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="0">
+            <widget class="QTableView" name="tableView"/>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_53">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>110</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>110</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>通知·动态</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_105">
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_cTitle_2">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <layout class="QGridLayout" name="gridLayout_106">
+             <item row="0" column="7">
+              <widget class="QLabel" name="label_contentType_2">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="5">
+              <widget class="QLabel" name="label_contentModified_2">
+               <property name="minimumSize">
+                <size>
+                 <width>200</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="label_contentCreated_2">
+               <property name="minimumSize">
+                <size>
+                 <width>200</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_105">
+               <property name="text">
+                <string>发布时间：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="6">
+              <widget class="QLabel" name="label_106">
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>类型：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_107">
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>作者：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_contentAuthor_2">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="QLabel" name="label_108">
+               <property name="text">
+                <string>最后修改：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_109">
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>标题：</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
          <widget class="QGroupBox" name="groupBox_47">
           <property name="title">
-           <string>公告管理</string>
+           <string/>
           </property>
+          <layout class="QGridLayout" name="gridLayout_103">
+           <item row="0" column="1">
+            <widget class="QWebEngineView" name="Contents_preview">
+             <property name="url">
+              <url>
+               <string>about:blank</string>
+              </url>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
