@@ -20,10 +20,10 @@ public:
 	void submitAll();
 	void setModel(QSqlTableModel* model);
 	void setManageModel(QSqlTableModel* model);
-	// void apply(const QString aid, const QString& uid);
-	// void cancel(const QString aid, const QString& uid);
-	// void delContent(const QString aid);
 	void setWorkType(int type);
+
+	bool cache = false;		//新内容缓存
+	int cacheRow = -1;		//缓存row
 
 private:
 	int workType = -1;	//1管理页面；2用户页面

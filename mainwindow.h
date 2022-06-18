@@ -87,7 +87,7 @@ private:
 
     QDataWidgetMapper* actEditMapper, *noticeEditMapper;
 
-    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManagerSelection; //选择模型
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManageSelection; //选择模型
 
     queryModel *relTableModel, *relTableModel_attend;
 
@@ -208,6 +208,10 @@ private slots:
 
     void on_comboBox_myAct_currentIndexChanged(const QString& arg1);
 
+    void on_noticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
+
+    void on_myNoticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
+
     void on_btn_addGroup_clicked();
 
     void on_btn_actApprove_clicked();
@@ -255,6 +259,16 @@ private slots:
     void on_btn_userManagePage_search_clicked();
 
     void on_btn_userManagePage_recovery_clicked();
+
+    void on_btn_updateContent_clicked();
+
+    void on_btn_cancelContent_clicked();
+
+    void on_btn_addContent_clicked();
+
+    void on_btn_delContent_clicked();
+
+    void on_lineEdit_manageContents_textChanged(const QString& arg1);
 
     void on_comboBox_group_currentIndexChanged(const QString &arg1);
 

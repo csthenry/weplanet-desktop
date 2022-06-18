@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>15</number>
+       <number>14</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -1747,7 +1747,7 @@ padding: 0px 5px;</string>
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <property name="elideMode">
            <enum>Qt::ElideNone</enum>
@@ -1812,7 +1812,7 @@ padding: 0px 5px;</string>
                     <widget class="QLabel" name="label_actName">
                      <property name="minimumSize">
                       <size>
-                       <width>170</width>
+                       <width>200</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -1869,6 +1869,12 @@ padding: 0px 5px;</string>
                      </item>
                      <item row="0" column="2">
                       <widget class="QLabel" name="label_93">
+                       <property name="maximumSize">
+                        <size>
+                         <width>60</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
                        <property name="layoutDirection">
                         <enum>Qt::LeftToRight</enum>
                        </property>
@@ -6084,19 +6090,6 @@ padding: 0px 5px;</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_85">
            <item row="0" column="2">
-            <widget class="QPushButton" name="btn_updateContent">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>更新 通知·动态</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
             <widget class="QPushButton" name="btn_delContent">
              <property name="minimumSize">
               <size>
@@ -6106,6 +6099,10 @@ padding: 0px 5px;</string>
              </property>
              <property name="text">
               <string>删除 通知·动态</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-trash.svg</normaloff>:/images/color_icon/color-trash.svg</iconset>
              </property>
             </widget>
            </item>
@@ -6120,9 +6117,13 @@ padding: 0px 5px;</string>
              <property name="text">
               <string>新增 通知·动态</string>
              </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-star_2.svg</normaloff>:/images/color_icon/color-star_2.svg</iconset>
+             </property>
             </widget>
            </item>
-           <item row="0" column="3">
+           <item row="0" column="4">
             <widget class="QPushButton" name="btn_cancelContent">
              <property name="minimumSize">
               <size>
@@ -6132,6 +6133,27 @@ padding: 0px 5px;</string>
              </property>
              <property name="text">
               <string>放弃修改</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="btn_updateContent">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>更新 通知·动态</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-upload_cloud.svg</normaloff>:/images/color_icon/color-upload_cloud.svg</iconset>
              </property>
             </widget>
            </item>

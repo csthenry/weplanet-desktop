@@ -147,7 +147,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         activityMemSelection = new QItemSelectionModel(activityMemModel);
         myActListSelection = new QItemSelectionModel(activityModel);
         myActSelection = new QItemSelectionModel(activityMemModel);
-        noticeManagerSelection = new QItemSelectionModel(noticeManageModel);
+        noticeManageSelection = new QItemSelectionModel(noticeManageModel);
 
         //构造mapper
         actEditMapper = new QDataWidgetMapper(this);
@@ -805,7 +805,7 @@ void MainWindow::setNoticeManagePage()
     ui->stackedWidget->setCurrentIndex(14);
 
     ui->tableView_mContents->setModel(noticeManageModel);
-    ui->tableView_mContents->setSelectionModel(noticeManagerSelection);
+    ui->tableView_mContents->setSelectionModel(noticeManageSelection);
     noticeEditMapper->setModel(noticeManageModel);
     noticeEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
@@ -815,6 +815,18 @@ void MainWindow::setNoticeManagePage()
     ui->tableView_mContents->hideColumn(5);
     ui->tableView_mContents->hideColumn(6);
     ui->tableView_mContents->hideColumn(7);
+    ui->tableView_mContents->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//填充整个view
+    //SelectionModel
+    ui->tableView_mContents->setSelectionModel(noticeManageSelection);
+    connect(noticeManageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+        this, SLOT(on_noticePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+    //Mapper
+    noticeEditMapper->setModel(noticeManageModel);
+    noticeEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+    noticeEditMapper->addMapping(ui->lineEdit_manageContents, 1);
+    noticeEditMapper->addMapping(ui->contents_editor, 2);
+    noticeEditMapper->addMapping(ui->checkBox_mCisHide, 6);
+    noticeEditMapper->addMapping(ui->rBtn_mCPost, 5);
 
 }
 
@@ -1057,6 +1069,8 @@ void MainWindow::on_actRefresh_triggered()
     case 9: break;
     case 10: break;
     case 11: on_actGroup_triggered(); break;
+    case 14: on_actNoticeManage_triggered(); break;
+    case 15: on_actNotice_triggered(); break;
 
     default:
         break;
@@ -1296,6 +1310,22 @@ void MainWindow::on_comboBox_myAct_currentIndexChanged(const QString& arg1)
         activityMemModel->setFilter("actm_uid=" + uid + " AND status='未录取'");
     else
         activityMemModel->setFilter("actm_uid=" + uid + " AND status='待审核'");
+}
+
+void MainWindow::on_noticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+    Q_UNUSED(previous);
+    QSqlRecord curRecord = noticeManageModel->record(current.row());
+    noticeEditMapper->setCurrentIndex(current.row());  //将映射移动到对应行
+    ui->label_mContentCreated->setText(curRecord.value("created").toDateTime().toString("yyyy-MM-dd hh:mm"));
+    ui->label_mContentModified->setText(curRecord.value("modified").toDateTime().toString("yyyy-MM-dd hh:mm"));
+    if (curRecord.value("c_type").toInt() == 0)
+        ui->rBtn_mCNotice->setChecked(true);
+}
+
+void MainWindow::on_myNoticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+    Q_UNUSED(previous);
 }
 
 void MainWindow::on_btn_addGroup_clicked()
@@ -1614,6 +1644,79 @@ void MainWindow::on_btn_userManagePage_search_clicked()
 void MainWindow::on_btn_userManagePage_recovery_clicked()
 {
     userManageModel->setFilter("");
+}
+
+void MainWindow::on_btn_updateContent_clicked()
+{
+    bool res = noticeEditMapper->submit();
+    if (res)
+        QMessageBox::information(this, "消息", "通知·动态更新成功。", QMessageBox::Ok);
+    else
+        QMessageBox::warning(this, "警告", "通知·动态更新失败，错误信息：" + noticeManageModel->lastError().text(), QMessageBox::Ok);
+}
+
+void MainWindow::on_btn_cancelContent_clicked()
+{
+    noticeEditMapper->revert();
+    ui->btn_addContent->setText("新增 通知·动态");
+}
+
+void MainWindow::on_btn_addContent_clicked()
+{
+    QModelIndex curIndex;
+    if (!posterWork->cache)
+    {
+        QMessageBox::information(this, "消息", "已新增一条通知·动态，请在编辑完成后再次点击此按钮以完成发布。", QMessageBox::Ok);
+        noticeManageModel->insertRow(noticeManageModel->rowCount(), QModelIndex()); //在末尾添加一个记录
+        curIndex = noticeManageModel->index(noticeManageModel->rowCount() - 1, 1);//创建最后一行的ModelIndex
+        posterWork->cacheRow = curIndex.row();
+        noticeManageSelection->clearSelection();    //清空选择项
+        noticeManageSelection->setCurrentIndex(curIndex, QItemSelectionModel::Select);//设置刚插入的行为当前选择行
+
+    	posterWork->cache = true;
+        ui->btn_delContent->setEnabled(false);
+        ui->btn_addContent->setText("发布 通知·动态");
+    }else
+    {
+        if (ui->lineEdit_manageContents->text().isEmpty() || ui->contents_editor->toPlainText().isEmpty())
+        {
+            QMessageBox::warning(this, "警告", "请将标题、正文等编辑完成后再点击发布。", QMessageBox::Ok);
+            return;
+        }
+        curDateTime = QDateTime::currentDateTime();
+        noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("created")), curDateTime);
+        noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("modified")), curDateTime);
+        noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("author_id")), uid);
+
+        const bool res = noticeEditMapper->submit();
+        if (res)
+        {
+            posterWork->cache = false;
+            ui->btn_addContent->setText("新增 通知·动态");
+            ui->btn_delContent->setEnabled(true);
+            QMessageBox::information(this, "消息", "通知·动态发布成功。", QMessageBox::Ok);
+        }
+        else
+            QMessageBox::warning(this, "警告", "通知·动态发布失败，错误信息：" + noticeManageModel->lastError().text(), QMessageBox::Ok);
+
+    }
+}
+
+void MainWindow::on_btn_delContent_clicked()
+{
+    const QMessageBox::StandardButton res = QMessageBox::warning(this, "警告", "确认要删除该通知·动态吗？", QMessageBox::Yes | QMessageBox::No);
+    if (res == QMessageBox::Yes)
+	{
+        const QModelIndex curIndex = noticeManageSelection->currentIndex();//获取当前选择单元格的模型索引
+        noticeManageModel->removeRow(curIndex.row());
+        noticeManageModel->submitAll();
+        on_actNoticeManage_triggered();
+    }
+}
+
+void MainWindow::on_lineEdit_manageContents_textChanged(const QString& arg1)
+{
+    ui->label_mCTitle->setText(arg1);
 }
 
 void MainWindow::on_comboBox_group_currentIndexChanged(const QString &arg1)

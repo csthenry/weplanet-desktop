@@ -237,7 +237,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
     creatTableStr =
         "CREATE TABLE IF NOT EXISTS magic_contents"
         "(c_id         int(10)      NOT NULL    AUTO_INCREMENT,"
-        "title         varchar(32)  NUll,"
+        "title         varchar(64)  NUll,"
         "text          mediumtext   NUll,"
         "created       datetime     NOT NUll,"
         "modified      datetime     NOT NUll,"
