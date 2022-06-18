@@ -5956,6 +5956,9 @@ padding: 0px 5px;</string>
               <layout class="QGridLayout" name="gridLayout_98">
                <item row="0" column="0">
                 <widget class="QPlainTextEdit" name="contents_editor">
+                 <property name="plainText">
+                  <string/>
+                 </property>
                  <property name="placeholderText">
                   <string>在此输入内容，支持Markdown语法...</string>
                  </property>
@@ -6210,7 +6213,7 @@ padding: 0px 5px;</string>
                 <enum>QLineEdit::Normal</enum>
                </property>
                <property name="placeholderText">
-                <string>请输入编号或主题...</string>
+                <string>请输入编号、主题或UID...</string>
                </property>
               </widget>
              </item>

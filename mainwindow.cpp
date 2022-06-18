@@ -1648,9 +1648,20 @@ void MainWindow::on_btn_userManagePage_recovery_clicked()
 
 void MainWindow::on_btn_updateContent_clicked()
 {
+    QModelIndex curIndex;
+    curDateTime = QDateTime::currentDateTime();
     bool res = noticeEditMapper->submit();
+    if(res)
+    {
+        curIndex = noticeManageSelection->currentIndex();
+        noticeManageModel->setData(noticeManageModel->index(curIndex.row(), noticeManageModel->fieldIndex("modified")), curDateTime);   //更新修改时间
+        res = noticeManageModel->submitAll();
+    }
     if (res)
+    {
         QMessageBox::information(this, "消息", "通知·动态更新成功。", QMessageBox::Ok);
+        on_actNoticeManage_triggered();
+    }
     else
         QMessageBox::warning(this, "警告", "通知·动态更新失败，错误信息：" + noticeManageModel->lastError().text(), QMessageBox::Ok);
 }
@@ -1695,6 +1706,7 @@ void MainWindow::on_btn_addContent_clicked()
             ui->btn_addContent->setText("新增 通知·动态");
             ui->btn_delContent->setEnabled(true);
             QMessageBox::information(this, "消息", "通知·动态发布成功。", QMessageBox::Ok);
+            on_actNoticeManage_triggered();
         }
         else
             QMessageBox::warning(this, "警告", "通知·动态发布失败，错误信息：" + noticeManageModel->lastError().text(), QMessageBox::Ok);
