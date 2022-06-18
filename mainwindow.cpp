@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->attendPage_avatar->setScaledContents(true);
     ui->info_avatar->setScaledContents(true);
 
+    ui->webEngineView->page()->setBackgroundColor(Qt::transparent);
+
     //用户权限设置（共8个）
     actionList.append(ui->actMessage);
     actionList.append(ui->actUserManager);
@@ -960,7 +962,6 @@ void MainWindow::on_actNoticeManage_triggered()
     ui->tableView_mContents->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_mContents->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_mContents->setEditTriggers(QAbstractItemView::NoEditTriggers);    //禁止编辑
-
 }
 
 void MainWindow::on_actApplyList_triggered() const
@@ -1121,9 +1122,9 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     ui->label_userManagePage_group->setText(curRecord.value("group_name").toString());    //这里应该填写关联的外键字段名
     ui->label_userManagePage_dpt->setText(curRecord.value("dpt_name").toString());
     if (curRecord.value("user_status").toInt() == 1)
-        ui->label_userStatus->setText("账号状态：正常");
+        ui->label_userStatus->setText("状态：正常");
     else
-        ui->label_userStatus->setText("账号状态：封禁");
+        ui->label_userStatus->setText("状态：封禁");
     //子线程加载头像
     userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
     emit userManageGetAvatar();

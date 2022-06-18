@@ -96,5 +96,6 @@
         <file>index.html</file>
         <file>3rdparty/markdown.css</file>
         <file>3rdparty/marked.js</file>
+        <file>loading.html</file>
     </qresource>
 </RCC>
