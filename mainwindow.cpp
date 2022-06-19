@@ -1668,7 +1668,15 @@ void MainWindow::on_btn_updateContent_clicked()
 
 void MainWindow::on_btn_cancelContent_clicked()
 {
-    noticeEditMapper->revert();
+    if (posterWork->cache)
+    {
+        noticeManageModel->revertAll();
+        posterWork->cache = false;
+        ui->btn_cancelContent->setText("放弃修改");
+        ui->btn_delContent->setEnabled(true);
+    }
+    else
+        noticeEditMapper->revert();
     ui->btn_addContent->setText("新增 通知·动态");
 }
 
@@ -1683,10 +1691,12 @@ void MainWindow::on_btn_addContent_clicked()
         posterWork->cacheRow = curIndex.row();
         noticeManageSelection->clearSelection();    //清空选择项
         noticeManageSelection->setCurrentIndex(curIndex, QItemSelectionModel::Select);//设置刚插入的行为当前选择行
-
     	posterWork->cache = true;
         ui->btn_delContent->setEnabled(false);
         ui->btn_addContent->setText("发布 通知·动态");
+        ui->btn_cancelContent->setText("放弃发布");
+        ui->rBtn_mCNotice->setChecked(true);
+        ui->checkBox_mCisHide->setChecked(false);
     }else
     {
         if (ui->lineEdit_manageContents->text().isEmpty() || ui->contents_editor->toPlainText().isEmpty())
@@ -1704,6 +1714,7 @@ void MainWindow::on_btn_addContent_clicked()
         {
             posterWork->cache = false;
             ui->btn_addContent->setText("新增 通知·动态");
+            ui->btn_cancelContent->setText("放弃修改");
             ui->btn_delContent->setEnabled(true);
             QMessageBox::information(this, "消息", "通知·动态发布成功。", QMessageBox::Ok);
             on_actNoticeManage_triggered();
