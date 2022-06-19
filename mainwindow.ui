@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>15</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -1747,7 +1747,7 @@ padding: 0px 5px;</string>
            <enum>QTabWidget::Triangular</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="elideMode">
            <enum>Qt::ElideNone</enum>
