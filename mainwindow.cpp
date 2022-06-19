@@ -128,7 +128,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //初始化Markdown相关
     notice_page = new PreviewPage(this);
-    channel = new QWebChannel(this);
+    c_channel = new QWebChannel(this);
+    m_channel = new QWebChannel(this);
+
+    c_channel->registerObject(QStringLiteral("content"), &c_content);
+    m_channel->registerObject(QStringLiteral("content"), &m_content);
 
     //sqlWork firstFinished信号槽
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
@@ -444,7 +448,8 @@ MainWindow::~MainWindow()
 
     delete loadingMovie;
     delete notice_page;
-    delete channel;
+    delete c_channel;
+    delete m_channel;
     //析构所有工作对象和线程
     delete ui;
 
@@ -988,9 +993,7 @@ void MainWindow::on_actNotice_triggered()
             QSqlRecord curRec = noticeModel->record(current.row());
             c_content.setText(curRec.value("text").toString());
         }, Qt::UniqueConnection);
-
-    channel->registerObject(QStringLiteral("content"), &c_content);
-    notice_page->setWebChannel(channel);
+    notice_page->setWebChannel(c_channel);
 
     ui->Contents_preview->setUrl(QUrl("qrc:/images/index.html"));
 
@@ -1011,8 +1014,7 @@ void MainWindow::on_actNoticeManage_triggered()
     ui->mContents_preview->setPage(notice_page);
     connect(ui->contents_editor, &QPlainTextEdit::textChanged,
         [this]() { m_content.setText(ui->contents_editor->toPlainText()); });
-    channel->registerObject(QStringLiteral("content"), &m_content);
-    notice_page->setWebChannel(channel);
+    notice_page->setWebChannel(m_channel);
 
     ui->mContents_preview->setUrl(QUrl("qrc:/images/index.html"));
 

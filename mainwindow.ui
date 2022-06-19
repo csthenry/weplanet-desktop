@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>13</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">

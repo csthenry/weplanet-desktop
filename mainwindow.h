@@ -51,9 +51,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+
     PreviewPage* notice_page;
 
-    QWebChannel* channel;
+    QWebChannel* c_channel, *m_channel;
 
     Document m_content, c_content;
 
