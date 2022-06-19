@@ -23,6 +23,7 @@ void PosterWork::working()
         tabModel->setHeaderData(tabModel->fieldIndex("c_id"), Qt::Horizontal, "编号");
         tabModel->setHeaderData(tabModel->fieldIndex("title"), Qt::Horizontal, "标题");
         tabModel->setHeaderData(tabModel->fieldIndex("author_id"), Qt::Horizontal, "发布者");
+        tabModel->setFilter("isHide = 0");  //仅显示未隐藏
         tabModel->select();
         
         emit contentsWorkFinished();
@@ -34,9 +35,8 @@ void PosterWork::working()
         manageModel->setEditStrategy(QSqlTableModel::OnRowChange);
         manageModel->setHeaderData(manageModel->fieldIndex("c_id"), Qt::Horizontal, "编号");
         manageModel->setHeaderData(manageModel->fieldIndex("title"), Qt::Horizontal, "标题");
-        manageModel->setHeaderData(manageModel->fieldIndex("author_id"), Qt::Horizontal, "发布者");
         manageModel->select();
-        qDebug() << "posterWork完成";
+
         emit contentsManageWorkFinished();
     }
 }

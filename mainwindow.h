@@ -51,7 +51,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
-    Document m_content;
+    PreviewPage* notice_page;
+
+    QWebChannel* channel;
+
+    Document m_content, c_content;
 
     QTimer *refTimer;
 
@@ -87,7 +91,7 @@ private:
 
     QDataWidgetMapper* actEditMapper, *noticeEditMapper;
 
-    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManageSelection; //选择模型
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManageSelection, *noticeSelection; //选择模型
 
     queryModel *relTableModel, *relTableModel_attend;
 
@@ -114,6 +118,8 @@ private:
     void setActivityManagePage();
 
     void setNoticeManagePage();
+
+    void setNoticePage();
 
     void setActivityPage();
 
@@ -208,7 +214,7 @@ private slots:
 
     void on_comboBox_myAct_currentIndexChanged(const QString& arg1);
 
-    void on_noticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
+    void on_noticeManagePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
 
     void on_myNoticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous);
 
@@ -267,6 +273,10 @@ private slots:
     void on_btn_addContent_clicked();
 
     void on_btn_delContent_clicked();
+
+    void on_btn_searchContents_clicked();
+
+    void on_btn_recoveryContents_clicked();
 
     void on_lineEdit_manageContents_textChanged(const QString& arg1);
 

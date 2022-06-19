@@ -125,6 +125,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     qRegisterMetaType<QSqlRecord>("QSqlRecord"); 
 	qRegisterMetaType<QVector<int>>("QVector<int>");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
+
+    //初始化Markdown相关
+    notice_page = new PreviewPage(this);
+    channel = new QWebChannel(this);
+
     //sqlWork firstFinished信号槽
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
@@ -148,6 +153,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         myActListSelection = new QItemSelectionModel(activityModel);
         myActSelection = new QItemSelectionModel(activityMemModel);
         noticeManageSelection = new QItemSelectionModel(noticeManageModel);
+        noticeSelection = new QItemSelectionModel(noticeModel);
 
         //构造mapper
         actEditMapper = new QDataWidgetMapper(this);
@@ -379,6 +385,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //通知动态信号槽
     connect(this, &MainWindow::posterWorking, posterWork, &PosterWork::working);
     connect(posterWork, &PosterWork::contentsManageWorkFinished, this, &MainWindow::setNoticeManagePage);
+    connect(posterWork, &PosterWork::contentsWorkFinished, this, &MainWindow::setNoticePage);
 
     //组织架构管理信号槽
     connect(this, &MainWindow::groupManageWorking, groupManageWork, &GroupManageWork::working);
@@ -434,8 +441,10 @@ MainWindow::~MainWindow()
     }
     refTimer->stop();
     loadingMovie->stop();
-    delete loadingMovie;
 
+    delete loadingMovie;
+    delete notice_page;
+    delete channel;
     //析构所有工作对象和线程
     delete ui;
 
@@ -803,15 +812,14 @@ void MainWindow::setActivityManagePage()
 void MainWindow::setNoticeManagePage()
 {
     ui->stackedWidget->setCurrentIndex(14);
-
+    noticeManageModel->setFilter("author_id=" + uid);
     ui->tableView_mContents->setModel(noticeManageModel);
-    ui->tableView_mContents->setSelectionModel(noticeManageSelection);
     noticeEditMapper->setModel(noticeManageModel);
     noticeEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
 
     ui->tableView_mContents->hideColumn(2);  //隐藏一些列
     ui->tableView_mContents->hideColumn(3);
-    ui->tableView_mContents->hideColumn(4);
+    ui->tableView_mContents->hideColumn(4);  
     ui->tableView_mContents->hideColumn(5);
     ui->tableView_mContents->hideColumn(6);
     ui->tableView_mContents->hideColumn(7);
@@ -819,7 +827,7 @@ void MainWindow::setNoticeManagePage()
     //SelectionModel
     ui->tableView_mContents->setSelectionModel(noticeManageSelection);
     connect(noticeManageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-        this, SLOT(on_noticePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+        this, SLOT(on_noticeManagePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
     //Mapper
     noticeEditMapper->setModel(noticeManageModel);
     noticeEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
@@ -828,6 +836,26 @@ void MainWindow::setNoticeManagePage()
     noticeEditMapper->addMapping(ui->checkBox_mCisHide, 6);
     noticeEditMapper->addMapping(ui->rBtn_mCPost, 5);
 
+}
+
+void MainWindow::setNoticePage()
+{
+    ui->stackedWidget->setCurrentIndex(15);
+
+    ui->tableView_contents->setModel(noticeModel);
+
+    ui->tableView_contents->hideColumn(2);  //隐藏一些列
+    ui->tableView_contents->hideColumn(3);
+    ui->tableView_contents->hideColumn(4);
+    ui->tableView_contents->hideColumn(5);
+    ui->tableView_contents->hideColumn(6);
+    ui->tableView_contents->hideColumn(7);
+    ui->tableView_contents->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//填充整个view
+
+    //SelectionModel
+    ui->tableView_contents->setSelectionModel(noticeSelection);
+    connect(noticeSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+        this, SLOT(on_myNoticePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 }
 
 void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
@@ -945,9 +973,30 @@ void MainWindow::on_actMessage_triggered()
 
 void MainWindow::on_actNotice_triggered()
 {
-    // if (ui->stackedWidget->currentIndex() == 13)
-    //     return;
-    ui->stackedWidget->setCurrentIndex(15);
+    if (ui->stackedWidget->currentIndex() == 13)
+        return;
+    ui->stackedWidget->setCurrentIndex(13);
+    posterWork->setWorkType(0);
+    emit posterWorking();
+
+    //初始化Markdown解析
+    ui->Contents_preview->setPage(notice_page);
+    
+    connect(noticeSelection, &QItemSelectionModel::currentRowChanged,
+        this, [=](const QModelIndex& current, const QModelIndex& previous) {
+            Q_UNUSED(previous);
+            QSqlRecord curRec = noticeModel->record(current.row());
+            c_content.setText(curRec.value("text").toString());
+        }, Qt::UniqueConnection);
+
+    channel->registerObject(QStringLiteral("content"), &c_content);
+    notice_page->setWebChannel(channel);
+
+    ui->Contents_preview->setUrl(QUrl("qrc:/images/index.html"));
+
+    ui->tableView_contents->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView_contents->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView_contents->setEditTriggers(QAbstractItemView::NoEditTriggers);    //禁止编辑
 }
 
 void MainWindow::on_actNoticeManage_triggered()
@@ -958,14 +1007,10 @@ void MainWindow::on_actNoticeManage_triggered()
     posterWork->setWorkType(1);
     emit posterWorking();
 
-	//初始化Markdown解析
-    PreviewPage* notice_page = new PreviewPage(this);
+    //初始化Markdown解析
     ui->mContents_preview->setPage(notice_page);
-
     connect(ui->contents_editor, &QPlainTextEdit::textChanged,
         [this]() { m_content.setText(ui->contents_editor->toPlainText()); });
-
-    QWebChannel* channel = new QWebChannel(this);
     channel->registerObject(QStringLiteral("content"), &m_content);
     notice_page->setWebChannel(channel);
 
@@ -1312,7 +1357,7 @@ void MainWindow::on_comboBox_myAct_currentIndexChanged(const QString& arg1)
         activityMemModel->setFilter("actm_uid=" + uid + " AND status='待审核'");
 }
 
-void MainWindow::on_noticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
+void MainWindow::on_noticeManagePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
     QSqlRecord curRecord = noticeManageModel->record(current.row());
@@ -1326,6 +1371,15 @@ void MainWindow::on_noticePagecurrentRowChanged(const QModelIndex& current, cons
 void MainWindow::on_myNoticePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
+    QSqlRecord curRecord = noticeModel->record(current.row());
+    ui->label_cTitle->setText(curRecord.value("title").toString());
+    ui->label_contentAuthor->setText(curRecord.value("author_id").toString());
+    ui->label_contentCreated->setText(curRecord.value("created").toDateTime().toString("yyyy-MM-dd hh:mm"));
+    ui->label_contentModified->setText(curRecord.value("modified").toDateTime().toString("yyyy-MM-dd hh:mm"));
+    if (curRecord.value("c_type").toInt() == 0)
+        ui->label_contentType->setText("通知");
+    else
+        ui->label_contentType->setText("动态");
 }
 
 void MainWindow::on_btn_addGroup_clicked()
@@ -1742,10 +1796,22 @@ void MainWindow::on_lineEdit_manageContents_textChanged(const QString& arg1)
     ui->label_mCTitle->setText(arg1);
 }
 
+void MainWindow::on_btn_searchContents_clicked()
+{
+    QString arg = "(c_id='" + ui->lineEdit_searchContents->text() + "' OR title LIKE '%" + ui->lineEdit_searchContents->text() + "%' OR text LIKE '%" + ui->lineEdit_searchContents->text() + "%' OR author_id='" + ui->lineEdit_searchContents->text() + "') AND isHide=0";
+    noticeModel->setFilter(arg);
+}
+
 void MainWindow::on_comboBox_group_currentIndexChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
     setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
+}
+
+void MainWindow::on_btn_recoveryContents_clicked()
+{
+    noticeModel->setFilter("isHide=0");
+    ui->lineEdit_searchContents->clear();
 }
 
 void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)

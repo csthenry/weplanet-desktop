@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>14</number>
+       <number>15</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -5863,7 +5863,11 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="0" column="0" colspan="2">
-            <widget class="QTableView" name="tableView_mContents"/>
+            <widget class="QTableView" name="tableView_mContents">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+            </widget>
            </item>
            <item row="1" column="1">
             <widget class="QLabel" name="label_mContentCreated">
@@ -6213,7 +6217,7 @@ padding: 0px 5px;</string>
                 <enum>QLineEdit::Normal</enum>
                </property>
                <property name="placeholderText">
-                <string>请输入编号、主题或UID...</string>
+                <string>请输入编号、关键字或UID...</string>
                </property>
               </widget>
              </item>
@@ -6250,7 +6254,14 @@ padding: 0px 5px;</string>
             </layout>
            </item>
            <item row="0" column="0">
-            <widget class="QTableView" name="tableView"/>
+            <widget class="QTableView" name="tableView_contents">
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -6273,24 +6284,10 @@ padding: 0px 5px;</string>
            <string>通知·动态</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_105">
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_cTitle_2">
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>--</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0" colspan="2">
             <layout class="QGridLayout" name="gridLayout_106">
              <item row="0" column="7">
-              <widget class="QLabel" name="label_contentType_2">
+              <widget class="QLabel" name="label_contentType">
                <property name="minimumSize">
                 <size>
                  <width>70</width>
@@ -6303,7 +6300,7 @@ padding: 0px 5px;</string>
               </widget>
              </item>
              <item row="0" column="5">
-              <widget class="QLabel" name="label_contentModified_2">
+              <widget class="QLabel" name="label_contentModified">
                <property name="minimumSize">
                 <size>
                  <width>200</width>
@@ -6316,7 +6313,7 @@ padding: 0px 5px;</string>
               </widget>
              </item>
              <item row="0" column="3">
-              <widget class="QLabel" name="label_contentCreated_2">
+              <widget class="QLabel" name="label_contentCreated">
                <property name="minimumSize">
                 <size>
                  <width>200</width>
@@ -6362,7 +6359,7 @@ padding: 0px 5px;</string>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLabel" name="label_contentAuthor_2">
+              <widget class="QLabel" name="label_contentAuthor">
                <property name="minimumSize">
                 <size>
                  <width>100</width>
@@ -6383,14 +6380,8 @@ padding: 0px 5px;</string>
              </item>
             </layout>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_109">
-             <property name="maximumSize">
-              <size>
-               <width>70</width>
-               <height>16777215</height>
-              </size>
-             </property>
+           <item row="0" column="0" colspan="2">
+            <widget class="QLabel" name="label_cTitle">
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -6399,7 +6390,10 @@ padding: 0px 5px;</string>
               </font>
              </property>
              <property name="text">
-              <string>标题：</string>
+              <string>--</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
