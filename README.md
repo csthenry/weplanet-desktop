@@ -65,7 +65,7 @@
 
 [GPL-3.0 License](https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE)
 
-[![Stargazers over time](https://starchart.cc/CSTHenry/MagicLightAssistant.svg)](https://starchart.cc/CSTHenry/MagicLightAssistant)
+[![Star History Chart](https://api.star-history.com/svg?repos=csthenry/MagicLightAssistant&type=Date)](https://star-history.com/#csthenry/MagicLightAssistant&Date)
 
 ---
 该项目已同步至Gitee：https://gitee.com/csthenry/MagicLightAssistant
