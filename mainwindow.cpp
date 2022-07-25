@@ -1372,12 +1372,12 @@ void MainWindow::on_comboBox_myAct_currentIndexChanged(const QString& arg1)
     QString dateTime = curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     if (arg1 == "所有活动")
         activityMemModel->setFilter("actm_uid=" + uid);
-    else if (arg1 == "已录取")
-        activityMemModel->setFilter("actm_uid=" + uid + " AND status='已录取'");
     else if (arg1 == "未录取")
         activityMemModel->setFilter("actm_uid=" + uid + " AND status='未录取'");
-    else
+    else if (arg1 == "待审核")
         activityMemModel->setFilter("actm_uid=" + uid + " AND status='待审核'");
+    else
+        activityMemModel->setFilter("actm_uid=" + uid + " AND (status='已录取' OR status='已完成')");
 }
 
 void MainWindow::on_noticeManagePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)

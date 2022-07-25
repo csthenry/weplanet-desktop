@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2477,6 +2477,19 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="3">
+                  <spacer name="horizontalSpacer_7">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
                 </layout>
                </item>
               </layout>
@@ -3909,6 +3922,18 @@ padding: 0px 5px;</string>
            </layout>
           </widget>
           <widget class="QTabWidget" name="tabWidget_5">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>473</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="currentIndex">
             <number>0</number>
            </property>
@@ -4315,6 +4340,9 @@ padding: 0px 5px;</string>
              </item>
              <item row="4" column="0" colspan="2">
               <widget class="QGroupBox" name="groupBox_52">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="title">
                 <string>数据管理*</string>
                </property>
