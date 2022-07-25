@@ -1,14 +1,14 @@
-# MagicLight Assistant
+# MagicLitePlanet
 
-![GitHub license](https://img.shields.io/github/license/CSTHenry/MagicLightAssistant?style=flat-square)
-![GitHub forks](https://img.shields.io/github/forks/CSTHenry/MagicLightAssistant?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/CSTHenry/MagicLightAssistant?style=flat-square)
-![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicLightAssistant?include_prereleases&style=flat-square)
-![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicLightAssistant/total?style=flat-square)
+![GitHub license](https://img.shields.io/github/license/CSTHenry/MagicLitePlanet?style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/CSTHenry/MagicLitePlanet?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/CSTHenry/MagicLitePlanet?style=flat-square)
+![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicLitePlanet?include_prereleases&style=flat-square)
+![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicLitePlanet/total?style=flat-square)
 
-🚀MagicLight Assistant - 适用于小型团体的协作系统
+🚀MagicLitePlanet - 适用于小型团体的协作系统
 
-  交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic<Light\> Assistant**。
+  交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic<Lite\>Planet**。
 
 - 平台：Windows x64
 - 开发环境：Visual Studio 2022 MSVC
@@ -36,6 +36,7 @@
 * [x] 数据分类导出
 * [x] 更新检测
 * [x] 异常登录限制
+* [x] 基于ECharts的数据大屏
 
 **进行中：**
 
@@ -46,14 +47,14 @@
 
 ### 开发进度截图
 
-![screenshot_1](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_10.png)
-![screenshot_2](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_2.jpg)
-![screenshot_3](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_3.jpg)
-![screenshot_4](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_8.png)
-![screenshot_5](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_6.png)
-![screenshot_6](https://github.com/CSTHenry/MagicLightAssistant/blob/master/screenshot/screenshot_9.png)
+![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_10.png)
+![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_2.jpg)
+![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_3.jpg)
+![screenshot_4](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_8.png)
+![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_6.png)
+![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_9.png)
 
-更多截图请查看：https://github.com/CSTHenry/MagicLightAssistant/tree/master/screenshot
+更多截图请查看：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
 
 ### 注意：
 
@@ -65,7 +66,7 @@
 
 [GPL-3.0 License](https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE)
 
-[![Star History Chart](https://api.star-history.com/svg?repos=csthenry/MagicLightAssistant&type=Date)](https://star-history.com/#csthenry/MagicLightAssistant&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=csthenry/MagicLitePlanet&type=Date)](https://star-history.com/#csthenry/MagicLitePlanet&Date)
 
 ---
 该项目已同步至Gitee：https://gitee.com/csthenry/MagicLightAssistant
