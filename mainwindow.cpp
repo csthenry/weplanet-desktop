@@ -83,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason)));
     QIcon icon(":/images/logo/MagicLightAssistant.png");
     trayIcon->setIcon(icon);
-    trayIcon->setToolTip("MagicLight Assistant - 运行中");
+    trayIcon->setToolTip("MagicLitePlanet - 运行中");
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->show();
 
@@ -1121,7 +1121,7 @@ void MainWindow::on_actMore_triggered() const
 void MainWindow::on_actRefresh_triggered()
 {
     qDebug() << "心跳query...";
-    trayIcon->setToolTip("MagicLight Assistant - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
+    trayIcon->setToolTip("MagicLitePlanet - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
     int index = ui->stackedWidget->currentIndex();
     switch (index)
     {

@@ -65,11 +65,11 @@ void AttendWork::analyseWorkTime()
     {
         cnt = 0;
         today = today.addDays(1);
+        workTime.setHMS(0, 0, 0);
         do{
             curRecord = relTableModel->record(cnt);
             if (today.date().toString("yyyy-MM-dd") == curRecord.value("today").toDateTime().date().toString("yyyy-MM-dd"))
             {
-                workTime.setHMS(0, 0, 0);
                 beginTime = QTime::fromString(curRecord.value("begin_date").toString(), "hh:mm:ss");
                 if (curRecord.value("end_date").isNull())
                 {
