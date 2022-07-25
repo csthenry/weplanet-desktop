@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->info_avatar->setScaledContents(true);
 
     ui->webEngineView->page()->setBackgroundColor(Qt::transparent);
+    ui->webEngineView_eCharts->page()->setBackgroundColor(Qt::transparent);
 
     //用户权限设置（共8个）
     actionList.append(ui->actMessage);
@@ -697,9 +698,29 @@ void MainWindow::setAttendPage()
     }
     ui->stackedWidget->setCurrentIndex(4);
     ui->stackedWidget->currentWidget()->setEnabled(true);
-
+    //eCharts QChart
     int *workTimeSum = attendWork->getWorkTime();
+    QJsonObject seriesObj;
+    QJsonArray weekWorkTime = attendWork->getWeekMyWorkTime(), weekAllWorkStatus = attendWork->getWeekAllWorkStatus(), dateArray, weekWorkMem = attendWork->getWeekWorkMem();
+    seriesObj.insert("data_yStatus", weekAllWorkStatus);
+    seriesObj.insert("data_yTime", weekWorkTime);
+    seriesObj.insert("data_yMem", weekWorkMem);
+    QString date;
+    curDateTime = QDateTime::currentDateTime();
+    curDateTime = curDateTime.addDays(-7);
+    for (int i = 7; i >= 1; i--)
+    {
+        curDateTime = curDateTime.addDays(1);
+        date = curDateTime.date().toString("MM.dd");
+        dateArray.append(date);
+    }
+    seriesObj.insert("data_x", dateArray);
+    QString jsCode = QString("init(%1, 1)").arg(QString(QJsonDocument(seriesObj).toJson()));
+    ui->label_chartMod->setText("我的本周考勤数据");
+    ui->webEngineView_eCharts->page()->runJavaScript(jsCode);
     service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), workTimeSum[0], workTimeSum[1], workTimeSum[2], workTimeSum[3]);  //绘制统计图
+
+    eChartsJsCode = QString(QJsonDocument(seriesObj).toJson());
 }
 
 void MainWindow::on_PieSliceHighlight(bool show)
@@ -1966,6 +1987,25 @@ void MainWindow::on_btn_endAttend_clicked()
         return;
     }
     emit attendPageModelSubmitAll(0);
+}
+
+void MainWindow::on_btn_switchChart_clicked()
+{
+    QString temp = eChartsJsCode;
+    if (ui->label_chartMod->text() == "我的本周考勤数据")
+    {
+        eChartsJsCode = QString("init(%1, 2)").arg(eChartsJsCode);
+        ui->label_chartMod->setText("星球本周考勤概况");
+        ui->webEngineView_eCharts->page()->runJavaScript(eChartsJsCode);
+        eChartsJsCode = temp;
+    }
+    else
+    {
+        eChartsJsCode = QString("init(%1, 1)").arg(eChartsJsCode);
+        ui->label_chartMod->setText("我的本周考勤数据");
+        ui->webEngineView_eCharts->page()->runJavaScript(eChartsJsCode);
+        eChartsJsCode = temp;
+    }
 }
 
 void MainWindow::on_btn_personalSubmit_clicked()

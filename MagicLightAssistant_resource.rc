@@ -31,11 +31,11 @@ BEGIN
         BLOCK "000404b0"
         BEGIN
             VALUE "CompanyName", "bytecho.net"
-            VALUE "FileDescription", "MagicLight Assistant"
+            VALUE "FileDescription", "Magic LitePlanet"
             VALUE "FileVersion", "0.1.5.0"
             VALUE "LegalCopyright", "Copyright (c) 2017-2022 bytecho.net. Written by Henry."
-            VALUE "OriginalFilename", "MagicLightAssistant.exe"
-            VALUE "ProductName", "MagicLightAssistant"
+            VALUE "OriginalFilename", "MagicLitePlanet.exe"
+            VALUE "ProductName", "MagicLitePlanet"
             VALUE "ProductVersion", "0.1.5.0"
         END
     END

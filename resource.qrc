@@ -98,4 +98,8 @@
         <file>3rdparty/marked.js</file>
         <file>loading.html</file>
     </qresource>
+    <qresource prefix="/lib">
+        <file>eCharts/echarts.html</file>
+        <file>eCharts/echarts.min.js</file>
+    </qresource>
 </RCC>

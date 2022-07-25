@@ -9,6 +9,7 @@
 #include <QMutex>
 #include <QSqlRecord>
 #include <QSqlQuery>
+#include <QJsonArray>
 #include "service.h"
 #include "querymodel.h"
 
@@ -19,12 +20,16 @@ public:
     explicit AttendWork(QObject *parent = nullptr);
     void working();
     void analyseWorkTime();
+    void analyseWorkStatus();
     QSqlRecord getRecord(const int index);
     QSqlDatabase getDB();
     void setUid(const QString& uid);
     void setModel(QSqlRelationalTableModel *relTableModel);
     int fieldIndex(const QString &field);
     int* getWorkTime();
+    QJsonArray getWeekMyWorkTime();
+    QJsonArray getWeekAllWorkStatus();
+    QJsonArray getWeekWorkMem();
 private slots:
     void submitAll(int type);   //1代表签到，0代表签退
 private:
@@ -33,6 +38,7 @@ private:
     QString uid;
     QSqlDatabase DB;
     QSqlRelationalTableModel *relTableModel;
+    QJsonArray weekMyWorkTime, weekAllWorkStatus, weekWorkMem;
 signals:
     void attendWorkFinished();
     void attendDone(bool);

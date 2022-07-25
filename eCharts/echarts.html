@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+
+<head>
+  <meta charset="utf-8">
+</head>
+
+<body style="height: 100%; margin: 0;">
+  <div id="container" style="height: 100%;"></div>
+
+
+  <script type="text/javascript" src="./echarts.min.js"></script>
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+    function init(args, type) {
+      if(type == 1)
+      {
+      option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'cross' }
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            //saveAsImage: {},
+            magicType: {
+              type: ['line', 'bar']
+            },
+            dataView: {
+              readOnly: true
+            }
+          }
+        },
+        legend: {},
+        xAxis: {
+          type: 'category',
+          name: '统计周期',
+          boundaryGap: false,
+          data: args['data_x']
+        },
+        yAxis: [
+          {
+            type: 'value',
+            name: '工作时间',
+            position: 'left',
+            axisLabel: {
+              formatter: '{value}小时'
+            }
+          },
+          {
+            type: 'category',
+            name: '考勤状态',
+            position: 'right',
+            axisLabel: {
+              formatter: '{value}'
+            }
+          }
+        ],
+        series: [
+          {
+            data: args['data_yTime'],
+            name: '工作时间',
+            type: 'line',
+            yAxisIndex: 0,
+            smooth: true,
+            markPoint: {
+              data: [
+                {
+                  type: 'max',
+                  name: 'Max'
+                },
+                {
+                  type: 'min',
+                  name: 'Min'
+                }
+              ]
+            },
+            markLine: {
+              data: [
+                {
+                  type: 'average',
+                  name: 'Average'
+                }
+              ]
+            }
+          },
+          {
+            data: args['data_yStatus'],
+            yAxisIndex: 1,
+            name: '考勤状态',
+            type: 'scatter'
+          }
+        ]
+      };}
+      else{
+      option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'cross' }
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            //saveAsImage: {},
+            magicType: {
+              type: ['line', 'bar']
+            },
+            dataView: {
+              readOnly: true
+            }
+          }
+        },
+        legend: {},
+        xAxis: {
+          type: 'category',
+          name: '统计周期',
+          boundaryGap: true,
+          data: args['data_x']
+        },
+        yAxis: [
+          {
+            type: 'value',
+            name: '签到总人数',
+            position: 'left',
+            axisLabel: {
+              formatter: '{value}人'
+            }
+          }
+        ],
+        series: [
+          {
+            data: args['data_yMem'],
+            name: '签到总人数',
+            type: 'bar',
+            yAxisIndex: 0,
+            smooth: true,
+            markPoint: {
+              data: [
+                {
+                  type: 'max',
+                  name: 'Max'
+                },
+                {
+                  type: 'min',
+                  name: 'Min'
+                }
+              ]
+            }
+          }
+        ]
+      };
+      }
+      if (option && typeof option === 'object') {
+        myChart.setOption(option, true);
+      }
+    }
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+
+</html>

@@ -28,6 +28,8 @@ public:
 
     checkUpdate();
 
+    ~checkUpdate();
+
     bool parse_UpdateJson(QLabel* label, QWidget* parent);
 
     QString getCurVersion();
@@ -46,7 +48,7 @@ public:
 
 private:
 
-    QNetworkAccessManager manager;		//定义网络请求对象
+    QNetworkAccessManager *manager;		//定义网络请求对象
 
     QString CurVersion;	//定义当前软件的版本号
 

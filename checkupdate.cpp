@@ -3,9 +3,11 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "0.1.5";   //在此处定义软件当前版本
+    CurVersion = "0.1.6";   //在此处定义软件当前版本
 }
-
+checkUpdate::~checkUpdate()
+{
+}
 bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
 {
     if (!getUpdateInfo())
@@ -35,16 +37,15 @@ bool checkUpdate::getUpdateInfo()
     QNetworkRequest quest;
     QNetworkReply* reply;
     QEventLoop loop;
-
     quest.setUrl(QUrl("https://www.bytecho.net/software_update.json"));
     quest.setHeader(QNetworkRequest::UserAgentHeader, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36");
-    reply = manager.get(quest);
+    manager = new QNetworkAccessManager();
+    reply = manager->get(quest);
 
     //请求结束并下载完成后，退出子事件循环
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     //开启子事件循环
     loop.exec();
-
     QString res = reply->readAll();
     QJsonParseError err_rpt;
     QJsonDocument root_Doc = QJsonDocument::fromJson(res.toUtf8(), &err_rpt);//字符串格式化为JSON
@@ -54,6 +55,7 @@ bool checkUpdate::getUpdateInfo()
         errorInfo = reply->errorString();
         return false;
     }
+    delete manager;
     if (root_Doc.isObject())
     {
         QJsonObject  root_Obj = root_Doc.object();   //创建JSON对象

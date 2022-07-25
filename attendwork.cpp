@@ -35,6 +35,9 @@ void AttendWork::analyseWorkTime()
 {
     int cnt = 0;
     QTime workTime(0, 0, 0, 0), beginTime, endTime;
+    QDateTime today = QDateTime::currentDateTime();
+    QJsonArray weekMyWorkTime = { 0, 0, 0, 0, 0, 0, 0 }, weekWorkMem = { 0, 0, 0, 0, 0, 0, 0 };
+    QJsonArray weekAllWorkStatus = { "未签到", "未签到" , "未签到" , "未签到" , "未签到" , "未签到" ,"未签到" };
     QSqlRecord curRecord;
     for(int i = 0; i < 4; i++)
         workTimeData[i] = 0;
@@ -57,6 +60,47 @@ void AttendWork::analyseWorkTime()
         }
         cnt ++;
     }while(!curRecord.value("begin_date").isNull());
+    today = today.addDays(-7);
+    for (int i = 0; i < 7; i++)
+    {
+        cnt = 0;
+        today = today.addDays(1);
+        do{
+            curRecord = relTableModel->record(cnt);
+            if (today.date().toString("yyyy-MM-dd") == curRecord.value("today").toDateTime().date().toString("yyyy-MM-dd"))
+            {
+                workTime.setHMS(0, 0, 0);
+                beginTime = QTime::fromString(curRecord.value("begin_date").toString(), "hh:mm:ss");
+                if (curRecord.value("end_date").isNull())
+                {
+                    qDebug() << "curRecord.value().isNull()";
+                    endTime = QTime::fromString(QDateTime::currentDateTime().time().toString(), "hh:mm:ss");
+                }
+                else
+                    endTime = QTime::fromString(curRecord.value("end_date").toString(), "hh:mm:ss");
+                workTime = workTime.addSecs(beginTime.secsTo(endTime));
+                weekAllWorkStatus[i] = "已签到";
+            }
+            cnt++;
+        } while (!curRecord.value("begin_date").isNull());
+        weekMyWorkTime[i] = workTime.hour();
+    }
+    this->weekMyWorkTime = weekMyWorkTime;
+    this->weekAllWorkStatus = weekAllWorkStatus;
+    QString preFilter = relTableModel->filter();
+    today = today.addDays(-7);
+    for (int i = 0; i < 7; i++)
+    {
+        today = today.addDays(1);
+        relTableModel->setFilter("today='" + today.date().toString("yyyy-MM-dd") + "'");
+        weekWorkMem[i] = relTableModel->rowCount();
+    }
+    relTableModel->setFilter(preFilter);
+    this->weekWorkMem = weekWorkMem;
+}
+
+void AttendWork::analyseWorkStatus()
+{
 }
 
 QSqlRecord AttendWork::getRecord(const int index)
@@ -84,6 +128,21 @@ int AttendWork::fieldIndex(const QString &field)
 int *AttendWork::getWorkTime()
 {
     return workTimeData;
+}
+
+QJsonArray AttendWork::getWeekMyWorkTime()
+{
+    return weekMyWorkTime;
+}
+
+QJsonArray AttendWork::getWeekAllWorkStatus()
+{
+    return weekAllWorkStatus;
+}
+
+QJsonArray AttendWork::getWeekWorkMem()
+{
+    return weekWorkMem;
 }
 
 QSqlDatabase AttendWork::getDB()

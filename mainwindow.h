@@ -106,6 +106,8 @@ private:
 
     ComboBoxDelegate comboxDelegateAuthority, comboxDelegateGender, comboxDelegateUserGroup, comboxDelegateUserDpt, comboxDelegateUserVerify;   //自定义数据代理
 
+    QString eChartsJsCode;
+
     void setHomePageBaseInfo();
 
     void setAttendPage();
@@ -318,6 +320,8 @@ private slots:
     void on_btn_beginAttend_clicked();
 
     void on_btn_endAttend_clicked();
+
+    void on_btn_switchChart_clicked();
 
     void on_PieSliceHighlight(bool show);
 

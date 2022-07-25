@@ -51,7 +51,7 @@ private:
     bool autoLoginSuccess = false;  //自动登录标记
     bool dbStatus = true;
     QPixmap *statusOKIcon, *statusErrorIcon;
-    checkUpdate updateSoftWare;
+    checkUpdate *updateSoftWare;
     void updateFinished(bool res);
 
 public:

@@ -17,7 +17,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MagicLight Assistant</string>
+   <string>MagicLitePlanet</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
@@ -163,7 +163,7 @@
     </font>
    </property>
    <property name="text">
-    <string>MagicLight Assistant</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Magic&amp;lt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Lite&lt;/span&gt;&amp;gt;Planet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QTabWidget" name="tabWidget">

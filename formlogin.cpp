@@ -56,10 +56,11 @@ formLogin::formLogin(QDialog *parent) :
     sqlWork = new SqlWork("loginDB");    //sql异步连接
     loginWork = new baseInfoWork();
     sqlThread = new QThread(), dbThread = new QThread();
+    updateSoftWare = new checkUpdate();
 
     sqlWork->moveToThread(dbThread);
     loginWork->moveToThread(sqlThread);
-    updateSoftWare.moveToThread(sqlThread);
+    updateSoftWare->moveToThread(sqlThread);
 
     //开启数据库连接线程
     dbThread->start();
@@ -90,8 +91,8 @@ formLogin::formLogin(QDialog *parent) :
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
-    connect(this, &formLogin::beginUpdate, &updateSoftWare, &checkUpdate::homeCheckUpdate);
-    connect(&updateSoftWare, &checkUpdate::homeCheckUpdateFinished, this, &formLogin::updateFinished);
+    connect(this, &formLogin::beginUpdate, updateSoftWare, &checkUpdate::homeCheckUpdate);
+    connect(updateSoftWare, &checkUpdate::homeCheckUpdateFinished, this, &formLogin::updateFinished);
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         if (!readPwd.isEmpty() && isAutoLogin)
         {
@@ -117,6 +118,7 @@ formLogin::~formLogin()
 
     delete loadingMovie;
     delete ui;
+    delete updateSoftWare;
     delete loginWork;
     delete sqlWork;
     delete dbThread;
@@ -180,13 +182,13 @@ QString formLogin::readLoginSettings()
 void formLogin::updateFinished(bool res)
 {
     if(!res)
-        QMessageBox::critical(this, "检查失败", "服务器地址错误或JSON格式错误！\n错误信息：" + updateSoftWare.getErrorInfo());
-    else if(updateSoftWare.getLatestVersion() > updateSoftWare.getCurVersion())
+        QMessageBox::critical(this, "检查失败", "服务器地址错误或JSON格式错误！\n错误信息：" + updateSoftWare->getErrorInfo());
+    else if(updateSoftWare->getLatestVersion() > updateSoftWare->getCurVersion())
     {
-        QString str = updateSoftWare.getUpdateString();
+        QString str = updateSoftWare->getUpdateString();
         int ret = QMessageBox::warning(this, "检查更新", str, "前往下载", "暂不更新");
         if (ret == 0)
-            QDesktopServices::openUrl(updateSoftWare.getUrl());
+            QDesktopServices::openUrl(updateSoftWare->getUrl());
     }
 }
 
