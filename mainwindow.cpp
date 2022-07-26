@@ -294,6 +294,20 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::attendManageWorking, attendManageWork, &AttendManageWork::working);
     connect(this, &MainWindow::attendManageGetAvatar, attendManageWork, &AttendManageWork::loadAvatar);
     connect(this, &MainWindow::attendManageModelSubmitAll, attendManageWork, &AttendManageWork::submitAll);
+    connect(this, &MainWindow::attendDataOperate, attendManageWork, &AttendManageWork::dataOperate);
+    connect(attendManageWork, &AttendManageWork::dataOperateFinished, this, [=](bool res) {
+        disconnect(loadingMovie, &QMovie::frameChanged, this, 0);
+        ui->btn_oneMonth->setIcon(QIcon());
+        ui->btn_threeMonth->setIcon(QIcon());
+        ui->btn_removeAll->setIcon(QIcon(":/images/color_icon/color-warning_2.svg"));
+        if (res)
+        {
+            QMessageBox::information(this, "消息", "考勤数据更新完成，页面即将刷新。", QMessageBox::Ok);
+            on_actAttendManager_triggered();
+        }
+        else
+            QMessageBox::warning(this, "消息", "考勤数据更新失败，请检查网络或联系管理员。", QMessageBox::Ok);
+        }, Qt::UniqueConnection);
     connect(attendManageWork, &AttendManageWork::attendManageWorkFinished, this, &MainWindow::setAttendManagePage);
     connect(attendManageWork, &AttendManageWork::avatarFinished, this, [=](QPixmap avatar){
         if(avatar.isNull())
@@ -1837,6 +1851,51 @@ void MainWindow::on_btn_recoveryContents_clicked()
 {
     noticeModel->setFilter("isHide=0");
     ui->lineEdit_searchContents->clear();
+}
+
+void MainWindow::on_btn_oneMonth_clicked()
+{
+    QMessageBox::StandardButton res;
+    res = QMessageBox::warning(this, "警告", "确认仅保留所有用户一个月考勤数据吗？", QMessageBox::Yes | QMessageBox::No);
+    if (res == QMessageBox::Yes)
+    {
+        connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
+            {
+                Q_UNUSED(tmp);
+                ui->btn_oneMonth->setIcon(QIcon(loadingMovie->currentPixmap()));
+            });
+        emit attendDataOperate(1);
+    }
+}
+
+void MainWindow::on_btn_threeMonth_clicked()
+{
+    QMessageBox::StandardButton res;
+    res = QMessageBox::warning(this, "警告", "确认仅保留所有用户三个月考勤数据吗？", QMessageBox::Yes | QMessageBox::No);
+    if (res == QMessageBox::Yes)
+    {
+        connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
+            {
+                Q_UNUSED(tmp);
+                ui->btn_threeMonth->setIcon(QIcon(loadingMovie->currentPixmap()));
+            });
+        emit attendDataOperate(2);
+    }
+}
+
+void MainWindow::on_btn_removeAll_clicked()
+{
+    QMessageBox::StandardButton res;
+    res = QMessageBox::warning(this, "警告", "确认清除所有用户考勤数据吗？该操作不可逆，请谨慎操作。", QMessageBox::Yes | QMessageBox::No);
+    if (res == QMessageBox::Yes)
+    {
+        connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
+            {
+                Q_UNUSED(tmp);
+                ui->btn_removeAll->setIcon(QIcon(loadingMovie->currentPixmap()));
+            });
+        emit attendDataOperate(3);
+    }
 }
 
 void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)

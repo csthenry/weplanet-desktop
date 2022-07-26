@@ -55,6 +55,32 @@ void AttendManageWork::working()
     emit attendManageWorkFinished();
 }
 
+void AttendManageWork::dataOperate(int type)
+{
+    QDateTime curDateTime = QDateTime::currentDateTime();
+    switch (type)
+    {
+    case 1:curDateTime = curDateTime.addMonths(-1);
+        break;
+    case 2:curDateTime = curDateTime.addMonths(-3);
+        break;
+    default:
+        break;
+    }
+    QSqlQuery query(DB);
+    if(type == 1 || type == 2)
+        query.exec("DELETE FROM magic_attendance WHERE today<'" + curDateTime.date().toString("yyyy-MM-dd") + "'");
+    else if(type == 3)
+        query.exec("DELETE FROM magic_attendance");
+    else
+        emit dataOperateFinished(false);
+    if(query.lastError().isValid())
+        emit dataOperateFinished(false);
+    else
+        emit dataOperateFinished(true);
+}
+
+
 void AttendManageWork::getComboxItems()
 {
     //获取用户组和部门

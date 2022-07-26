@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -4346,7 +4346,7 @@ padding: 0px 5px;</string>
                 </size>
                </property>
                <property name="text">
-                <string>补签</string>
+                <string>补签当前用户</string>
                </property>
               </widget>
              </item>
@@ -4362,21 +4362,21 @@ padding: 0px 5px;</string>
                 </size>
                </property>
                <property name="text">
-                <string>退签</string>
+                <string>退签当前用户</string>
                </property>
               </widget>
              </item>
              <item row="4" column="0" colspan="2">
               <widget class="QGroupBox" name="groupBox_52">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="title">
-                <string>数据管理*</string>
+                <string>考勤数据管理*</string>
                </property>
                <layout class="QGridLayout" name="gridLayout_104">
                 <item row="0" column="0">
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="btn_oneMonth">
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -4389,7 +4389,7 @@ padding: 0px 5px;</string>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QPushButton" name="pushButton_2">
+                 <widget class="QPushButton" name="btn_threeMonth">
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -4402,7 +4402,7 @@ padding: 0px 5px;</string>
                  </widget>
                 </item>
                 <item row="0" column="2">
-                 <widget class="QPushButton" name="pushButton_3">
+                 <widget class="QPushButton" name="btn_removeAll">
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -4411,6 +4411,10 @@ padding: 0px 5px;</string>
                   </property>
                   <property name="text">
                    <string>清理所有数据</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resource.qrc">
+                    <normaloff>:/images/color_icon/color-warning_2.svg</normaloff>:/images/color_icon/color-warning_2.svg</iconset>
                   </property>
                  </widget>
                 </item>
@@ -4598,7 +4602,7 @@ padding: 0px 5px;</string>
            </font>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab">
            <attribute name="title">
@@ -6073,7 +6077,13 @@ padding: 0px 5px;</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>200</height>
+               <height>150</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>150</height>
               </size>
              </property>
              <property name="contextMenuPolicy">
@@ -6086,18 +6096,37 @@ padding: 0px 5px;</string>
              </property>
             </widget>
            </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_102">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;本项目使用的第三方库：&lt;/p&gt;&lt;p&gt;[1]. Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn&lt;/p&gt;&lt;p&gt;[2]. ECharts, https://echarts.apache.org&lt;br/&gt;&lt;/p&gt;&lt;p&gt;开源协议：&lt;/p&gt;&lt;p&gt;GPL-3.0 License, https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Copyright (C) 2017-2022 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::AutoText</enum>
+             </property>
+             <property name="scaledContents">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="0">
-            <spacer name="verticalSpacer_10">
+            <widget class="Line" name="line_4">
+             <property name="frameShadow">
+              <enum>QFrame::Sunken</enum>
+             </property>
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
           </layout>
          </widget>
