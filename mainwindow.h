@@ -281,6 +281,12 @@ private slots:
 
     void on_btn_recoveryContents_clicked();
 
+    void on_btn_oneMonth_clicked();
+
+    void on_btn_threeMonth_clicked();
+
+    void on_btn_removeAll_clicked();
+
     void on_lineEdit_manageContents_textChanged(const QString& arg1);
 
     void on_comboBox_group_currentIndexChanged(const QString &arg1);
@@ -414,6 +420,8 @@ signals:
     void posterSubmitAll();
 
     void beginUpdate(QLabel* label, QWidget* parent);
+
+    void attendDataOperate(int type);
 private:
     Ui::MainWindow *ui;
 };

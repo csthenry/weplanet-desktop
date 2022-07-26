@@ -22,6 +22,7 @@ public:
     void submitAll(int type);   //1补签 0退签
     void loadAvatar();
     void setCombox(QComboBox* group, QComboBox* department);
+    void dataOperate(int type);
     QSqlDatabase getDB();
 private:
     service db_service;
@@ -37,6 +38,7 @@ signals:
     void submitAddFinished(bool);
     void submitDelFinished(bool);
     void avatarFinished(QPixmap curPix);
+    void dataOperateFinished(bool);
 };
 
 #endif // ATTENDMANAGEWORK_H

@@ -25,6 +25,11 @@ void AttendWork::working()
     relTableModel->select();
     relTableModel->setFilter("a_uid='" + uid +"'");
 
+    //将未签退的考勤项签退，签退时间23:59:59
+    QDateTime curDateTime = QDateTime::currentDateTime();
+    QSqlQuery query(DB);
+    query.exec("UPDATE magic_attendance SET end_date='23:59:59' WHERE today<'" + curDateTime.date().toString("yyyy-MM-dd") + "' AND end_date IS NULL");
+
     //分析工作时间
     analyseWorkTime();
 
