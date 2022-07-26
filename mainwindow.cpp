@@ -2038,11 +2038,18 @@ void MainWindow::on_btn_personalSubmit_clicked()
         QMessageBox::warning(this, "警告", "请输入6~16位的密码以确保安全。", QMessageBox::Ok);
         return;
     }
+    connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
+        {
+            Q_UNUSED(tmp);
+            ui->btn_personalSubmit->setIcon(QIcon(loadingMovie->currentPixmap()));
+        });
     emit editPersonalInfo(ui->lineEdit_checkOldPwd->text(), newTel, newMail, newAvatar, newPwd);
 }
 
 void MainWindow::on_editPersonalInfoRes(int res)
 {
+    disconnect(loadingMovie, &QMovie::frameChanged, this, 0);
+    ui->btn_personalSubmit->setIcon(QIcon());
     if(res == -1)
     {
         QMessageBox::warning(this, "消息", "验证原密码验证失败，请检查原密码是否填写正确。", QMessageBox::Ok);
