@@ -209,7 +209,7 @@ void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, c
 {
     DB.open();
     QSqlQuery query(DB);
-    if(service::authAccount(DB, uid, uid.toLongLong(), service::pwdEncrypt(oldPwd)))
+    if(service::authAccount(DB, uid, uid.toLongLong(), service::pwdEncrypt(oldPwd)) == 200)
     {
         if(!tel.isEmpty())
             query.exec("UPDATE magic_users SET telephone='" + tel +"' WHERE uid='" + uid +"';");

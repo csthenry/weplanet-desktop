@@ -71,8 +71,8 @@ private:
 signals:
 
 	void finished();
-    void homeCheckUpdateFinished(bool res);
 
+    void homeCheckUpdateFinished(bool res);
 };
 
 #endif // CHECKUPDATE_H

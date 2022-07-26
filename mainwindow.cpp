@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->info_avatar->setScaledContents(true);
 
     ui->webEngineView->page()->setBackgroundColor(Qt::transparent);
+    ui->webEngineView_about->page()->setBackgroundColor(Qt::transparent);
+    ui->webEngineView->setUrl(QUrl("qrc:/images/loading.html"));
     ui->webEngineView_eCharts->page()->setBackgroundColor(Qt::transparent);
 
     //用户权限设置（共8个）

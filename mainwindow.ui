@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>15</number>
+       <number>12</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2889,6 +2889,9 @@ p, li { white-space: pre-wrap; }
            <layout class="QGridLayout" name="gridLayout_111">
             <item row="0" column="0" colspan="4">
              <widget class="QWebEngineView" name="webEngineView_eCharts">
+              <property name="contextMenuPolicy">
+               <enum>Qt::NoContextMenu</enum>
+              </property>
               <property name="url">
                <url>
                 <string>qrc:/lib/eCharts/echarts.html</string>
@@ -6039,7 +6042,39 @@ padding: 0px 5px;</string>
           <property name="title">
            <string>更多</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_101"/>
+          <layout class="QGridLayout" name="gridLayout_101">
+           <item row="0" column="0">
+            <widget class="QWebEngineView" name="webEngineView_about">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="contextMenuPolicy">
+              <enum>Qt::NoContextMenu</enum>
+             </property>
+             <property name="url">
+              <url>
+               <string>qrc:/lib/eCharts/echarts_about.html</string>
+              </url>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <spacer name="verticalSpacer_10">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -6048,6 +6083,9 @@ padding: 0px 5px;</string>
        <layout class="QGridLayout" name="gridLayout_68">
         <item row="0" column="0">
          <widget class="QWebEngineView" name="webEngineView">
+          <property name="contextMenuPolicy">
+           <enum>Qt::NoContextMenu</enum>
+          </property>
           <property name="styleSheet">
            <string notr="true"/>
           </property>

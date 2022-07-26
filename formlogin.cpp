@@ -92,6 +92,8 @@ formLogin::formLogin(QDialog *parent) :
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
     connect(this, &formLogin::beginUpdate, updateSoftWare, &checkUpdate::homeCheckUpdate);
+    //更新检测
+    emit beginUpdate();
     connect(updateSoftWare, &checkUpdate::homeCheckUpdateFinished, this, &formLogin::updateFinished);
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         if (!readPwd.isEmpty() && isAutoLogin)
@@ -103,8 +105,6 @@ formLogin::formLogin(QDialog *parent) :
         {
             emit initDatabase();    //初始化数据库
         }
-        //更新检测
-        emit beginUpdate();
     }, Qt::UniqueConnection);
 
 }

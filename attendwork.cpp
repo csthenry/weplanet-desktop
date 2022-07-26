@@ -72,10 +72,7 @@ void AttendWork::analyseWorkTime()
             {
                 beginTime = QTime::fromString(curRecord.value("begin_date").toString(), "hh:mm:ss");
                 if (curRecord.value("end_date").isNull())
-                {
-                    qDebug() << "curRecord.value().isNull()";
                     endTime = QTime::fromString(QDateTime::currentDateTime().time().toString(), "hh:mm:ss");
-                }
                 else
                     endTime = QTime::fromString(curRecord.value("end_date").toString(), "hh:mm:ss");
                 workTime = workTime.addSecs(beginTime.secsTo(endTime));

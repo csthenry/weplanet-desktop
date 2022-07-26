@@ -101,5 +101,6 @@
     <qresource prefix="/lib">
         <file>eCharts/echarts.html</file>
         <file>eCharts/echarts.min.js</file>
+        <file>eCharts/echarts_about.html</file>
     </qresource>
 </RCC>
