@@ -677,6 +677,15 @@ padding: 0px 5px;</string>
    <property name="text">
     <string/>
    </property>
+   <property name="pixmap">
+    <pixmap resource="resource.qrc">:/images/color_icon/loading.gif</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
  </widget>
  <resources>

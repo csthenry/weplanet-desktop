@@ -1,0 +1,72 @@
+<svg width="39" height="39" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" class="lds-spinner">
+ <g>
+  <rect fill="none" id="canvas_background" height="41" width="41" y="-1" x="-1"/>
+ </g>
+ <g>
+  <g id="svg_1">
+   <rect id="svg_2" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+       <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9230769230769231s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_3" transform="rotate(27.69230842590332 19.250560760498036,19.402814865112305) ">
+   <rect id="svg_4" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+       <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8461538461538461s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_5" transform="rotate(55.38461685180664 19.250535964965813,19.40279579162598) ">
+   <rect id="svg_6" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+       <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.7692307692307693s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_7" transform="rotate(83.07691955566406 19.250713348388675,19.40272712707519) ">
+   <rect id="svg_8" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+       <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6923076923076923s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_9" transform="rotate(110.76923370361328 19.25052261352539,19.40278053283691) ">
+   <rect id="svg_10" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6153846153846154s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_11" transform="rotate(138.46153259277344 19.25009536743164,19.40294075012207) ">
+   <rect id="svg_12" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+       <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5384615384615384s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_13" transform="rotate(166.15383911132812 19.25094985961914,19.402656555175778) ">
+   <rect id="svg_14" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+       <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.46153846153846156s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_15" transform="rotate(193.84616088867188 19.250526428222653,19.40279579162598) ">
+   <rect id="svg_16" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.38461538461538464s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_17" transform="rotate(221.53846740722656 19.250537872314453,19.402795791625977) ">
+   <rect id="svg_18" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3076923076923077s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_19" transform="rotate(249.23077392578125 19.250534057617188,19.40276527404785) ">
+   <rect id="svg_20" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.23076923076923078s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_21" transform="rotate(276.9230651855469 19.250240325927734,19.402809143066406) ">
+   <rect id="svg_22" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.15384615384615385s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_23" transform="rotate(304.6153869628906 19.250644683837884,19.402769088745114) ">
+   <rect id="svg_24" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.07692307692307693s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+  <g id="svg_25" transform="rotate(332.30767822265625 19.250612258911133,19.402900695800785) ">
+   <rect id="svg_26" fill="#333" height="12" width="2" y="1.40281" x="18.25051">
+       <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
+  </rect>
+  </g>
+ </g>
+</svg>
