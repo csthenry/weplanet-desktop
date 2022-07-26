@@ -69,6 +69,5 @@
 [![Star History Chart](https://api.star-history.com/svg?repos=csthenry/MagicLitePlanet&type=Date)](https://star-history.com/#csthenry/MagicLitePlanet&Date)
 
 ---
-该项目已同步至Gitee：https://gitee.com/csthenry/MagicLightAssistant
 
 Copyright (C) 2017-2022 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
