@@ -41,16 +41,24 @@ formLogin::formLogin(QDialog *parent) :
     ui->labelIcon->setScaledContents(true);    //图片自适应大小
     ui->mainIcon->setScaledContents(true);
     ui->mainIcon->setPixmap(mainicon);
-    ui->labelIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
+    //ui->labelIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
 
     //加载动画
     loadingMovie = new QMovie(":/images/color_icon/loading.gif");
+    loadingMovie_2 = new QMovie(":/images/color_icon/loading.gif");
+    connect(loadingMovie_2, &QMovie::frameChanged, this, [=](int tmp)
+        {
+            Q_UNUSED(tmp);
+            ui->labelIcon->setPixmap(loadingMovie_2->currentPixmap());
+        });
     connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
         {
             Q_UNUSED(tmp);
             ui->btn_Login->setIcon(QIcon(loadingMovie->currentPixmap()));
 			ui->btn_Signup->setIcon(QIcon(loadingMovie->currentPixmap()));
         });
+    loadingMovie_2->start();
+    ui->labelIcon->setMovie(loadingMovie_2);
 
     //多线程相关
     sqlWork = new SqlWork("loginDB");    //sql异步连接
@@ -115,8 +123,10 @@ formLogin::~formLogin()
     if (!isQuit)
         beforeAccept();
     loadingMovie->stop();
+    loadingMovie_2->stop();
 
     delete loadingMovie;
+    delete loadingMovie_2;
     delete ui;
     delete updateSoftWare;
     delete loginWork;
@@ -307,6 +317,7 @@ void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)
 
 void formLogin::on_statusChanged(const bool status)
 {
+    loadingMovie_2->stop();
     ui->btn_Login->setEnabled(status);
     ui->btn_Signup->setEnabled(status);
     if(status)

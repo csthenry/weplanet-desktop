@@ -42,7 +42,7 @@ private:
     baseInfoWork *loginWork;
     QThread *sqlThread, *dbThread;
 
-    QMovie *loadingMovie;
+    QMovie *loadingMovie, *loadingMovie_2;
     QString readPwd;    //保存的密码
     QString loginUid;   //登录成功的uid
     void writeLoginSettings();
