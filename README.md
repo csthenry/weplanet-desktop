@@ -64,7 +64,7 @@
 
 ### LICENSE
 
-[GPL-3.0 License](https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE)
+[GPL-3.0 License](https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE)
 
 [![Star History Chart](https://api.star-history.com/svg?repos=csthenry/MagicLitePlanet&type=Date)](https://star-history.com/#csthenry/MagicLitePlanet&Date)
 
