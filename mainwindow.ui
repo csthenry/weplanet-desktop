@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>12</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -6077,13 +6077,13 @@ padding: 0px 5px;</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>150</height>
+               <height>100</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>150</height>
+               <height>100</height>
               </size>
              </property>
              <property name="contextMenuPolicy">
@@ -6102,7 +6102,7 @@ padding: 0px 5px;</string>
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;本项目使用的第三方库：&lt;/p&gt;&lt;p&gt;[1]. Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn&lt;/p&gt;&lt;p&gt;[2]. ECharts, https://echarts.apache.org&lt;br/&gt;&lt;/p&gt;&lt;p&gt;开源协议：&lt;/p&gt;&lt;p&gt;GPL-3.0 License, https://github.com/CSTHenry/MagicGMS/blob/master/LICENSE&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Copyright (C) 2017-2022 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1]. Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn&lt;/p&gt;&lt;p&gt;[2]. ECharts, https://echarts.apache.org&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2022 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="textFormat">
               <enum>Qt::AutoText</enum>
@@ -6115,6 +6115,9 @@ padding: 0px 5px;</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
+             </property>
+             <property name="openExternalLinks">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
