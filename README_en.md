@@ -6,9 +6,9 @@
 ![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicLitePlanet?include_prereleases&style=flat-square)
 ![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicLitePlanet/total?style=flat-square)
 
-🚀MagicLitePlanet - Interactive system for small group
+🚀MagicLitePlanet - Interactive system for small groups
 
-  The functions of communication, analysis, management, approval... are all incredibly integrated in **Magic<Lite\>Planet** that great, minimalist and lightweight.
+  The functions of communication, analysis, management, approval... are all incredibly integrated in **Magic<Lite\>Planet**.
   
 - OS：Windows x64
 - IDE：Visual Studio 2022 MSVC
@@ -43,7 +43,7 @@
 * [ ] Community chat
 * [ ] More...
 
-### Screenshot
+### Screenshots
 
 ![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_11.png)
 ![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_10.png)
@@ -52,7 +52,7 @@
 ![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_6.png)
 ![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_9.png)
 
-more screenshot：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
+more screenshots：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
 
 ### Tips：
 
