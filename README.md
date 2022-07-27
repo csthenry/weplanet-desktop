@@ -1,5 +1,7 @@
 # MagicLitePlanet
 
+[English Readme](https://github.com/csthenry/MagicLitePlanet/blob/master/README_en.md)
+
 ![GitHub license](https://img.shields.io/github/license/CSTHenry/MagicLitePlanet?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/CSTHenry/MagicLitePlanet?style=flat-square)
 ![GitHub stars](https://img.shields.io/github/stars/CSTHenry/MagicLitePlanet?style=flat-square)
