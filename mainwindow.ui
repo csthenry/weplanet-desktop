@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>12</number>
+       <number>14</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -1896,6 +1896,19 @@ padding: 0px 5px;</string>
                        </property>
                       </widget>
                      </item>
+                     <item row="0" column="3">
+                      <spacer name="horizontalSpacer_15">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
                     </layout>
                    </item>
                    <item row="1" column="0">
@@ -2103,6 +2116,10 @@ p, li { white-space: pre-wrap; }
               <property name="text">
                <string>取消报名</string>
               </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-error.svg</normaloff>:/images/color_icon/color-error.svg</iconset>
+              </property>
              </widget>
             </item>
             <item row="1" column="6">
@@ -2189,6 +2206,10 @@ padding: 0px 5px;</string>
               </property>
               <property name="text">
                <string>报名活动</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-flag.svg</normaloff>:/images/color_icon/color-flag.svg</iconset>
               </property>
              </widget>
             </item>
@@ -2533,6 +2554,70 @@ p, li { white-space: pre-wrap; }
            <layout class="QGridLayout" name="gridLayout_38">
             <item row="0" column="0">
              <widget class="QSplitter" name="splitter_2">
+              <property name="palette">
+               <palette>
+                <active>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                 <colorrole role="Window">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="0">
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </active>
+                <inactive>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                 <colorrole role="Window">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="0">
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </inactive>
+                <disabled>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="0">
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                 <colorrole role="Window">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="0">
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </disabled>
+               </palette>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -2783,6 +2868,70 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="1" column="0" colspan="3">
                  <widget class="QChartView" name="chartView_attend">
+                  <property name="palette">
+                   <palette>
+                    <active>
+                     <colorrole role="Base">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="0">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="AlternateBase">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                    </active>
+                    <inactive>
+                     <colorrole role="Base">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="0">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="AlternateBase">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                    </inactive>
+                    <disabled>
+                     <colorrole role="Base">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="0">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="AlternateBase">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                    </disabled>
+                   </palette>
+                  </property>
                   <property name="font">
                    <font>
                     <family>微软雅黑</family>
@@ -2808,7 +2957,11 @@ p, li { white-space: pre-wrap; }
                      </size>
                     </property>
                     <property name="text">
-                     <string>签到</string>
+                     <string>今日签到</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="resource.qrc">
+                      <normaloff>:/images/color_icon/approve_3.svg</normaloff>:/images/color_icon/approve_3.svg</iconset>
                     </property>
                    </widget>
                   </item>
@@ -2821,7 +2974,11 @@ p, li { white-space: pre-wrap; }
                      </size>
                     </property>
                     <property name="text">
-                     <string>签退</string>
+                     <string>今日签退</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="resource.qrc">
+                      <normaloff>:/images/color_icon/approve_2.svg</normaloff>:/images/color_icon/approve_2.svg</iconset>
                     </property>
                    </widget>
                   </item>
@@ -2917,7 +3074,7 @@ p, li { white-space: pre-wrap; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resource.qrc">:/images/logo/heart.svg</pixmap>
+               <pixmap resource="resource.qrc">:/images/color_icon/color-chart.svg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -3480,7 +3637,7 @@ padding: 0px 5px;</string>
                </size>
               </property>
               <property name="text">
-               <string>确认修改（谨慎操作*）</string>
+               <string>确认修改</string>
               </property>
               <property name="icon">
                <iconset resource="resource.qrc">
@@ -3607,7 +3764,7 @@ padding: 0px 5px;</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resource.qrc">
-                    <normaloff>:/images/color_icon/color-warning.svg</normaloff>:/images/color_icon/color-warning.svg</iconset>
+                    <normaloff>:/images/color_icon/color-warning_2.svg</normaloff>:/images/color_icon/color-warning_2.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -3630,7 +3787,7 @@ padding: 0px 5px;</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resource.qrc">
-                    <normaloff>:/images/color_icon/color-contact.svg</normaloff>:/images/color_icon/color-contact.svg</iconset>
+                    <normaloff>:/images/color_icon/color-star_2.svg</normaloff>:/images/color_icon/color-star_2.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -3656,7 +3813,7 @@ padding: 0px 5px;</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resource.qrc">
-                    <normaloff>:/images/color_icon/color-warning_2.svg</normaloff>:/images/color_icon/color-warning_2.svg</iconset>
+                    <normaloff>:/images/color_icon/color-error.svg</normaloff>:/images/color_icon/color-error.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -4348,6 +4505,10 @@ padding: 0px 5px;</string>
                <property name="text">
                 <string>补签当前用户</string>
                </property>
+               <property name="icon">
+                <iconset resource="resource.qrc">
+                 <normaloff>:/images/color_icon/color-addtag.svg</normaloff>:/images/color_icon/color-addtag.svg</iconset>
+               </property>
               </widget>
              </item>
              <item row="3" column="1">
@@ -4363,6 +4524,10 @@ padding: 0px 5px;</string>
                </property>
                <property name="text">
                 <string>退签当前用户</string>
+               </property>
+               <property name="icon">
+                <iconset resource="resource.qrc">
+                 <normaloff>:/images/color_icon/color-error.svg</normaloff>:/images/color_icon/color-error.svg</iconset>
                </property>
               </widget>
              </item>
@@ -4602,7 +4767,7 @@ padding: 0px 5px;</string>
            </font>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="tab">
            <attribute name="title">
@@ -4936,6 +5101,10 @@ padding: 0px 5px;</string>
               <property name="text">
                <string>发布活动</string>
               </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
+              </property>
              </widget>
             </item>
             <item row="5" column="2" colspan="2">
@@ -4953,6 +5122,10 @@ padding: 0px 5px;</string>
               </property>
               <property name="text">
                <string>清空内容</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-trash.svg</normaloff>:/images/color_icon/color-trash.svg</iconset>
               </property>
              </widget>
             </item>
@@ -5334,6 +5507,10 @@ padding: 0px 5px;</string>
               <property name="text">
                <string>更新活动</string>
               </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-upload_cloud.svg</normaloff>:/images/color_icon/color-upload_cloud.svg</iconset>
+              </property>
              </widget>
             </item>
             <item row="5" column="2" colspan="2">
@@ -5351,6 +5528,10 @@ padding: 0px 5px;</string>
               </property>
               <property name="text">
                <string>删除活动</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-trash.svg</normaloff>:/images/color_icon/color-trash.svg</iconset>
               </property>
              </widget>
             </item>
