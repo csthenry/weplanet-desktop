@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>14</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -1791,7 +1791,7 @@ padding: 0px 5px;</string>
                   <widget class="QTableView" name="tableView_activity">
                    <property name="minimumSize">
                     <size>
-                     <width>750</width>
+                     <width>800</width>
                      <height>0</height>
                     </size>
                    </property>
