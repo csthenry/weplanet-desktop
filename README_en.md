@@ -43,7 +43,7 @@
 * [ ] Community chat
 * [ ] More...
 
-### Screenshot
+### Screenshots
 
 ![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_11.png)
 ![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_10.png)
@@ -52,7 +52,7 @@
 ![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_6.png)
 ![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_9.png)
 
-more screenshot：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
+more screenshots：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
 
 ### Tips：
 
