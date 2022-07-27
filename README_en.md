@@ -21,26 +21,26 @@
 
 **Finished：**
 
-* [x] register/log in
+* [x] Register/Login
 * [x] Attendance System
-* [x] Personal Information Management
-* [x] User Management
-* [x] Version Notice
+* [x] Personal profile management
+* [x] User management
+* [x] Announcement of version
 * [x] Activity system
-* [x] Custom permission system
+* [x] Custom authority system of users
 * [x] Organizational structure management
-* [x] notification and dynamic system based on Markdown
-* [x] Statistics chart
+* [x] Announcement and Dynamic System based on Markdown
+* [x] Statistics charts
 * [x] Data classification export
-* [x] Update
-* [x] login security system
-* [x] Data great panel based on ECharts
+* [x] Auto-Check for updates
+* [x] Login Security System
+* [x] Great data panel based on ECharts
 
 **Developing：**
 
-* [ ] Approval system
+* [ ] Approval System
 * [ ] Approval Process Design Module
-* [ ] Community chat
+* [ ] Community Chat System
 * [ ] More...
 
 ### Screenshots
