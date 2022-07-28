@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1350</width>
-    <height>750</height>
+    <width>1390</width>
+    <height>758</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1350</width>
-    <height>750</height>
+    <width>1390</width>
+    <height>758</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -7126,6 +7126,7 @@ padding: 0px 5px;</string>
    <addaction name="actGroup"/>
    <addaction name="actRefresh"/>
    <addaction name="separator"/>
+   <addaction name="actPanel"/>
    <addaction name="actMore"/>
    <addaction name="actExit"/>
   </widget>
@@ -7267,13 +7268,13 @@ padding: 0px 5px;</string>
   <action name="actMessage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-mail_2.svg</normaloff>:/images/color_icon/color-mail_2.svg</iconset>
+     <normaloff>:/images/color_icon/color-reviews.svg</normaloff>:/images/color_icon/color-reviews.svg</iconset>
    </property>
    <property name="text">
-    <string>信箱</string>
+    <string>聊天</string>
    </property>
    <property name="toolTip">
-    <string>信箱</string>
+    <string>聊天</string>
    </property>
   </action>
   <action name="actManage">
@@ -7334,6 +7335,18 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>动态管理</string>
+   </property>
+  </action>
+  <action name="actPanel">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-chart.svg</normaloff>:/images/color_icon/color-chart.svg</iconset>
+   </property>
+   <property name="text">
+    <string>数据大屏</string>
+   </property>
+   <property name="toolTip">
+    <string>数据大屏</string>
    </property>
   </action>
  </widget>

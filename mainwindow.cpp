@@ -853,8 +853,6 @@ void MainWindow::setActivityManagePage()
 
 void MainWindow::setNoticeManagePage()
 {
-    ui->stackedWidget->setCurrentIndex(14);
-    noticeManageModel->setFilter("author_id=" + uid);
     ui->tableView_mContents->setModel(noticeManageModel);
     noticeEditMapper->setModel(noticeManageModel);
     noticeEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
@@ -878,6 +876,8 @@ void MainWindow::setNoticeManagePage()
     noticeEditMapper->addMapping(ui->checkBox_mCisHide, 6);
     noticeEditMapper->addMapping(ui->rBtn_mCPost, 5);
 
+    noticeManageModel->setFilter("author_id=" + uid);
+    ui->stackedWidget->setCurrentIndex(14);
 }
 
 void MainWindow::setNoticePage()
