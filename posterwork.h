@@ -21,6 +21,7 @@ public:
 	void setModel(QSqlTableModel* model);
 	void setManageModel(QSqlTableModel* model);
 	void setWorkType(int type);
+	void poster_statistics();
 
 	bool cache = false;		//ÐÂÄÚÈÝ»º´æ
 	int cacheRow = -1;		//»º´ærow

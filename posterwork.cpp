@@ -65,3 +65,17 @@ void PosterWork::setWorkType(int type)
 {
     workType = type;
 }
+
+void PosterWork::poster_statistics()
+{
+    DB.open();
+    QSqlQuery statistics(DB);
+
+    //统计动态发布量
+    statistics.exec("SELECT * FROM magic_statistics WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    if (statistics.next())
+        statistics.exec("UPDATE magic_statistics SET dynamics_cnt=dynamics_cnt+1 WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    else
+        statistics.exec("INSERT INTO magic_statistics (date, dynamics_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
+    statistics.clear();
+}
