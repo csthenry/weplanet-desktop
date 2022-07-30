@@ -248,6 +248,18 @@ bool service::initDatabaseTables(QSqlDatabase db)
         ")ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);
+    //统计数据表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_statistics"
+        "(date         date      NOT NULL DEFAULT 0,"
+        "login_cnt     int(10)   NOT NULL DEFAULT 0,"
+        "register_cnt  int(10)   NOT NULL DEFAULT 0,"
+        "get_cnt       int(10)   NOT NULL DEFAULT 0,"
+        "activity_cnt  int(10)   NOT NULL DEFAULT 0,"
+        "dynamics_cnt  int(10)   NOT NULL DEFAULT 0)"
+        "ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
     query.clear();
     
     return res;
@@ -256,7 +268,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
 int service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
 {
     db.open();
-    QSqlQuery query(db);
+    QSqlQuery query(db), statistics(db);
 
     if (account == 0 || QString::number(account).isEmpty() || pwd.isEmpty())
         return 403;
@@ -264,6 +276,13 @@ int service::authAccount(QSqlDatabase& db, QString& uid, const long long account
     bool net = query.exec("SELECT password, user_status FROM magic_users WHERE uid = " + QString::number(account));
     if (!net)
         return 500;
+    //统计登录请求量
+    statistics.exec("SELECT * FROM magic_statistics WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    if(statistics.next())
+        statistics.exec("UPDATE magic_statistics SET login_cnt=login_cnt+1 WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    else
+        statistics.exec("INSERT INTO magic_statistics (date, login_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
+    statistics.clear();
     if(query.next() && pwd == query.value("password").toString())
     {
         uid = QString::number(account);

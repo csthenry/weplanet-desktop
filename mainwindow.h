@@ -108,6 +108,10 @@ private:
 
     QString eChartsJsCode;
 
+    QJsonObject panel_seriesObj, panel_display;     //智慧大屏
+	
+	int panel_series_count = 14, panel_option = -1;
+
     void setHomePageBaseInfo();
 
     void setAttendPage();
@@ -141,6 +145,8 @@ private:
     void closeEvent(QCloseEvent* event);    //重写void closeEvent(QCloseEvent *event);
 
     void updateFinished();
+
+    void setStatisticsPanel(int option = 0, int days = -1);
 
     SqlWork *sqlWork;
 
@@ -190,6 +196,8 @@ private slots:
     void on_actGroup_triggered();
 
     void on_actMore_triggered() const;
+
+    void on_actPanel_triggered();
 
     void on_actRefresh_triggered();
 
@@ -286,6 +294,20 @@ private slots:
     void on_btn_threeMonth_clicked();
 
     void on_btn_removeAll_clicked();
+
+    void on_btn_switchPanel_clicked();
+
+    void on_btn_panel_clicked();
+
+    void on_btn_loginCnt_clicked();
+
+    void on_btn_registerCnt_clicked();
+
+    void on_btn_getCnt_clicked();
+
+    void on_btn_actCnt_clicked();
+
+    void on_btn_dyCnt_clicked();
 
     void on_lineEdit_manageContents_textChanged(const QString& arg1);
 
@@ -422,6 +444,12 @@ signals:
     void beginUpdate(QLabel* label, QWidget* parent);
 
     void attendDataOperate(int type);
+
+    void get_statistics();
+
+    void poster_statistics();
+
+    void loadStatisticsPanel();
 private:
     Ui::MainWindow *ui;
 };

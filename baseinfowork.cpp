@@ -187,8 +187,17 @@ void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
 void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender)
 {
     DB.open();
-    QSqlQuery query(DB);
+    QSqlQuery query(DB), statistics(DB);
     QString creatQueryStr;
+	
+    //统计注册请求量
+    statistics.exec("SELECT * FROM magic_statistics WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    if (statistics.next())
+        statistics.exec("UPDATE magic_statistics SET register_cnt=register_cnt+1 WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    else
+        statistics.exec("INSERT INTO magic_statistics (date, register_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
+    statistics.clear();
+	
     creatQueryStr =
             "INSERT INTO magic_users"
             "(password, name, user_group, user_dpt, telephone, gender, score, user_status)"
@@ -262,6 +271,80 @@ void baseInfoWork::updateScore(float score)
     qDebug() << "正在将已完成活动学时写入数据库...";
     QSqlQuery query(DB);
     query.exec("UPDATE magic_users SET score ='" + QString::number(score) + "' + score WHERE uid = '" + uid + "'");
+}
+
+void baseInfoWork::get_statistics()
+{
+    DB.open();
+    QSqlQuery statistics(DB);
+
+    //统计心跳请求量
+    statistics.exec("SELECT * FROM magic_statistics WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    if (statistics.next())
+        statistics.exec("UPDATE magic_statistics SET get_cnt=get_cnt+1 WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+    else
+        statistics.exec("INSERT INTO magic_statistics (date, get_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
+    statistics.clear();
+}
+
+void baseInfoWork::loadStatisticsPanel()
+{
+    DB.open();
+	QSqlQuery query(DB);
+	QDateTime date = QDateTime::currentDateTime();
+    QJsonArray login_cnt, register_cnt, get_cnt, activity_cnt, dynamices_cnt;   //14天数据
+    QJsonArray login_cnt_half, register_cnt_half, get_cnt_half, activity_cnt_half, dynamices_cnt_half;  //7天数据
+    date = date.addDays(-14);
+    for (int i = 0; i < 14; i++)
+    {
+        date = date.addDays(1);
+        query.exec("SELECT * FROM magic_statistics WHERE date='" + date.date().toString("yyyy-MM-dd") + "'");
+        if (query.next())
+        {
+            QSqlRecord record = query.record();
+			login_cnt.append(record.value("login_cnt").toInt());
+			register_cnt.append(record.value("register_cnt").toInt());
+			get_cnt.append(record.value("get_cnt").toInt());
+			activity_cnt.append(record.value("activity_cnt").toInt());
+			dynamices_cnt.append(record.value("dynamics_cnt").toInt());
+        }
+        else
+        {   //当天没有记录，设初值0
+            login_cnt.append(0);
+			register_cnt.append(0);
+			get_cnt.append(0);
+			activity_cnt.append(0);
+			dynamices_cnt.append(0);
+        }
+    }
+    for (int i = 7; i < 14; i++)
+    {
+        login_cnt_half.append(login_cnt[i]);
+		register_cnt_half.append(register_cnt[i]);
+		get_cnt_half.append(get_cnt[i]);
+		activity_cnt_half.append(activity_cnt[i]);
+		dynamices_cnt_half.append(dynamices_cnt[i]);
+    }
+	//构建json obj
+    panelSeriesObj.insert("data_login", login_cnt);
+	panelSeriesObj.insert("data_register", register_cnt);
+	panelSeriesObj.insert("data_get", get_cnt);
+	panelSeriesObj.insert("data_activity", activity_cnt);
+	panelSeriesObj.insert("data_dynamices", dynamices_cnt);
+
+    panelSeriesObj_half.insert("data_login", login_cnt_half);
+	panelSeriesObj_half.insert("data_register", register_cnt_half);
+	panelSeriesObj_half.insert("data_get", get_cnt_half);
+	panelSeriesObj_half.insert("data_activity", activity_cnt_half);
+	panelSeriesObj_half.insert("data_dynamices", dynamices_cnt_half);
+	
+	query.clear();
+    emit loadStatisticsPanelFinished(0, -1);
+}
+
+QJsonObject baseInfoWork::getPanelSeriesObj(int type)
+{
+    return type == 1 ? panelSeriesObj : panelSeriesObj_half;
 }
 
 QString baseInfoWork::getName()

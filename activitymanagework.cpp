@@ -97,8 +97,19 @@ QSqlDatabase ActivityManageWork::getDB()
 void ActivityManageWork::submitAll()
 {
     bool res = true;
-    if(tabModel->isDirty())
-		res = tabModel->submitAll();
+    if (tabModel->isDirty())
+    {
+        res = tabModel->submitAll();
+        QSqlQuery statistics(DB);
+
+        //统计活动发布量
+        statistics.exec("SELECT * FROM magic_statistics WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+        if (statistics.next())
+            statistics.exec("UPDATE magic_statistics SET activity_cnt=activity_cnt+1 WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
+        else
+            statistics.exec("INSERT INTO magic_statistics (date, activity_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
+        statistics.clear();
+    }
     emit submitAllFinished(res);
 }
 

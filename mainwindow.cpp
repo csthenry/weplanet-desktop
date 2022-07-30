@@ -1,5 +1,5 @@
 ﻿/***************************************************/
-/*              Magic Light Assistant              */
+/*                 MagicLitePlanet                 */
 /* Copyright (c) 2017-2021 by bytecho.net          */
 /* Written by Henry                                */
 /* Function:                                       */
@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     ui->webEngineView->page()->setBackgroundColor(Qt::transparent);
     ui->webEngineView_about->page()->setBackgroundColor(Qt::transparent);
+	ui->webEngineView_panel->page()->setBackgroundColor(Qt::transparent);
     ui->webEngineView->setUrl(QUrl("qrc:/images/loading.html"));
     ui->webEngineView_eCharts->page()->setBackgroundColor(Qt::transparent);
 
@@ -194,6 +195,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         refTimer->start(5*60*1000);  //开启心跳query定时器（5分钟心跳）
     }, Qt::UniqueConnection);
 
+    connect(this, &MainWindow::get_statistics, setBaseInfoWork, &baseInfoWork::get_statistics);
+    connect(this, &MainWindow::loadStatisticsPanel, setBaseInfoWork, &baseInfoWork::loadStatisticsPanel);
+    connect(setBaseInfoWork, &baseInfoWork::loadStatisticsPanelFinished, this, &MainWindow::setStatisticsPanel);
+	
     //个人基本信息信号槽
     connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
     sqlThread->start();
@@ -407,6 +412,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::posterWorking, posterWork, &PosterWork::working);
     connect(posterWork, &PosterWork::contentsManageWorkFinished, this, &MainWindow::setNoticeManagePage);
     connect(posterWork, &PosterWork::contentsWorkFinished, this, &MainWindow::setNoticePage);
+    connect(this, &MainWindow::poster_statistics, posterWork, &PosterWork::poster_statistics);
 
     //组织架构管理信号槽
     connect(this, &MainWindow::groupManageWorking, groupManageWork, &GroupManageWork::working);
@@ -739,6 +745,59 @@ void MainWindow::setAttendPage()
     eChartsJsCode = QString(QJsonDocument(seriesObj).toJson());
 }
 
+void MainWindow::setStatisticsPanel(int option, int days)
+{
+    QJsonArray dateArray;
+    panel_option = option;
+    panel_series_count = 14;
+    panel_seriesObj = setBaseInfoWork->getPanelSeriesObj(1), panel_display;
+    if (days == 7)
+    {
+        panel_series_count = 7;
+        panel_seriesObj = setBaseInfoWork->getPanelSeriesObj(0);
+    }
+	//构建显示项
+    panel_display.insert("登录请求", false);
+	panel_display.insert("注册请求", false);
+    panel_display.insert("心跳请求", false);
+    panel_display.insert("新增活动", false);
+    panel_display.insert("新增动态", false);
+    if (panel_option == 0)
+    {
+        panel_display["登录请求"] = true;
+		panel_display["注册请求"] = true;
+		panel_display["心跳请求"] = true;
+		panel_display["新增活动"] = true;
+		panel_display["新增动态"] = true;
+        ui->label_panelChartMod->setText("HenryOS 智慧大屏（" + QString::number(panel_series_count) + "天）");
+    }
+    switch (panel_option)
+    {
+    case 1:panel_display["登录请求"] = true; ui->label_panelChartMod->setText("HenryOS 登录请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 2:panel_display["注册请求"] = true; ui->label_panelChartMod->setText("HenryOS 注册请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 3:panel_display["心跳请求"] = true; ui->label_panelChartMod->setText("HenryOS 心跳请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 4:panel_display["新增活动"] = true; ui->label_panelChartMod->setText("HenryOS 活动新增量（" + QString::number(panel_series_count) + "天）"); break;
+    case 5:panel_display["新增动态"] = true; ui->label_panelChartMod->setText("HenryOS 动态新增量（" + QString::number(panel_series_count) + "天）"); break;
+    default:
+        break;
+    }
+    QString date;
+    QString jsCode;
+    curDateTime = QDateTime::currentDateTime();
+    curDateTime = curDateTime.addDays(-panel_series_count);
+    for (int i = panel_series_count; i >= 1; i--)
+    {
+        curDateTime = curDateTime.addDays(1);
+        date = curDateTime.date().toString("MM.dd");
+        dateArray.append(date);
+    }
+    panel_seriesObj.insert("data_x", dateArray);
+    jsCode = QString("init(%1, %2)").arg(QString(QJsonDocument(panel_seriesObj).toJson()), QString(QJsonDocument(panel_display).toJson()));
+	ui->webEngineView_panel->page()->runJavaScript(jsCode);
+	if(ui->stackedWidget->currentIndex() != 16)
+        ui->stackedWidget->setCurrentIndex(16);
+}
+
 void MainWindow::on_PieSliceHighlight(bool show)
 { //鼠标移入、移出时触发hovered()信号，动态设置setExploded()效果
     QPieSlice *slice;
@@ -853,8 +912,6 @@ void MainWindow::setActivityManagePage()
 
 void MainWindow::setNoticeManagePage()
 {
-    ui->stackedWidget->setCurrentIndex(14);
-    noticeManageModel->setFilter("author_id=" + uid);
     ui->tableView_mContents->setModel(noticeManageModel);
     noticeEditMapper->setModel(noticeManageModel);
     noticeEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
@@ -878,6 +935,8 @@ void MainWindow::setNoticeManagePage()
     noticeEditMapper->addMapping(ui->checkBox_mCisHide, 6);
     noticeEditMapper->addMapping(ui->rBtn_mCPost, 5);
 
+    noticeManageModel->setFilter("author_id=" + uid);
+    ui->stackedWidget->setCurrentIndex(14);
 }
 
 void MainWindow::setNoticePage()
@@ -1134,9 +1193,16 @@ void MainWindow::on_actMore_triggered() const
     ui->stackedWidget->setCurrentIndex(12);
 }
 
+void MainWindow::on_actPanel_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(13);
+    emit loadStatisticsPanel();
+}
+
 void MainWindow::on_actRefresh_triggered()
 {
     qDebug() << "心跳query...";
+    emit get_statistics();  //统计心跳请求量
     trayIcon->setToolTip("MagicLitePlanet - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
     int index = ui->stackedWidget->currentIndex();
     switch (index)
@@ -1155,6 +1221,7 @@ void MainWindow::on_actRefresh_triggered()
     case 11: on_actGroup_triggered(); break;
     case 14: on_actNoticeManage_triggered(); break;
     case 15: on_actNotice_triggered(); break;
+    case 16: on_actPanel_triggered(); break;
 
     default:
         break;
@@ -1673,6 +1740,11 @@ void MainWindow::on_rBtn_man_clicked()
     userManageModel->setFilter("gender='男'");
 }
 
+void MainWindow::on_btn_getCnt_clicked()
+{
+    setStatisticsPanel(3, panel_series_count);
+}
+
 void MainWindow::on_rBtn_woman_clicked()
 {
     ui->comboBox_group->setCurrentIndex(0);
@@ -1680,11 +1752,21 @@ void MainWindow::on_rBtn_woman_clicked()
     userManageModel->setFilter("gender='女'");
 }
 
+void MainWindow::on_btn_registerCnt_clicked()
+{
+    setStatisticsPanel(2, panel_series_count);
+}
+
 void MainWindow::on_rBtn_all_clicked()
 {
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
     userManageModel->setFilter("");
+}
+
+void MainWindow::on_btn_actCnt_clicked()
+{
+    setStatisticsPanel(4, panel_series_count);
 }
 
 void MainWindow::on_rBtn_actAll_clicked()
@@ -1697,6 +1779,11 @@ void MainWindow::on_rBtn_actAll_clicked()
     if (idx == -1 && pre_filter.indexOf("status") != -1)
         pre_filter.clear();
     activityMemModel->setFilter(pre_filter);
+}
+
+void MainWindow::on_btn_dyCnt_clicked()
+{
+    setStatisticsPanel(5, panel_series_count);
 }
 
 void MainWindow::on_rBtn_actFinished_clicked()
@@ -1810,6 +1897,7 @@ void MainWindow::on_btn_addContent_clicked()
             ui->btn_cancelContent->setText("放弃修改");
             ui->btn_delContent->setEnabled(true);
             QMessageBox::information(this, "消息", "通知·动态发布成功。", QMessageBox::Ok);
+            emit poster_statistics();   //统计活动发布量
             on_actNoticeManage_triggered();
         }
         else
@@ -1845,6 +1933,14 @@ void MainWindow::on_comboBox_group_currentIndexChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
     setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
+}
+
+void MainWindow::on_btn_switchPanel_clicked()
+{
+	if(panel_series_count == 14)
+        setStatisticsPanel(panel_option, 7);
+    else
+        setStatisticsPanel(panel_option, 14);
 }
 
 void MainWindow::on_btn_recoveryContents_clicked()
@@ -1904,12 +2000,22 @@ void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)
     setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
 }
 
+void MainWindow::on_btn_panel_clicked()
+{
+    setStatisticsPanel(0, panel_series_count);
+}
+
 void MainWindow::on_btn_userManagePage_recovery_2_clicked()
 {
     userManageModel->setFilter("");
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
     ui->rBtn_all->setChecked(true);
+}
+
+void MainWindow::on_btn_loginCnt_clicked()
+{
+    setStatisticsPanel(1, panel_series_count);
 }
 
 void MainWindow::on_comboBox_group_2_currentIndexChanged(const QString &arg1)
