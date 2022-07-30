@@ -757,11 +757,30 @@ void MainWindow::setStatisticsPanel(int option, int days)
         panel_seriesObj = setBaseInfoWork->getPanelSeriesObj(0);
     }
 	//构建显示项
-    panel_display.insert("登录请求", true);
-	panel_display.insert("注册请求", true);
-    panel_display.insert("心跳请求", true);
-    panel_display.insert("新增活动", true);
-    panel_display.insert("新增动态", true);
+    panel_display.insert("登录请求", false);
+	panel_display.insert("注册请求", false);
+    panel_display.insert("心跳请求", false);
+    panel_display.insert("新增活动", false);
+    panel_display.insert("新增动态", false);
+    if (panel_option == 0)
+    {
+        panel_display["登录请求"] = true;
+		panel_display["注册请求"] = true;
+		panel_display["心跳请求"] = true;
+		panel_display["新增活动"] = true;
+		panel_display["新增动态"] = true;
+        ui->label_panelChartMod->setText("HenryOS 智慧大屏（" + QString::number(panel_series_count) + "天）");
+    }
+    switch (panel_option)
+    {
+    case 1:panel_display["登录请求"] = true; ui->label_panelChartMod->setText("HenryOS 登录请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 2:panel_display["注册请求"] = true; ui->label_panelChartMod->setText("HenryOS 注册请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 3:panel_display["心跳请求"] = true; ui->label_panelChartMod->setText("HenryOS 心跳请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 4:panel_display["新增活动"] = true; ui->label_panelChartMod->setText("HenryOS 活动新增量（" + QString::number(panel_series_count) + "天）"); break;
+    case 5:panel_display["新增动态"] = true; ui->label_panelChartMod->setText("HenryOS 动态新增量（" + QString::number(panel_series_count) + "天）"); break;
+    default:
+        break;
+    }
     QString date;
     QString jsCode;
     curDateTime = QDateTime::currentDateTime();
@@ -1202,6 +1221,7 @@ void MainWindow::on_actRefresh_triggered()
     case 11: on_actGroup_triggered(); break;
     case 14: on_actNoticeManage_triggered(); break;
     case 15: on_actNotice_triggered(); break;
+    case 16: on_actPanel_triggered(); break;
 
     default:
         break;
@@ -1720,6 +1740,11 @@ void MainWindow::on_rBtn_man_clicked()
     userManageModel->setFilter("gender='男'");
 }
 
+void MainWindow::on_btn_getCnt_clicked()
+{
+    setStatisticsPanel(3, panel_series_count);
+}
+
 void MainWindow::on_rBtn_woman_clicked()
 {
     ui->comboBox_group->setCurrentIndex(0);
@@ -1727,11 +1752,21 @@ void MainWindow::on_rBtn_woman_clicked()
     userManageModel->setFilter("gender='女'");
 }
 
+void MainWindow::on_btn_registerCnt_clicked()
+{
+    setStatisticsPanel(2, panel_series_count);
+}
+
 void MainWindow::on_rBtn_all_clicked()
 {
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
     userManageModel->setFilter("");
+}
+
+void MainWindow::on_btn_actCnt_clicked()
+{
+    setStatisticsPanel(4, panel_series_count);
 }
 
 void MainWindow::on_rBtn_actAll_clicked()
@@ -1744,6 +1779,11 @@ void MainWindow::on_rBtn_actAll_clicked()
     if (idx == -1 && pre_filter.indexOf("status") != -1)
         pre_filter.clear();
     activityMemModel->setFilter(pre_filter);
+}
+
+void MainWindow::on_btn_dyCnt_clicked()
+{
+    setStatisticsPanel(5, panel_series_count);
 }
 
 void MainWindow::on_rBtn_actFinished_clicked()
@@ -1960,12 +2000,22 @@ void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)
     setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
 }
 
+void MainWindow::on_btn_panel_clicked()
+{
+    setStatisticsPanel(0, panel_series_count);
+}
+
 void MainWindow::on_btn_userManagePage_recovery_2_clicked()
 {
     userManageModel->setFilter("");
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
     ui->rBtn_all->setChecked(true);
+}
+
+void MainWindow::on_btn_loginCnt_clicked()
+{
+    setStatisticsPanel(1, panel_series_count);
 }
 
 void MainWindow::on_comboBox_group_2_currentIndexChanged(const QString &arg1)

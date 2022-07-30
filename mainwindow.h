@@ -297,6 +297,18 @@ private slots:
 
     void on_btn_switchPanel_clicked();
 
+    void on_btn_panel_clicked();
+
+    void on_btn_loginCnt_clicked();
+
+    void on_btn_registerCnt_clicked();
+
+    void on_btn_getCnt_clicked();
+
+    void on_btn_actCnt_clicked();
+
+    void on_btn_dyCnt_clicked();
+
     void on_lineEdit_manageContents_textChanged(const QString& arg1);
 
     void on_comboBox_group_currentIndexChanged(const QString &arg1);

@@ -1739,6 +1739,25 @@ padding: 0px 5px;</string>
           <property name="title">
            <string>消息收发</string>
           </property>
+          <widget class="QLabel" name="label_110">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>70</y>
+             <width>451</width>
+             <height>81</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>正在开发中...敬请期待！</string>
+           </property>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -3160,19 +3179,6 @@ p, li { white-space: pre-wrap; }
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox_7">
-          <property name="font">
-           <font>
-            <family>微软雅黑</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>申请栏</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QGroupBox" name="groupBox_22">
           <property name="font">
@@ -3184,6 +3190,38 @@ p, li { white-space: pre-wrap; }
           <property name="title">
            <string>申请记录和状态</string>
           </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>申请栏</string>
+          </property>
+          <widget class="QLabel" name="label_109">
+           <property name="geometry">
+            <rect>
+             <x>30</x>
+             <y>40</y>
+             <width>451</width>
+             <height>81</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>正在开发中...敬请期待！</string>
+           </property>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -5945,6 +5983,25 @@ padding: 0px 5px;</string>
           <property name="title">
            <string>审批队列</string>
           </property>
+          <widget class="QLabel" name="label_112">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>80</y>
+             <width>451</width>
+             <height>81</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>正在开发中...敬请期待！</string>
+           </property>
+          </widget>
          </widget>
         </item>
         <item row="0" column="1">
@@ -5974,6 +6031,25 @@ padding: 0px 5px;</string>
           <property name="title">
            <string>现有审批项</string>
           </property>
+          <widget class="QLabel" name="label_111">
+           <property name="geometry">
+            <rect>
+             <x>70</x>
+             <y>90</y>
+             <width>451</width>
+             <height>81</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>正在开发中...敬请期待！</string>
+           </property>
+          </widget>
          </widget>
         </item>
         <item row="0" column="1" rowspan="2">
@@ -7013,7 +7089,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>活动发布量</string>
+              <string>活动新增量</string>
              </property>
             </widget>
            </item>
@@ -7077,7 +7153,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>动态发布量</string>
+              <string>动态新增量</string>
              </property>
             </widget>
            </item>

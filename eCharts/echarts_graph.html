@@ -1,0 +1,106 @@
+<!--
+	THIS EXAMPLE WAS DOWNLOADED FROM https://echarts.apache.org/examples/zh/editor.html?c=graph-simple&code=PYBwLglsB2AEC8sDeAoWtJgDYFMBcya6GOAHmAQOSCF2oJ5GggraDQXpUQL4A0RYwwWkIBJByIBDaBAC2IyDAAiAVwBO0qNACqIACbT8sAIwBWAAxHO6MZJUwAoiIDOEaAHMN2sLsoBHeY8gBjAEloAHl5MEozWDscRQgcOwIAbSJ0VGJiMABPEA8nZRAACwiU4iwRTOAwqmgYHGL09DtMiQAjXgBlCAAvXWNI9IB6AcVgEQkCMEV5HHYhwAJ8wHALQDWjQAqlEvQylpwsQXXiOwLgAHcJqZw94QbYHE0nHHbmtp3YRMo_CEU_XAjYShFFEZHSgAXX6xBudwerQ63V0iQALOx9EZQXsITgADIiLbPNJXWAAMxgYE6PQIhguYPQbhEST2qXpxGgYw8ADlgJocPp6vj0KQCABmExUhqZQUmRmXfF43nMiRsjlcgBMPN5_NgAA5hYz0GLYEKjJKRQzeeg5QrOfrVfj1QA2Po62B6g1Gxky_Hmqjsy3w61XdXwh2mp3iw281h7VFXLCOADWCRebsddkqnwtXL0foaYH-dwov29XN9xtK2O2u2D6CJiikYHciiogCwEwDj8Vmrgdjqdpo6I-GS-726m_OnYMXHTnFHmvYqrSWNmXcY6q8Aa9J603W3P9ocThgzj3XbyBw0U0ph9PLQK2xlczh85RC7AVZLIyKY9B7llcBX8aARO8sgIIwADoAE4SyOCBNDAAoCCVEs_CUAA3HAPzsBMwwaXtiGw4EUFYABuIA
+	请注意，该图表不是 Apache ECharts 官方示例，而是由用户代码生成的。请注意鉴别其内容。
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  <script type="text/javascript" src="./echarts.min.js"></script>
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    option = {
+  title: {
+    text: '审批流程'
+  },
+  tooltip: {},
+  animationDurationUpdate: 1500,
+  animationEasingUpdate: 'quinticInOut',
+  series: [
+    {
+      type: 'graph',
+      layout: 'none',
+      symbolSize: 50,
+      //roam: true,//鼠标拖动
+      label: {
+        show: true
+      },
+      edgeSymbol: ['circle', 'arrow'],
+      edgeSymbolSize: [4, 10],
+      edgeLabel: {
+        fontSize: 15
+      },
+      data: [
+        {
+          name: 'Node 1',
+          x: 300,
+          y: 300
+        },
+        {
+          name: 'Node 2',
+          x: 800,
+          y: 300
+        },
+        {
+          name: 'Node 3',
+          x: 650,
+          y: 300
+        },
+        {
+          name: 'Node 4',
+          x: 450,
+          y: 300
+        }
+      ],
+      links: [
+        {
+          source: 'Node 1',
+          target: 'Node 4',
+          label: {
+            formatter: '通过',
+            show: true
+          }
+        },
+        {
+          source: 'Node 4',
+          target: 'Node 3',
+          label: {
+            formatter: '通过',
+            show: true
+          }
+        },
+        {
+          source: 'Node 3',
+          target: 'Node 2'
+        }
+      ],
+      lineStyle: {
+        opacity: 0.9,
+        width: 2,
+        curveness: 0
+      }
+    }
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>
