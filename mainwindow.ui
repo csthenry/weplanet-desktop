@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>16</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -3987,7 +3987,7 @@ padding: 0px 5px;</string>
           <widget class="QGroupBox" name="groupBox_10">
            <property name="minimumSize">
             <size>
-             <width>620</width>
+             <width>820</width>
              <height>0</height>
             </size>
            </property>
@@ -4153,7 +4153,7 @@ padding: 0px 5px;</string>
            </property>
            <property name="minimumSize">
             <size>
-             <width>473</width>
+             <width>520</width>
              <height>0</height>
             </size>
            </property>

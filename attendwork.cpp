@@ -85,7 +85,7 @@ void AttendWork::analyseWorkTime()
             }
             cnt++;
         } while (!curRecord.value("begin_date").isNull());
-        weekMyWorkTime[i] = workTime.hour();
+        weekMyWorkTime[i] = QString::asprintf("%.2f", workTime.hour() + workTime.minute() / 60.0);
     }
     this->weekMyWorkTime = weekMyWorkTime;
     this->weekAllWorkStatus = weekAllWorkStatus;
