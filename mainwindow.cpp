@@ -1061,6 +1061,7 @@ void MainWindow::on_actManage_triggered()
     ui->tableView_actList->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_actMember->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_actMember->setSelectionMode(QAbstractItemView::SingleSelection);
+	ui->tableView_actMember->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);    //填充整个view
 
     ui->tableView_actList->setItemDelegateForColumn(0, readOnlyDelegate);
     ui->tableView_actList->setItemDelegateForColumn(6, readOnlyDelegate);
