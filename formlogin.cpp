@@ -35,12 +35,12 @@ formLogin::formLogin(QDialog *parent) :
 
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     //QPixmap mainicon(":/images/color_icon/main.svg");
-    QPixmap mainicon(":/images/logo/planet.svg");
+    //QPixmap mainicon(":/images/logo/planet.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
     ui->labelIcon->setMaximumSize(25, 25);
     ui->labelIcon->setScaledContents(true);    //图片自适应大小
     ui->mainIcon->setScaledContents(true);
-    ui->mainIcon->setPixmap(mainicon);
+    //ui->mainIcon->setPixmap(mainicon);
     //ui->labelIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
 
     //加载动画
