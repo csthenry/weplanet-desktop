@@ -37,7 +37,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -4632,28 +4632,7 @@ padding: 0px 5px;</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_36">
              <item row="0" column="0">
-              <widget class="QGroupBox" name="groupBox_11">
-               <property name="minimumSize">
-                <size>
-                 <width>473</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="title">
-                <string>考勤详情</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_34">
-                <item row="0" column="0">
-                 <widget class="QTableView" name="tableView_attendInfo"/>
-                </item>
-               </layout>
-              </widget>
+              <widget class="QTableView" name="tableView_attendInfo"/>
              </item>
             </layout>
            </widget>
@@ -6359,7 +6338,7 @@ padding: 0px 5px;</string>
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1]. Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn&lt;/p&gt;&lt;p&gt;[2]. ECharts, https://echarts.apache.org&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2022 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2022 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="textFormat">
               <enum>Qt::AutoText</enum>
@@ -7356,14 +7335,30 @@ padding: 0px 5px;</string>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QToolBar {
+border-image: url(:/src/img/headerbg.png);
+}
+QToolButton{
+color: #2f2e2e;
+background-color: transparent;
+} 
+</string>
+   </property>
    <property name="movable">
     <bool>false</bool>
    </property>
-   <property name="allowedAreas">
-    <set>Qt::TopToolBarArea</set>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>true</bool>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -7406,6 +7401,15 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>首页</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actUserManager">
    <property name="checkable">
@@ -7421,6 +7425,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>用户管理</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actAttend">
    <property name="icon">
@@ -7432,6 +7442,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>考勤</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actApply">
@@ -7445,6 +7461,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>申请</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actMyInfo">
    <property name="icon">
@@ -7456,6 +7478,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>个人信息</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actApplyList">
@@ -7469,6 +7497,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>审批队列</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actApplyItems">
    <property name="icon">
@@ -7481,6 +7515,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>审批流程</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actAttendManager">
    <property name="icon">
@@ -7489,6 +7529,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="text">
     <string>考勤管理</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actGroup">
@@ -7502,6 +7548,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>组织架构</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actExit">
    <property name="icon">
@@ -7513,6 +7565,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>退出</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actMore">
@@ -7526,6 +7584,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>更多...</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actMessage">
    <property name="icon">
@@ -7537,6 +7601,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>聊天</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actManage">
@@ -7550,6 +7620,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>活动管理</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="action">
    <property name="icon">
@@ -7561,6 +7637,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>活动</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actRefresh">
@@ -7574,6 +7656,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>刷新页面</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actNotice">
    <property name="icon">
@@ -7585,6 +7673,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>通知动态</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actNoticeManage">
@@ -7598,6 +7692,12 @@ padding: 0px 5px;</string>
    <property name="toolTip">
     <string>动态管理</string>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actPanel">
    <property name="icon">
@@ -7609,6 +7709,12 @@ padding: 0px 5px;</string>
    </property>
    <property name="toolTip">
     <string>智慧大屏</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
  </widget>
