@@ -49,7 +49,7 @@
 
 ### 开发进度截图
 
-![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_11.png)
+![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_12.png)
 ![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_10.png)
 ![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_2.jpg)
 ![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_3.jpg)
