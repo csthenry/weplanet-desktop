@@ -115,6 +115,18 @@ formLogin::formLogin(QDialog *parent) :
         }
     }, Qt::UniqueConnection);
 
+    //更新HarmonyOS字体
+    QFont font;
+    int size, font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");
+    QStringList fontName = QFontDatabase::applicationFontFamilies(font_Id);
+    font.setFamily(fontName.at(0));
+    auto listWidget = findChildren<QWidget*>();
+    for (auto& widget : listWidget) //遍历所有组件
+    {
+        size = widget->font().pointSize();
+        font.setPointSize(size);
+        widget->setFont(font);
+    }
 }
 
 formLogin::~formLogin()
