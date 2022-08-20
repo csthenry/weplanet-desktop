@@ -517,7 +517,7 @@ void MainWindow::receiveData(QString uid)
 void MainWindow::updateFinished()
 {
     ui->groupBox_33->setTitle("版本公告（软件版本：Ver " + updateSoftWare.getCurVersion() + "）");
-    ui->label_homeVer->setText("Ver " + updateSoftWare.getCurVersion());
+    ui->label_homeVer->setText(updateSoftWare.getCurVersion());
     if (updateSoftWare.getLatestVersion().isEmpty())
         ui->label_LatestVersion->setText("--");
     else

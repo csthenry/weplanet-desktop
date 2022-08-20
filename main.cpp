@@ -30,11 +30,11 @@ int main(int argc, char *argv[])
     qDebug() << "width:" << width << ",ScreenWidth:" << ScreenWidth << ",height:" << height << ",scale:" << scale;
 
     //程序UI基于125%缩放开发
-	if(scale >= 1.25)
-        qputenv("QT_SCALE_FACTOR", "1.0");  //根据系统缩放比例调整
-    else
-        qputenv("QT_SCALE_FACTOR", QString::number(scale + 0.25).toLatin1());
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+	//if(scale >= 1.25)
+ //       qputenv("QT_SCALE_FACTOR", "1.0");  //根据系统缩放比例调整
+ //   else
+ //       qputenv("QT_SCALE_FACTOR", QString::number(scale + 0.25).toLatin1());
+    //QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);   //开启高缩放支持图片
 	
     QApplication a(argc, argv);
