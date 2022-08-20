@@ -109,4 +109,7 @@
         <file>font/HarmonyOS_Sans_SC_Regular.ttf</file>
         <file>img/headerbg.png</file>
     </qresource>
+    <qresource prefix="/qt">
+        <file>etc/qt.conf</file>
+    </qresource>
 </RCC>
