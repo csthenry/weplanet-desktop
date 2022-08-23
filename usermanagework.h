@@ -34,7 +34,7 @@ private slots:
 private:
     service db_service;
     QComboBox *m_group, *m_department;
-    QSqlDatabase DB;
+    QSqlDatabase DB, DB_SECOND;
     QString avatarUrl, uid;
     QPixmap curPix;
     QSqlRelationalTableModel *relTableModel;

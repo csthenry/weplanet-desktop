@@ -917,6 +917,7 @@ void MainWindow::setUserManagePage() const
     ui->tableView_userManage->setModel(userManageModel);
     ui->tableView_userManage->hideColumn(1);  //隐藏密码列
     ui->tableView_userManage->hideColumn(10);  //隐藏用户状态
+
 	ui->tableView_userManage->setSelectionModel(userManagePageSelection);
     /*
     //当前项变化时触发currentChanged信号

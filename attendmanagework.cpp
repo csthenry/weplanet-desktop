@@ -8,7 +8,6 @@ AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
 void AttendManageWork::working()
 {
     DB.open();
-    userModel->clear();
     userModel->database().open();   //该model数据库和AttendManageWork中不一致
     
     userModel->setTable("magic_users");

@@ -3,12 +3,12 @@
 UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "UserManageWork_DB");
+    db_service.addDatabase(DB_SECOND, "UserManageWork_DB_SECOND");
 }
 
 void UserManageWork::working()
 {
     DB.open();  //使用model时，数据库应保持开启
-    relTableModel->clear();
     relTableModel->setTable("magic_users");
     relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
@@ -81,8 +81,8 @@ void UserManageWork::loadAvatar()
 
 void UserManageWork::queryAccount(const QString& account)
 {
-    DB.open();
-    QSqlQuery query(DB);
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     QSqlRecord res;
     query.exec("SELECT * FROM magic_users WHERE uid=" + account);
     query.next();
@@ -94,6 +94,7 @@ void UserManageWork::queryAccount(const QString& account)
     query.next();
     res.setValue("user_dpt", query.value(0));
     query.clear();
+	DB_SECOND.close();
     emit queryAccountFinished(res);
 }
 
@@ -124,8 +125,8 @@ void UserManageWork::setCombox(QComboBox* group, QComboBox* department)
 void UserManageWork::getVerify(const QString& uid)
 {
     this->uid = uid;
-    DB.open();
-    QSqlQuery query(DB);
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     bool res = query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
     if (query.next())
     {
@@ -143,6 +144,7 @@ void UserManageWork::getVerify(const QString& uid)
         verifyInfo = "";
     }
     query.clear();
+	DB_SECOND.close();
     emit getVerifyFinished(res);
 }
 
