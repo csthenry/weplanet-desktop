@@ -8,6 +8,7 @@ UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 void UserManageWork::working()
 {
     DB.open();  //使用model时，数据库应保持开启
+    relTableModel->clear();
     relTableModel->setTable("magic_users");
     relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
@@ -92,6 +93,7 @@ void UserManageWork::queryAccount(const QString& account)
     query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id=" + res.value("user_dpt").toString());
     query.next();
     res.setValue("user_dpt", query.value(0));
+    query.clear();
     emit queryAccountFinished(res);
 }
 
@@ -100,11 +102,13 @@ void UserManageWork::setCurAvatarUrl(const QString &url)
     avatarUrl = url;
 }
 
+/*
 void UserManageWork::getComboxItems(QStringList &comboxItems_group, QStringList &comboxItems_department)
 {
     comboxItems_group = this->comboxItems_group;
     comboxItems_department = this->comboxItems_department;
 }
+*/
 
 QSqlDatabase UserManageWork::getDB()
 {
@@ -115,4 +119,66 @@ void UserManageWork::setCombox(QComboBox* group, QComboBox* department)
 {
     m_group = group;
     m_department = department;
+}
+
+void UserManageWork::getVerify(const QString& uid)
+{
+    this->uid = uid;
+    DB.open();
+    QSqlQuery query(DB);
+    bool res = query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
+    if (query.next())
+    {
+        verifyTag = query.value("vid").toInt();
+        verifyInfo = query.value("info").toString();
+
+        query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
+        query.next();
+        verifyType = query.value("verify_name").toString();
+    }
+    else
+    {
+        verifyTag = -1;
+        verifyType = "";
+        verifyInfo = "";
+    }
+    query.clear();
+    emit getVerifyFinished(res);
+}
+
+void UserManageWork::updateVerify(int type, int verifyTag, const QString& info)
+{
+    bool res = false;
+    DB.open();
+    QSqlQuery query(DB);
+    if (type == 0)
+        res = query.exec("DELETE FROM magic_verify WHERE v_uid = " + uid);
+    else if(type == 1)
+		res = query.exec("INSERT INTO magic_verify (v_uid, vid, info) VALUES (" + uid + ", " + QString::number(verifyTag) + ", '" + info + "')");
+    else
+		res = query.exec("UPDATE magic_verify SET vid = " + QString::number(verifyTag) + ", info = '" + info + "' WHERE v_uid = " + uid);
+    qDebug() << query.lastError().text() << " " << query.lastQuery();
+    if (res)
+        getVerify(this->uid);
+    emit updateVerifyFinished(res);
+}
+
+QString UserManageWork::getVerifyInfo()
+{
+    return verifyInfo;
+}
+
+QString UserManageWork::getVerifyType()
+{
+    return verifyType;
+}
+
+int UserManageWork::getVerifyTag()
+{
+    return verifyTag;
+}
+
+QString UserManageWork::getUid()
+{
+    return uid;
 }

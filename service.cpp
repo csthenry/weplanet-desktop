@@ -182,7 +182,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "CREATE TABLE IF NOT EXISTS magic_verify"
         "(v_uid          int(10)      NOT NULL    AUTO_INCREMENT,"
         "vid             int(10)  NOT NUll,"
-        "info            varchar(32),"
+        "info            varchar(64),"
         "PRIMARY KEY (v_uid)"
         ")ENGINE=InnoDB;";
     if (res)

@@ -40,6 +40,9 @@ public:
     QString getDepartment();
     QString getScore();
     QPixmap getAvatar();
+    QString getVerifyType();
+    QString getVerufyInfo();
+	int getVerifyTag();
 
 private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
@@ -65,6 +68,8 @@ private:
     QString score;
     QPixmap avatar;
     QString attendBeginTime, attendEndTime;
+    QString verifyType, verifyInfo;
+    int verifyTag;
     QPixmap loadAvatar(const QString& url);
     QString loadGroup(const QString& uid);
     QString loadDepartment(const QString& uid);

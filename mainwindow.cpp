@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 {
     ui->setupUi(this);
 
+    infoWidget = new InfoWidget();  //初始化信息窗口
+	
     statusIcon = new QLabel(this);     //用于显示状态图标的label
     statusIcon->setMaximumSize(25, 25);
     statusIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
@@ -49,7 +51,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     userAvatar = new QPixmap(":/images/color_icon/user.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
 
-    verifyIcon = new QPixmap(":/images/color_icon/verify_2.svg");
+	//认证图标
+    verifyIcon_1 = new QPixmap(":/images/color_icon/verify.svg");
+    verifyIcon_2 = new QPixmap(":/images/color_icon/verify_2.svg");
+    verifyNone = new QPixmap(":/images/color_icon/color-delete.svg");
 
     ui->statusbar->addWidget(statusIcon);   //将状态组件添加至statusBar
     ui->statusbar->addWidget(connectStatusLable);
@@ -141,7 +146,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //sqlWork firstFinished信号槽
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();
-
+		
         //构造model
         attendPageModel = new QSqlRelationalTableModel(this, attendWork->getDB());
         userManageModel = new QSqlRelationalTableModel(nullptr, userManageWork->getDB());
@@ -279,6 +284,56 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::userManageGetAvatar, userManageWork, &UserManageWork::loadAvatar);
     connect(this, &MainWindow::userManageModelSubmitAll, userManageWork, &UserManageWork::submitAll);
     connect(userManageWork, &UserManageWork::userManageWorkFinished, this, &MainWindow::setUserManagePage);
+	connect(this, &MainWindow::updateVerify, userManageWork, &UserManageWork::updateVerify);
+	connect(this, &MainWindow::getVerify, userManageWork, &UserManageWork::getVerify);
+    connect(userManageWork, &UserManageWork::updateVerifyFinished, this, [=](bool res) {
+        if (res)
+            QMessageBox::information(this, "消息", "认证系统：操作成功，当前用户认证信息已更新。", QMessageBox::Ok);
+        else
+			QMessageBox::warning(this, "错误", "认证系统：操作失败，请联系技术支持。", QMessageBox::Ok);
+        }, Qt::UniqueConnection);
+    connect(userManageWork, &UserManageWork::getVerifyFinished, this, [=](bool res) {
+        QString verifyType;
+        ui->btn_updateVerify->setEnabled(res);
+        if (res)
+        {
+			int verifyTag = userManageWork->getVerifyTag();
+            verifyType = userManageWork->getVerifyType();
+            ui->btn_updateVerify->setText("更新认证");
+            ui->btn_verifyInfo->setEnabled(true);
+            ui->btn_delVerify->setEnabled(true);
+            if (verifyTag == 1)
+                ui->label_verifyIcon_manage->setPixmap(*verifyIcon_1);
+            else if (verifyTag == 2)
+                ui->label_verifyIcon_manage->setPixmap(*verifyIcon_2);
+            else
+                ui->label_verifyIcon_manage->setPixmap(*verifyNone);
+            ui->label_verifyIcon_manage_main->setPixmap(*ui->label_verifyIcon_manage->pixmap());
+            if (verifyTag == -1)
+            {
+                ui->btn_verifyInfo->setEnabled(false);
+                ui->btn_delVerify->setEnabled(false);
+                ui->label_verifyIcon_manage_main->setPixmap(QPixmap());
+                verifyType = "暂无认证";
+                ui->btn_updateVerify->setText("添加认证");
+            }
+        }
+        else
+        {
+            ui->btn_verifyInfo->setEnabled(false);
+            ui->btn_delVerify->setEnabled(false);
+            ui->label_verifyIcon_manage->setPixmap(*verifyNone);
+            ui->label_verifyIcon_manage_main->setPixmap(*verifyNone);
+            ui->btn_updateVerify->setText("暂不可用");
+            verifyType = "获取失败";
+        }
+        ui->label_verifyType_manage->setText(verifyType + QString("（UID:%1）").arg(userManageWork->getUid()));
+        infoWidget->setInfoTitle("认证详情：");
+        infoWidget->setBoxTitle("认证系统");
+        infoWidget->setInfo(userManageWork->getVerifyInfo());
+        infoWidget->setInfoIcon(*ui->label_verifyIcon_manage->pixmap());
+		
+		}, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar){
         if(avatar.isNull())
             ui->userManagePage_avatar->setPixmap(*userAvatar);
@@ -453,14 +508,14 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //更新HarmonyOS字体
     QFont font;
-    int size, font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");
+    int font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");
     QStringList fontName = QFontDatabase::applicationFontFamilies(font_Id);
     font.setFamily(fontName.at(0));
     auto listWidget = findChildren<QWidget*>();
     for (auto& widget : listWidget) //遍历所有组件
     {
-        size = widget->font().pointSize();
-        font.setPointSize(size);
+        font.setWeight(widget->font().weight());
+        font.setPointSize(widget->font().pointSize());
         widget->setFont(font);
     }
 }
@@ -482,13 +537,17 @@ MainWindow::~MainWindow()
     refTimer->stop();
     loadingMovie->stop();
 
+    delete infoWidget;
     delete loadingMovie;
     delete notice_page;
     delete c_channel;
     delete m_channel;
     //析构所有工作对象和线程
     delete ui;
-
+    delete verifyIcon_1;
+    delete verifyIcon_2;
+    delete verifyNone;
+	
     delete sqlWork;
     delete setBaseInfoWork;
     delete userManageWork;
@@ -540,6 +599,24 @@ void MainWindow::setHomePageBaseInfo()
     ui->label_info_department->setText(setBaseInfoWork->getDepartment());
     ui->label_home_score->setText(setBaseInfoWork->getScore());
 
+	//认证信息
+    if (setBaseInfoWork->getVerifyTag() == -1)
+    {
+        ui->label_verifyIcon->setPixmap(QPixmap());
+        ui->label_verifyType->setText("暂无认证：");
+        ui->label_home_verifyInfo->setText("--");
+    }
+    else
+    {
+		if(setBaseInfoWork->getVerifyTag() == 1)
+            ui->label_verifyIcon->setPixmap(*verifyIcon_1);
+        else
+            ui->label_verifyIcon->setPixmap(*verifyIcon_2);
+        ui->label_verifyType->setText(setBaseInfoWork->getVerifyType() + "：");
+        ui->label_home_verifyInfo->setText(setBaseInfoWork->getVerufyInfo());
+    }
+
+    ui->label_verifyIcon_2->setPixmap(*ui->label_verifyIcon->pixmap());
     if(ui->label_home_gender->text().isEmpty())
     {
         ui->label_home_gender->setText("--");   //将可能为空的数据设置值
@@ -1308,6 +1385,9 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
     emit userManageGetAvatar();
     
+	//子线程获取认证信息
+    emit getVerify(curRecord.value("uid").toString());
+	
     //密码修改
     if(!ui->lineEdit_editPwd->text().isEmpty())
     {
@@ -2256,6 +2336,34 @@ void MainWindow::on_btn_getQQAvatar_clicked()
         });
 
     emit bindQQAvatar(ui->label_info_mail->text());
+}
+
+void MainWindow::on_btn_verifyInfo_clicked()
+{
+    infoWidget->show();
+}
+
+void MainWindow::on_btn_delVerify_clicked()
+{
+    emit updateVerify(0, -1, "");
+}
+
+void MainWindow::on_btn_updateVerify_clicked()
+{
+    if (ui->lineEdit_verifyInfo->text().isEmpty())
+    {
+        QMessageBox::warning(this, "警告", "认证信息暂未填写，请填写后重试。", QMessageBox::Ok);
+        return;
+    }
+    int updateType = 2;
+    if (userManageWork->getVerifyTag() == -1)
+        updateType = 1;
+	if(ui->rBtn_verify_person->isChecked())
+        emit updateVerify(updateType, 1, ui->lineEdit_verifyInfo->text());
+    else
+        emit updateVerify(updateType, 2, ui->lineEdit_verifyInfo->text());
+    ui->lineEdit_verifyInfo->clear();
+    ui->rBtn_verify_person->setChecked(true);
 }
 
 void MainWindow::on_btn_personalClear_clicked()

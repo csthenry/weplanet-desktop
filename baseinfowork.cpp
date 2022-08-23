@@ -36,6 +36,24 @@ void baseInfoWork::loadBaseInfoWorking()
     }
     else
         isAttend = false;
+
+    query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
+    if (query.next())
+    {
+		verifyTag = query.value("vid").toInt();
+		verifyInfo = query.value("info").toString();
+		
+        query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
+        query.next();
+        verifyType = query.value("verify_name").toString();
+    }
+    else
+    {
+		verifyTag = -1;
+		verifyType = "";
+        verifyInfo = "";
+    }
+	
     query.clear();
     DB.close();
     emit baseInfoFinished();
@@ -385,6 +403,21 @@ QString baseInfoWork::getScore()
 QPixmap baseInfoWork::getAvatar()
 {
     return avatar;
+}
+
+QString baseInfoWork::getVerifyType()
+{
+    return verifyType;
+}
+
+QString baseInfoWork::getVerufyInfo()
+{
+    return verifyInfo;
+}
+
+int baseInfoWork::getVerifyTag()
+{
+    return verifyTag;
 }
 
 QPixmap baseInfoWork::loadAvatar(const QString &url)

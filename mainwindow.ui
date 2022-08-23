@@ -37,516 +37,10 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
-        <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>220</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>微软雅黑</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>欢迎登录~</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_19">
-           <item row="0" column="0" rowspan="3">
-            <widget class="QLabel" name="avatar">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>120</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>120</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>微软雅黑</family>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">margin:5px;</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <layout class="QGridLayout" name="gridLayout_12">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>用户账号：</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_uid">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="0" column="2">
-            <layout class="QGridLayout" name="gridLayout_13">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_12">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>用户类型：</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_group">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="3">
-            <layout class="QGridLayout" name="gridLayout_17">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_4">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>手  机  号：</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_tel">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="0" column="3">
-            <layout class="QGridLayout" name="gridLayout_14">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_department">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_11">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>所属组群：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="3" column="0" colspan="4">
-            <layout class="QGridLayout" name="gridLayout_10">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_verifyIcon">
-               <property name="minimumSize">
-                <size>
-                 <width>25</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>25</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_13">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>95</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>认证信息：</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="label_home_verify">
-               <property name="minimumSize">
-                <size>
-                 <width>700</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="2" column="1">
-            <layout class="QGridLayout" name="gridLayout_18">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_mail">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_5">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>邮       箱：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="2">
-            <layout class="QGridLayout" name="gridLayout_16">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_gender">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_10">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>性       别：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="1">
-            <layout class="QGridLayout" name="gridLayout_15">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_name">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_3">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>姓       名：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="2" column="2">
-            <layout class="QGridLayout" name="gridLayout_87">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_home_score">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_89">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>100</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>活动学时：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="1" column="0">
          <layout class="QGridLayout" name="gridLayout_40">
           <item row="0" column="0">
@@ -575,8 +69,8 @@
             <layout class="QGridLayout" name="gridLayout_44">
              <item row="0" column="0">
               <layout class="QGridLayout" name="gridLayout_39">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_36">
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_35">
                  <property name="minimumSize">
                   <size>
                    <width>45</width>
@@ -590,12 +84,12 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>当天：</string>
+                  <string>签退：</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="QLabel" name="label_homePage_attendStatus">
+               <item row="2" column="1">
+                <widget class="QLabel" name="label_homePage_endTime">
                  <property name="minimumSize">
                   <size>
                    <width>150</width>
@@ -639,8 +133,21 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_35">
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_homePage_attendDate">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>--</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_36">
                  <property name="minimumSize">
                   <size>
                    <width>45</width>
@@ -654,20 +161,7 @@
                   </size>
                  </property>
                  <property name="text">
-                  <string>签退：</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="label_homePage_endTime">
-                 <property name="minimumSize">
-                  <size>
-                   <width>150</width>
-                   <height>35</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>--</string>
+                  <string>当天：</string>
                  </property>
                 </widget>
                </item>
@@ -690,8 +184,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1">
-                <widget class="QLabel" name="label_homePage_attendDate">
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_homePage_attendStatus">
                  <property name="minimumSize">
                   <size>
                    <width>150</width>
@@ -893,6 +387,526 @@
           </layout>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>220</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>欢迎登录~</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_19">
+           <item row="0" column="0" rowspan="3">
+            <widget class="QLabel" name="avatar">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>120</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>120</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">margin:5px;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QGridLayout" name="gridLayout_12">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>用户账号：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_uid">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="2">
+            <layout class="QGridLayout" name="gridLayout_13">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_12">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>用户类型：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_group">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="3">
+            <layout class="QGridLayout" name="gridLayout_14">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_department">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_11">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>所属组群：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="1">
+            <layout class="QGridLayout" name="gridLayout_15">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_name">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>姓       名：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="2">
+            <layout class="QGridLayout" name="gridLayout_16">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_gender">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_10">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>性       别：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="3">
+            <layout class="QGridLayout" name="gridLayout_17">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>手  机  号：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_tel">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="1">
+            <layout class="QGridLayout" name="gridLayout_18">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_mail">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>邮       箱：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="2">
+            <layout class="QGridLayout" name="gridLayout_87">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_score">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_89">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>活动学时：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="1" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_10">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_home_verifyInfo">
+               <property name="minimumSize">
+                <size>
+                 <width>700</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_verifyType">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>95</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>认证信息：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+          <widget class="QLabel" name="label_verifyIcon">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>120</y>
+             <width>30</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/images/color_icon/color-delete.svg</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <zorder>avatar</zorder>
+          <zorder>label_verifyIcon</zorder>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="page_userInfo">
@@ -955,114 +969,65 @@
            <string>个人详情</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_59">
-           <item row="2" column="0" colspan="3">
-            <layout class="QGridLayout" name="gridLayout_56">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_info_name">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_49">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>105</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>姓       名：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="8" column="0">
-            <spacer name="verticalSpacer_3">
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>20</width>
-               <height>40</height>
+               <width>96</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
-           <item row="3" column="0" colspan="3">
-            <layout class="QGridLayout" name="gridLayout_52">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_45">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>105</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>性       别：</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_info_gender">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <item row="0" column="1">
+            <widget class="QLabel" name="info_avatar">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>120</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>120</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>16</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">margin:5px;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>96</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
            <item row="1" column="0" colspan="3">
             <layout class="QGridLayout" name="gridLayout_55">
@@ -1112,18 +1077,245 @@
              </item>
             </layout>
            </item>
-           <item row="0" column="0">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>96</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+           <item row="2" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_56">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_info_name">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_49">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>105</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>姓       名：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_52">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_45">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>105</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>性       别：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_info_gender">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_58">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_info_group">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_51">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>105</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>用户类型：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="5" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_57">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_info_department">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_50">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>105</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>所属组群：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="6" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_53">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_46">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>105</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>手       机：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_info_tel">
+               <property name="minimumSize">
+                <size>
+                 <width>160</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>11</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>--</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item row="7" column="0" colspan="3">
             <layout class="QGridLayout" name="gridLayout_54">
@@ -1185,196 +1377,18 @@
              </item>
             </layout>
            </item>
-           <item row="0" column="2">
-            <spacer name="horizontalSpacer_2">
+           <item row="8" column="0">
+            <spacer name="verticalSpacer_3">
              <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+              <enum>Qt::Vertical</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>96</width>
-               <height>20</height>
+               <width>20</width>
+               <height>40</height>
               </size>
              </property>
             </spacer>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="info_avatar">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>120</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>120</width>
-               <height>120</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>微软雅黑</family>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">margin:5px;</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0" colspan="3">
-            <layout class="QGridLayout" name="gridLayout_57">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_info_department">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_50">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>105</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>所属组群：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="4" column="0" colspan="3">
-            <layout class="QGridLayout" name="gridLayout_58">
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_info_group">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_51">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>105</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>用户类型：</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="6" column="0" colspan="3">
-            <layout class="QGridLayout" name="gridLayout_53">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_46">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>105</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>手       机：</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_info_tel">
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>35</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>11</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>--</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="9" column="0" colspan="3">
             <widget class="QPushButton" name="btn_getQQAvatar">
@@ -1394,6 +1408,40 @@
             </widget>
            </item>
           </layout>
+          <widget class="QLabel" name="label_verifyIcon_2">
+           <property name="geometry">
+            <rect>
+             <x>230</x>
+             <y>120</y>
+             <width>30</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/images/color_icon/color-delete.svg</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <zorder>info_avatar</zorder>
+          <zorder>label_verifyIcon_2</zorder>
+          <zorder>btn_getQQAvatar</zorder>
          </widget>
         </item>
         <item row="1" column="1">
@@ -3495,7 +3543,7 @@ padding: 0px 5px;</string>
           <widget class="QGroupBox" name="groupBox_9">
            <property name="minimumSize">
             <size>
-             <width>310</width>
+             <width>430</width>
              <height>0</height>
             </size>
            </property>
@@ -3508,21 +3556,49 @@ padding: 0px 5px;</string>
            <property name="title">
             <string>用户信息</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout_91">
-            <item row="3" column="0">
-             <spacer name="verticalSpacer_2">
+           <layout class="QGridLayout" name="gridLayout_11">
+            <item row="0" column="0">
+             <widget class="QLabel" name="userManagePage_avatar">
+              <property name="minimumSize">
+               <size>
+                <width>120</width>
+                <height>120</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>120</width>
+                <height>120</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>16</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">margin:5px;</string>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" rowspan="2">
+             <widget class="Line" name="line_3">
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
+             </widget>
             </item>
-            <item row="0" column="2" colspan="3">
+            <item row="0" column="2">
              <layout class="QGridLayout" name="gridLayout_29">
               <item row="0" column="0">
                <widget class="QLabel" name="label_6">
@@ -3681,110 +3757,23 @@ padding: 0px 5px;</string>
               </item>
              </layout>
             </item>
-            <item row="4" column="0" colspan="5">
-             <widget class="QPushButton" name="btn_editUser_check">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="minimumSize">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_userStatus">
+              <property name="maximumSize">
                <size>
-                <width>0</width>
-                <height>45</height>
+                <width>120</width>
+                <height>120</height>
                </size>
               </property>
               <property name="text">
-               <string>确认修改</string>
+               <string>状态：--</string>
               </property>
-              <property name="icon">
-               <iconset resource="resource.qrc">
-                <normaloff>:/images/color_icon/color-setting_3.svg</normaloff>:/images/color_icon/color-setting_3.svg</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
-            <item row="5" column="0" colspan="5">
-             <widget class="QPushButton" name="btn_editUser_cancel">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>45</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>取消操作</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resource.qrc">
-                <normaloff>:/images/color_icon/color-stop.svg</normaloff>:/images/color_icon/color-stop.svg</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <layout class="QGridLayout" name="gridLayout_11">
-              <item row="0" column="0">
-               <widget class="QLabel" name="userManagePage_avatar">
-                <property name="minimumSize">
-                 <size>
-                  <width>120</width>
-                  <height>120</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>120</width>
-                  <height>120</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>微软雅黑</family>
-                  <pointsize>16</pointsize>
-                 </font>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">margin:5px;</string>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_userStatus">
-                <property name="maximumSize">
-                 <size>
-                  <width>120</width>
-                  <height>120</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>状态：--</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="0" colspan="5">
+            <item row="2" column="0" colspan="3">
              <widget class="Line" name="line">
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
@@ -3794,7 +3783,7 @@ padding: 0px 5px;</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="5">
+            <item row="3" column="0" colspan="3">
              <widget class="QTabWidget" name="tabWidget_3">
               <property name="currentIndex">
                <number>0</number>
@@ -3977,19 +3966,430 @@ padding: 0px 5px;</string>
                 </item>
                </layout>
               </widget>
+              <widget class="QWidget" name="tab_13">
+               <attribute name="title">
+                <string>认证管理</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_116">
+                <item row="0" column="0" colspan="3">
+                 <layout class="QGridLayout" name="gridLayout_115">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_verifyIcon_manage">
+                    <property name="minimumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="pixmap">
+                     <pixmap resource="resource.qrc">:/images/color_icon/color-delete.svg</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_verifyStatus">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>95</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>11</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>认证状态：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="label_verifyType_manage">
+                    <property name="minimumSize">
+                     <size>
+                      <width>180</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>11</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>--</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_verifyType_2">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>95</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>认证信息：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QPushButton" name="btn_verifyInfo">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>查看详情</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPushButton" name="btn_delVerify">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>取消当前认证</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="3">
+                 <widget class="QGroupBox" name="groupBox_11">
+                  <property name="title">
+                   <string/>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_117">
+                   <item row="0" column="1">
+                    <layout class="QGridLayout" name="gridLayout_114">
+                     <item row="0" column="0">
+                      <widget class="QRadioButton" name="rBtn_verify_group">
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLabel" name="label_verifyIcon_4">
+                       <property name="minimumSize">
+                        <size>
+                         <width>30</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>30</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resource.qrc">:/images/color_icon/verify_2.svg</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QLabel" name="label_verifyType_6">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>95</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <family>微软雅黑</family>
+                         <pointsize>11</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>机构认证</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="3">
+                      <spacer name="horizontalSpacer_18">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="0" column="0">
+                    <layout class="QGridLayout" name="gridLayout_34">
+                     <item row="0" column="1">
+                      <widget class="QRadioButton" name="rBtn_verify_person">
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_verifyType_5">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>95</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <family>微软雅黑</family>
+                         <pointsize>11</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>个人认证</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QLabel" name="label_verifyIcon_3">
+                       <property name="minimumSize">
+                        <size>
+                         <width>30</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>30</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resource.qrc">:/images/color_icon/verify.svg</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_13">
+                       <property name="text">
+                        <string>类型：</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="0" colspan="2">
+                    <widget class="QLineEdit" name="lineEdit_verifyInfo">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>35</height>
+                      </size>
+                     </property>
+                     <property name="placeholderText">
+                      <string>输入认证信息...</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0" colspan="2">
+                    <widget class="QPushButton" name="btn_updateVerify">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>35</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>添加认证</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="Line" name="line_3">
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
+            <item row="4" column="0">
+             <spacer name="verticalSpacer_2">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="5" column="0" colspan="3">
+             <widget class="QPushButton" name="btn_editUser_check">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>45</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>确认修改</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-setting_3.svg</normaloff>:/images/color_icon/color-setting_3.svg</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0" colspan="3">
+             <widget class="QPushButton" name="btn_editUser_cancel">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>45</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>取消操作</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resource.qrc">
+                <normaloff>:/images/color_icon/color-stop.svg</normaloff>:/images/color_icon/color-stop.svg</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
               </property>
              </widget>
             </item>
            </layout>
+           <widget class="QLabel" name="label_verifyIcon_manage_main">
+            <property name="geometry">
+             <rect>
+              <x>100</x>
+              <y>120</y>
+              <width>30</width>
+              <height>30</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>30</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="resource.qrc">:/images/color_icon/color-delete.svg</pixmap>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <zorder>label_userStatus</zorder>
+           <zorder>userManagePage_avatar</zorder>
+           <zorder>btn_editUser_check</zorder>
+           <zorder>btn_editUser_cancel</zorder>
+           <zorder>line</zorder>
+           <zorder>line_3</zorder>
+           <zorder>tabWidget_3</zorder>
+           <zorder>label_verifyIcon_manage_main</zorder>
           </widget>
          </widget>
         </item>
@@ -6775,7 +7175,7 @@ padding: 0px 5px;</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>35</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="font">
@@ -6783,11 +7183,6 @@ padding: 0px 5px;</string>
                  <family>微软雅黑</family>
                  <pointsize>10</pointsize>
                 </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">border-radius: 17.4px;/*设置圆角的大小*/
-border: .5px solid rgb(207, 207, 207);
-padding: 0px 5px;</string>
                </property>
                <property name="text">
                 <string/>
@@ -6805,7 +7200,7 @@ padding: 0px 5px;</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>35</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="text">
@@ -6822,7 +7217,7 @@ padding: 0px 5px;</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>35</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="text">

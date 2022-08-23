@@ -39,6 +39,7 @@
 #include "document.h"
 #include "previewpage.h"
 #include "posterwork.h"
+#include "infowidget.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -98,7 +99,7 @@ private:
 
     QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
-    QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon, *userAvatar;
+    QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon_1, *verifyIcon_2, *verifyNone, *userAvatar;
 
     formLogin *formLoginWindow;
 
@@ -165,6 +166,8 @@ private:
     PosterWork* posterWork;
 
     checkUpdate updateSoftWare;
+
+    InfoWidget* infoWidget;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -377,6 +380,12 @@ private slots:
 
     void on_btn_getQQAvatar_clicked();
 
+    void on_btn_verifyInfo_clicked();
+
+    void on_btn_delVerify_clicked();
+	
+    void on_btn_updateVerify_clicked();
+
     void loadActMemAccountInfo(QSqlRecord rec);
 
 signals:
@@ -450,6 +459,10 @@ signals:
     void poster_statistics();
 
     void loadStatisticsPanel();
+
+    void getVerify(const QString& uid);
+
+	void updateVerify(int type, int verifyTag, const QString& info);
 private:
     Ui::MainWindow *ui;
 };

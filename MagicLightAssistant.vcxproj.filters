@@ -104,6 +104,9 @@
     <ClCompile Include="posterwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="infowidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -160,6 +163,9 @@
     <QtMoc Include="checkupdate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="infowidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -174,6 +180,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="mainwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="infowidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
