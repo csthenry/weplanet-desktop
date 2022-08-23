@@ -918,10 +918,11 @@ void MainWindow::setUserManagePage() const
     ui->tableView_userManage->hideColumn(1);  //隐藏密码列
     ui->tableView_userManage->hideColumn(10);  //隐藏用户状态
 	ui->tableView_userManage->setSelectionModel(userManagePageSelection);
+    /*
     //当前项变化时触发currentChanged信号
     connect(userManagePageSelection, SIGNAL(currentChanged(QModelIndex, QModelIndex)),
                 this, SLOT(on_userManagePagecurrentChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
-    
+    */
     //当前行变化时触发currentRowChanged信号
     connect(userManagePageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
                 this, SLOT(on_userManagePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
