@@ -405,6 +405,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::delActivity, activityManageWork, &ActivityManageWork::delActivity);
     connect(this, &MainWindow::queryAccount, userManageWork, &UserManageWork::queryAccount);
     connect(userManageWork, &UserManageWork::queryAccountFinished, this, &MainWindow::loadActMemAccountInfo);
+    connect(this, &MainWindow::approveAllActivity, activityManageWork, &ActivityManageWork::m_approveAll);
     connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar) {
         if (ui->stackedWidget->currentIndex() == 8)
         {
@@ -598,6 +599,7 @@ void MainWindow::setHomePageBaseInfo()
     ui->label_home_department->setText(setBaseInfoWork->getDepartment());
     ui->label_info_department->setText(setBaseInfoWork->getDepartment());
     ui->label_home_score->setText(setBaseInfoWork->getScore());
+    ui->label_home_lastLogin->setText(setBaseInfoWork->getLastLoginTime());
 
 	//认证信息
     if (setBaseInfoWork->getVerifyTag() == -1)
@@ -634,7 +636,8 @@ void MainWindow::setHomePageBaseInfo()
     }
     if (ui->label_home_score->text().isEmpty())
         ui->label_home_score->setText("--");
-
+    if (ui->label_home_lastLogin->text().isEmpty())
+        ui->label_home_lastLogin->setText("--");
     if(setBaseInfoWork->getAvatar().isNull())
         ui->avatar->setPixmap(*userAvatar);
     else
@@ -1605,6 +1608,17 @@ void MainWindow::on_btn_actApprove_clicked()
         return;
     }
     emit approveActivity(curRec.value("actm_id").toString());
+}
+
+void MainWindow::on_btn_actApproveAll_clicked()
+{
+    QSqlRecord record = activityModel->record(activitySelection->currentIndex().row());
+    if (record.value("act_id").toString().isEmpty())
+    {
+        QMessageBox::warning(this, "警告", "请选择正确的活动。");
+        return;
+    }
+    emit approveAllActivity(record.value("act_id").toString());
 }
 
 void MainWindow::on_btn_actReject_clicked()

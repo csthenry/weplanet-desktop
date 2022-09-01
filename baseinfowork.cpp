@@ -13,7 +13,7 @@ void baseInfoWork::loadBaseInfoWorking()
     this->uid = uid;
     QSqlQuery query(DB);
     QThread::msleep(30);    //等待GUI相应的时间
-    query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar, score FROM magic_users WHERE uid = " + uid);
+    query.exec("SELECT * FROM magic_users WHERE uid = " + uid);
     if(query.next())
     {
         name = query.value("name").toString();
@@ -22,6 +22,7 @@ void baseInfoWork::loadBaseInfoWorking()
         mail = query.value("mail").toString();
         avatarUrl = query.value("user_avatar").toString();
         score = query.value("score").toString();
+        lastLoginTime = query.value("last_login").toDateTime().toString("yyyy-MM-dd HH:mm:ss");
     }
     group = loadGroup(uid);
     department = loadDepartment(uid);
@@ -413,6 +414,11 @@ QString baseInfoWork::getVerifyType()
 QString baseInfoWork::getVerufyInfo()
 {
     return verifyInfo;
+}
+
+QString baseInfoWork::getLastLoginTime()
+{
+    return lastLoginTime;
 }
 
 int baseInfoWork::getVerifyTag()

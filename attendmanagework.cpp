@@ -22,6 +22,7 @@ void AttendManageWork::working()
     userModel->setHeaderData(userModel->fieldIndex("user_group"), Qt::Horizontal, "用户组");
     userModel->setHeaderData(userModel->fieldIndex("user_dpt"), Qt::Horizontal, "所在部门");
     userModel->setHeaderData(userModel->fieldIndex("user_avatar"), Qt::Horizontal, "头像地址");
+    userModel->setHeaderData(userModel->fieldIndex("last_login"), Qt::Horizontal, "最后登录");
 
     //建立外键关联
     userModel->setRelation(userModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));

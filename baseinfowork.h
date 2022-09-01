@@ -16,7 +16,7 @@ class baseInfoWork : public QObject
 public:
     explicit baseInfoWork(QObject *parent = nullptr);
     void loadBaseInfoWorking();
-    void loadAvatarPic(QString url);
+    //void loadAvatarPic(QString url);
 
     void refreshBaseInfo(); //用于刷新数据
     void setUid(QString uid);
@@ -42,6 +42,7 @@ public:
     QPixmap getAvatar();
     QString getVerifyType();
     QString getVerufyInfo();
+    QString getLastLoginTime();
 	int getVerifyTag();
 
 private slots:
@@ -69,6 +70,7 @@ private:
     QPixmap avatar;
     QString attendBeginTime, attendEndTime;
     QString verifyType, verifyInfo;
+    QString lastLoginTime;
     int verifyTag;
     QPixmap loadAvatar(const QString& url);
     QString loadGroup(const QString& uid);

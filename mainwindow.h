@@ -236,6 +236,8 @@ private slots:
 
     void on_btn_actApprove_clicked();
 
+    void on_btn_actApproveAll_clicked();
+
     void on_btn_actReject_clicked();
 
     void on_btn_actDel_clicked();
@@ -429,6 +431,8 @@ signals:
     void cancelActivity(const QString aid, const QString& uid);
 
     void approveActivity(const QString actm_id);
+
+    void approveAllActivity(const QString act_id);
 
     void rejectActivity(const QString actm_id);
 

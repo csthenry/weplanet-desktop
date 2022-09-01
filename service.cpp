@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "fPHHs6D7rsP8cztP";
+    dataBasePassword = "wY2nG2dO7cH1mD9n";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -83,6 +83,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "user_avatar   varchar(256) NULL ,"
         "score         float(5,2)   NUll ,"
         "user_status   tinyint(1)   NOT NULL ,"
+        "last_login    datetime     NULL ,"
         "PRIMARY KEY (uid)                "
         ")ENGINE=InnoDB;                  "
         "INSERT INTO magic_users          "
@@ -289,6 +290,7 @@ int service::authAccount(QSqlDatabase& db, QString& uid, const long long account
         qDebug() << uid << "登录方式：账号登录";
         if (query.value("user_status").toInt() == 0)    //账号状态检测
             return 400;
+		query.exec("UPDATE magic_users SET last_login = '" + QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + "' WHERE uid = " + QString::number(account));   //更新最后登录时间
         return 200;
     }
     else
@@ -304,6 +306,7 @@ int service::authAccount(QSqlDatabase& db, QString& uid, const long long account
                 qDebug() << uid << "登录方式：手机号登录";
                 if (query.value("user_status").toInt() == 0)    //账号状态检测
                     return 400;
+                query.exec("UPDATE magic_users SET last_login = '" + QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + "' WHERE uid = " + uid);   //更新最后登录时间
                 return 200;
             }
         return 403;
