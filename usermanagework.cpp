@@ -36,7 +36,8 @@ void UserManageWork::working()
 void UserManageWork::getComboxItems()
 {
     //获取用户组和部门
-    QSqlQuery comboxGroup(DB);
+    DB_SECOND.open();
+    QSqlQuery comboxGroup(DB_SECOND);
     comboxItems_group.clear();
     comboxGroup.exec("SELECT * FROM magic_group");
     while (comboxGroup.next())
@@ -47,6 +48,7 @@ void UserManageWork::getComboxItems()
     while (comboxGroup.next())
         comboxItems_department << comboxGroup.value("dpt_name").toString();
     comboxGroup.clear();
+    DB_SECOND.close();
 
     //初始化数据过滤comBox
     for (int i = m_group->count() - 1; i >= 1; i--)
@@ -152,8 +154,8 @@ void UserManageWork::getVerify(const QString& uid)
 void UserManageWork::updateVerify(int type, int verifyTag, const QString& info)
 {
     bool res = false;
-    DB.open();
-    QSqlQuery query(DB);
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     if (type == 0)
         res = query.exec("DELETE FROM magic_verify WHERE v_uid = " + uid);
     else if(type == 1)
@@ -161,6 +163,8 @@ void UserManageWork::updateVerify(int type, int verifyTag, const QString& info)
     else
 		res = query.exec("UPDATE magic_verify SET vid = " + QString::number(verifyTag) + ", info = '" + info + "' WHERE v_uid = " + uid);
     qDebug() << query.lastError().text() << " " << query.lastQuery();
+    query.clear();
+    DB_SECOND.close();
     if (res)
         getVerify(this->uid);
     emit updateVerifyFinished(res);
