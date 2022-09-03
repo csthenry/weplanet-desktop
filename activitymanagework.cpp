@@ -52,11 +52,13 @@ void ActivityManageWork::updateActStatus()
         curRec = memberTabModel->record(i);
         tabModel->setFilter("act_id = '" + curRec.value("act_id").toString() + "'");
         actRec = tabModel->record(0);
+        
         if (actRec.value("endDate").toDateTime() <= curDataTime)
         {
             memberTabModel->setData(memberTabModel->index(i, 4), "已完成");
             memberTabModel->submitAll();
-            if(!memberTabModel->lastError().isValid())
+            //自己发布的活动不加学时
+            if(!memberTabModel->lastError().isValid() && actRec.value("editUid").toString() != uid)
             {
                 curScore += actRec.value("act_score").toFloat();
                 qDebug() << "正在统计[" + actRec.value("act_name").toString() + "]学时：" << actRec.value("act_score").toFloat();

@@ -24,7 +24,7 @@ public:
 private:
     service db_service;
     bool isFirst = true;
-    QSqlDatabase DB;
+    QSqlDatabase DB, DB_SECOND;
     QSqlTableModel *groupModel, *departmentModel;
 
 signals:

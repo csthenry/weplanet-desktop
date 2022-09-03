@@ -3,6 +3,7 @@
 AttendWork::AttendWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "AttendWork_DB");
+    db_service.addDatabase(DB_SECOND, "AttendWork_DB_SECOND");
 }
 
 void AttendWork::working()
@@ -26,9 +27,12 @@ void AttendWork::working()
     relTableModel->setFilter("a_uid='" + uid +"'");
 
     //将未签退的考勤项签退，签退时间23:59:59
+    DB_SECOND.open();
     QDateTime curDateTime = QDateTime::currentDateTime();
-    QSqlQuery query(DB);
+    QSqlQuery query(DB_SECOND);
     query.exec("UPDATE magic_attendance SET end_date='23:59:59' WHERE today<'" + curDateTime.date().toString("yyyy-MM-dd") + "' AND end_date IS NULL");
+    query.clear();
+    DB_SECOND.close();
 
     //分析工作时间
     analyseWorkTime();
@@ -159,9 +163,11 @@ void AttendWork::submitAll(int type)
         emit attendDone(relTableModel->submitAll());
     else
     {
-        QSqlQuery query(DB);
+        DB_SECOND.open();
+        QSqlQuery query(DB_SECOND);
         bool res = query.exec("UPDATE magic_attendance SET end_date = '" + cur.time().toString("hh:mm:ss") + "' WHERE a_uid = '" + uid +"' AND today = '" + cur.date().toString("yyyy-MM-dd") + "';");
         query.clear();
+        DB_SECOND.close();
         emit attendOutDone(res);
     }
 }

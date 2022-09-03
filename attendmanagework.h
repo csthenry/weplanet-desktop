@@ -29,7 +29,7 @@ private:
     QComboBox *m_group, *m_department;
     QPixmap curPix;
     QString avatarUrl;
-    QSqlDatabase DB;
+    QSqlDatabase DB, DB_SECOND;
     QStringList comboxItems_group, comboxItems_department;
     QSqlRelationalTableModel *userModel, *attendModel;
     void getComboxItems();

@@ -3,6 +3,7 @@
 GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "GroupManageWork_DB");
+    db_service.addDatabase(DB_SECOND, "GroupManageWork_DB_SECOND");
 }
 
 void GroupManageWork::working()
@@ -68,10 +69,12 @@ void GroupManageWork::submitAll(int type)
 void GroupManageWork::fixUser(int type, const QString &removedId)
 {
     QString id = removedId;
-    QSqlQuery query(DB);
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     if(type ==1)
         query.exec("UPDATE magic_users SET user_group='2' WHERE user_group='" + id + "';");   //将已经删除的用户组恢复至默认普通用户
     else
         query.exec("UPDATE magic_users SET user_dpt='1' WHERE user_dpt='" + id + "';");//将已经删除的部门恢复至默认部门
     query.clear();
+    DB_SECOND.close();
 }

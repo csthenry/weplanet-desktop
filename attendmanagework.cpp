@@ -3,6 +3,7 @@
 AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "AttendManageWork_DB");
+    db_service.addDatabase(DB_SECOND, "AttendManageWork_DB_SECOND");
 }
 
 void AttendManageWork::working()
@@ -45,9 +46,12 @@ void AttendManageWork::working()
     attendModel->select();
 
     //将未签退的考勤项签退，签退时间23:59:59
+    DB_SECOND.open();
     QDateTime curDateTime = QDateTime::currentDateTime();
-    QSqlQuery query(DB);
+    QSqlQuery query(DB_SECOND);
     query.exec("UPDATE magic_attendance SET end_date='23:59:59' WHERE today<'" + curDateTime.date().toString("yyyy-MM-dd") + "' AND end_date IS NULL");
+    query.clear();
+    DB_SECOND.close();
 
     //获取用户组和部门
     getComboxItems();
@@ -68,7 +72,9 @@ void AttendManageWork::dataOperate(int type)
     default:
         break;
     }
-    QSqlQuery query(DB);
+
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     if(type == 1 || type == 2)
         query.exec("DELETE FROM magic_attendance WHERE today<'" + curDateTime.date().toString("yyyy-MM-dd") + "'");
     else if(type == 3)
@@ -79,13 +85,16 @@ void AttendManageWork::dataOperate(int type)
         emit dataOperateFinished(false);
     else
         emit dataOperateFinished(true);
+    query.clear();
+    DB_SECOND.close();
 }
 
 
 void AttendManageWork::getComboxItems()
 {
     //获取用户组和部门
-    QSqlQuery comboxGroup(DB);
+    DB_SECOND.open();
+    QSqlQuery comboxGroup(DB_SECOND);
     comboxItems_group.clear();
     comboxGroup.exec("SELECT * FROM magic_group");
     while (comboxGroup.next())
@@ -96,6 +105,7 @@ void AttendManageWork::getComboxItems()
     while (comboxGroup.next())
         comboxItems_department << comboxGroup.value("dpt_name").toString();
     comboxGroup.clear();
+    DB_SECOND.close();
 
     //初始化数据过滤comBox
     for (int i = m_group->count() - 1; i >= 1; i--)
