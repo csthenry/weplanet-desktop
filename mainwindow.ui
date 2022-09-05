@@ -6927,7 +6927,7 @@ padding: 0px 5px;</string>
           </property>
           <property name="url">
            <url>
-            <string>qrc:/images/loading.html</string>
+            <string>qrc:/src/loader.html</string>
            </url>
           </property>
          </widget>
