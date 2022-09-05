@@ -338,6 +338,8 @@ private slots:
 
     void on_comboBox_department_2_currentIndexChanged(const QString &arg1);
 
+    void on_checkBox_agreePrivacy_stateChanged(int state);
+
     void on_btn_attendManagePage_recovery_clicked();
 
     void on_btn_attendManagePage_search_clicked();

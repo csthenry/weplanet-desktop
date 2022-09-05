@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->attendPage_avatar->setScaledContents(true);
     ui->info_avatar->setScaledContents(true);
 
+    //webEngine背景透明
     ui->webEngineView->page()->setBackgroundColor(Qt::transparent);
     ui->webEngineView_about->page()->setBackgroundColor(Qt::transparent);
 	ui->webEngineView_panel->page()->setBackgroundColor(Qt::transparent);
@@ -1686,6 +1687,7 @@ void MainWindow::on_btn_actJoin_clicked()
         QMessageBox::warning(this, "错误", "你已经报名了该活动，请勿重复报名。");
         return;
     }
+    ui->checkBox_agreePrivacy->setChecked(false);
     emit applyActivity(select_id, uid);
 }
 
@@ -2138,6 +2140,11 @@ void MainWindow::on_comboBox_department_2_currentIndexChanged(const QString &arg
 {
     Q_UNUSED(arg1);
     setUsersFilter_dpt(ui->comboBox_group_2, ui->comboBox_department_2);
+}
+
+void MainWindow::on_checkBox_agreePrivacy_stateChanged(int state)
+{
+    ui->btn_actJoin->setEnabled(bool(state));
 }
 
 void MainWindow::on_btn_attendManagePage_recovery_clicked()
