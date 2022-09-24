@@ -39,6 +39,7 @@
 #include "document.h"
 #include "previewpage.h"
 #include "posterwork.h"
+#include "infowidget.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -98,7 +99,7 @@ private:
 
     QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
-    QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon, *userAvatar;
+    QPixmap *statusOKIcon, *statusErrorIcon, *verifyIcon_1, *verifyIcon_2, *verifyNone, *userAvatar;
 
     formLogin *formLoginWindow;
 
@@ -166,6 +167,8 @@ private:
 
     checkUpdate updateSoftWare;
 
+    InfoWidget* infoWidget;
+
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
     ~MainWindow();
@@ -232,6 +235,8 @@ private slots:
     void on_btn_addGroup_clicked();
 
     void on_btn_actApprove_clicked();
+
+    void on_btn_actApproveAll_clicked();
 
     void on_btn_actReject_clicked();
 
@@ -333,6 +338,8 @@ private slots:
 
     void on_comboBox_department_2_currentIndexChanged(const QString &arg1);
 
+    void on_checkBox_agreePrivacy_stateChanged(int state);
+
     void on_btn_attendManagePage_recovery_clicked();
 
     void on_btn_attendManagePage_search_clicked();
@@ -376,6 +383,12 @@ private slots:
     void on_editPersonalInfoRes(int res);
 
     void on_btn_getQQAvatar_clicked();
+
+    void on_btn_verifyInfo_clicked();
+
+    void on_btn_delVerify_clicked();
+	
+    void on_btn_updateVerify_clicked();
 
     void loadActMemAccountInfo(QSqlRecord rec);
 
@@ -421,6 +434,8 @@ signals:
 
     void approveActivity(const QString actm_id);
 
+    void approveAllActivity(const QString act_id);
+
     void rejectActivity(const QString actm_id);
 
     void delActivityMem(const QString actm_id);
@@ -450,6 +465,10 @@ signals:
     void poster_statistics();
 
     void loadStatisticsPanel();
+
+    void getVerify(const QString& uid);
+
+	void updateVerify(int type, int verifyTag, const QString& info);
 private:
     Ui::MainWindow *ui;
 };

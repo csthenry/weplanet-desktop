@@ -13,7 +13,7 @@ void baseInfoWork::loadBaseInfoWorking()
     this->uid = uid;
     QSqlQuery query(DB);
     QThread::msleep(30);    //等待GUI相应的时间
-    query.exec("SELECT name, gender, telephone, mail, user_group, user_dpt, user_avatar, score FROM magic_users WHERE uid = " + uid);
+    query.exec("SELECT * FROM magic_users WHERE uid = " + uid);
     if(query.next())
     {
         name = query.value("name").toString();
@@ -22,10 +22,8 @@ void baseInfoWork::loadBaseInfoWorking()
         mail = query.value("mail").toString();
         avatarUrl = query.value("user_avatar").toString();
         score = query.value("score").toString();
+        lastLoginTime = query.value("last_login").toDateTime().toString("yyyy-MM-dd HH:mm:ss");
     }
-    group = loadGroup(uid);
-    department = loadDepartment(uid);
-    avatar = loadAvatar(avatarUrl);
 
     query.exec("SELECT * FROM magic_attendance WHERE a_uid='" + uid + "' AND today='" + curDateTime.date().toString("yyyy-MM-dd") + "';");
     if(query.next())
@@ -36,8 +34,32 @@ void baseInfoWork::loadBaseInfoWorking()
     }
     else
         isAttend = false;
+
+    query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
+    if (query.next())
+    {
+		verifyTag = query.value("vid").toInt();
+		verifyInfo = query.value("info").toString();
+		
+        query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
+        query.next();
+        verifyType = query.value("verify_name").toString();
+    }
+    else
+    {
+		verifyTag = -1;
+		verifyType = "";
+        verifyInfo = "";
+    }
+	
     query.clear();
     DB.close();
+
+    //此处操作会关闭数据库连接，故最后执行
+    group = loadGroup(uid);
+    department = loadDepartment(uid);
+    avatar = loadAvatar(avatarUrl);
+
     emit baseInfoFinished();
     qDebug() << "baseInfoLoad线程：" << this->thread();
 }
@@ -107,7 +129,10 @@ void baseInfoWork::bindQQAvatar(QString qqMail)
             qDebug() << "头像SDK" << avatarSdk << " 头像地址" + avatarUrl;
 
             query.exec("UPDATE magic_users SET user_avatar='" + avatarUrl + "' WHERE uid='" + uid + "';");
-            if (!query.lastError().text().isEmpty())
+            bool query_res = query.lastError().text().isEmpty();
+            query.clear();
+            DB.close();
+            if (!query_res)
             {
                 emit bindQQAvatarFinished(-1);
                 return;
@@ -149,6 +174,7 @@ QString baseInfoWork::getLastSignupUid()
 
 QString baseInfoWork::loadGroup(const QString& uid)
 {
+    DB.open();
     QString res;
     QSqlQuery query(DB);
     query.exec("SELECT user_group FROM magic_users WHERE uid = " + uid);
@@ -159,12 +185,14 @@ QString baseInfoWork::loadGroup(const QString& uid)
         return "--";
     res = query.value("group_name").toString();
     query.clear();
+    DB.close();
     return res;
 }
 
 QString baseInfoWork::loadDepartment(const QString& uid)
 {
     QString res;
+    DB.open();
     QSqlQuery query(DB);
     query.exec("SELECT user_dpt FROM magic_users WHERE uid = " + uid);
     if(!query.next())
@@ -174,6 +202,7 @@ QString baseInfoWork::loadDepartment(const QString& uid)
         return "--";
     res = query.value("dpt_name").toString();
     query.clear();
+    DB.close();
     return res;
 }
 
@@ -271,6 +300,8 @@ void baseInfoWork::updateScore(float score)
     qDebug() << "正在将已完成活动学时写入数据库...";
     QSqlQuery query(DB);
     query.exec("UPDATE magic_users SET score ='" + QString::number(score) + "' + score WHERE uid = '" + uid + "'");
+    query.clear();
+    DB.close();
 }
 
 void baseInfoWork::get_statistics()
@@ -285,6 +316,7 @@ void baseInfoWork::get_statistics()
     else
         statistics.exec("INSERT INTO magic_statistics (date, get_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
     statistics.clear();
+    DB.close();
 }
 
 void baseInfoWork::loadStatisticsPanel()
@@ -339,6 +371,7 @@ void baseInfoWork::loadStatisticsPanel()
 	panelSeriesObj_half.insert("data_dynamices", dynamices_cnt_half);
 	
 	query.clear();
+    DB.close();
     emit loadStatisticsPanelFinished(0, -1);
 }
 
@@ -385,6 +418,26 @@ QString baseInfoWork::getScore()
 QPixmap baseInfoWork::getAvatar()
 {
     return avatar;
+}
+
+QString baseInfoWork::getVerifyType()
+{
+    return verifyType;
+}
+
+QString baseInfoWork::getVerufyInfo()
+{
+    return verifyInfo;
+}
+
+QString baseInfoWork::getLastLoginTime()
+{
+    return lastLoginTime;
+}
+
+int baseInfoWork::getVerifyTag()
+{
+    return verifyTag;
 }
 
 QPixmap baseInfoWork::loadAvatar(const QString &url)

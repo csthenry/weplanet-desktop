@@ -4,6 +4,7 @@ ActivityManageWork::ActivityManageWork(QObject *parent)
 	: QObject(parent)
 {
     db_service.addDatabase(DB, "ActivityManageWork_DB");
+    db_service.addDatabase(DB_SECOND, "ActivityManageWork_DB_SECOND");
 }
 
 ActivityManageWork::~ActivityManageWork()
@@ -51,11 +52,13 @@ void ActivityManageWork::updateActStatus()
         curRec = memberTabModel->record(i);
         tabModel->setFilter("act_id = '" + curRec.value("act_id").toString() + "'");
         actRec = tabModel->record(0);
+        
         if (actRec.value("endDate").toDateTime() <= curDataTime)
         {
             memberTabModel->setData(memberTabModel->index(i, 4), "已完成");
             memberTabModel->submitAll();
-            if(!memberTabModel->lastError().isValid())
+            //自己发布的活动不加学时
+            if(!memberTabModel->lastError().isValid() && actRec.value("editUid").toString() != uid)
             {
                 curScore += actRec.value("act_score").toFloat();
                 qDebug() << "正在统计[" + actRec.value("act_name").toString() + "]学时：" << actRec.value("act_score").toFloat();
@@ -99,8 +102,9 @@ void ActivityManageWork::submitAll()
     bool res = true;
     if (tabModel->isDirty())
     {
+        DB_SECOND.open();
         res = tabModel->submitAll();
-        QSqlQuery statistics(DB);
+        QSqlQuery statistics(DB_SECOND);
 
         //统计活动发布量
         statistics.exec("SELECT * FROM magic_statistics WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
@@ -109,6 +113,7 @@ void ActivityManageWork::submitAll()
         else
             statistics.exec("INSERT INTO magic_statistics (date, activity_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
         statistics.clear();
+        DB_SECOND.close();
     }
     emit submitAllFinished(res);
 }
@@ -130,27 +135,32 @@ void ActivityManageWork::setMemberModel(QSqlTableModel* model)
 
 void ActivityManageWork::apply(const QString aid, const QString& uid)
 {
+    DB_SECOND.open();
     QDateTime curDateTime;
     curDateTime = QDateTime::currentDateTime();
-    QSqlQuery query(DB);
+    QSqlQuery query(DB_SECOND);
     query.exec("INSERT INTO magic_activityMembers (act_id, actm_uid, actm_joinDate, status) VALUES (" + aid + ", " + uid + ", '" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + "', '待审核')");
     QString res = query.lastError().text();
     query.clear();
+    DB_SECOND.close();
     emit operateFinished(res);
 }
 
 void ActivityManageWork::cancel(const QString aid, const QString& uid)
 {
-    QSqlQuery query(DB);
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     query.exec("DELETE FROM magic_activityMembers WHERE act_id=" + aid + " AND actm_uid=" + uid);
     QString res = query.lastError().text();
     query.clear();
+    DB_SECOND.close();
     emit operateFinished(res);
 }
 
 void ActivityManageWork::delActivity(const QString aid)
 {
-    QSqlQuery query(DB);
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     query.exec("DELETE FROM magic_activity WHERE act_id=" + aid);
     QString res = query.lastError().text();
     if(res.isEmpty())
@@ -159,6 +169,18 @@ void ActivityManageWork::delActivity(const QString aid)
         QString res = query.lastError().text();
     }
     query.clear();
+    DB_SECOND.close();
+    emit manageOperateFinished(res);
+}
+
+void ActivityManageWork::m_approveAll(const QString aid)
+{
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
+    query.exec("UPDATE magic_activityMembers SET status='已录取' WHERE act_id=" + aid + " AND status='待审核'");
+    QString res = query.lastError().text();
+    query.clear();
+    DB_SECOND.close();
     emit manageOperateFinished(res);
 }
 

@@ -5,6 +5,7 @@ PosterWork::PosterWork(QObject *parent)
 	: QObject(parent)
 {
     db_service.addDatabase(DB, "PosterManageWork_DB");
+    db_service.addDatabase(DB_SECOND, "PosterManageWork_DB_SECOND");
 }
 
 PosterWork::~PosterWork()
@@ -68,8 +69,8 @@ void PosterWork::setWorkType(int type)
 
 void PosterWork::poster_statistics()
 {
-    DB.open();
-    QSqlQuery statistics(DB);
+    DB_SECOND.open();
+    QSqlQuery statistics(DB_SECOND);
 
     //统计动态发布量
     statistics.exec("SELECT * FROM magic_statistics WHERE date='" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "'");
@@ -78,4 +79,5 @@ void PosterWork::poster_statistics()
     else
         statistics.exec("INSERT INTO magic_statistics (date, dynamics_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
     statistics.clear();
+    DB_SECOND.close();
 }

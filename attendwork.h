@@ -36,7 +36,7 @@ private:
     int workTimeData[4] = {0};
     service db_service;
     QString uid;
-    QSqlDatabase DB;
+    QSqlDatabase DB, DB_SECOND;
     QSqlRelationalTableModel *relTableModel;
     QJsonArray weekMyWorkTime, weekAllWorkStatus, weekWorkMem;
 signals:

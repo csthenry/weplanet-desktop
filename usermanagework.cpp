@@ -3,6 +3,7 @@
 UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "UserManageWork_DB");
+    db_service.addDatabase(DB_SECOND, "UserManageWork_DB_SECOND");
 }
 
 void UserManageWork::working()
@@ -21,6 +22,7 @@ void UserManageWork::working()
     relTableModel->setHeaderData(relTableModel->fieldIndex("user_dpt"), Qt::Horizontal, "所在部门");
     relTableModel->setHeaderData(relTableModel->fieldIndex("user_avatar"), Qt::Horizontal, "头像地址");
     relTableModel->setHeaderData(relTableModel->fieldIndex("score"), Qt::Horizontal, "活动学时");
+    relTableModel->setHeaderData(relTableModel->fieldIndex("last_login"), Qt::Horizontal, "最后登录");
     //建立外键关联
     relTableModel->setRelation(relTableModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
     relTableModel->setRelation(relTableModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
@@ -34,7 +36,8 @@ void UserManageWork::working()
 void UserManageWork::getComboxItems()
 {
     //获取用户组和部门
-    QSqlQuery comboxGroup(DB);
+    DB_SECOND.open();
+    QSqlQuery comboxGroup(DB_SECOND);
     comboxItems_group.clear();
     comboxGroup.exec("SELECT * FROM magic_group");
     while (comboxGroup.next())
@@ -45,6 +48,7 @@ void UserManageWork::getComboxItems()
     while (comboxGroup.next())
         comboxItems_department << comboxGroup.value("dpt_name").toString();
     comboxGroup.clear();
+    DB_SECOND.close();
 
     //初始化数据过滤comBox
     for (int i = m_group->count() - 1; i >= 1; i--)
@@ -80,8 +84,8 @@ void UserManageWork::loadAvatar()
 
 void UserManageWork::queryAccount(const QString& account)
 {
-    DB.open();
-    QSqlQuery query(DB);
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
     QSqlRecord res;
     query.exec("SELECT * FROM magic_users WHERE uid=" + account);
     query.next();
@@ -92,6 +96,8 @@ void UserManageWork::queryAccount(const QString& account)
     query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id=" + res.value("user_dpt").toString());
     query.next();
     res.setValue("user_dpt", query.value(0));
+    query.clear();
+	DB_SECOND.close();
     emit queryAccountFinished(res);
 }
 
@@ -100,11 +106,13 @@ void UserManageWork::setCurAvatarUrl(const QString &url)
     avatarUrl = url;
 }
 
+/*
 void UserManageWork::getComboxItems(QStringList &comboxItems_group, QStringList &comboxItems_department)
 {
     comboxItems_group = this->comboxItems_group;
     comboxItems_department = this->comboxItems_department;
 }
+*/
 
 QSqlDatabase UserManageWork::getDB()
 {
@@ -115,4 +123,69 @@ void UserManageWork::setCombox(QComboBox* group, QComboBox* department)
 {
     m_group = group;
     m_department = department;
+}
+
+void UserManageWork::getVerify(const QString& uid)
+{
+    this->uid = uid;
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
+    bool res = query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
+    if (query.next())
+    {
+        verifyTag = query.value("vid").toInt();
+        verifyInfo = query.value("info").toString();
+
+        query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
+        query.next();
+        verifyType = query.value("verify_name").toString();
+    }
+    else
+    {
+        verifyTag = -1;
+        verifyType = "";
+        verifyInfo = "";
+    }
+    query.clear();
+	DB_SECOND.close();
+    emit getVerifyFinished(res);
+}
+
+void UserManageWork::updateVerify(int type, int verifyTag, const QString& info)
+{
+    bool res = false;
+    DB_SECOND.open();
+    QSqlQuery query(DB_SECOND);
+    if (type == 0)
+        res = query.exec("DELETE FROM magic_verify WHERE v_uid = " + uid);
+    else if(type == 1)
+		res = query.exec("INSERT INTO magic_verify (v_uid, vid, info) VALUES (" + uid + ", " + QString::number(verifyTag) + ", '" + info + "')");
+    else
+		res = query.exec("UPDATE magic_verify SET vid = " + QString::number(verifyTag) + ", info = '" + info + "' WHERE v_uid = " + uid);
+    qDebug() << query.lastError().text() << " " << query.lastQuery();
+    query.clear();
+    DB_SECOND.close();
+    if (res)
+        getVerify(this->uid);
+    emit updateVerifyFinished(res);
+}
+
+QString UserManageWork::getVerifyInfo()
+{
+    return verifyInfo;
+}
+
+QString UserManageWork::getVerifyType()
+{
+    return verifyType;
+}
+
+int UserManageWork::getVerifyTag()
+{
+    return verifyTag;
+}
+
+QString UserManageWork::getUid()
+{
+    return uid;
 }

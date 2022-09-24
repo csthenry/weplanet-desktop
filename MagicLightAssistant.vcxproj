@@ -214,6 +214,7 @@
     <ClCompile Include="excelexport.cpp" />
     <ClCompile Include="formlogin.cpp" />
     <ClCompile Include="groupmanagework.cpp" />
+    <ClCompile Include="infowidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="posterwork.cpp" />
@@ -245,6 +246,7 @@
     </QtMoc>
     <QtMoc Include="previewpage.h" />
     <QtMoc Include="posterwork.h" />
+    <QtMoc Include="infowidget.h" />
     <ClInclude Include="querymodel.h" />
     <ClInclude Include="readOnlyDelegate.h" />
     <ClInclude Include="resource.h" />
@@ -275,6 +277,7 @@
   <ItemGroup>
     <QtUic Include="formlogin.ui">
     </QtUic>
+    <QtUic Include="infowidget.ui" />
     <QtUic Include="mainwindow.ui">
     </QtUic>
   </ItemGroup>

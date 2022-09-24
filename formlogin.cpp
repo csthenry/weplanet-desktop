@@ -35,12 +35,12 @@ formLogin::formLogin(QDialog *parent) :
 
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     //QPixmap mainicon(":/images/color_icon/main.svg");
-    QPixmap mainicon(":/images/logo/planet.svg");
+    //QPixmap mainicon(":/images/logo/planet.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
     ui->labelIcon->setMaximumSize(25, 25);
     ui->labelIcon->setScaledContents(true);    //图片自适应大小
     ui->mainIcon->setScaledContents(true);
-    ui->mainIcon->setPixmap(mainicon);
+    //ui->mainIcon->setPixmap(mainicon);
     //ui->labelIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
 
     //加载动画
@@ -115,6 +115,18 @@ formLogin::formLogin(QDialog *parent) :
         }
     }, Qt::UniqueConnection);
 
+    //更新HarmonyOS字体
+    QFont font;
+    int font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");
+    QStringList fontName = QFontDatabase::applicationFontFamilies(font_Id);
+    font.setFamily(fontName.at(0));
+    auto listWidget = findChildren<QWidget*>();
+    for (auto& widget : listWidget) //遍历所有组件
+    {
+        font.setWeight(widget->font().weight());
+        font.setPointSize(widget->font().pointSize());
+        widget->setFont(font);
+    }
 }
 
 formLogin::~formLogin()
@@ -198,7 +210,10 @@ void formLogin::updateFinished(bool res)
         QString str = updateSoftWare->getUpdateString();
         int ret = QMessageBox::warning(this, "检查更新", str, "前往下载", "暂不更新");
         if (ret == 0)
+        {
             QDesktopServices::openUrl(updateSoftWare->getUrl());
+            this->close();  //关闭窗口
+        }
     }
 }
 
