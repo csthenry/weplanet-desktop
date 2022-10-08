@@ -71,9 +71,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->tableView_userManage->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_userManage));
 
     //加载动画
+    avatarLoadMovie = new QMovie(":/images/img/Loading6.gif");
     loadingMovie = new QMovie(":/images/color_icon/loading.gif");
     ui->label_loading->setMovie(loadingMovie);
     loadingMovie->start();
+    avatarLoadMovie->start();
 
     //心跳query
     refTimer = new QTimer(this);
@@ -538,9 +540,11 @@ MainWindow::~MainWindow()
     }
     refTimer->stop();
     loadingMovie->stop();
+    avatarLoadMovie->stop();
 
     delete infoWidget;
     delete loadingMovie;
+    delete avatarLoadMovie;
     delete notice_page;
     delete c_channel;
     delete m_channel;
@@ -1387,11 +1391,16 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
         ui->label_userStatus->setText("状态：正常");
     else
         ui->label_userStatus->setText("状态：封禁");
+
     //子线程加载头像
     userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
+    ui->userManagePage_avatar->setPixmap(QPixmap(":/images/color_icon/user.svg"));
     emit userManageGetAvatar();
     
 	//子线程获取认证信息
+    ui->label_verifyType_manage->setText("加载中...");
+    ui->btn_verifyInfo->setEnabled(false);
+    ui->btn_delVerify->setEnabled(false);
     emit getVerify(curRecord.value("uid").toString());
 	
     //密码修改
@@ -1492,6 +1501,13 @@ void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& cu
     Q_UNUSED(previous);
     if (ui->tabWidget_2->currentIndex() != 2)   //切换至报名成员信息页
         ui->tabWidget_2->setCurrentIndex(2);
+	ui->activityManage_avatar->setPixmap(QPixmap(":/images/color_icon/user.svg"));
+    ui->label_actMemUid->setText("加载中...");
+    ui->label_actMemName->setText("加载中...");
+    ui->label_actMemGroup->setText("加载中...");
+    ui->label_actMemDpt->setText("加载中...");
+    ui->label_actTel->setText("加载中...");
+    ui->label_actMail->setText("加载中...");
     emit queryAccount(activityMemModel->record(current.row()).value("actm_uid").toString());
 }
 

@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1390</width>
-    <height>758</height>
+    <width>1450</width>
+    <height>770</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1390</width>
-    <height>758</height>
+    <width>1450</width>
+    <height>770</height>
    </size>
   </property>
   <property name="contextMenuPolicy">
@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>17</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -6942,7 +6942,7 @@ padding: 0px 5px;</string>
       </widget>
       <widget class="QWidget" name="page_more">
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QGroupBox" name="groupBox_20">
           <property name="font">
            <font>
@@ -6951,34 +6951,10 @@ padding: 0px 5px;</string>
            </font>
           </property>
           <property name="title">
-           <string>更多</string>
+           <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_101">
-           <item row="0" column="0">
-            <widget class="QWebEngineView" name="webEngineView_about">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>100</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>100</height>
-              </size>
-             </property>
-             <property name="contextMenuPolicy">
-              <enum>Qt::NoContextMenu</enum>
-             </property>
-             <property name="url">
-              <url>
-               <string>qrc:/lib/eCharts/echarts_about.html</string>
-              </url>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
+           <item row="1" column="0">
             <widget class="QLabel" name="label_102">
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
@@ -7003,17 +6979,31 @@ padding: 0px 5px;</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="Line" name="line_4">
-             <property name="frameShadow">
-              <enum>QFrame::Sunken</enum>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
           </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QWebEngineView" name="webEngineView_about">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::NoContextMenu</enum>
+          </property>
+          <property name="url">
+           <url>
+            <string>qrc:/lib/eCharts/echarts_about.html</string>
+           </url>
+          </property>
          </widget>
         </item>
        </layout>
@@ -7834,6 +7824,21 @@ padding: 0px 5px;</string>
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page_6">
+       <widget class="QGroupBox" name="groupBox_55">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>50</y>
+          <width>951</width>
+          <height>201</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>设置</string>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="page_5">
        <widget class="QWidget" name="layoutWidget_2">
         <property name="geometry">
@@ -8028,6 +8033,7 @@ background-color: transparent;
    <addaction name="actRefresh"/>
    <addaction name="separator"/>
    <addaction name="actPanel"/>
+   <addaction name="actSettings"/>
    <addaction name="actMore"/>
    <addaction name="actExit"/>
   </widget>
@@ -8353,6 +8359,24 @@ background-color: transparent;
    </property>
    <property name="toolTip">
     <string>智慧大屏</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actSettings">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/images/color_icon/color-setting_2.svg</normaloff>:/images/color_icon/color-setting_2.svg</iconset>
+   </property>
+   <property name="text">
+    <string>设置</string>
+   </property>
+   <property name="toolTip">
+    <string>设置</string>
    </property>
    <property name="font">
     <font>

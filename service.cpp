@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "***********";
+    dataBasePassword = "yG4fY8oQ0oL6aQ4p";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -258,6 +258,18 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "get_cnt       int(10)   NOT NULL DEFAULT 0,"
         "activity_cnt  int(10)   NOT NULL DEFAULT 0,"
         "dynamics_cnt  int(10)   NOT NULL DEFAULT 0)"
+        "ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
+    //系统数据表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_system"
+        "(sys_name     varchar(64)    NOT NULL,"
+        "field_1       varchar(128)   NULL,"
+        "field_2       varchar(128)   NULL,"
+        "field_3       varchar(128)   NULL,"
+        "field_4       varchar(128)   NULL,"
+        "field_5       varchar(128)   NULL)"
         "ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);

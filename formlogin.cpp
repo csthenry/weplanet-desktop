@@ -19,7 +19,7 @@ formLogin::formLogin(QDialog *parent) :
     ui(new Ui::formLogin)
 {
     ui->setupUi(this);
-
+    ui->groupBox->setVisible(false);
     //限制登录注册输入
     QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
     QValidator* validator_account = new QRegExpValidator(regx_account), *validator_pwd= new QRegExpValidator(regx_pwd);
@@ -99,8 +99,8 @@ formLogin::formLogin(QDialog *parent) :
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
-    connect(this, &formLogin::beginUpdate, updateSoftWare, &checkUpdate::homeCheckUpdate);
     //更新检测
+    connect(this, &formLogin::beginUpdate, updateSoftWare, &checkUpdate::homeCheckUpdate);
     emit beginUpdate();
     connect(updateSoftWare, &checkUpdate::homeCheckUpdateFinished, this, &formLogin::updateFinished);
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
@@ -114,7 +114,20 @@ formLogin::formLogin(QDialog *parent) :
             emit initDatabase();    //初始化数据库
         }
     }, Qt::UniqueConnection);
-
+    //获取公告
+	connect(this, &formLogin::getAnnouncement, loginWork, &baseInfoWork::getAnnouncement);
+    connect(loginWork, &baseInfoWork::getAnnouncementFinished, this, [=](bool res) {
+        if (res)
+        {
+			ui->label_announcement->setText(loginWork->getAnnouncementText());
+            if (loginWork->getAnnouncementTag() == 0)
+                ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-tips.svg"));
+            else
+                ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-warning_2.svg"));
+        }
+        ui->groupBox->setVisible(res);
+        });
+    emit getAnnouncement();
     //更新HarmonyOS字体
     QFont font;
     int font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");

@@ -61,7 +61,7 @@ private:
 
     QTimer *refTimer;
 
-    QMovie *loadingMovie;
+    QMovie *loadingMovie, *avatarLoadMovie;
     
     QMutex mutex;
 

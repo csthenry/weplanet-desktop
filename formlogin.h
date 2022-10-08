@@ -88,6 +88,7 @@ signals:
     void signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender);
     void initDatabase();
     void beginUpdate();
+	void getAnnouncement();
 };
 
 #endif // FORMLOGIN_H

@@ -319,6 +319,24 @@ void baseInfoWork::get_statistics()
     DB.close();
 }
 
+void baseInfoWork::getAnnouncement()
+{
+	DB.open();
+	QSqlQuery query(DB);
+	query.exec("SELECT * FROM magic_system WHERE sys_name='announcement'");
+    bool res = query.next();
+    if (res)
+    {
+        announcementTag = query.value("field_1").toInt();
+        announcementText = query.value("field_2").toString();
+		res = query.value("field_3").toBool();
+    }
+	query.clear();
+	DB.close();
+
+	emit getAnnouncementFinished(res);
+}
+
 void baseInfoWork::loadStatisticsPanel()
 {
     DB.open();
@@ -435,9 +453,19 @@ QString baseInfoWork::getLastLoginTime()
     return lastLoginTime;
 }
 
+QString baseInfoWork::getAnnouncementText()
+{
+    return announcementText;
+}
+
 int baseInfoWork::getVerifyTag()
 {
     return verifyTag;
+}
+
+int baseInfoWork::getAnnouncementTag()
+{
+    return announcementTag;
 }
 
 QPixmap baseInfoWork::loadAvatar(const QString &url)

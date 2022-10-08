@@ -98,12 +98,24 @@
         <file>3rdparty/markdown.css</file>
         <file>3rdparty/marked.js</file>
         <file>loading.html</file>
+        <file>img/Loading1.gif</file>
+        <file>img/Loading2.gif</file>
+        <file>img/Loading3.gif</file>
+        <file>img/Loading4.gif</file>
+        <file>img/Loading5.gif</file>
+        <file>img/Loading6.gif</file>
+        <file>img/Loading7.gif</file>
+        <file>img/Loading8.gif</file>
+        <file>img/Loading9.gif</file>
+        <file>img/Loading10.gif</file>
+        <file>img/loading.gif</file>
     </qresource>
     <qresource prefix="/lib">
         <file>eCharts/echarts.html</file>
         <file>eCharts/echarts.min.js</file>
         <file>eCharts/echarts_about.html</file>
         <file>eCharts/echarts_panel.html</file>
+        <file>eCharts/2022.png</file>
     </qresource>
     <qresource prefix="/src">
         <file>font/HarmonyOS_Sans_SC_Regular.ttf</file>

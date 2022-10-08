@@ -25,6 +25,7 @@ public:
     void updateScore(float score);
     void get_statistics();
     void loadStatisticsPanel();
+    void getAnnouncement();
     QJsonObject getPanelSeriesObj(int type);
 
     bool getAttendToday();
@@ -43,7 +44,9 @@ public:
     QString getVerifyType();
     QString getVerufyInfo();
     QString getLastLoginTime();
+	QString getAnnouncementText();
 	int getVerifyTag();
+    int getAnnouncementTag();
 
 private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
@@ -75,6 +78,8 @@ private:
     QPixmap loadAvatar(const QString& url);
     QString loadGroup(const QString& uid);
     QString loadDepartment(const QString& uid);
+    QString announcementText;
+    int announcementTag;
     QJsonObject panelSeriesObj, panelSeriesObj_half;
 
 signals:
@@ -87,6 +92,7 @@ signals:
     void initDatabaseFinished(bool);
     void bindQQAvatarFinished(int);
     void loadStatisticsPanelFinished(int, int);
+	void getAnnouncementFinished(bool);
 };
 
 #endif // BASEINFOWORK_H
