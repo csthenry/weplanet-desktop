@@ -50,6 +50,7 @@ private:
     QString readLoginSettings();
     bool autoLoginSuccess = false;  //自动登录标记
     bool dbStatus = true;
+    bool isDebug;
     QPixmap *statusOKIcon, *statusErrorIcon;
     checkUpdate *updateSoftWare;
     void updateFinished(bool res);

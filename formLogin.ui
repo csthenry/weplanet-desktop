@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>760</width>
-    <height>469</height>
+    <height>476</height>
    </rect>
   </property>
   <property name="font">
@@ -153,7 +153,10 @@
         </font>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#49b9c5;&quot;&gt;Magic&amp;lt;Lite&amp;gt;Planet&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#49b9c5;&quot;&gt;Magic&amp;lt;Lite&amp;gt;Planet &lt;/span&gt;&lt;span style=&quot; font-size:7pt; font-weight:600; color:#49b9c5;&quot;&gt;©字节星球 计算机科学与技术学院/软件工程学院&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="margin">
+        <number>10</number>
        </property>
       </widget>
      </item>

@@ -67,7 +67,7 @@ private:
 
     bool dbStatus = true;
 
-    QThread *dbThread, *sqlThread;
+    QThread *dbThread, *sqlThread, *sqlThread_SECOND;
 
     QString uid, removedGroupId, removedDptId;
 
@@ -148,6 +148,8 @@ private:
     void updateFinished();
 
     void setStatisticsPanel(int option = 0, int days = -1);
+	
+    void setSystemSettings();
 
     SqlWork *sqlWork;
 
@@ -203,6 +205,8 @@ private slots:
     void on_actPanel_triggered();
 
     void on_actRefresh_triggered();
+
+    void on_actSettings_triggered();
 
     void on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason action);
 
@@ -313,6 +317,8 @@ private slots:
     void on_btn_actCnt_clicked();
 
     void on_btn_dyCnt_clicked();
+
+    void on_btn_saveSysSettings_clicked();
 
     void on_lineEdit_manageContents_textChanged(const QString& arg1);
 
@@ -469,6 +475,10 @@ signals:
     void getVerify(const QString& uid);
 
 	void updateVerify(int type, int verifyTag, const QString& info);
+
+    void loadSystemSettings();
+
+    void saveSystemSettings();
 private:
     Ui::MainWindow *ui;
 };

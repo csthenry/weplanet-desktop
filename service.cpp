@@ -270,7 +270,13 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "field_3       varchar(128)   NULL,"
         "field_4       varchar(128)   NULL,"
         "field_5       varchar(128)   NULL)"
-        "ENGINE=InnoDB;";
+        "ENGINE=InnoDB;"
+        "INSERT INTO magic_system"
+        "(sys_name, field_3)"
+        "VALUES ('announcement', 'false');"
+        "INSERT INTO magic_system"
+        "(sys_name, field_1)"
+        "VALUES ('debug', 'false');";
     if (res)
         res = query.exec(creatTableStr);
     query.clear();

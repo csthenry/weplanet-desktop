@@ -108,18 +108,18 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     activityManageWork = new ActivityManageWork();
     posterWork = new PosterWork();
 
-    sqlThread = new QThread(), dbThread = new QThread();
+    sqlThread = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
     setBaseInfoWork->moveToThread(sqlThread);
     attendWork->moveToThread(sqlThread);
-    userManageWork->moveToThread(sqlThread);
+    userManageWork->moveToThread(sqlThread_SECOND);
     attendManageWork->moveToThread(sqlThread);
     groupManageWork->moveToThread(sqlThread);
-    activityManageWork->moveToThread(sqlThread);
+    activityManageWork->moveToThread(sqlThread_SECOND);
     posterWork->moveToThread(sqlThread);
     
     //检查更新
-    updateSoftWare.moveToThread(sqlThread);
+    updateSoftWare.moveToThread(sqlThread_SECOND);
 
     connect(this, &MainWindow::beginUpdate, &updateSoftWare, &checkUpdate::parse_UpdateJson);
     connect(&updateSoftWare, &checkUpdate::finished, this, &MainWindow::updateFinished);
@@ -127,6 +127,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //开启数据库连接线程
     dbThread->start();
+    sqlThread->start();
+    sqlThread_SECOND->start();
     sqlWork->beginThread();
     connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
     emit startDbWork();
@@ -207,10 +209,19 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::loadStatisticsPanel, setBaseInfoWork, &baseInfoWork::loadStatisticsPanel);
     connect(setBaseInfoWork, &baseInfoWork::loadStatisticsPanelFinished, this, &MainWindow::setStatisticsPanel);
 	
-    //个人基本信息信号槽
+    //基本信息信号槽
     connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
-    sqlThread->start();
     connect(this, &MainWindow::startBaseInfoWork, setBaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
+	connect(this, &MainWindow::loadSystemSettings, setBaseInfoWork, &baseInfoWork::loadSystemSettings);
+	connect(setBaseInfoWork, &baseInfoWork::loadSystemSettingsFinished, this, &MainWindow::setSystemSettings);
+    connect(this, &MainWindow::saveSystemSettings, setBaseInfoWork, &baseInfoWork::saveSystemSettings);
+	connect(setBaseInfoWork, &baseInfoWork::saveSystemSettingsFinished, this, [=](bool res){
+        ui->label_loadingSettings->setMovie(&QMovie());
+		if (res) 
+			QMessageBox::information(this, "提示", "系统设置保存成功。");
+        else
+            QMessageBox::warning(this, "警告", "系统设置保存失败。");
+        });
 
     //首页活动信号槽
     connect(this, &MainWindow::actHomeWorking, activityManageWork, &ActivityManageWork::homeWorking);
@@ -530,6 +541,11 @@ MainWindow::~MainWindow()
     {
         sqlThread->quit();
         sqlThread->wait();
+    }
+    if (sqlThread_SECOND->isRunning())
+    {
+        sqlThread_SECOND->quit();
+        sqlThread_SECOND->wait();
     }
     if(dbThread->isRunning())
     {
@@ -894,6 +910,24 @@ void MainWindow::setStatisticsPanel(int option, int days)
 	ui->webEngineView_panel->page()->runJavaScript(jsCode);
 	if(ui->stackedWidget->currentIndex() != 16)
         ui->stackedWidget->setCurrentIndex(16);
+}
+
+void MainWindow::setSystemSettings()
+{
+    ui->label_loadingSettings->setMovie(&QMovie());
+    if (setBaseInfoWork->getSys_isAnnounceOpen())
+        ui->rBtn_announceOpen->setChecked(true);
+    else
+		ui->rBtn_announceClose->setChecked(true);
+    if (setBaseInfoWork->getSys_isTipsAnnounce())
+        ui->rBtn_tipsAnnounce->setChecked(true);
+    else
+        ui->rBtn_warningAnnounce->setChecked(true);
+    if (setBaseInfoWork->getSys_isDebugOpen())
+        ui->rBtn_debugOpen->setChecked(true);
+    else
+		ui->rBtn_debugClose->setChecked(true);
+    ui->textEdit_announcement->setText(setBaseInfoWork->getSys_announcementText());
 }
 
 void MainWindow::on_PieSliceHighlight(bool show)
@@ -1323,10 +1357,18 @@ void MainWindow::on_actRefresh_triggered()
     case 14: on_actNoticeManage_triggered(); break;
     case 15: on_actNotice_triggered(); break;
     case 16: on_actPanel_triggered(); break;
+    case 17: on_actSettings_triggered(); break;
 
     default:
         break;
     }
+}
+
+void MainWindow::on_actSettings_triggered()
+{
+	emit loadSystemSettings();
+    ui->label_loadingSettings->setMovie(loadingMovie);
+    ui->stackedWidget->setCurrentIndex(17);
 }
 
 void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const
@@ -1912,6 +1954,17 @@ void MainWindow::on_rBtn_actAll_clicked()
 void MainWindow::on_btn_dyCnt_clicked()
 {
     setStatisticsPanel(5, panel_series_count);
+}
+
+void MainWindow::on_btn_saveSysSettings_clicked()
+{
+    setBaseInfoWork->setSys_isAnnounceOpen(ui->rBtn_announceOpen->isChecked());
+    setBaseInfoWork->setSys_isTipsAnnounce(ui->rBtn_tipsAnnounce->isChecked());
+    setBaseInfoWork->setSys_isDebugOpen(ui->rBtn_debugOpen->isChecked());
+    setBaseInfoWork->setSys_announcementText(ui->textEdit_announcement->toPlainText());
+	
+    ui->label_loadingSettings->setMovie(loadingMovie);
+    emit saveSystemSettings();
 }
 
 void MainWindow::on_rBtn_actFinished_clicked()
@@ -2543,11 +2596,14 @@ void MainWindow::initToolbar(QSqlRecord rec)
     {
         actionList[6]->setEnabled(false);
         actionList[6]->setVisible(false);
-
+        ui->groupBox_system->setEnabled(false);
+        ui->groupBox_system->setVisible(false);
     }
     else {
         actionList[6]->setEnabled(true);
         actionList[6]->setVisible(true);
+        ui->groupBox_system->setEnabled(true);
+        ui->groupBox_system->setVisible(true);
     }
     if (rec.value("notice_manage").toString() == '0')
     {

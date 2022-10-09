@@ -331,6 +331,10 @@ void baseInfoWork::getAnnouncement()
         announcementText = query.value("field_2").toString();
 		res = query.value("field_3").toBool();
     }
+    query.exec("SELECT * FROM magic_system WHERE sys_name='debug'"); 
+    if (query.next())
+        isDebug = query.value("field_1").toBool();
+    qDebug() << "system debug:" << query.value("field_1").toBool();
 	query.clear();
 	DB.close();
 
@@ -391,6 +395,44 @@ void baseInfoWork::loadStatisticsPanel()
 	query.clear();
     DB.close();
     emit loadStatisticsPanelFinished(0, -1);
+}
+
+void baseInfoWork::loadSystemSettings()
+{
+    bool res = false;
+    DB.open();
+    QSqlQuery query(DB);
+    query.exec("SELECT * FROM magic_system WHERE sys_name='announcement'");
+    res = query.next();
+	if (res)
+	{
+		QSqlRecord record = query.record();
+		sys_isAnnounceOpen = record.value("field_3").toBool();
+        sys_isTipsAnnounce = record.value("field_1").toBool();
+        sys_announcementText = record.value("field_2").toString();
+	}
+    query.exec("SELECT * FROM magic_system WHERE sys_name='debug'");
+    res = query.next();
+    if (res)
+    {
+        QSqlRecord record = query.record();
+        sys_isDebugOpen = record.value("field_1").toBool();
+    }
+    query.clear();
+    DB.close();
+    emit loadSystemSettingsFinished(res);
+}
+
+void baseInfoWork::saveSystemSettings()
+{
+    bool res;
+    DB.open();
+    QSqlQuery query(DB);
+	query.exec("UPDATE magic_system SET field_1='" + QString::number(sys_isDebugOpen) + "' WHERE sys_name='debug'");
+	res = query.exec("UPDATE magic_system SET field_1='" + QString::number(sys_isTipsAnnounce) + "', field_2='" + sys_announcementText + "', field_3='" + QString::number(sys_isAnnounceOpen) + "' WHERE sys_name='announcement'");
+	query.clear();
+	DB.close();
+	emit saveSystemSettingsFinished(res);
 }
 
 QJsonObject baseInfoWork::getPanelSeriesObj(int type)
@@ -466,6 +508,51 @@ int baseInfoWork::getVerifyTag()
 int baseInfoWork::getAnnouncementTag()
 {
     return announcementTag;
+}
+
+bool baseInfoWork::getIsDebug()
+{
+    return isDebug;
+}
+
+bool baseInfoWork::getSys_isAnnounceOpen()
+{
+    return sys_isAnnounceOpen;
+}
+
+bool baseInfoWork::getSys_isTipsAnnounce()
+{
+    return sys_isTipsAnnounce;
+}
+
+bool baseInfoWork::getSys_isDebugOpen()
+{
+    return sys_isDebugOpen;
+}
+
+void baseInfoWork::setSys_isAnnounceOpen(bool arg)
+{
+    sys_isAnnounceOpen = arg;
+}
+
+void baseInfoWork::setSys_isTipsAnnounce(bool arg)
+{
+    sys_isTipsAnnounce = arg;
+}
+
+void baseInfoWork::setSys_isDebugOpen(bool arg)
+{
+    sys_isDebugOpen = arg;
+}
+
+void baseInfoWork::setSys_announcementText(const QString& arg)
+{
+    sys_announcementText = arg;
+}
+
+QString baseInfoWork::getSys_announcementText()
+{
+    return sys_announcementText;
 }
 
 QPixmap baseInfoWork::loadAvatar(const QString &url)
