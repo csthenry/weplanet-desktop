@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //加载动画
     avatarLoadMovie = new QMovie(":/images/img/Loading6.gif");
-    loadingMovie = new QMovie(":/images/color_icon/loading.gif");
+    loadingMovie = new QMovie(":/images/img/Loading4.gif");//:/images/color_icon/loading.gif
     ui->label_loading->setMovie(loadingMovie);
     loadingMovie->start();
     avatarLoadMovie->start();
@@ -197,8 +197,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
         posterWork->setManageModel(noticeManageModel);
         posterWork->setModel(noticeModel);
-
-
+		
+        ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
         emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
         emit actHomeWorking();
@@ -215,12 +215,18 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 	connect(this, &MainWindow::loadSystemSettings, setBaseInfoWork, &baseInfoWork::loadSystemSettings);
 	connect(setBaseInfoWork, &baseInfoWork::loadSystemSettingsFinished, this, &MainWindow::setSystemSettings);
     connect(this, &MainWindow::saveSystemSettings, setBaseInfoWork, &baseInfoWork::saveSystemSettings);
-	connect(setBaseInfoWork, &baseInfoWork::saveSystemSettingsFinished, this, [=](bool res){
+    connect(setBaseInfoWork, &baseInfoWork::saveSystemSettingsFinished, this, [=](bool res) {
         ui->label_loadingSettings->setMovie(&QMovie());
-		if (res) 
-			QMessageBox::information(this, "提示", "系统设置保存成功。");
+        if (res)
+        {
+            ui->label_loadingSettings->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+            QMessageBox::information(this, "提示", "系统设置保存成功。");
+        }
         else
+        {
+            ui->label_loadingSettings->setPixmap(QPixmap(":/images/color_icon/color-error.svg"));
             QMessageBox::warning(this, "警告", "系统设置保存失败。");
+        }
         });
 
     //首页活动信号槽
@@ -261,6 +267,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     	ui->btn_getQQAvatar->setIcon(QIcon(QPixmap(":/images/color_icon/user.svg")));
     	if (tag == 1)
     	{
+            ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
     		emit startBaseInfoWork();      //刷新个人信息
     		QMessageBox::information(this, "消息", "QQ头像绑定成功，你的头像将会随QQ头像更新。", QMessageBox::Ok);
     	}
@@ -691,6 +698,13 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_homePage_beginTime->setText("--");
         ui->label_homePage_endTime->setText("--");
     }
+	//更新首页状态图标
+    ui->label_homeStatus->setMovie(&QMovie());
+    if (ui->label_homeVer->text() >= ui->label_LatestVersion->text())
+        ui->label_homeStatus->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+    else
+        ui->label_homeStatus->setPixmap(QPixmap(":/images/color_icon/approve_2.svg"));
+	
     sqlWork->beginThread();
 }
 
@@ -757,6 +771,7 @@ void MainWindow::on_actExit_triggered()
         formLoginWindow->send();    //发送信号
         resetUID();
         emit startSetAuth(uid);
+        ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
         emit startBaseInfoWork();
         emit actHomeWorking();
         ui->stackedWidget->setCurrentIndex(13);  //回到首页
@@ -780,6 +795,7 @@ void MainWindow::on_actHome_triggered()
         sqlWork->stopThread();  //等待sqlWork暂停时再停止，避免数据库未连接
     else
         return;
+    ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
     emit startBaseInfoWork();   //刷新首页数据
     emit actHomeWorking();
 }

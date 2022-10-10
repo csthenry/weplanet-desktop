@@ -32,7 +32,6 @@ formLogin::formLogin(QDialog *parent) :
     ui->labelStatus->setWhatsThis("如果显示绿色图标，表示数据库连接正常，否则请检查网络或联系技术支持。\nEmail: cst@bytecho.net");
 
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
-
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     //QPixmap mainicon(":/images/color_icon/main.svg");
     //QPixmap mainicon(":/images/logo/planet.svg");
