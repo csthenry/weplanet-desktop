@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //加载动画
     avatarLoadMovie = new QMovie(":/images/img/Loading6.gif");
-    loadingMovie = new QMovie(":/images/img/Loading4.gif");//:/images/color_icon/loading.gif
+    loadingMovie = new QMovie(":/images/img/Loading4.gif"); //:/images/color_icon/loading.gif
     ui->label_loading->setMovie(loadingMovie);
     loadingMovie->start();
     avatarLoadMovie->start();
@@ -1382,8 +1382,11 @@ void MainWindow::on_actRefresh_triggered()
 
 void MainWindow::on_actSettings_triggered()
 {
-	emit loadSystemSettings();
-    ui->label_loadingSettings->setMovie(loadingMovie);
+    if (ui->groupBox_system->isEnabled())
+    {
+        emit loadSystemSettings();
+        ui->label_loadingSettings->setMovie(loadingMovie);
+    }
     ui->stackedWidget->setCurrentIndex(17);
 }
 
