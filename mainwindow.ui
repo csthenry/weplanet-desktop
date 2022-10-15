@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>17</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -8192,8 +8192,60 @@ padding: 0px 5px;</string>
           <property name="title">
            <string>全局设置</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_125">
+          <layout class="QGridLayout" name="gridLayout_128">
            <item row="0" column="0">
+            <widget class="QGroupBox" name="groupBox_55">
+             <property name="title">
+              <string/>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_125">
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="checkBox_autoRun">
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNoPredictiveText</set>
+                </property>
+                <property name="text">
+                 <string>开机时自动启动</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="3">
+               <widget class="QPushButton" name="btn_resetAutoRun">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>重新设置开机自启</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resource.qrc">
+                  <normaloff>:/images/color_icon/color-launch.svg</normaloff>:/images/color_icon/color-launch.svg</iconset>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_25">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>1179</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0" colspan="2">
             <widget class="QLabel" name="label_117">
              <property name="font">
               <font>
@@ -8201,14 +8253,14 @@ padding: 0px 5px;</string>
               </font>
              </property>
              <property name="text">
-              <string>目前仅开放【管理员系统设置（仅管理员可见）】，【普通用户全局设置】待根据具体需求开发...</string>
+              <string>目前仅开放【系统设置】（管理员）和开机自启，更多【全局设置】待根据具体需求开发...</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="2" column="0" colspan="2">
             <spacer name="verticalSpacer_10">
              <property name="orientation">
               <enum>Qt::Vertical</enum>

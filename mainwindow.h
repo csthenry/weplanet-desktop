@@ -11,6 +11,7 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#define AUTO_RUN "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" //自启注册表地址
 
 #include <QMainWindow>
 #include <QDataWidgetMapper>
@@ -112,6 +113,10 @@ private:
     QJsonObject panel_seriesObj, panel_display;     //智慧大屏
 	
 	int panel_series_count = 14, panel_option = -1;
+
+    void setProcessAutoRun(const QString& appPath, bool flag = false);  //自启函数
+
+    bool isAutoRun(const QString& appPath); //是否开机自启
 
     void setHomePageBaseInfo();
 
@@ -345,6 +350,10 @@ private slots:
     void on_comboBox_department_2_currentIndexChanged(const QString &arg1);
 
     void on_checkBox_agreePrivacy_stateChanged(int state);
+
+    void on_checkBox_autoRun_stateChanged(int state);
+
+    void on_btn_resetAutoRun_clicked();
 
     void on_btn_attendManagePage_recovery_clicked();
 

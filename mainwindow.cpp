@@ -540,6 +540,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         font.setPointSize(widget->font().pointSize());
         widget->setFont(font);
     }
+    //检测开机启动
+    ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
 }
 MainWindow::~MainWindow()
 {
@@ -610,6 +612,42 @@ void MainWindow::updateFinished()
         ui->label_LatestVersion->setText("--");
     else
         ui->label_LatestVersion->setText(updateSoftWare.getLatestVersion());
+}
+/*******************************
+ * 功能：开启/关闭 进程开机自动启动
+ * 参数：
+    1、appPath：需要开启/关闭的自启动软件的“绝对路径”，通常为QApplication::applicationFilePath()
+    2、flag：   开启/关闭自启动标志位，1为开启，0为关闭
+*******************************/
+void MainWindow::setProcessAutoRun(const QString& appPath, bool flag)
+{
+    QSettings settings(AUTO_RUN, QSettings::NativeFormat);
+
+    //以程序名称作为注册表中的键,根据键获取对应的值（程序路径）
+    QFileInfo fInfo(appPath);
+    QString name = fInfo.baseName();    //键-名称
+
+    //如果注册表中的路径和当前程序路径不一样，则表示没有设置自启动或本自启动程序已经更换了路径
+    QString oldPath = settings.value(name).toString(); //获取目前的值-绝对路劲
+    QString newPath = QDir::toNativeSeparators(appPath);    //toNativeSeparators函数将"/"替换为"\"
+    if (flag)
+    {
+        if (oldPath != newPath)
+            settings.setValue(name, newPath);
+    }
+    else
+        settings.remove(name);
+}
+
+bool MainWindow::isAutoRun(const QString& appPath)
+{
+    QSettings settings(AUTO_RUN, QSettings::NativeFormat);
+    QFileInfo fInfo(appPath);
+    QString name = fInfo.baseName();
+    QString oldPath = settings.value(name).toString();
+    QString newPath = QDir::toNativeSeparators(appPath);
+
+    return (settings.contains(name) && newPath == oldPath);
 }
 
 void MainWindow::setHomePageBaseInfo()
@@ -2233,6 +2271,18 @@ void MainWindow::on_comboBox_department_2_currentIndexChanged(const QString &arg
 void MainWindow::on_checkBox_agreePrivacy_stateChanged(int state)
 {
     ui->btn_actJoin->setEnabled(bool(state));
+}
+
+void MainWindow::on_checkBox_autoRun_stateChanged(int state)
+{
+    setProcessAutoRun(QApplication::applicationFilePath(), state);
+}
+
+void MainWindow::on_btn_resetAutoRun_clicked()
+{
+    setProcessAutoRun(QApplication::applicationFilePath(), 1);
+    ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
+    QMessageBox::information(this, "提示", "设置完成，请重新启动Windows。", QMessageBox::Ok);
 }
 
 void MainWindow::on_btn_attendManagePage_recovery_clicked()
