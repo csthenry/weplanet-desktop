@@ -14,11 +14,11 @@ service::service()
     /*****************请在此处完善数据库信息*****************/
 
     dataBaseType = "QMYSQL";    //available drivers: QSQLITE QMYSQL QMYSQL3 QODBC QODBC3 QPSQL QPSQL7
-    hostName = "106.54.176.177";
+    hostName = "api.bytecho.net";
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "***********";
+    dataBasePassword = "***************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -259,6 +259,24 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "activity_cnt  int(10)   NOT NULL DEFAULT 0,"
         "dynamics_cnt  int(10)   NOT NULL DEFAULT 0)"
         "ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
+    //系统数据表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_system"
+        "(sys_name     varchar(64)    NOT NULL,"
+        "field_1       varchar(128)   NULL,"
+        "field_2       varchar(256)   NULL,"
+        "field_3       varchar(128)   NULL,"
+        "field_4       varchar(128)   NULL,"
+        "field_5       varchar(128)   NULL)"
+        "ENGINE=InnoDB;"
+        "INSERT INTO magic_system"
+        "(sys_name, field_3)"
+        "VALUES ('announcement', 0);"
+        "INSERT INTO magic_system"
+        "(sys_name, field_1)"
+        "VALUES ('debug', 0);";
     if (res)
         res = query.exec(creatTableStr);
     query.clear();

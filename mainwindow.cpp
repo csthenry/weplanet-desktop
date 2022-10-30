@@ -71,9 +71,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->tableView_userManage->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_userManage));
 
     //加载动画
-    loadingMovie = new QMovie(":/images/color_icon/loading.gif");
+    avatarLoadMovie = new QMovie(":/images/img/Loading6.gif");
+    loadingMovie = new QMovie(":/images/img/Loading4.gif"); //:/images/color_icon/loading.gif
     ui->label_loading->setMovie(loadingMovie);
     loadingMovie->start();
+    avatarLoadMovie->start();
 
     //心跳query
     refTimer = new QTimer(this);
@@ -106,18 +108,18 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     activityManageWork = new ActivityManageWork();
     posterWork = new PosterWork();
 
-    sqlThread = new QThread(), dbThread = new QThread();
+    sqlThread = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
     setBaseInfoWork->moveToThread(sqlThread);
     attendWork->moveToThread(sqlThread);
-    userManageWork->moveToThread(sqlThread);
+    userManageWork->moveToThread(sqlThread_SECOND);
     attendManageWork->moveToThread(sqlThread);
     groupManageWork->moveToThread(sqlThread);
-    activityManageWork->moveToThread(sqlThread);
+    activityManageWork->moveToThread(sqlThread_SECOND);
     posterWork->moveToThread(sqlThread);
     
     //检查更新
-    updateSoftWare.moveToThread(sqlThread);
+    updateSoftWare.moveToThread(sqlThread_SECOND);
 
     connect(this, &MainWindow::beginUpdate, &updateSoftWare, &checkUpdate::parse_UpdateJson);
     connect(&updateSoftWare, &checkUpdate::finished, this, &MainWindow::updateFinished);
@@ -125,6 +127,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //开启数据库连接线程
     dbThread->start();
+    sqlThread->start();
+    sqlThread_SECOND->start();
     sqlWork->beginThread();
     connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
     emit startDbWork();
@@ -193,8 +197,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
         posterWork->setManageModel(noticeManageModel);
         posterWork->setModel(noticeModel);
-
-
+		
+        ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
         emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
         emit actHomeWorking();
@@ -205,10 +209,25 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::loadStatisticsPanel, setBaseInfoWork, &baseInfoWork::loadStatisticsPanel);
     connect(setBaseInfoWork, &baseInfoWork::loadStatisticsPanelFinished, this, &MainWindow::setStatisticsPanel);
 	
-    //个人基本信息信号槽
+    //基本信息信号槽
     connect(setBaseInfoWork, &baseInfoWork::baseInfoFinished, this, &MainWindow::setHomePageBaseInfo);
-    sqlThread->start();
     connect(this, &MainWindow::startBaseInfoWork, setBaseInfoWork, &baseInfoWork::loadBaseInfoWorking);
+	connect(this, &MainWindow::loadSystemSettings, setBaseInfoWork, &baseInfoWork::loadSystemSettings);
+	connect(setBaseInfoWork, &baseInfoWork::loadSystemSettingsFinished, this, &MainWindow::setSystemSettings);
+    connect(this, &MainWindow::saveSystemSettings, setBaseInfoWork, &baseInfoWork::saveSystemSettings);
+    connect(setBaseInfoWork, &baseInfoWork::saveSystemSettingsFinished, this, [=](bool res) {
+        ui->label_loadingSettings->setMovie(&QMovie());
+        if (res)
+        {
+            ui->label_loadingSettings->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+            QMessageBox::information(this, "提示", "系统设置保存成功。");
+        }
+        else
+        {
+            ui->label_loadingSettings->setPixmap(QPixmap(":/images/color_icon/color-error.svg"));
+            QMessageBox::warning(this, "警告", "系统设置保存失败。");
+        }
+        });
 
     //首页活动信号槽
     connect(this, &MainWindow::actHomeWorking, activityManageWork, &ActivityManageWork::homeWorking);
@@ -248,6 +267,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     	ui->btn_getQQAvatar->setIcon(QIcon(QPixmap(":/images/color_icon/user.svg")));
     	if (tag == 1)
     	{
+            ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
     		emit startBaseInfoWork();      //刷新个人信息
     		QMessageBox::information(this, "消息", "QQ头像绑定成功，你的头像将会随QQ头像更新。", QMessageBox::Ok);
     	}
@@ -520,6 +540,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         font.setPointSize(widget->font().pointSize());
         widget->setFont(font);
     }
+    //检测开机启动
+    ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
 }
 MainWindow::~MainWindow()
 {
@@ -528,6 +550,11 @@ MainWindow::~MainWindow()
     {
         sqlThread->quit();
         sqlThread->wait();
+    }
+    if (sqlThread_SECOND->isRunning())
+    {
+        sqlThread_SECOND->quit();
+        sqlThread_SECOND->wait();
     }
     if(dbThread->isRunning())
     {
@@ -538,9 +565,11 @@ MainWindow::~MainWindow()
     }
     refTimer->stop();
     loadingMovie->stop();
+    avatarLoadMovie->stop();
 
     delete infoWidget;
     delete loadingMovie;
+    delete avatarLoadMovie;
     delete notice_page;
     delete c_channel;
     delete m_channel;
@@ -583,6 +612,42 @@ void MainWindow::updateFinished()
         ui->label_LatestVersion->setText("--");
     else
         ui->label_LatestVersion->setText(updateSoftWare.getLatestVersion());
+}
+/*******************************
+ * 功能：开启/关闭 进程开机自动启动
+ * 参数：
+    1、appPath：需要开启/关闭的自启动软件的“绝对路径”，通常为QApplication::applicationFilePath()
+    2、flag：   开启/关闭自启动标志位，1为开启，0为关闭
+*******************************/
+void MainWindow::setProcessAutoRun(const QString& appPath, bool flag)
+{
+    QSettings settings(AUTO_RUN, QSettings::NativeFormat);
+
+    //以程序名称作为注册表中的键,根据键获取对应的值（程序路径）
+    QFileInfo fInfo(appPath);
+    QString name = fInfo.baseName();    //键-名称
+
+    //如果注册表中的路径和当前程序路径不一样，则表示没有设置自启动或本自启动程序已经更换了路径
+    QString oldPath = settings.value(name).toString(); //获取目前的值-绝对路劲
+    QString newPath = QDir::toNativeSeparators(appPath);    //toNativeSeparators函数将"/"替换为"\"
+    if (flag)
+    {
+        if (oldPath != newPath)
+            settings.setValue(name, newPath);
+    }
+    else
+        settings.remove(name);
+}
+
+bool MainWindow::isAutoRun(const QString& appPath)
+{
+    QSettings settings(AUTO_RUN, QSettings::NativeFormat);
+    QFileInfo fInfo(appPath);
+    QString name = fInfo.baseName();
+    QString oldPath = settings.value(name).toString();
+    QString newPath = QDir::toNativeSeparators(appPath);
+
+    return (settings.contains(name) && newPath == oldPath);
 }
 
 void MainWindow::setHomePageBaseInfo()
@@ -671,6 +736,13 @@ void MainWindow::setHomePageBaseInfo()
         ui->label_homePage_beginTime->setText("--");
         ui->label_homePage_endTime->setText("--");
     }
+	//更新首页状态图标
+    ui->label_homeStatus->setMovie(&QMovie());
+    if (ui->label_homeVer->text() >= ui->label_LatestVersion->text())
+        ui->label_homeStatus->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+    else
+        ui->label_homeStatus->setPixmap(QPixmap(":/images/color_icon/approve_2.svg"));
+	
     sqlWork->beginThread();
 }
 
@@ -737,6 +809,7 @@ void MainWindow::on_actExit_triggered()
         formLoginWindow->send();    //发送信号
         resetUID();
         emit startSetAuth(uid);
+        ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
         emit startBaseInfoWork();
         emit actHomeWorking();
         ui->stackedWidget->setCurrentIndex(13);  //回到首页
@@ -760,6 +833,7 @@ void MainWindow::on_actHome_triggered()
         sqlWork->stopThread();  //等待sqlWork暂停时再停止，避免数据库未连接
     else
         return;
+    ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
     emit startBaseInfoWork();   //刷新首页数据
     emit actHomeWorking();
 }
@@ -890,6 +964,24 @@ void MainWindow::setStatisticsPanel(int option, int days)
 	ui->webEngineView_panel->page()->runJavaScript(jsCode);
 	if(ui->stackedWidget->currentIndex() != 16)
         ui->stackedWidget->setCurrentIndex(16);
+}
+
+void MainWindow::setSystemSettings()
+{
+    ui->label_loadingSettings->setMovie(&QMovie());
+    if (setBaseInfoWork->getSys_isAnnounceOpen())
+        ui->rBtn_announceOpen->setChecked(true);
+    else
+		ui->rBtn_announceClose->setChecked(true);
+    if (setBaseInfoWork->getSys_isTipsAnnounce())
+        ui->rBtn_tipsAnnounce->setChecked(true);
+    else
+        ui->rBtn_warningAnnounce->setChecked(true);
+    if (setBaseInfoWork->getSys_isDebugOpen())
+        ui->rBtn_debugOpen->setChecked(true);
+    else
+		ui->rBtn_debugClose->setChecked(true);
+    ui->textEdit_announcement->setText(setBaseInfoWork->getSys_announcementText());
 }
 
 void MainWindow::on_PieSliceHighlight(bool show)
@@ -1319,10 +1411,21 @@ void MainWindow::on_actRefresh_triggered()
     case 14: on_actNoticeManage_triggered(); break;
     case 15: on_actNotice_triggered(); break;
     case 16: on_actPanel_triggered(); break;
+    case 17: on_actSettings_triggered(); break;
 
     default:
         break;
     }
+}
+
+void MainWindow::on_actSettings_triggered()
+{
+    if (ui->groupBox_system->isEnabled())
+    {
+        emit loadSystemSettings();
+        ui->label_loadingSettings->setMovie(loadingMovie);
+    }
+    ui->stackedWidget->setCurrentIndex(17);
 }
 
 void MainWindow::on_groupPageDptcurrentChanged(const QModelIndex &current, const QModelIndex &previous) const
@@ -1387,11 +1490,16 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
         ui->label_userStatus->setText("状态：正常");
     else
         ui->label_userStatus->setText("状态：封禁");
+
     //子线程加载头像
     userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
+    ui->userManagePage_avatar->setPixmap(QPixmap(":/images/color_icon/user.svg"));
     emit userManageGetAvatar();
     
 	//子线程获取认证信息
+    ui->label_verifyType_manage->setText("加载中...");
+    ui->btn_verifyInfo->setEnabled(false);
+    ui->btn_delVerify->setEnabled(false);
     emit getVerify(curRecord.value("uid").toString());
 	
     //密码修改
@@ -1492,6 +1600,13 @@ void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& cu
     Q_UNUSED(previous);
     if (ui->tabWidget_2->currentIndex() != 2)   //切换至报名成员信息页
         ui->tabWidget_2->setCurrentIndex(2);
+	ui->activityManage_avatar->setPixmap(QPixmap(":/images/color_icon/user.svg"));
+    ui->label_actMemUid->setText("加载中...");
+    ui->label_actMemName->setText("加载中...");
+    ui->label_actMemGroup->setText("加载中...");
+    ui->label_actMemDpt->setText("加载中...");
+    ui->label_actTel->setText("加载中...");
+    ui->label_actMail->setText("加载中...");
     emit queryAccount(activityMemModel->record(current.row()).value("actm_uid").toString());
 }
 
@@ -1898,6 +2013,17 @@ void MainWindow::on_btn_dyCnt_clicked()
     setStatisticsPanel(5, panel_series_count);
 }
 
+void MainWindow::on_btn_saveSysSettings_clicked()
+{
+    setBaseInfoWork->setSys_isAnnounceOpen(ui->rBtn_announceOpen->isChecked());
+    setBaseInfoWork->setSys_isTipsAnnounce(ui->rBtn_tipsAnnounce->isChecked());
+    setBaseInfoWork->setSys_isDebugOpen(ui->rBtn_debugOpen->isChecked());
+    setBaseInfoWork->setSys_announcementText(ui->textEdit_announcement->toPlainText());
+	
+    ui->label_loadingSettings->setMovie(loadingMovie);
+    emit saveSystemSettings();
+}
+
 void MainWindow::on_rBtn_actFinished_clicked()
 {
     int idx = -1;
@@ -2145,6 +2271,18 @@ void MainWindow::on_comboBox_department_2_currentIndexChanged(const QString &arg
 void MainWindow::on_checkBox_agreePrivacy_stateChanged(int state)
 {
     ui->btn_actJoin->setEnabled(bool(state));
+}
+
+void MainWindow::on_checkBox_autoRun_stateChanged(int state)
+{
+    setProcessAutoRun(QApplication::applicationFilePath(), state);
+}
+
+void MainWindow::on_btn_resetAutoRun_clicked()
+{
+    setProcessAutoRun(QApplication::applicationFilePath(), 1);
+    ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
+    QMessageBox::information(this, "提示", "设置完成，请重新启动Windows。", QMessageBox::Ok);
 }
 
 void MainWindow::on_btn_attendManagePage_recovery_clicked()
@@ -2527,11 +2665,14 @@ void MainWindow::initToolbar(QSqlRecord rec)
     {
         actionList[6]->setEnabled(false);
         actionList[6]->setVisible(false);
-
+        ui->groupBox_system->setEnabled(false);
+        ui->groupBox_system->setVisible(false);
     }
     else {
         actionList[6]->setEnabled(true);
         actionList[6]->setVisible(true);
+        ui->groupBox_system->setEnabled(true);
+        ui->groupBox_system->setVisible(true);
     }
     if (rec.value("notice_manage").toString() == '0')
     {

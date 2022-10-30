@@ -11,6 +11,7 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#define AUTO_RUN "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" //自启注册表地址
 
 #include <QMainWindow>
 #include <QDataWidgetMapper>
@@ -61,13 +62,13 @@ private:
 
     QTimer *refTimer;
 
-    QMovie *loadingMovie;
+    QMovie *loadingMovie, *avatarLoadMovie;
     
     QMutex mutex;
 
     bool dbStatus = true;
 
-    QThread *dbThread, *sqlThread;
+    QThread *dbThread, *sqlThread, *sqlThread_SECOND;
 
     QString uid, removedGroupId, removedDptId;
 
@@ -113,6 +114,10 @@ private:
 	
 	int panel_series_count = 14, panel_option = -1;
 
+    void setProcessAutoRun(const QString& appPath, bool flag = false);  //自启函数
+
+    bool isAutoRun(const QString& appPath); //是否开机自启
+
     void setHomePageBaseInfo();
 
     void setAttendPage();
@@ -148,6 +153,8 @@ private:
     void updateFinished();
 
     void setStatisticsPanel(int option = 0, int days = -1);
+	
+    void setSystemSettings();
 
     SqlWork *sqlWork;
 
@@ -203,6 +210,8 @@ private slots:
     void on_actPanel_triggered();
 
     void on_actRefresh_triggered();
+
+    void on_actSettings_triggered();
 
     void on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason action);
 
@@ -314,6 +323,8 @@ private slots:
 
     void on_btn_dyCnt_clicked();
 
+    void on_btn_saveSysSettings_clicked();
+
     void on_lineEdit_manageContents_textChanged(const QString& arg1);
 
     void on_comboBox_group_currentIndexChanged(const QString &arg1);
@@ -339,6 +350,10 @@ private slots:
     void on_comboBox_department_2_currentIndexChanged(const QString &arg1);
 
     void on_checkBox_agreePrivacy_stateChanged(int state);
+
+    void on_checkBox_autoRun_stateChanged(int state);
+
+    void on_btn_resetAutoRun_clicked();
 
     void on_btn_attendManagePage_recovery_clicked();
 
@@ -469,6 +484,10 @@ signals:
     void getVerify(const QString& uid);
 
 	void updateVerify(int type, int verifyTag, const QString& info);
+
+    void loadSystemSettings();
+
+    void saveSystemSettings();
 private:
     Ui::MainWindow *ui;
 };

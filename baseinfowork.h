@@ -25,6 +25,9 @@ public:
     void updateScore(float score);
     void get_statistics();
     void loadStatisticsPanel();
+    void loadSystemSettings();
+    void saveSystemSettings();
+    void getAnnouncement();
     QJsonObject getPanelSeriesObj(int type);
 
     bool getAttendToday();
@@ -43,7 +46,18 @@ public:
     QString getVerifyType();
     QString getVerufyInfo();
     QString getLastLoginTime();
+	QString getAnnouncementText();
 	int getVerifyTag();
+    int getAnnouncementTag();
+    bool getIsDebug();
+    bool getSys_isAnnounceOpen();
+    bool getSys_isTipsAnnounce();
+    bool getSys_isDebugOpen();
+    void setSys_isAnnounceOpen(bool arg);
+	void setSys_isTipsAnnounce(bool arg);
+	void setSys_isDebugOpen(bool arg);
+	void setSys_announcementText(const QString& arg);
+    QString getSys_announcementText();
 
 private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
@@ -75,7 +89,12 @@ private:
     QPixmap loadAvatar(const QString& url);
     QString loadGroup(const QString& uid);
     QString loadDepartment(const QString& uid);
+    QString announcementText;
+    int announcementTag;
+	bool isDebug = false;
     QJsonObject panelSeriesObj, panelSeriesObj_half;
+    bool sys_isAnnounceOpen, sys_isTipsAnnounce, sys_isDebugOpen;
+    QString sys_announcementText;
 
 signals:
     void baseInfoFinished();
@@ -87,6 +106,9 @@ signals:
     void initDatabaseFinished(bool);
     void bindQQAvatarFinished(int);
     void loadStatisticsPanelFinished(int, int);
+	void getAnnouncementFinished(bool);
+    void loadSystemSettingsFinished(bool);
+    void saveSystemSettingsFinished(bool);
 };
 
 #endif // BASEINFOWORK_H

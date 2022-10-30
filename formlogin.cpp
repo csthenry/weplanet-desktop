@@ -19,7 +19,7 @@ formLogin::formLogin(QDialog *parent) :
     ui(new Ui::formLogin)
 {
     ui->setupUi(this);
-
+    ui->groupBox->setVisible(false);
     //限制登录注册输入
     QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
     QValidator* validator_account = new QRegExpValidator(regx_account), *validator_pwd= new QRegExpValidator(regx_pwd);
@@ -32,7 +32,6 @@ formLogin::formLogin(QDialog *parent) :
     ui->labelStatus->setWhatsThis("如果显示绿色图标，表示数据库连接正常，否则请检查网络或联系技术支持。\nEmail: cst@bytecho.net");
 
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
-
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     //QPixmap mainicon(":/images/color_icon/main.svg");
     //QPixmap mainicon(":/images/logo/planet.svg");
@@ -99,22 +98,43 @@ formLogin::formLogin(QDialog *parent) :
     connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
-    connect(this, &formLogin::beginUpdate, updateSoftWare, &checkUpdate::homeCheckUpdate);
     //更新检测
+    connect(this, &formLogin::beginUpdate, updateSoftWare, &checkUpdate::homeCheckUpdate);
     emit beginUpdate();
     connect(updateSoftWare, &checkUpdate::homeCheckUpdateFinished, this, &formLogin::updateFinished);
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         if (!readPwd.isEmpty() && isAutoLogin)
         {
-            loadingMovie->start();
-            emit autoLoginAuthAccount(ui->lineEdit_Uid->text().toLongLong(), readPwd);
+            if (!isDebug)
+            {
+                loadingMovie->start();
+                emit autoLoginAuthAccount(ui->lineEdit_Uid->text().toLongLong(), readPwd);
+            }
         }
         if (!config_ini->value("/Database/init").toBool())
-        {
             emit initDatabase();    //初始化数据库
-        }
     }, Qt::UniqueConnection);
-
+    //获取公告
+	connect(this, &formLogin::getAnnouncement, loginWork, &baseInfoWork::getAnnouncement);
+    connect(loginWork, &baseInfoWork::getAnnouncementFinished, this, [=](bool res) {
+        if (res)
+        {
+			ui->label_announcement->setText(loginWork->getAnnouncementText());
+            if (loginWork->getAnnouncementTag() == 1)
+                ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-tips.svg"));
+            else
+                ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-warning_2.svg"));
+        }
+        ui->groupBox->setVisible(res);
+        isDebug = loginWork->getIsDebug();
+        if (loginWork->getIsDebug())
+        {
+            ui->tabWidget->setEnabled(false);
+			ui->btn_Login->setText("【系统维护中，预计恢复时间详见公告】");
+            ui->btn_Login->setIcon(QIcon(":/images/color_icon/color-warning_2.svg"));
+        }
+        });
+    emit getAnnouncement();
     //更新HarmonyOS字体
     QFont font;
     int font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");

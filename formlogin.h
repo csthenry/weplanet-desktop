@@ -50,6 +50,7 @@ private:
     QString readLoginSettings();
     bool autoLoginSuccess = false;  //自动登录标记
     bool dbStatus = true;
+    bool isDebug;
     QPixmap *statusOKIcon, *statusErrorIcon;
     checkUpdate *updateSoftWare;
     void updateFinished(bool res);
@@ -88,6 +89,7 @@ signals:
     void signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender);
     void initDatabase();
     void beginUpdate();
+	void getAnnouncement();
 };
 
 #endif // FORMLOGIN_H
