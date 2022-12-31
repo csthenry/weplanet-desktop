@@ -63,6 +63,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     readOnlyDelegate = new class readOnlyDelegate(this);    //用于tableView只读
 
+    ui->label_newMsgIcon->setVisible(false);
+    ui->label_newMsg->setVisible(false);
+
     //设置ItemDelegate(用户管理页性别栏)
     comboxList.clear();
     comboxList << "男" << "女";
@@ -84,7 +87,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         });
     msgPushTimer = new QTimer(this);
     connect(msgPushTimer, &QTimer::timeout, this, [=]() {
-        emit startPushMsg(sendToUid);
+        if (!isPushing)  //Push队列处理中时跳过，避免任务堆积
+        {
+            isPushing = true;
+            emit startPushMsg(sendToUid, msgStackMax);
+        }
         });
 
     //托盘事件
@@ -111,8 +118,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     activityManageWork = new ActivityManageWork();
     posterWork = new PosterWork();
     msgService = new MsgService();
+    msgPusherService = new MsgService();
 
-    sqlThread = new QThread(), sqlThread_MSG = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
+    sqlThread = new QThread(), sqlThread_MSG = new QThread(), sqlThread_MSGPUSHER = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
     setBaseInfoWork->moveToThread(sqlThread);
     attendWork->moveToThread(sqlThread);
@@ -122,6 +130,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     activityManageWork->moveToThread(sqlThread_SECOND);
     posterWork->moveToThread(sqlThread);
     msgService->moveToThread(sqlThread_MSG);
+    msgPusherService->moveToThread(sqlThread_MSGPUSHER);
     
     //检查更新
     updateSoftWare.moveToThread(sqlThread_SECOND);
@@ -134,6 +143,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     dbThread->start();
     sqlThread->start();
     sqlThread_MSG->start();
+    sqlThread_MSGPUSHER->start();
     sqlThread_SECOND->start();
     sqlWork->beginThread();
     connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
@@ -539,12 +549,16 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::loadMsgMemList, msgService, &MsgService::loadMsgMemList);
     connect(msgService, &MsgService::loadMsgMemListFinished, this, &MainWindow::setMsgPage);
     connect(this, &MainWindow::sendMessage, msgService, &MsgService::sendMessage);
-    connect(this, &MainWindow::startPushMsg, msgService, &MsgService::pushMessage);
+    connect(this, &MainWindow::startPushMsg, msgPusherService, &MsgService::pushMessage);
+    connect(msgPusherService, &MsgService::pusher, this, &MainWindow::msgPusher);
     connect(msgService, &MsgService::pusher, this, &MainWindow::msgPusher);
     connect(msgService, &MsgService::sendMessageFinished, [=](bool res) {
         ui->label_send->setMovie(&QMovie());
     if (res)
+    {
         ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+        curMsgStackCnt++;   //发送成功，当前消息数据量+1
+    }
     else
         ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_2.svg"));
         });
@@ -571,6 +585,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         config_ini->setValue("/System/MsgPushTime", msgPushTime);
     else
         ui->lineEdit_msgPushTime->setText(config_ini->value("/System/MsgPushTime").toString());
+
+    if (!config_ini->value("/System/MsgStackMaxCnt").toBool())
+        config_ini->setValue("/System/MsgStackMaxCnt", msgStackMax);
+    else
+        ui->lineEdit_msgPushMaxCnt->setText(config_ini->value("/System/MsgStackMaxCnt").toString());
 }
 MainWindow::~MainWindow()
 {
@@ -584,6 +603,11 @@ MainWindow::~MainWindow()
     {
         sqlThread_MSG->quit();
         sqlThread_MSG->wait();
+    }
+    if (sqlThread_MSGPUSHER->isRunning())
+    {
+        sqlThread_MSGPUSHER->quit();
+        sqlThread_MSGPUSHER->wait();
     }
     if (sqlThread_SECOND->isRunning())
     {
@@ -622,9 +646,12 @@ MainWindow::~MainWindow()
     delete attendManageWork;
     delete groupManageWork;
     delete activityManageWork;
+    delete msgService;
+    delete msgPusherService;
 
     delete sqlThread;
     delete sqlThread_MSG;
+    delete sqlThread_MSGPUSHER;
     delete sqlThread_SECOND;
     delete dbThread;
 
@@ -1058,8 +1085,10 @@ void MainWindow::setMsgPage()
         //按钮事件
         connect(msgMember, &QToolButton::clicked, [=]() {
             ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
+            if(msgMember->toolTip() != sendToUid)
+                curMsgStackCnt = 0;    //切换用户时初始化消息数据量
             sendToUid = msgMember->toolTip();
-            emit startPushMsg(sendToUid);   //获取聊天记录
+            emit startPushMsg(sendToUid, msgStackMax);   //获取聊天记录
             ui->textBrowser_msgHistory->clear();
             ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
             ui->textBrowser_msgHistory->setTextColor(Qt::blue);
@@ -1071,6 +1100,7 @@ void MainWindow::setMsgPage()
 
 void MainWindow::msgPusher(QStack<QByteArray> msgStack)
 {
+    isPushing = false;  //消息推送队列已经处理完成
     ui->textBrowser_msgHistory->clear();
     QString from_uid, from_name, to_uid, to_name, msgText, send_time;
     if (msgStack.isEmpty())
@@ -1090,6 +1120,16 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         ui->textBrowser_msgHistory->setCurrentFont(HarmonyOS_Font);
         ui->textBrowser_msgHistory->setTextColor(Qt::black);
         ui->textBrowser_msgHistory->append("消息内容：" + msgText);
+    }
+
+    if (curMsgStackCnt < msgPusherService->getMsgStackCnt(sendToUid))  //有新消息
+    {
+        curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
+        ui->label_newMsg->setText("<font color=red>" + ui->label_newMsg->text() + "</font>");
+        ui->label_newMsgIcon->setVisible(true);
+        ui->label_newMsg->setVisible(true);
+        ui->btn_newMsgCheacked->setEnabled(true);
+        trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
     }
 }
 
@@ -2663,6 +2703,13 @@ void MainWindow::on_btn_sendMsg_clicked()
     ui->textEdit_msg->clear();
 }
 
+void MainWindow::on_btn_newMsgCheacked_clicked()
+{
+    ui->btn_newMsgCheacked->setEnabled(false);
+    ui->label_newMsgIcon->setVisible(false);
+    ui->label_newMsg->setVisible(false);
+}
+
 void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
 {
     if (arg.toInt() > 0 && arg.toInt() <= 300)
@@ -2674,6 +2721,17 @@ void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
     }
     else
         ui->lineEdit_msgPushTime->setText(QString::number(msgPushTime));
+}
+
+void MainWindow::on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg)
+{
+    if (arg.toInt() > 0 && arg.toInt() <= 300)
+    {
+        msgStackMax = arg.toInt();
+        config_ini->setValue("/System/MsgStackMaxCnt", msgStackMax);
+    }
+    else
+        ui->lineEdit_msgPushMaxCnt->setText(QString::number(msgStackMax));
 }
 
 void MainWindow::on_btn_personalClear_clicked()

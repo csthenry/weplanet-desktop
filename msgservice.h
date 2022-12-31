@@ -13,15 +13,16 @@ class MsgService  : public QObject
 	Q_OBJECT
 
 private:
+	QHash<QString, int> msgStackCnt;	//当前会话消息栈数据量
 	service db_service;
-	QSqlDatabase DB;
+	QSqlDatabase DB, DB_PUSHER;
 	QList<QString> msgMem;
 	QList<QString> msgMemName;
 	QList<QPixmap> avatar;
 	QList<QString> getMsgMem(QString uid);
 	QStack<QByteArray> msgStack;
-	void getAvatar(QList<QString>& members);
-	QString getName(QString uid);
+	void getAvatar(const QString& member);
+	QString getName(const QString& uid, int path);
 
 public:
 	QList<QString> getMsgMemList();
@@ -29,7 +30,8 @@ public:
 	QList<QPixmap> getAvatarList();
 	void loadMsgMemList(QString uid);
 	void sendMessage(QByteArray array);
-	void pushMessage(QString uid);
+	void pushMessage(QString uid, int limit);
+	int getMsgStackCnt(const QString& uid);
 
 public:
 	MsgService(QObject *parent = nullptr);

@@ -70,7 +70,13 @@ private:
 
     bool dbStatus = true;
 
-    QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_SECOND;
+    bool isPushing = false; //消息推送中
+
+    int curMsgStackCnt = 0; //当前消息栈数据量
+
+    int msgStackMax = 30; //聊天记录最大数量
+
+    QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_MSGPUSHER, *sqlThread_SECOND;
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
 
@@ -186,7 +192,7 @@ private:
 
     InfoWidget* infoWidget;
 
-    MsgService* msgService;
+    MsgService* msgService, *msgPusherService;
 
     QSettings* config_ini;
 
@@ -421,7 +427,11 @@ private slots:
 
     void on_btn_sendMsg_clicked();
 
+    void on_btn_newMsgCheacked_clicked();
+
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
+
+    void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
 
     void loadActMemAccountInfo(QSqlRecord rec);
 
@@ -511,7 +521,7 @@ signals:
 
     void sendMessage(QByteArray array);
 
-    void startPushMsg(QString uid);
+    void startPushMsg(QString uid, int limit);
 private:
     Ui::MainWindow *ui;
 };
