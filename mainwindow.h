@@ -41,6 +41,7 @@
 #include "previewpage.h"
 #include "posterwork.h"
 #include "infowidget.h"
+#include "msgservice.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -53,6 +54,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    QFont HarmonyOS_Font;
 
     PreviewPage* notice_page;
 
@@ -60,7 +62,7 @@ private:
 
     Document m_content, c_content;
 
-    QTimer *refTimer;
+    QTimer *refTimer, *msgPushTimer;
 
     QMovie *loadingMovie, *avatarLoadMovie;
     
@@ -68,9 +70,9 @@ private:
 
     bool dbStatus = true;
 
-    QThread *dbThread, *sqlThread, *sqlThread_SECOND;
+    QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_SECOND;
 
-    QString uid, removedGroupId, removedDptId;
+    QString uid, removedGroupId, removedDptId, sendToUid = "-1";
 
     QSystemTrayIcon* trayIcon;
 
@@ -111,8 +113,12 @@ private:
     QString eChartsJsCode;
 
     QJsonObject panel_seriesObj, panel_display;     //智慧大屏
+
+    QList<QToolButton*> msgMemberList;  //好友列表
 	
 	int panel_series_count = 14, panel_option = -1;
+
+    int msgPushTime = 5;
 
     void setProcessAutoRun(const QString& appPath, bool flag = false);  //自启函数
 
@@ -156,6 +162,10 @@ private:
 	
     void setSystemSettings();
 
+    void setMsgPage();
+
+    void msgPusher(QStack<QByteArray> msgStack);
+
     SqlWork *sqlWork;
 
     baseInfoWork *setBaseInfoWork;
@@ -175,6 +185,10 @@ private:
     checkUpdate updateSoftWare;
 
     InfoWidget* infoWidget;
+
+    MsgService* msgService;
+
+    QSettings* config_ini;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -405,6 +419,10 @@ private slots:
 	
     void on_btn_updateVerify_clicked();
 
+    void on_btn_sendMsg_clicked();
+
+    void on_lineEdit_msgPushTime_textChanged(const QString& arg);
+
     void loadActMemAccountInfo(QSqlRecord rec);
 
 signals:
@@ -488,6 +506,12 @@ signals:
     void loadSystemSettings();
 
     void saveSystemSettings();
+
+    void loadMsgMemList(QString uid);
+
+    void sendMessage(QByteArray array);
+
+    void startPushMsg(QString uid);
 private:
     Ui::MainWindow *ui;
 };

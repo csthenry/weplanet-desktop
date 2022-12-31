@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "***************";
+    dataBasePassword = "RRwkWZbKfetMsG2B";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -277,6 +277,25 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "INSERT INTO magic_system"
         "(sys_name, field_1)"
         "VALUES ('debug', 0);";
+    if (res)
+        res = query.exec(creatTableStr);
+    //好友关系表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_relation"
+        "(user_id      int(10)        NOT NULL,"
+        "friend_id     int(10)        NOT NULL,"
+        "extra         varchar(128)   NULL)"
+        "ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
+    //聊天信息表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_message"
+        "(from_uid      int(10)      NOT NULL,"
+        "to_uid         int(10)      NOT NULL,"
+        "text           mediumtext   NOT NULL,"
+        "send_time      datetime     NOT NULL)"
+        "ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);
     query.clear();

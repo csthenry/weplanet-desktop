@@ -107,6 +107,9 @@
     <ClCompile Include="infowidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="msgservice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -164,6 +167,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="infowidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="msgservice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -157,6 +157,8 @@ formLogin::~formLogin()
     loadingMovie->stop();
     loadingMovie_2->stop();
 
+    delete config_ini;
+
     delete loadingMovie;
     delete loadingMovie_2;
     delete ui;

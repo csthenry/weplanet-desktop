@@ -79,9 +79,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //心跳query
     refTimer = new QTimer(this);
-    connect(refTimer, &QTimer::timeout, this, [=]()
-        {
+    connect(refTimer, &QTimer::timeout, this, [=]()  {
             on_actRefresh_triggered();
+        });
+    msgPushTimer = new QTimer(this);
+    connect(msgPushTimer, &QTimer::timeout, this, [=]() {
+        emit startPushMsg(sendToUid);
         });
 
     //托盘事件
@@ -107,8 +110,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     groupManageWork = new GroupManageWork();
     activityManageWork = new ActivityManageWork();
     posterWork = new PosterWork();
+    msgService = new MsgService();
 
-    sqlThread = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
+    sqlThread = new QThread(), sqlThread_MSG = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
     setBaseInfoWork->moveToThread(sqlThread);
     attendWork->moveToThread(sqlThread);
@@ -117,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     groupManageWork->moveToThread(sqlThread);
     activityManageWork->moveToThread(sqlThread_SECOND);
     posterWork->moveToThread(sqlThread);
+    msgService->moveToThread(sqlThread_MSG);
     
     //检查更新
     updateSoftWare.moveToThread(sqlThread_SECOND);
@@ -128,6 +133,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //开启数据库连接线程
     dbThread->start();
     sqlThread->start();
+    sqlThread_MSG->start();
     sqlThread_SECOND->start();
     sqlWork->beginThread();
     connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
@@ -139,6 +145,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     qRegisterMetaType<QSqlRecord>("QSqlRecord"); 
 	qRegisterMetaType<QVector<int>>("QVector<int>");
     qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
+    qRegisterMetaType<QStack<QByteArray>>("QStack<QByteArray>");
 
     //初始化Markdown相关
     notice_page = new PreviewPage(this);
@@ -203,6 +210,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
         emit actHomeWorking();
         refTimer->start(5*60*1000);  //开启心跳query定时器（5分钟心跳）
+        msgPushTimer->start(msgPushTime * 1000);
     }, Qt::UniqueConnection);
 
     connect(this, &MainWindow::get_statistics, setBaseInfoWork, &baseInfoWork::get_statistics);
@@ -272,7 +280,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     		QMessageBox::information(this, "消息", "QQ头像绑定成功，你的头像将会随QQ头像更新。", QMessageBox::Ok);
     	}
         else if(tag == 0)
-            QMessageBox::warning(this, "错误", "我们很想获取你的QQ头像，但不可思议的是，你的邮箱竟然不是QQ邮箱...请更换QQ邮箱后再试吧~", QMessageBox::Ok);
+            QMessageBox::warning(this, "错误", "当前绑定的邮箱并非QQ邮箱，请绑定QQ邮箱后重试。", QMessageBox::Ok);
         else
             QMessageBox::warning(this, "错误", "未知错误，请检查网络情况或联系管理员。", QMessageBox::Ok);
     });
@@ -527,6 +535,19 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             }
         }
     });
+    //聊天系统信号槽
+    connect(this, &MainWindow::loadMsgMemList, msgService, &MsgService::loadMsgMemList);
+    connect(msgService, &MsgService::loadMsgMemListFinished, this, &MainWindow::setMsgPage);
+    connect(this, &MainWindow::sendMessage, msgService, &MsgService::sendMessage);
+    connect(this, &MainWindow::startPushMsg, msgService, &MsgService::pushMessage);
+    connect(msgService, &MsgService::pusher, this, &MainWindow::msgPusher);
+    connect(msgService, &MsgService::sendMessageFinished, [=](bool res) {
+        ui->label_send->setMovie(&QMovie());
+    if (res)
+        ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+    else
+        ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_2.svg"));
+        });
 
     //更新HarmonyOS字体
     QFont font;
@@ -540,8 +561,16 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         font.setPointSize(widget->font().pointSize());
         widget->setFont(font);
     }
+    HarmonyOS_Font = font;
     //检测开机启动
     ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
+
+    //系统配置
+    config_ini = new QSettings("config.ini", QSettings::IniFormat);
+    if (!config_ini->value("/System/MsgPushTime").toBool())
+        config_ini->setValue("/System/MsgPushTime", msgPushTime);
+    else
+        ui->lineEdit_msgPushTime->setText(config_ini->value("/System/MsgPushTime").toString());
 }
 MainWindow::~MainWindow()
 {
@@ -550,6 +579,11 @@ MainWindow::~MainWindow()
     {
         sqlThread->quit();
         sqlThread->wait();
+    }
+    if (sqlThread_MSG->isRunning())
+    {
+        sqlThread_MSG->quit();
+        sqlThread_MSG->wait();
     }
     if (sqlThread_SECOND->isRunning())
     {
@@ -564,8 +598,11 @@ MainWindow::~MainWindow()
         dbThread->wait();
     }
     refTimer->stop();
+    msgPushTimer->stop();
     loadingMovie->stop();
     avatarLoadMovie->stop();
+
+    delete config_ini;
 
     delete infoWidget;
     delete loadingMovie;
@@ -587,6 +624,8 @@ MainWindow::~MainWindow()
     delete activityManageWork;
 
     delete sqlThread;
+    delete sqlThread_MSG;
+    delete sqlThread_SECOND;
     delete dbThread;
 
     delete readOnlyDelegate;
@@ -801,6 +840,7 @@ void MainWindow::on_actExit_triggered()
     // QSqlDatabase::removeDatabase("test_loginDB");
     formLoginWindow = new formLogin();
     refTimer->stop();
+    msgPushTimer->stop();
     trayIcon->hide();
     this->close();
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
@@ -814,6 +854,7 @@ void MainWindow::on_actExit_triggered()
         emit actHomeWorking();
         ui->stackedWidget->setCurrentIndex(13);  //回到首页
         refTimer->start(3 * 60 * 1000);  //开启心跳query定时器（3分钟心跳）
+        msgPushTimer->start(msgPushTime * 1000);
         delete formLoginWindow;
         this->showMinimized();
         QThread::msleep(150);
@@ -982,6 +1023,74 @@ void MainWindow::setSystemSettings()
     else
 		ui->rBtn_debugClose->setChecked(true);
     ui->textEdit_announcement->setText(setBaseInfoWork->getSys_announcementText());
+}
+
+void MainWindow::setMsgPage()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    QList<QString> friendList = msgService->getMsgMemList();
+    QList<QString> friendNameList = msgService->getMsgMemNameList();
+    QList<QPixmap> friendAvatar = msgService->getAvatarList();
+
+    for (auto curMem : msgMemberList)
+    {
+        if (curMem != nullptr)
+        {
+            ui->Msg_page_vLayout->removeWidget(curMem);
+            msgMemberList.pop_front();
+            delete curMem;
+        }
+    }
+    ui->Msg_page_vLayout->removeItem(ui->Msg_page_vLayout->itemAt(0));  //删除spacer
+    for (int i = 0; i < friendList.count(); i++)
+    {
+        QToolButton* msgMember = new QToolButton(this);
+        msgMember->setIcon(friendAvatar[i]);
+        msgMember->setIconSize(QSize(50, 50));
+        msgMember->setText(QString(" [%1] %2").arg(friendList[i], friendNameList[i]));
+        msgMember->setToolTip(friendList[i]);
+        msgMember->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        msgMember->setMinimumWidth(ui->toolBox_Msg->width() * 0.9);
+        msgMember->setMaximumWidth(ui->toolBox_Msg->width() * 0.9);
+        ui->Msg_page_vLayout->addWidget(msgMember);
+        msgMemberList.append(msgMember);
+
+        //按钮事件
+        connect(msgMember, &QToolButton::clicked, [=]() {
+            ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
+            sendToUid = msgMember->toolTip();
+            emit startPushMsg(sendToUid);   //获取聊天记录
+            ui->textBrowser_msgHistory->clear();
+            ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
+            ui->textBrowser_msgHistory->setTextColor(Qt::blue);
+            ui->textBrowser_msgHistory->append("================ 消息加载中... ================");
+            });
+    }
+    ui->Msg_page_vLayout->addStretch(); //添加spacer
+}
+
+void MainWindow::msgPusher(QStack<QByteArray> msgStack)
+{
+    ui->textBrowser_msgHistory->clear();
+    QString from_uid, from_name, to_uid, to_name, msgText, send_time;
+    if (msgStack.isEmpty())
+    {
+        ui->textBrowser_msgHistory->append("================ 当前暂无聊天记录 ================ ");
+        return;
+    }
+    while (!msgStack.isEmpty())
+    {
+        QDataStream stream(&msgStack.pop(), QIODevice::ReadOnly);
+        stream >> from_uid >> from_name >> to_uid >> to_name >> msgText >> send_time;
+
+        HarmonyOS_Font.setPointSize(14);
+        ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
+        ui->textBrowser_msgHistory->setTextColor(Qt::blue);
+        ui->textBrowser_msgHistory->append(QString("================ [%1] %2 %3 ================").arg(from_uid, from_name, send_time));
+        ui->textBrowser_msgHistory->setCurrentFont(HarmonyOS_Font);
+        ui->textBrowser_msgHistory->setTextColor(Qt::black);
+        ui->textBrowser_msgHistory->append("消息内容：" + msgText);
+    }
 }
 
 void MainWindow::on_PieSliceHighlight(bool show)
@@ -1258,7 +1367,10 @@ void MainWindow::on_actManage_triggered()
 
 void MainWindow::on_actMessage_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(2);
+    if (ui->stackedWidget->currentIndex() == 13)
+        return;
+    ui->stackedWidget->setCurrentIndex(13);
+    emit loadMsgMemList(uid);
 }
 
 void MainWindow::on_actNotice_triggered()
@@ -2501,7 +2613,9 @@ void MainWindow::on_btn_getQQAvatar_clicked()
 
 void MainWindow::on_btn_verifyInfo_clicked()
 {
-    infoWidget->show();
+    infoWidget->showMinimized();
+    QThread::msleep(150);
+    infoWidget->showNormal();
 }
 
 void MainWindow::on_btn_delVerify_clicked()
@@ -2525,6 +2639,41 @@ void MainWindow::on_btn_updateVerify_clicked()
         emit updateVerify(updateType, 2, ui->lineEdit_verifyInfo->text());
     ui->lineEdit_verifyInfo->clear();
     ui->rBtn_verify_person->setChecked(true);
+}
+
+void MainWindow::on_btn_sendMsg_clicked()
+{
+    QString msgText = ui->textEdit_msg->toPlainText();
+    if (msgText.isEmpty() || sendToUid == "-1")
+        return;
+    QByteArray array;
+    QDataStream stream(&array, QIODevice::WriteOnly);
+    QDateTime curDateTime = QDateTime::currentDateTime();
+    stream << uid << sendToUid << msgText << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
+    ui->label_send->setMovie(loadingMovie);
+    emit sendMessage(array);
+
+    HarmonyOS_Font.setPointSize(14);
+    ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
+    ui->textBrowser_msgHistory->setTextColor(Qt::blue);
+    ui->textBrowser_msgHistory->append(QString("================ [%1] %2 %3 ================").arg(ui->label_home_uid->text(), ui->label_home_name->text(), curDateTime.toString("yyyy-MM-dd hh:mm:ss")));
+    ui->textBrowser_msgHistory->setCurrentFont(HarmonyOS_Font);
+    ui->textBrowser_msgHistory->setTextColor(Qt::black);
+    ui->textBrowser_msgHistory->append("消息内容：" + msgText);
+    ui->textEdit_msg->clear();
+}
+
+void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
+{
+    if (arg.toInt() > 0 && arg.toInt() <= 300)
+    {
+        msgPushTime = arg.toInt();
+        config_ini->setValue("/System/MsgPushTime", msgPushTime);
+        msgPushTimer->stop();
+        msgPushTimer->start(msgPushTime * 1000);
+    }
+    else
+        ui->lineEdit_msgPushTime->setText(QString::number(msgPushTime));
 }
 
 void MainWindow::on_btn_personalClear_clicked()

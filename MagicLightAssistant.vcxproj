@@ -217,6 +217,7 @@
     <ClCompile Include="infowidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
+    <ClCompile Include="msgservice.cpp" />
     <ClCompile Include="posterwork.cpp" />
     <ClCompile Include="previewpage.cpp" />
     <ClCompile Include="querymodel.cpp" />
@@ -247,6 +248,7 @@
     <QtMoc Include="previewpage.h" />
     <QtMoc Include="posterwork.h" />
     <QtMoc Include="infowidget.h" />
+    <QtMoc Include="msgservice.h" />
     <ClInclude Include="querymodel.h" />
     <ClInclude Include="readOnlyDelegate.h" />
     <ClInclude Include="resource.h" />
