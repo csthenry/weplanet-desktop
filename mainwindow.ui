@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>17</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -851,7 +851,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>100</width>
+                 <width>90</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -897,7 +897,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>100</width>
+                 <width>90</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -1038,7 +1038,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Copyright (C) 2017-2022 bytecho.net Henry. LICENSE GPL-3.0 License. OpenSource Software.</string>
+              <string>Copyright (C) 2017-2023 bytecho.net Henry. LICENSE GPL-3.0 License. OpenSource Software.</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1947,14 +1947,20 @@ padding: 0px 5px;</string>
             <height>16777215</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="layoutDirection">
            <enum>Qt::LeftToRight</enum>
           </property>
           <property name="frameShape">
-           <enum>QFrame::Box</enum>
+           <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
+           <enum>QFrame::Plain</enum>
           </property>
           <property name="lineWidth">
            <number>1</number>
@@ -1970,9 +1976,15 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>296</width>
-             <height>553</height>
+             <width>300</width>
+             <height>557</height>
             </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>10</pointsize>
+            </font>
            </property>
            <attribute name="label">
             <string>我的好友</string>
@@ -1997,9 +2009,15 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>296</width>
-             <height>553</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>10</pointsize>
+            </font>
            </property>
            <attribute name="label">
             <string>好友申请</string>
@@ -2027,72 +2045,6 @@ padding: 0px 5px;</string>
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_45">
-           <item row="3" column="4">
-            <widget class="QPushButton" name="btn_sendMsg">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>发送消息</string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0" colspan="5">
-            <widget class="QTextEdit" name="textEdit_msg">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>150</height>
-              </size>
-             </property>
-             <property name="documentTitle">
-              <string/>
-             </property>
-             <property name="placeholderText">
-              <string>请在此输入后发送...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="btn_deleteMsgMem_2">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>添加好友</string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0" colspan="5">
-            <widget class="QTextBrowser" name="textBrowser_msgHistory"/>
-           </item>
-           <item row="3" column="2">
-            <spacer name="horizontalSpacer_23">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item row="0" column="0" colspan="5">
             <widget class="QGroupBox" name="groupBox_56">
              <property name="title">
@@ -2182,7 +2134,64 @@ padding: 0px 5px;</string>
              </layout>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="1" column="0" colspan="5">
+            <widget class="QSplitter" name="splitter_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <widget class="QTextBrowser" name="textBrowser_msgHistory">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>350</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+             </widget>
+             <widget class="QTextEdit" name="textEdit_msg">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>250</height>
+               </size>
+              </property>
+              <property name="documentTitle">
+               <string/>
+              </property>
+              <property name="placeholderText">
+               <string>请在此输入后发送...</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="btn_addMsgMem">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>添加好友</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
             <widget class="QPushButton" name="btn_deleteMsgMem">
              <property name="minimumSize">
               <size>
@@ -2199,7 +2208,20 @@ padding: 0px 5px;</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="3">
+           <item row="2" column="2">
+            <spacer name="horizontalSpacer_23">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="3">
             <widget class="QLabel" name="label_send">
              <property name="minimumSize">
               <size>
@@ -2221,6 +2243,23 @@ padding: 0px 5px;</string>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QPushButton" name="btn_sendMsg">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>发送消息</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
              </property>
             </widget>
            </item>
@@ -4632,6 +4671,9 @@ padding: 0px 5px;</string>
                 </item>
                 <item row="1" column="1">
                  <widget class="QPushButton" name="btn_verifyInfo">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -4645,6 +4687,9 @@ padding: 0px 5px;</string>
                 </item>
                 <item row="1" column="2">
                  <widget class="QPushButton" name="btn_delVerify">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -7307,7 +7352,7 @@ padding: 0px 5px;</string>
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2022 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2023 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="textFormat">
               <enum>Qt::AutoText</enum>

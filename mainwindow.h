@@ -42,6 +42,7 @@
 #include "posterwork.h"
 #include "infowidget.h"
 #include "msgservice.h"
+#include "friendswidget.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -120,7 +121,15 @@ private:
 
     QJsonObject panel_seriesObj, panel_display;     //智慧大屏
 
-    QList<QToolButton*> msgMemberList;  //好友列表
+    QList<QToolButton*> msgMemberList, msgMemApplyList;  //好友列表
+
+    QToolButton* msgApplyMemBtn;
+
+    QString msgApplyMemBtn_Text;
+
+    QLabel* msgListTips_1, *msgListTips_2;
+
+    int msgListTipsType = -1;
 	
 	int panel_series_count = 14, panel_option = -1;
 
@@ -191,6 +200,8 @@ private:
     checkUpdate updateSoftWare;
 
     InfoWidget* infoWidget;
+
+    FriendsWidget* friendsWidget;
 
     MsgService* msgService, *msgPusherService;
 
@@ -429,6 +440,10 @@ private slots:
 
     void on_btn_newMsgCheacked_clicked();
 
+    void on_btn_addMsgMem_clicked();
+
+    void on_btn_deleteMsgMem_clicked();
+
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 
     void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
@@ -522,6 +537,8 @@ signals:
     void sendMessage(QByteArray array);
 
     void startPushMsg(QString uid, int limit);
+
+    void delFriend(const QString& me, const QString& member);
 private:
     Ui::MainWindow *ui;
 };

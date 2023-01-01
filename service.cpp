@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "RRwkWZbKfetMsG2B";
+    dataBasePassword = "***************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -284,7 +284,8 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "CREATE TABLE IF NOT EXISTS magic_relation"
         "(user_id      int(10)        NOT NULL,"
         "friend_id     int(10)        NOT NULL,"
-        "extra         varchar(128)   NULL)"
+        "extra         varchar(128)   NULL,"
+        "status        tinyint(1)     NOT NULL)"
         "ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);
@@ -465,9 +466,9 @@ QPixmap service::setAvatarStyle(QPixmap avatar)
     return pixmap;
 }
 
-QString service::getGroup(const QString& uid)
+QString service::getGroup(QSqlDatabase& db, const QString& uid)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.exec("SELECT user_group FROM magic_users WHERE uid = " + uid);
     if(!query.next())
         return "--";
@@ -477,9 +478,9 @@ QString service::getGroup(const QString& uid)
     return query.value("group_name").toString();
 }
 
-QString service::getDepartment(const QString& uid)
+QString service::getDepartment(QSqlDatabase& db, const QString& uid)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.exec("SELECT user_dpt FROM magic_users WHERE uid = " + uid);
     if(!query.next())
         return "--";
