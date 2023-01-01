@@ -2828,6 +2828,11 @@ void MainWindow::on_btn_addMsgMem_clicked()
 
 void MainWindow::on_btn_deleteMsgMem_clicked()
 {
+    if (sendToUid == "-1")
+    {
+        QMessageBox::warning(this, "警告", "请选择一名好友后再试。", QMessageBox::Ok);
+        return;
+    }
     const QMessageBox::StandardButton res = QMessageBox::warning(this, "警告", "确认要删除好友 [" + sendToUid + "] 吗？", QMessageBox::Yes | QMessageBox::No);
     if (res == QMessageBox::Yes)
     {
