@@ -1605,9 +1605,6 @@ void MainWindow::on_actGroup_triggered()
     //选择行变化时
     connect(groupPageSelection_department, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
                 this, SLOT(on_groupPageDptcurrentChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
-
-    ui->tableView_group->setRowHidden(0, true);
-
 }
 
 void MainWindow::setGroupManagePage()
@@ -1633,6 +1630,7 @@ void MainWindow::setGroupManagePage()
     ui->tableView_group->setSelectionModel(groupPageSelection_group);
     ui->tableView_department->setSelectionModel(groupPageSelection_department);
 
+    ui->tableView_group->setRowHidden(0, true); //隐藏第一行
     ui->stackedWidget->setCurrentIndex(11);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
@@ -1971,8 +1969,8 @@ void MainWindow::on_btn_addGroup_clicked()
     groupPageSelection_group->clearSelection();//清空选择项
     groupPageSelection_group->setCurrentIndex(curIndex, QItemSelectionModel::Select);//设置刚插入的行为当前选择行
 
-    int currow = curIndex.row(); //获得当前行
-    groupModel->setData(groupModel->index(currow, 0), groupModel->rowCount()); //自动生成编号
+    //int currow = curIndex.row(); //获得当前行
+    //groupModel->setData(groupModel->index(currow, 0), groupModel->rowCount()); //自动生成编号
 }
 
 void MainWindow::on_btn_actApprove_clicked()
@@ -2121,8 +2119,8 @@ void MainWindow::on_btn_addDpt_clicked()
     groupPageSelection_department->clearSelection();//清空选择项
     groupPageSelection_department->setCurrentIndex(curIndex, QItemSelectionModel::Select);//设置刚插入的行为当前选择行
 
-    int currow = curIndex.row(); //获得当前行
-    departmentModel->setData(departmentModel->index(currow, 0), departmentModel->rowCount()); //自动生成编号
+    //int currow = curIndex.row(); //获得当前行
+    //departmentModel->setData(departmentModel->index(currow, 0), departmentModel->rowCount()); //自动生成编号
 }
 
 void MainWindow::on_btn_delDpt_clicked()
