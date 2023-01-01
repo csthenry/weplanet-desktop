@@ -39,12 +39,12 @@
 * [x] 更新检测
 * [x] 异常登录限制
 * [x] 基于ECharts的数据大屏
+* [x] 好友及聊天系统
 
 **进行中：**
 
 * [ ] 审批系统
 * [ ] 审批流程自定义设计
-* [ ] 社区聊天系统
 * [ ] 更多...
 
 ### 开发进度截图
@@ -72,4 +72,4 @@
 
 ---
 
-Copyright (C) 2017-2022 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
+Copyright (C) 2017-2023 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
