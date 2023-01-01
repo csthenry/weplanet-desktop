@@ -279,6 +279,26 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "VALUES ('debug', 0);";
     if (res)
         res = query.exec(creatTableStr);
+    //好友关系表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_relation"
+        "(user_id      int(10)        NOT NULL,"
+        "friend_id     int(10)        NOT NULL,"
+        "extra         varchar(128)   NULL,"
+        "status        tinyint(1)     NOT NULL)"
+        "ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
+    //聊天信息表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_message"
+        "(from_uid      int(10)      NOT NULL,"
+        "to_uid         int(10)      NOT NULL,"
+        "text           mediumtext   NOT NULL,"
+        "send_time      datetime     NOT NULL)"
+        "ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
     query.clear();
     
     return res;
@@ -446,9 +466,9 @@ QPixmap service::setAvatarStyle(QPixmap avatar)
     return pixmap;
 }
 
-QString service::getGroup(const QString& uid)
+QString service::getGroup(QSqlDatabase& db, const QString& uid)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.exec("SELECT user_group FROM magic_users WHERE uid = " + uid);
     if(!query.next())
         return "--";
@@ -458,9 +478,9 @@ QString service::getGroup(const QString& uid)
     return query.value("group_name").toString();
 }
 
-QString service::getDepartment(const QString& uid)
+QString service::getDepartment(QSqlDatabase& db, const QString& uid)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.exec("SELECT user_dpt FROM magic_users WHERE uid = " + uid);
     if(!query.next())
         return "--";

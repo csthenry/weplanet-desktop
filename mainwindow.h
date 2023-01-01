@@ -41,6 +41,8 @@
 #include "previewpage.h"
 #include "posterwork.h"
 #include "infowidget.h"
+#include "msgservice.h"
+#include "friendswidget.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -53,6 +55,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    QFont HarmonyOS_Font;
 
     PreviewPage* notice_page;
 
@@ -60,7 +63,7 @@ private:
 
     Document m_content, c_content;
 
-    QTimer *refTimer;
+    QTimer *refTimer, *msgPushTimer;
 
     QMovie *loadingMovie, *avatarLoadMovie;
     
@@ -68,9 +71,15 @@ private:
 
     bool dbStatus = true;
 
-    QThread *dbThread, *sqlThread, *sqlThread_SECOND;
+    bool isPushing = false; //消息推送中
 
-    QString uid, removedGroupId, removedDptId;
+    int curMsgStackCnt = 0; //当前消息栈数据量
+
+    int msgStackMax = 30; //聊天记录最大数量
+
+    QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_MSGPUSHER, *sqlThread_SECOND;
+
+    QString uid, removedGroupId, removedDptId, sendToUid = "-1";
 
     QSystemTrayIcon* trayIcon;
 
@@ -111,8 +120,20 @@ private:
     QString eChartsJsCode;
 
     QJsonObject panel_seriesObj, panel_display;     //智慧大屏
+
+    QList<QToolButton*> msgMemberList, msgMemApplyList;  //好友列表
+
+    QToolButton* msgApplyMemBtn;
+
+    QString msgApplyMemBtn_Text;
+
+    QLabel* msgListTips_1, *msgListTips_2;
+
+    int msgListTipsType = -1;
 	
 	int panel_series_count = 14, panel_option = -1;
+
+    int msgPushTime = 5;
 
     void setProcessAutoRun(const QString& appPath, bool flag = false);  //自启函数
 
@@ -156,6 +177,10 @@ private:
 	
     void setSystemSettings();
 
+    void setMsgPage();
+
+    void msgPusher(QStack<QByteArray> msgStack);
+
     SqlWork *sqlWork;
 
     baseInfoWork *setBaseInfoWork;
@@ -175,6 +200,12 @@ private:
     checkUpdate updateSoftWare;
 
     InfoWidget* infoWidget;
+
+    FriendsWidget* friendsWidget;
+
+    MsgService* msgService, *msgPusherService;
+
+    QSettings* config_ini;
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -405,6 +436,18 @@ private slots:
 	
     void on_btn_updateVerify_clicked();
 
+    void on_btn_sendMsg_clicked();
+
+    void on_btn_newMsgCheacked_clicked();
+
+    void on_btn_addMsgMem_clicked();
+
+    void on_btn_deleteMsgMem_clicked();
+
+    void on_lineEdit_msgPushTime_textChanged(const QString& arg);
+
+    void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
+
     void loadActMemAccountInfo(QSqlRecord rec);
 
 signals:
@@ -488,6 +531,14 @@ signals:
     void loadSystemSettings();
 
     void saveSystemSettings();
+
+    void loadMsgMemList(QString uid);
+
+    void sendMessage(QByteArray array);
+
+    void startPushMsg(QString uid, int limit);
+
+    void delFriend(const QString& me, const QString& member);
 private:
     Ui::MainWindow *ui;
 };

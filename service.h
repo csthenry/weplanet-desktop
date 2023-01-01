@@ -42,9 +42,9 @@ public:
 
     static QPixmap setAvatarStyle(QPixmap);
 
-    static QString getGroup(const QString& uid);
+    static QString getGroup(QSqlDatabase& db, const QString& uid);
 
-    static QString getDepartment(const QString& uid);
+    static QString getDepartment(QSqlDatabase& db, const QString& uid);
 
     static void buildAttendChart(QChartView* chartView_attend, const QWidget* parent, const QFont& font, int data_1, int data_2, int data_3, int data_4);
 

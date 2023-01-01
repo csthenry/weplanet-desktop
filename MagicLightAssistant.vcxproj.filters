@@ -107,6 +107,12 @@
     <ClCompile Include="infowidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="msgservice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="friendswidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -166,6 +172,12 @@
     <QtMoc Include="infowidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="msgservice.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="friendswidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -183,6 +195,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="infowidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="friendswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

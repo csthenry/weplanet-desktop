@@ -27,8 +27,8 @@
     <normaloff>:/images/logo/MagicLightAssistant.png</normaloff>:/images/logo/MagicLightAssistant.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_80">
-    <item row="0" column="0">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="enabled">
        <bool>true</bool>
@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>17</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -851,7 +851,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>100</width>
+                 <width>90</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -897,7 +897,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>100</width>
+                 <width>90</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -1038,7 +1038,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Copyright (C) 2017-2022 bytecho.net Henry. LICENSE GPL-3.0 License. OpenSource Software.</string>
+              <string>Copyright (C) 2017-2023 bytecho.net Henry. LICENSE GPL-3.0 License. OpenSource Software.</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1932,36 +1932,338 @@ padding: 0px 5px;</string>
        </layout>
       </widget>
       <widget class="QWidget" name="messagePage">
-       <layout class="QGridLayout" name="gridLayout_45">
+       <layout class="QGridLayout" name="gridLayout_129">
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_34">
+         <widget class="QToolBox" name="toolBox_Msg">
+          <property name="minimumSize">
+           <size>
+            <width>280</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
-          <property name="title">
-           <string>消息收发</string>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
           </property>
-          <widget class="QLabel" name="label_110">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>1</number>
+          </property>
+          <property name="midLineWidth">
+           <number>0</number>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="Msg_page">
            <property name="geometry">
             <rect>
-             <x>90</x>
-             <y>70</y>
-             <width>451</width>
-             <height>81</height>
+             <x>0</x>
+             <y>0</y>
+             <width>300</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
             <font>
              <family>微软雅黑</family>
-             <pointsize>18</pointsize>
+             <pointsize>10</pointsize>
             </font>
            </property>
-           <property name="text">
-            <string>正在开发中...敬请期待！</string>
-           </property>
+           <attribute name="label">
+            <string>我的好友</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="Msg_page_vLayout">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+           </layout>
           </widget>
+          <widget class="QWidget" name="Msg_ApplyPage">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>98</width>
+             <height>28</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <attribute name="label">
+            <string>好友申请</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="Msg_ApplyPage_vLayout">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_34">
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_45">
+           <item row="0" column="0" colspan="5">
+            <widget class="QGroupBox" name="groupBox_56">
+             <property name="title">
+              <string/>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_80">
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_newMsg">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>[有新消息]</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_msgMemName">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>--</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_newMsgIcon">
+                <property name="minimumSize">
+                 <size>
+                  <width>30</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>30</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="resource.qrc">:/images/color_icon/color-tips.svg</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QPushButton" name="btn_newMsgCheacked">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>已读</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="5">
+            <widget class="QSplitter" name="splitter_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <widget class="QTextBrowser" name="textBrowser_msgHistory">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>350</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+             </widget>
+             <widget class="QTextEdit" name="textEdit_msg">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>250</height>
+               </size>
+              </property>
+              <property name="documentTitle">
+               <string/>
+              </property>
+              <property name="placeholderText">
+               <string>请在此输入后发送...</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="btn_addMsgMem">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>添加好友</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="btn_deleteMsgMem">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>删除好友</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <spacer name="horizontalSpacer_23">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLabel" name="label_send">
+             <property name="minimumSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="resource.qrc">:/images/color_icon/approve_3.svg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QPushButton" name="btn_sendMsg">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>发送消息</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -4369,6 +4671,9 @@ padding: 0px 5px;</string>
                 </item>
                 <item row="1" column="1">
                  <widget class="QPushButton" name="btn_verifyInfo">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -4382,6 +4687,9 @@ padding: 0px 5px;</string>
                 </item>
                 <item row="1" column="2">
                  <widget class="QPushButton" name="btn_delVerify">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -7044,7 +7352,7 @@ padding: 0px 5px;</string>
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2022 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2023 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="textFormat">
               <enum>Qt::AutoText</enum>
@@ -8097,6 +8405,13 @@ padding: 0px 5px;</string>
            </item>
            <item row="1" column="0" colspan="5">
             <layout class="QGridLayout" name="gridLayout_119">
+             <item row="0" column="0" colspan="3">
+              <widget class="QTextEdit" name="textEdit_announcement">
+               <property name="placeholderText">
+                <string>在此输入全局公告内容...</string>
+               </property>
+              </widget>
+             </item>
              <item row="1" column="2">
               <spacer name="horizontalSpacer_21">
                <property name="orientation">
@@ -8137,13 +8452,6 @@ padding: 0px 5px;</string>
                <property name="icon">
                 <iconset resource="resource.qrc">
                  <normaloff>:/images/color_icon/color-approve.svg</normaloff>:/images/color_icon/color-approve.svg</iconset>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="3">
-              <widget class="QTextEdit" name="textEdit_announcement">
-               <property name="placeholderText">
-                <string>在此输入全局公告内容...</string>
                </property>
               </widget>
              </item>
@@ -8190,13 +8498,13 @@ padding: 0px 5px;</string>
         <item row="1" column="0">
          <widget class="QGroupBox" name="groupBox_allSettings">
           <property name="title">
-           <string>全局设置</string>
+           <string/>
           </property>
-          <layout class="QGridLayout" name="gridLayout_128">
+          <layout class="QGridLayout" name="gridLayout_130">
            <item row="0" column="0">
             <widget class="QGroupBox" name="groupBox_55">
              <property name="title">
-              <string/>
+              <string>系统设置</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_125">
               <item row="0" column="1">
@@ -8208,11 +8516,11 @@ padding: 0px 5px;</string>
                  <set>Qt::ImhNoPredictiveText</set>
                 </property>
                 <property name="text">
-                 <string>开机时自动启动</string>
+                 <string>开机时启动</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0" colspan="3">
+              <item row="0" column="2">
                <widget class="QPushButton" name="btn_resetAutoRun">
                 <property name="minimumSize">
                  <size>
@@ -8221,7 +8529,7 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string>重新设置开机自启</string>
+                 <string>重置开机自启</string>
                 </property>
                 <property name="icon">
                  <iconset resource="resource.qrc">
@@ -8233,6 +8541,61 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="0" column="1">
+            <widget class="QGroupBox" name="groupBox_59">
+             <property name="title">
+              <string>在线聊天</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_128">
+              <item row="0" column="0">
+               <widget class="QLineEdit" name="lineEdit_msgPushTime">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>5</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1" colspan="2">
+               <widget class="QLabel" name="label_110">
+                <property name="text">
+                 <string>秒后刷新消息列表</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QLabel" name="label_117">
+                <property name="text">
+                 <string>最多加载消息数量</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLineEdit" name="lineEdit_msgPushMaxCnt">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>30</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="2">
             <spacer name="horizontalSpacer_25">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -8245,22 +8608,7 @@ padding: 0px 5px;</string>
              </property>
             </spacer>
            </item>
-           <item row="1" column="0" colspan="2">
-            <widget class="QLabel" name="label_117">
-             <property name="font">
-              <font>
-               <pointsize>16</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>目前仅开放【系统设置】（管理员）和开机自启，更多【全局设置】待根据具体需求开发...</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0" colspan="2">
+           <item row="1" column="0" colspan="3">
             <spacer name="verticalSpacer_10">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -8683,13 +9031,13 @@ background-color: transparent;
   <action name="actMessage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-mail_2.svg</normaloff>:/images/color_icon/color-mail_2.svg</iconset>
+     <normaloff>:/images/color_icon/color-computer.svg</normaloff>:/images/color_icon/color-computer.svg</iconset>
    </property>
    <property name="text">
-    <string>聊天</string>
+    <string>在线聊天</string>
    </property>
    <property name="toolTip">
-    <string>聊天</string>
+    <string>在线聊天</string>
    </property>
    <property name="font">
     <font>
@@ -8758,10 +9106,10 @@ background-color: transparent;
      <normaloff>:/images/color_icon/color-date.svg</normaloff>:/images/color_icon/color-date.svg</iconset>
    </property>
    <property name="text">
-    <string>通知动态</string>
+    <string>动态</string>
    </property>
    <property name="toolTip">
-    <string>通知动态</string>
+    <string>动态</string>
    </property>
    <property name="font">
     <font>
