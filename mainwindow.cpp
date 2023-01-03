@@ -562,6 +562,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         {
             ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
             curMsgStackCnt++;   //发送成功，当前消息数据量+1
+            //qDebug() << "发送后cur:" << curMsgStackCnt << "stack:" << msgPusherService->getMsgStackCnt(sendToUid);
         }
         else
             ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_2.svg"));
@@ -613,6 +614,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //检测开机启动
     ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
+
+    //绑定快捷键
+    ui->btn_sendMsg->setShortcut(QKeySequence(tr("ctrl+return")));   //消息发送
 
     //系统配置
     config_ini = new QSettings("config.ini", QSettings::IniFormat);
@@ -1153,13 +1157,12 @@ void MainWindow::setMsgPage()
         connect(msgMember, &QToolButton::clicked, this, [=]() {
             ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
             msgHistoryInfo = QString("<p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 和%1 的聊天记录 ---</p>").arg(msgMember->text());
-            if (msgMember->toolTip() != sendToUid)
-            {
-                curMsgStackCnt = 0;    //切换用户时初始化消息数据量
-                msg_contents.clear();   //初始化消息缓存
-            }
+
+            curMsgStackCnt = 0;    //切换用户时初始化消息数据量
+            msg_contents.clear();   //初始化消息缓存
             sendToUid = msgMember->toolTip();
             emit startPushMsg(uid, sendToUid, msgStackMax);   //获取聊天记录
+
             ui->textBrowser_msgHistory->clear();
             ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
             ui->textBrowser_msgHistory->append("<br><p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 消息加载中...  ---</p><br>");
@@ -1222,11 +1225,20 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
 {
     isPushing = false;  //消息推送队列已经处理完成
 
-    if (curMsgStackCnt > msgPusherService->getMsgStackCnt(sendToUid))  //消息历史过旧，才会推送新消息
+    //qDebug() << "刷新消息cur:" << curMsgStackCnt << "stack:" << msgPusherService->getMsgStackCnt(sendToUid);
+    if (curMsgStackCnt < msgPusherService->getMsgStackCnt(sendToUid))  //有新消息
     {
+        ui->label_newMsg->setText("<font color=red>" + ui->label_newMsg->text() + "</font>");
+        ui->label_newMsgIcon->setVisible(true);
+        ui->label_newMsg->setVisible(true);
+        ui->btn_newMsgCheacked->setEnabled(true);
+        if(curMsgStackCnt != 0)
+            trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
         curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
-        return;
     }
+
+    if (curMsgStackCnt > msgPusherService->getMsgStackCnt(sendToUid))  //消息历史过旧，才会推送新消息
+        return;
     if (msgPusherService->getPreviousPushUid() != msgPusherService->getPushingUid()) //如果已切换用户，则跳过此次push
         return;
 
@@ -1267,16 +1279,6 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(beforePos);  //滚动条不在末尾，则恢复原位置
     else
         ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(ui->textBrowser_msgHistory->verticalScrollBar()->maximum());
-
-    if (curMsgStackCnt < msgPusherService->getMsgStackCnt(sendToUid))  //有新消息
-    {
-        curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
-        ui->label_newMsg->setText("<font color=red>" + ui->label_newMsg->text() + "</font>");
-        ui->label_newMsgIcon->setVisible(true);
-        ui->label_newMsg->setVisible(true);
-        ui->btn_newMsgCheacked->setEnabled(true);
-        trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
-    }
 }
 
 void MainWindow::initMsgSys()
