@@ -2009,8 +2009,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>300</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -2260,7 +2260,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>发送消息</string>
+              <string>发送 Ctrl+Enter </string>
              </property>
              <property name="icon">
               <iconset resource="resource.qrc">
