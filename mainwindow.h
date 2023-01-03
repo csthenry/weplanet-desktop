@@ -83,6 +83,8 @@ private:
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
 
+    QString msgHistoryInfo; //聊天记录说明
+
     QSystemTrayIcon* trayIcon;
 
     QMenu *trayIconMenu;

@@ -3,7 +3,7 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "0.1.8-RC.2";   //在此处定义软件当前版本
+    CurVersion = "0.1.8-RC-a";   //在此处定义软件当前版本
 }
 checkUpdate::~checkUpdate()
 {

@@ -1145,6 +1145,7 @@ void MainWindow::setMsgPage()
         //按钮事件
         connect(msgMember, &QToolButton::clicked, this, [=]() {
             ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
+            msgHistoryInfo = QString("<p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 和%1 的聊天记录 ---</p>").arg(msgMember->text());
             if (msgMember->toolTip() != sendToUid)
             {
                 curMsgStackCnt = 0;    //切换用户时初始化消息数据量
@@ -1233,27 +1234,27 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         ui->textBrowser_msgHistory->append("<br><p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 当前暂无聊天记录 ---</p><br>");
         return;
     }
-
     msg_contents.clear();
     while (!msgStack.isEmpty())
     {
         QDataStream stream(&msgStack.pop(), QIODevice::ReadOnly);
         stream >> from_uid >> from_name >> to_uid >> to_name >> msgText >> send_time;
         QDateTime sendDate = QDateTime::fromString(send_time, "yyyy-MM-dd hh:mm:ss");
+
         if (sendDate.date() == QDateTime::currentDateTime().date())
             send_time = sendDate.time().toString("hh:mm:ss");   //若时间为当前，则简化显示
         if (from_uid == uid)
         {
             msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>%2 %3</p>").arg(from_name, send_time, HarmonyOS_Font_Family);
-            msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:14pt;'>%1 📨 </p>").arg(msgText);
+            msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);
         }
         else
         {
             msg_contents += QString("<p align='left' style='margin-left:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>[%1] %2 %3</p>").arg(from_uid, from_name, send_time, HarmonyOS_Font_Family);
-            msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:14pt;'> 📣 %1</p>").arg(msgText);
+            msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'> 📣 %1</p>").arg(msgText);
         }
     }
-    ui->textBrowser_msgHistory->append(QString("<br>%1").arg(msg_contents));
+    ui->textBrowser_msgHistory->append(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
 
     if (!atEnd)
         ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(beforePos);  //滚动条不在末尾，则恢复原位置
@@ -2830,9 +2831,9 @@ void MainWindow::on_btn_sendMsg_clicked()
     emit sendMessage(array);
 
     msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-size:10pt;'>%2 %3</p>").arg(ui->label_home_name->text(), curDateTime.toString("hh:mm:ss"));
-    msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:14pt;'>%1 📨 </p>").arg(msgText);
+    msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);
     ui->textBrowser_msgHistory->clear();
-    ui->textBrowser_msgHistory->append(QString("<br>%1").arg(msg_contents));
+    ui->textBrowser_msgHistory->append(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
     ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(ui->textBrowser_msgHistory->verticalScrollBar()->maximum()); //移动至末尾
     ui->textEdit_msg->clear();
 }

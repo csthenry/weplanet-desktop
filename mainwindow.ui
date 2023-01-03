@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2164,6 +2164,11 @@ padding: 0px 5px;</string>
                 <width>16777215</width>
                 <height>250</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
               </property>
               <property name="documentTitle">
                <string/>
