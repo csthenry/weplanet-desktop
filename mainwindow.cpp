@@ -91,7 +91,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         if (!isPushing)  //Push队列处理中时跳过，避免任务堆积
         {
             isPushing = true;
-            emit startPushMsg(sendToUid, msgStackMax);
+            emit startPushMsg(uid, sendToUid, msgStackMax);
         }
         });
 
@@ -706,6 +706,9 @@ void MainWindow::receiveData(QString uid)
     ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
     ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
     ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
+
+    //重置在线聊天
+    initMsgSys();
 }
 
 void MainWindow::updateFinished()
@@ -909,6 +912,10 @@ void MainWindow::on_actExit_triggered()
     formLoginWindow = new formLogin();
     refTimer->stop();
     msgPushTimer->stop();
+
+    //重置在线聊天
+    initMsgSys();
+
     trayIcon->hide();
     this->close();
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
@@ -921,7 +928,7 @@ void MainWindow::on_actExit_triggered()
         emit startBaseInfoWork();
         emit actHomeWorking();
         ui->stackedWidget->setCurrentIndex(13);  //回到首页
-        refTimer->start(3 * 60 * 1000);  //开启心跳query定时器（3分钟心跳）
+        refTimer->start(3 * 60 * 1000);  //开启心跳定时器（3分钟心跳）
         msgPushTimer->start(msgPushTime * 1000);
         delete formLoginWindow;
         this->showMinimized();
@@ -1152,7 +1159,7 @@ void MainWindow::setMsgPage()
                 msg_contents.clear();   //初始化消息缓存
             }
             sendToUid = msgMember->toolTip();
-            emit startPushMsg(sendToUid, msgStackMax);   //获取聊天记录
+            emit startPushMsg(uid, sendToUid, msgStackMax);   //获取聊天记录
             ui->textBrowser_msgHistory->clear();
             ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
             ui->textBrowser_msgHistory->append("<br><p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 消息加载中...  ---</p><br>");
@@ -1270,6 +1277,18 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         ui->btn_newMsgCheacked->setEnabled(true);
         trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
     }
+}
+
+void MainWindow::initMsgSys()
+{
+    sendToUid = "-1";
+    isPushing = false;
+    curMsgStackCnt = 0;
+    msgHistoryInfo.clear();
+    msg_contents.clear();
+    ui->textBrowser_msgHistory->clear();
+    ui->label_msgMemName->setText("--");
+    on_btn_newMsgCheacked_clicked();
 }
 
 void MainWindow::on_PieSliceHighlight(bool show)

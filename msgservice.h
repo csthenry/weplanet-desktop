@@ -36,7 +36,7 @@ public:
 	QString getPreviousPushUid();
 	void loadMsgMemList(QString uid);
 	void sendMessage(QByteArray array);
-	void pushMessage(QString uid, int limit);
+	void pushMessage(QString me, QString member, int limit);
 	void searchMember(const QString& uid);
 	void loadApplyInfo(const QString& me, const QString& member);
 	void sendApply(const QString& me, const QString& member, const QString& info);

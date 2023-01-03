@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow
 private:
     QFont HarmonyOS_Font;
 
-    QString HarmonyOS_Font_Family, msg_contents;
+    QString HarmonyOS_Font_Family;
 
     PreviewPage* notice_page;
 
@@ -83,7 +83,7 @@ private:
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
 
-    QString msgHistoryInfo; //聊天记录说明
+    QString msg_contents, msgHistoryInfo; //聊天记录、说明
 
     QSystemTrayIcon* trayIcon;
 
@@ -184,6 +184,8 @@ private:
     void setMsgPage();
 
     void msgPusher(QStack<QByteArray> msgStack);
+
+    void initMsgSys();
 
     SqlWork *sqlWork;
 
@@ -540,7 +542,7 @@ signals:
 
     void sendMessage(QByteArray array);
 
-    void startPushMsg(QString uid, int limit);
+    void startPushMsg(QString me, QString member, int limit);
 
     void delFriend(const QString& me, const QString& member);
 private:
