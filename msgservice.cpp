@@ -41,7 +41,7 @@ void MsgService::pushMessage(QString me, QString member, int limit)
 	QString from_uid, from_name, to_uid, to_name, msgText, send_time;
 
 	msgStack.clear();
-	query.exec(QString("SELECT * FROM magic_message WHERE from_uid='%1' AND to_uid='%2' UNION ALL SELECT * FROM magic_message WHERE from_uid='%2' AND to_uid='%1' ORDER BY send_time DESC").arg(me, member));	   // LIMIT 0,30
+	query.exec(QString("SELECT * FROM magic_message WHERE from_uid='%1' AND to_uid='%2' UNION ALL SELECT * FROM magic_message WHERE from_uid='%2' AND to_uid='%1' ORDER BY id DESC").arg(me, member));	   // LIMIT 0,30
 	msgStackCnt[member] = query.size();	//消息栈数据量
 	while (query.next() && cnt <= limit) {
 		QByteArray array;
