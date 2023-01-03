@@ -28,21 +28,21 @@ void MsgService::sendMessage(QByteArray array)
 	emit sendMessageFinished(res);
 }
 
-void MsgService::pushMessage(QString uid, int limit)
+void MsgService::pushMessage(QString me, QString member, int limit)
 {
-	pushingUid = uid;
-	if (uid == "-1")
+	pushingUid = member;
+	if (member == "-1")
 		return;
-	if (msgStackCnt.contains(uid))	//初始化对应用户消息栈数据量
-		msgStackCnt.value(uid, 0);
+	if (msgStackCnt.contains(member))	//初始化对应用户消息栈数据量
+		msgStackCnt.value(member, 0);
 	int cnt = 1;
 	DB_PUSHER.open();
 	QSqlQuery query(DB_PUSHER);
 	QString from_uid, from_name, to_uid, to_name, msgText, send_time;
 
 	msgStack.clear();
-	query.exec("SELECT * FROM magic_message WHERE from_uid='" + uid + "' UNION ALL SELECT * FROM magic_message WHERE to_uid='" + uid + "' ORDER BY send_time DESC");	   // LIMIT 0,30
-	msgStackCnt[uid] = query.size();	//消息栈数据量
+	query.exec(QString("SELECT * FROM magic_message WHERE from_uid='%1' AND to_uid='%2' UNION ALL SELECT * FROM magic_message WHERE from_uid='%2' AND to_uid='%1' ORDER BY send_time DESC").arg(me, member));	   // LIMIT 0,30
+	msgStackCnt[member] = query.size();	//消息栈数据量
 	while (query.next() && cnt <= limit) {
 		QByteArray array;
 		QDataStream stream(&array, QIODevice::WriteOnly);
@@ -61,7 +61,7 @@ void MsgService::pushMessage(QString uid, int limit)
 	query.clear();
 	DB_PUSHER.close();
 
-	previousPushUid = uid;
+	previousPushUid = member;
 	emit pusher(msgStack);
 }
 
