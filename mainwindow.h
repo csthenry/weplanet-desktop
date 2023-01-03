@@ -57,6 +57,8 @@ class MainWindow : public QMainWindow
 private:
     QFont HarmonyOS_Font;
 
+    QString HarmonyOS_Font_Family, msg_contents;
+
     PreviewPage* notice_page;
 
     QWebChannel* c_channel, *m_channel;

@@ -13,6 +13,7 @@ class MsgService  : public QObject
 	Q_OBJECT
 
 private:
+	QString pushingUid, previousPushUid;	//当前在push谁的消息，和上次push的UID
 	QHash<QString, int> msgStackCnt;	//当前会话消息栈数据量
 	service db_service;
 	QSqlDatabase DB, DB_PUSHER;
@@ -31,6 +32,8 @@ public:
 	QList<QString> getMsgApplyMemList();
 	QList<QString> getMsgApplyMemNameList();
 	QList<QPixmap> getApplyAvatarList();
+	QString getPushingUid();
+	QString getPreviousPushUid();
 	void loadMsgMemList(QString uid);
 	void sendMessage(QByteArray array);
 	void pushMessage(QString uid, int limit);
