@@ -26,7 +26,7 @@ void GroupManageWork::working()
     groupModel->setHeaderData(groupModel->fieldIndex("attend_manage"), Qt::Horizontal,"考勤管理权");
     groupModel->setHeaderData(groupModel->fieldIndex("apply_manage"), Qt::Horizontal,"审批权限");
     groupModel->setHeaderData(groupModel->fieldIndex("applyItem_manage"), Qt::Horizontal,"审批流程管理权");
-    groupModel->setHeaderData(groupModel->fieldIndex("group_manage"), Qt::Horizontal,"系统及组织架构管理权");
+    groupModel->setHeaderData(groupModel->fieldIndex("group_manage"), Qt::Horizontal,"系统及组织管理权");
     groupModel->setHeaderData(groupModel->fieldIndex("activity_manage"), Qt::Horizontal,"活动管理权");
     groupModel->setHeaderData(groupModel->fieldIndex("send_message"), Qt::Horizontal,"信息收发权限");
     groupModel->setHeaderData(groupModel->fieldIndex("notice_manage"), Qt::Horizontal, "公告管理权限");

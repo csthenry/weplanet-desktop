@@ -57,6 +57,8 @@ class MainWindow : public QMainWindow
 private:
     QFont HarmonyOS_Font;
 
+    QString HarmonyOS_Font_Family, msg_contents;
+
     PreviewPage* notice_page;
 
     QWebChannel* c_channel, *m_channel;
@@ -80,6 +82,8 @@ private:
     QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_MSGPUSHER, *sqlThread_SECOND;
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
+
+    QString msgHistoryInfo; //聊天记录说明
 
     QSystemTrayIcon* trayIcon;
 

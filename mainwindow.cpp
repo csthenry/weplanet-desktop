@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     actionList.append(ui->actGroup);
     actionList.append(ui->actNoticeManage);
 
-    connectStatusLable = new QLabel("数据库服务状态: 正在连接...");
+    connectStatusLable = new QLabel("服务状态: 正在连接...");
     connectStatusLable->setMinimumWidth(1100);
 
     userAvatar = new QPixmap(":/images/color_icon/user.svg");
@@ -594,7 +594,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     msgListTips_2->setMinimumWidth(ui->toolBox_Msg->width());
     msgListTips_2->setMaximumWidth(ui->toolBox_Msg->width());
     msgListTips_2->setAlignment(Qt::AlignHCenter);
-    ui->toolBox_Msg->setStyleSheet("QToolBox::tab,QToolTip{padding-left:5px;border-radius:5px;color:#E7ECF0;background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #667481,stop:1 #566373)}QToolBox::tab:selected{ background:qlineargradient(spread : pad,x1 : 0,y1 : 0,x2 : 0,y2 : 1,stop : 0 #778899,stop:1 #708090) }QToolButton{font: 10pt \"微软雅黑\"; }QLabel{font: 10pt \"微软雅黑\";}QToolBox QScrollBar{width:0;height:0}");
+    
     //更新HarmonyOS字体
     QFont font;
     int font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");
@@ -608,6 +608,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         widget->setFont(font);
     }
     HarmonyOS_Font = font;
+    ui->toolBox_Msg->setStyleSheet(QString("QToolBox::tab,QToolTip{padding-left:5px;border-radius:5px;color:#E7ECF0;background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #667481,stop:1 #566373)}QToolBox::tab:selected{ background:qlineargradient(spread : pad,x1 : 0,y1 : 0,x2 : 0,y2 : 1,stop : 0 #778899,stop:1 #708090) }QToolButton{font: 10pt \"%1\"; }QLabel{font: 10pt \"%1\";}QToolBox QScrollBar{width:0;height:0}").arg(fontName.at(0)));
+    HarmonyOS_Font_Family = fontName.at(0);
 
     //检测开机启动
     ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
@@ -1143,14 +1145,17 @@ void MainWindow::setMsgPage()
         //按钮事件
         connect(msgMember, &QToolButton::clicked, this, [=]() {
             ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
-            if(msgMember->toolTip() != sendToUid)
+            msgHistoryInfo = QString("<p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 和%1 的聊天记录 ---</p>").arg(msgMember->text());
+            if (msgMember->toolTip() != sendToUid)
+            {
                 curMsgStackCnt = 0;    //切换用户时初始化消息数据量
+                msg_contents.clear();   //初始化消息缓存
+            }
             sendToUid = msgMember->toolTip();
             emit startPushMsg(sendToUid, msgStackMax);   //获取聊天记录
             ui->textBrowser_msgHistory->clear();
             ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
-            ui->textBrowser_msgHistory->setTextColor(Qt::blue);
-            ui->textBrowser_msgHistory->append("================ 消息加载中... ================");
+            ui->textBrowser_msgHistory->append("<br><p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 消息加载中...  ---</p><br>");
             });
     }
     ui->Msg_page_vLayout->addStretch(); //添加spacer
@@ -1209,26 +1214,52 @@ void MainWindow::setMsgPage()
 void MainWindow::msgPusher(QStack<QByteArray> msgStack)
 {
     isPushing = false;  //消息推送队列已经处理完成
-    ui->textBrowser_msgHistory->clear();
-    QString from_uid, from_name, to_uid, to_name, msgText, send_time;
-    if (msgStack.isEmpty())
+
+    if (curMsgStackCnt > msgPusherService->getMsgStackCnt(sendToUid))  //消息历史过旧，才会推送新消息
     {
-        ui->textBrowser_msgHistory->append("================ 当前暂无聊天记录 ================ ");
+        curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
         return;
     }
+    if (msgPusherService->getPreviousPushUid() != msgPusherService->getPushingUid()) //如果已切换用户，则跳过此次push
+        return;
+
+    QString from_uid, from_name, to_uid, to_name, msgText, send_time;
+    
+    int beforePos = ui->textBrowser_msgHistory->verticalScrollBar()->value();   //滚动条位置
+    bool atEnd = beforePos >= ui->textBrowser_msgHistory->verticalScrollBar()->maximum();
+    ui->textBrowser_msgHistory->clear();
+
+    if (msgStack.isEmpty())
+    {
+        ui->textBrowser_msgHistory->append("<br><p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 当前暂无聊天记录 ---</p><br>");
+        return;
+    }
+    msg_contents.clear();
     while (!msgStack.isEmpty())
     {
         QDataStream stream(&msgStack.pop(), QIODevice::ReadOnly);
         stream >> from_uid >> from_name >> to_uid >> to_name >> msgText >> send_time;
+        QDateTime sendDate = QDateTime::fromString(send_time, "yyyy-MM-dd hh:mm:ss");
 
-        HarmonyOS_Font.setPointSize(14);
-        ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
-        ui->textBrowser_msgHistory->setTextColor(Qt::blue);
-        ui->textBrowser_msgHistory->append(QString("================ [%1] %2 %3 ================").arg(from_uid, from_name, send_time));
-        ui->textBrowser_msgHistory->setCurrentFont(HarmonyOS_Font);
-        ui->textBrowser_msgHistory->setTextColor(Qt::black);
-        ui->textBrowser_msgHistory->append("消息内容：" + msgText);
+        if (sendDate.date() == QDateTime::currentDateTime().date())
+            send_time = sendDate.time().toString("hh:mm:ss");   //若时间为当前，则简化显示
+        if (from_uid == uid)
+        {
+            msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>%2 %3</p>").arg(from_name, send_time, HarmonyOS_Font_Family);
+            msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);
+        }
+        else
+        {
+            msg_contents += QString("<p align='left' style='margin-left:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>[%1] %2 %3</p>").arg(from_uid, from_name, send_time, HarmonyOS_Font_Family);
+            msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'> 📣 %1</p>").arg(msgText);
+        }
     }
+    ui->textBrowser_msgHistory->append(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
+
+    if (!atEnd)
+        ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(beforePos);  //滚动条不在末尾，则恢复原位置
+    else
+        ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(ui->textBrowser_msgHistory->verticalScrollBar()->maximum());
 
     if (curMsgStackCnt < msgPusherService->getMsgStackCnt(sendToUid))  //有新消息
     {
@@ -1605,9 +1636,6 @@ void MainWindow::on_actGroup_triggered()
     //选择行变化时
     connect(groupPageSelection_department, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
                 this, SLOT(on_groupPageDptcurrentChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
-
-    ui->tableView_group->setRowHidden(0, true);
-
 }
 
 void MainWindow::setGroupManagePage()
@@ -1633,6 +1661,7 @@ void MainWindow::setGroupManagePage()
     ui->tableView_group->setSelectionModel(groupPageSelection_group);
     ui->tableView_department->setSelectionModel(groupPageSelection_department);
 
+    ui->tableView_group->setRowHidden(0, true); //隐藏第一行
     ui->stackedWidget->setCurrentIndex(11);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
@@ -1971,8 +2000,8 @@ void MainWindow::on_btn_addGroup_clicked()
     groupPageSelection_group->clearSelection();//清空选择项
     groupPageSelection_group->setCurrentIndex(curIndex, QItemSelectionModel::Select);//设置刚插入的行为当前选择行
 
-    int currow = curIndex.row(); //获得当前行
-    groupModel->setData(groupModel->index(currow, 0), groupModel->rowCount()); //自动生成编号
+    //int currow = curIndex.row(); //获得当前行
+    //groupModel->setData(groupModel->index(currow, 0), groupModel->rowCount()); //自动生成编号
 }
 
 void MainWindow::on_btn_actApprove_clicked()
@@ -2121,8 +2150,8 @@ void MainWindow::on_btn_addDpt_clicked()
     groupPageSelection_department->clearSelection();//清空选择项
     groupPageSelection_department->setCurrentIndex(curIndex, QItemSelectionModel::Select);//设置刚插入的行为当前选择行
 
-    int currow = curIndex.row(); //获得当前行
-    departmentModel->setData(departmentModel->index(currow, 0), departmentModel->rowCount()); //自动生成编号
+    //int currow = curIndex.row(); //获得当前行
+    //departmentModel->setData(departmentModel->index(currow, 0), departmentModel->rowCount()); //自动生成编号
 }
 
 void MainWindow::on_btn_delDpt_clicked()
@@ -2801,13 +2830,11 @@ void MainWindow::on_btn_sendMsg_clicked()
     ui->label_send->setMovie(loadingMovie);
     emit sendMessage(array);
 
-    HarmonyOS_Font.setPointSize(14);
-    ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
-    ui->textBrowser_msgHistory->setTextColor(Qt::blue);
-    ui->textBrowser_msgHistory->append(QString("================ [%1] %2 %3 ================").arg(ui->label_home_uid->text(), ui->label_home_name->text(), curDateTime.toString("yyyy-MM-dd hh:mm:ss")));
-    ui->textBrowser_msgHistory->setCurrentFont(HarmonyOS_Font);
-    ui->textBrowser_msgHistory->setTextColor(Qt::black);
-    ui->textBrowser_msgHistory->append("消息内容：" + msgText);
+    msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-size:10pt;'>%2 %3</p>").arg(ui->label_home_name->text(), curDateTime.toString("hh:mm:ss"));
+    msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);
+    ui->textBrowser_msgHistory->clear();
+    ui->textBrowser_msgHistory->append(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
+    ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(ui->textBrowser_msgHistory->verticalScrollBar()->maximum()); //移动至末尾
     ui->textEdit_msg->clear();
 }
 
@@ -2830,6 +2857,11 @@ void MainWindow::on_btn_addMsgMem_clicked()
 
 void MainWindow::on_btn_deleteMsgMem_clicked()
 {
+    if (sendToUid == "-1")
+    {
+        QMessageBox::warning(this, "警告", "请选择一名好友后再试。", QMessageBox::Ok);
+        return;
+    }
     const QMessageBox::StandardButton res = QMessageBox::warning(this, "警告", "确认要删除好友 [" + sendToUid + "] 吗？", QMessageBox::Yes | QMessageBox::No);
     if (res == QMessageBox::Yes)
     {
@@ -2926,13 +2958,13 @@ void MainWindow::on_statusChanged(bool status)
     {
         dbStatus = false;
         statusIcon->setPixmap(*statusErrorIcon);
-        connectStatusLable->setText("数据库服务状态: " + sqlWork->getTestDb().lastError().text());
+        connectStatusLable->setText("服务状态: " + sqlWork->getTestDb().lastError().text());
     }
     else
     {
         dbStatus = true;
         statusIcon->setPixmap(*statusOKIcon);
-        connectStatusLable->setText("数据库服务状态: 已连接数据库");
+        connectStatusLable->setText("服务状态: 已连接至服务器");
     }
 }
 

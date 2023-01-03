@@ -360,12 +360,12 @@ void formLogin::on_statusChanged(const bool status)
     if(status)
     {
         ui->labelIcon->setPixmap(*statusOKIcon);
-        ui->labelStatus->setText("数据库服务状态: 已连接数据库");
+        ui->labelStatus->setText("服务状态: 已连接至服务器");
     }
     else
     {
         ui->labelIcon->setPixmap(*statusErrorIcon);
-        ui->labelStatus->setText("数据库服务状态: " + sqlWork->getTestDb().lastError().text());
+        ui->labelStatus->setText("服务状态: " + sqlWork->getTestDb().lastError().text());
     }
 }
 

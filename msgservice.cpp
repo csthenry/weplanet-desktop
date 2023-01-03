@@ -30,6 +30,7 @@ void MsgService::sendMessage(QByteArray array)
 
 void MsgService::pushMessage(QString uid, int limit)
 {
+	pushingUid = uid;
 	if (uid == "-1")
 		return;
 	if (msgStackCnt.contains(uid))	//初始化对应用户消息栈数据量
@@ -60,6 +61,7 @@ void MsgService::pushMessage(QString uid, int limit)
 	query.clear();
 	DB_PUSHER.close();
 
+	previousPushUid = uid;
 	emit pusher(msgStack);
 }
 
@@ -269,6 +271,16 @@ QList<QString> MsgService::getMsgApplyMemNameList()
 QList<QPixmap> MsgService::getApplyAvatarList()
 {
 	return applyAvatar;
+}
+
+QString MsgService::getPushingUid()
+{
+	return pushingUid;
+}
+
+QString MsgService::getPreviousPushUid()
+{
+	return previousPushUid;
 }
 
 MsgService::~MsgService()
