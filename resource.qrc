@@ -109,6 +109,7 @@
         <file>img/Loading9.gif</file>
         <file>img/Loading10.gif</file>
         <file>img/loading.gif</file>
+        <file>img/qq-nt-logo.png</file>
     </qresource>
     <qresource prefix="/lib">
         <file>eCharts/echarts.html</file>

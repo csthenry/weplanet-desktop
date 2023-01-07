@@ -20,7 +20,7 @@
    <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>MagicLitePlanet</string>
+   <string>WePlanet</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -258,7 +258,7 @@
            </font>
           </property>
           <property name="title">
-           <string>欢迎登录~</string>
+           <string>欢迎来到 WePlanet</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_91">
            <item row="0" column="0" rowspan="3">
@@ -813,8 +813,8 @@
           <property name="title">
            <string/>
           </property>
-          <layout class="QGridLayout" name="gridLayout_127">
-           <item row="0" column="0" rowspan="2">
+          <layout class="QGridLayout" name="gridLayout_131">
+           <item row="0" column="0" rowspan="3">
             <widget class="QLabel" name="label_homeStatus">
              <property name="minimumSize">
               <size>
@@ -845,13 +845,13 @@
               <widget class="QLabel" name="label_70">
                <property name="minimumSize">
                 <size>
-                 <width>90</width>
+                 <width>80</width>
                  <height>0</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>90</width>
+                 <width>80</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -869,7 +869,7 @@
               <widget class="QLabel" name="label_homeVer">
                <property name="minimumSize">
                 <size>
-                 <width>80</width>
+                 <width>100</width>
                  <height>0</height>
                 </size>
                </property>
@@ -891,13 +891,13 @@
               <widget class="QLabel" name="label_73">
                <property name="minimumSize">
                 <size>
-                 <width>90</width>
+                 <width>80</width>
                  <height>0</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>90</width>
+                 <width>80</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -915,7 +915,7 @@
               <widget class="QLabel" name="label_LatestVersion">
                <property name="minimumSize">
                 <size>
-                 <width>80</width>
+                 <width>100</width>
                  <height>0</height>
                 </size>
                </property>
@@ -944,7 +944,60 @@
              </property>
             </spacer>
            </item>
-           <item row="1" column="1">
+           <item row="0" column="4" rowspan="2">
+            <layout class="QGridLayout" name="gridLayout_127">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_122">
+               <property name="minimumSize">
+                <size>
+                 <width>95</width>
+                 <height>38</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>95</width>
+                 <height>38</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="resource.qrc">:/images/img/qq-nt-logo.png</pixmap>
+               </property>
+               <property name="scaledContents">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_123">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>38</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>110</width>
+                 <height>38</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt; color:#7f7f7f;&quot;&gt;技术架构驱动&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="1" rowspan="2">
             <widget class="QLabel" name="label_71">
              <property name="font">
               <font>
@@ -959,7 +1012,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
+           <item row="1" column="2" rowspan="2">
             <layout class="QGridLayout" name="gridLayout_78">
              <item row="0" column="0">
               <widget class="QLabel" name="label_118">
@@ -1027,7 +1080,7 @@
              </item>
             </layout>
            </item>
-           <item row="1" column="3">
+           <item row="2" column="3" colspan="2">
             <widget class="QLabel" name="label_72">
              <property name="enabled">
               <bool>false</bool>
@@ -1976,8 +2029,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -2009,8 +2062,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -2045,7 +2098,82 @@ padding: 0px 5px;</string>
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_45">
-           <item row="0" column="0" colspan="5">
+           <item row="1" column="0" colspan="6">
+            <widget class="QSplitter" name="splitter_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <widget class="QTextBrowser" name="textBrowser_msgHistory">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>350</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+             </widget>
+             <widget class="QTextEdit" name="textEdit_msg">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>250</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="documentTitle">
+               <string/>
+              </property>
+              <property name="placeholderText">
+               <string>请在此输入后发送...</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <spacer name="horizontalSpacer_23">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="btn_addMsgMem">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>添加好友</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="6">
             <widget class="QGroupBox" name="groupBox_56">
              <property name="title">
               <string/>
@@ -2134,99 +2262,7 @@ padding: 0px 5px;</string>
              </layout>
             </widget>
            </item>
-           <item row="1" column="0" colspan="5">
-            <widget class="QSplitter" name="splitter_5">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <widget class="QTextBrowser" name="textBrowser_msgHistory">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>350</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
-             </widget>
-             <widget class="QTextEdit" name="textEdit_msg">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>100</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>250</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="documentTitle">
-               <string/>
-              </property>
-              <property name="placeholderText">
-               <string>请在此输入后发送...</string>
-              </property>
-             </widget>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QPushButton" name="btn_addMsgMem">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>添加好友</string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QPushButton" name="btn_deleteMsgMem">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>删除好友</string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <spacer name="horizontalSpacer_23">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="2" column="3">
+           <item row="2" column="4">
             <widget class="QLabel" name="label_send">
              <property name="minimumSize">
               <size>
@@ -2251,7 +2287,24 @@ padding: 0px 5px;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="4">
+           <item row="2" column="1">
+            <widget class="QPushButton" name="btn_deleteMsgMem">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>删除好友</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="5">
             <widget class="QPushButton" name="btn_sendMsg">
              <property name="minimumSize">
               <size>
@@ -2265,6 +2318,13 @@ padding: 0px 5px;</string>
              <property name="icon">
               <iconset resource="resource.qrc">
                <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QCheckBox" name="checkBox_noMsgRem">
+             <property name="text">
+              <string>勿扰模式</string>
              </property>
             </widget>
            </item>
@@ -7339,46 +7399,6 @@ padding: 0px 5px;</string>
       </widget>
       <widget class="QWidget" name="page_more">
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_20">
-          <property name="font">
-           <font>
-            <family>微软雅黑</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string/>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_101">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_102">
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2023 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::AutoText</enum>
-             </property>
-             <property name="scaledContents">
-              <bool>false</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-             <property name="openExternalLinks">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QWebEngineView" name="webEngineView_about">
           <property name="minimumSize">
@@ -7401,6 +7421,46 @@ padding: 0px 5px;</string>
             <string>qrc:/lib/eCharts/echarts_about.html</string>
            </url>
           </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox_20">
+          <property name="font">
+           <font>
+            <family>微软雅黑</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_101">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_102">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (x64)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2023 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::AutoText</enum>
+             </property>
+             <property name="scaledContents">
+              <bool>false</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+             <property name="openExternalLinks">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -8810,9 +8870,9 @@ background-color: transparent;
    <addaction name="actHome"/>
    <addaction name="actMyInfo"/>
    <addaction name="actMessage"/>
+   <addaction name="actAttend"/>
    <addaction name="actNotice"/>
    <addaction name="action"/>
-   <addaction name="actAttend"/>
    <addaction name="actApply"/>
    <addaction name="separator"/>
    <addaction name="actUserManager"/>
@@ -8838,7 +8898,7 @@ background-color: transparent;
      <normaloff>:/images/color_icon/color-star.svg</normaloff>:/images/color_icon/color-star.svg</iconset>
    </property>
    <property name="text">
-    <string>首页</string>
+    <string>WePlanet</string>
    </property>
    <property name="toolTip">
     <string>首页</string>
@@ -8859,7 +8919,7 @@ background-color: transparent;
    </property>
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-account.svg</normaloff>:/images/color_icon/color-account.svg</iconset>
+     <normaloff>:/images/color_icon/color-inf.svg</normaloff>:/images/color_icon/color-inf.svg</iconset>
    </property>
    <property name="text">
     <string>用户管理</string>
@@ -8877,7 +8937,7 @@ background-color: transparent;
   <action name="actAttend">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-event.svg</normaloff>:/images/color_icon/color-event.svg</iconset>
+     <normaloff>:/images/color_icon/color-time.svg</normaloff>:/images/color_icon/color-time.svg</iconset>
    </property>
    <property name="text">
     <string>考勤</string>
@@ -8895,7 +8955,7 @@ background-color: transparent;
   <action name="actApply">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
+     <normaloff>:/images/color_icon/color-license.svg</normaloff>:/images/color_icon/color-license.svg</iconset>
    </property>
    <property name="text">
     <string>申请</string>
@@ -8913,13 +8973,13 @@ background-color: transparent;
   <action name="actMyInfo">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-paste.svg</normaloff>:/images/color_icon/color-paste.svg</iconset>
+     <normaloff>:/images/color_icon/color-idcard.svg</normaloff>:/images/color_icon/color-idcard.svg</iconset>
    </property>
    <property name="text">
-    <string>个人信息</string>
+    <string>我的</string>
    </property>
    <property name="toolTip">
-    <string>个人信息</string>
+    <string>我的资料</string>
    </property>
    <property name="font">
     <font>
@@ -9036,13 +9096,13 @@ background-color: transparent;
   <action name="actMessage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-computer.svg</normaloff>:/images/color_icon/color-computer.svg</iconset>
+     <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
    </property>
    <property name="text">
-    <string>在线聊天</string>
+    <string>畅聊</string>
    </property>
    <property name="toolTip">
-    <string>在线聊天</string>
+    <string>好友及消息</string>
    </property>
    <property name="font">
     <font>
@@ -9054,7 +9114,7 @@ background-color: transparent;
   <action name="actManage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-proj.svg</normaloff>:/images/color_icon/color-proj.svg</iconset>
+     <normaloff>:/images/color_icon/color-newProj.svg</normaloff>:/images/color_icon/color-newProj.svg</iconset>
    </property>
    <property name="text">
     <string>活动管理</string>
@@ -9072,7 +9132,7 @@ background-color: transparent;
   <action name="action">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-widget.svg</normaloff>:/images/color_icon/color-widget.svg</iconset>
+     <normaloff>:/images/color_icon/color-support.svg</normaloff>:/images/color_icon/color-support.svg</iconset>
    </property>
    <property name="text">
     <string>活动</string>
@@ -9108,7 +9168,7 @@ background-color: transparent;
   <action name="actNotice">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-date.svg</normaloff>:/images/color_icon/color-date.svg</iconset>
+     <normaloff>:/images/color_icon/color-info.svg</normaloff>:/images/color_icon/color-info.svg</iconset>
    </property>
    <property name="text">
     <string>动态</string>

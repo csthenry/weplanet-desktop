@@ -73,6 +73,8 @@ private:
 
     bool dbStatus = true;
 
+    bool isSending = false; //消息发送中
+
     bool isPushing = false; //消息推送中
 
     int curMsgStackCnt = 0; //当前消息栈数据量
@@ -389,6 +391,8 @@ private slots:
     void on_checkBox_agreePrivacy_stateChanged(int state);
 
     void on_checkBox_autoRun_stateChanged(int state);
+
+    void on_checkBox_noMsgRem_stateChanged(int state);
 
     void on_btn_resetAutoRun_clicked();
 
