@@ -390,6 +390,8 @@ private slots:
 
     void on_checkBox_autoRun_stateChanged(int state);
 
+    void on_checkBox_noMsgRem_stateChanged(int state);
+
     void on_btn_resetAutoRun_clicked();
 
     void on_btn_attendManagePage_recovery_clicked();

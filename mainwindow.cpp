@@ -105,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason)));
     QIcon icon(":/images/logo/MagicLightAssistant.png");
     trayIcon->setIcon(icon);
-    trayIcon->setToolTip("MagicLitePlanet - 运行中");
+    trayIcon->setToolTip("WePlanet - 运行中");
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->show();
 
@@ -581,6 +581,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             on_btn_newMsgCheacked_clicked();
             QMessageBox::information(this, "消息", QString("已删除好友 [%1] ，请刷新好友列表。").arg(sendToUid), QMessageBox::Ok);
             sendToUid = "-1";
+            emit loadMsgMemList(uid);
         }
         else
             QMessageBox::warning(this, "消息", res, QMessageBox::Ok);
@@ -1057,15 +1058,15 @@ void MainWindow::setStatisticsPanel(int option, int days)
 		panel_display["心跳请求"] = true;
 		panel_display["新增活动"] = true;
 		panel_display["新增动态"] = true;
-        ui->label_panelChartMod->setText("HenryOS 智慧大屏（" + QString::number(panel_series_count) + "天）");
+        ui->label_panelChartMod->setText("智慧大屏（" + QString::number(panel_series_count) + "天）");
     }
     switch (panel_option)
     {
-    case 1:panel_display["登录请求"] = true; ui->label_panelChartMod->setText("HenryOS 登录请求量（" + QString::number(panel_series_count) + "天）"); break;
-    case 2:panel_display["注册请求"] = true; ui->label_panelChartMod->setText("HenryOS 注册请求量（" + QString::number(panel_series_count) + "天）"); break;
-    case 3:panel_display["心跳请求"] = true; ui->label_panelChartMod->setText("HenryOS 心跳请求量（" + QString::number(panel_series_count) + "天）"); break;
-    case 4:panel_display["新增活动"] = true; ui->label_panelChartMod->setText("HenryOS 活动新增量（" + QString::number(panel_series_count) + "天）"); break;
-    case 5:panel_display["新增动态"] = true; ui->label_panelChartMod->setText("HenryOS 动态新增量（" + QString::number(panel_series_count) + "天）"); break;
+    case 1:panel_display["登录请求"] = true; ui->label_panelChartMod->setText("登录请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 2:panel_display["注册请求"] = true; ui->label_panelChartMod->setText("注册请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 3:panel_display["心跳请求"] = true; ui->label_panelChartMod->setText("心跳请求量（" + QString::number(panel_series_count) + "天）"); break;
+    case 4:panel_display["新增活动"] = true; ui->label_panelChartMod->setText("活动新增量（" + QString::number(panel_series_count) + "天）"); break;
+    case 5:panel_display["新增动态"] = true; ui->label_panelChartMod->setText("动态新增量（" + QString::number(panel_series_count) + "天）"); break;
     default:
         break;
     }
@@ -1208,9 +1209,13 @@ void MainWindow::setMsgPage()
     if (friendList.isEmpty())
     {
         msgListTips_1->setText("暂无好友");
+        ui->toolBox_Msg->setItemText(0, "我的好友");
         ui->Msg_page_vLayout->addWidget(msgListTips_1);
         ui->Msg_page_vLayout->addStretch(); //添加spacer
         msgListTipsType = 1;
+    }
+    else {
+        ui->toolBox_Msg->setItemText(0, QString("我的好友（共%1名）").arg(friendList.count()));
     }
     if (friendApplyList.isEmpty())
     {
@@ -1218,6 +1223,12 @@ void MainWindow::setMsgPage()
         ui->Msg_ApplyPage_vLayout->addWidget(msgListTips_2);
         ui->Msg_ApplyPage_vLayout->addStretch(); //添加spacer
         msgListTipsType = 2;
+		ui->toolBox_Msg->setItemText(1, "好友申请");
+    }
+    else {
+		ui->toolBox_Msg->setItemText(1, QString("好友申请（%1条待审核）").arg(friendApplyList.count()));
+        if(!ui->checkBox_noMsgRem->isChecked())
+            trayIcon->showMessage("好友验证", QString("你有 %1 条好友申请待审核，请及时查看。").arg(friendApplyList.count()));
     }
 }
 
@@ -1228,11 +1239,14 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
     //qDebug() << "刷新消息cur:" << curMsgStackCnt << "stack:" << msgPusherService->getMsgStackCnt(sendToUid);
     if (curMsgStackCnt < msgPusherService->getMsgStackCnt(sendToUid))  //有新消息
     {
-        ui->label_newMsg->setText("<font color=red>" + ui->label_newMsg->text() + "</font>");
-        ui->label_newMsgIcon->setVisible(true);
-        ui->label_newMsg->setVisible(true);
-        ui->btn_newMsgCheacked->setEnabled(true);
-        if(curMsgStackCnt != 0)
+        if (curMsgStackCnt != 0)
+        {
+            ui->label_newMsg->setText("<font color=red>" + ui->label_newMsg->text() + "</font>");
+            ui->label_newMsgIcon->setVisible(true);
+            ui->label_newMsg->setVisible(true);
+            ui->btn_newMsgCheacked->setEnabled(true);
+        }
+        if(curMsgStackCnt != 0 && !ui->checkBox_noMsgRem->isChecked())
             trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
         curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
     }
@@ -1241,6 +1255,10 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         return;
     if (msgPusherService->getPreviousPushUid() != msgPusherService->getPushingUid()) //如果已切换用户，则跳过此次push
         return;
+
+    //添加聊得火热
+    if(msgPusherService->getMsgStackCnt(sendToUid) >= 30 && ui->label_msgMemName->text().indexOf(" 🔥 ") == -1)
+		ui->label_msgMemName->setText(ui->label_msgMemName->text() + " 🔥 ");
 
     QString from_uid, from_name, to_uid, to_name, msgText, send_time;
     
@@ -1702,7 +1720,7 @@ void MainWindow::on_actRefresh_triggered()
 {
     qDebug() << "心跳query...";
     emit get_statistics();  //统计心跳请求量
-    trayIcon->setToolTip("MagicLitePlanet - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
+    trayIcon->setToolTip("WePlanet - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
     int index = ui->stackedWidget->currentIndex(); 
     switch (index)
     {
@@ -1775,7 +1793,10 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     ui->btn_editUser_cancel->setEnabled(userManageModel->isDirty());
     
     if(curRecord.value("uid") == "1")
-        ui->tableView_userManage->setItemDelegateForRow(current.row(), readOnlyDelegate);   //禁止编辑系统账号
+        //ui->tableView_userManage->setItemDelegateForRow(current.row(), readOnlyDelegate);   //禁止编辑系统账号
+        ui->tableView_userManage->setRowHidden(current.row(), true);
+    else
+        ui->tableView_userManage->setRowHidden(0, false);   //允许编辑普通账号
     if (curRecord.value("uid") != "100000" && curRecord.value("uid") != "1" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
     {
         ui->btn_delUser->setEnabled(current.isValid());
@@ -2588,6 +2609,12 @@ void MainWindow::on_checkBox_autoRun_stateChanged(int state)
     setProcessAutoRun(QApplication::applicationFilePath(), state);
 }
 
+void MainWindow::on_checkBox_noMsgRem_stateChanged(int state)
+{
+    if(state)
+        QMessageBox::information(this, "提示", "开启勿扰模式后，将关闭新消息及好友验证提醒。", QMessageBox::Ok);
+}
+
 void MainWindow::on_btn_resetAutoRun_clicked()
 {
     setProcessAutoRun(QApplication::applicationFilePath(), 1);
@@ -3078,6 +3105,7 @@ void MainWindow::initToolbar(QSqlRecord rec)
 void MainWindow::createActions()
 {
     mShowMainAction = new QAction("显示主界面", this);
+    mShowMainAction->setIcon(QIcon(":/images/color_icon/color-star.svg"));
     connect(mShowMainAction, &QAction::triggered, this, [=]()
 		{
             if (this->isHidden())
