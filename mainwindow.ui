@@ -8870,9 +8870,9 @@ background-color: transparent;
    <addaction name="actHome"/>
    <addaction name="actMyInfo"/>
    <addaction name="actMessage"/>
+   <addaction name="actAttend"/>
    <addaction name="actNotice"/>
    <addaction name="action"/>
-   <addaction name="actAttend"/>
    <addaction name="actApply"/>
    <addaction name="separator"/>
    <addaction name="actUserManager"/>
@@ -8898,7 +8898,7 @@ background-color: transparent;
      <normaloff>:/images/color_icon/color-star.svg</normaloff>:/images/color_icon/color-star.svg</iconset>
    </property>
    <property name="text">
-    <string>首页</string>
+    <string>WePlanet</string>
    </property>
    <property name="toolTip">
     <string>首页</string>
@@ -8919,7 +8919,7 @@ background-color: transparent;
    </property>
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-account.svg</normaloff>:/images/color_icon/color-account.svg</iconset>
+     <normaloff>:/images/color_icon/color-inf.svg</normaloff>:/images/color_icon/color-inf.svg</iconset>
    </property>
    <property name="text">
     <string>用户管理</string>
@@ -8937,7 +8937,7 @@ background-color: transparent;
   <action name="actAttend">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-event.svg</normaloff>:/images/color_icon/color-event.svg</iconset>
+     <normaloff>:/images/color_icon/color-time.svg</normaloff>:/images/color_icon/color-time.svg</iconset>
    </property>
    <property name="text">
     <string>考勤</string>
@@ -8955,7 +8955,7 @@ background-color: transparent;
   <action name="actApply">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
+     <normaloff>:/images/color_icon/color-license.svg</normaloff>:/images/color_icon/color-license.svg</iconset>
    </property>
    <property name="text">
     <string>申请</string>
@@ -8973,13 +8973,13 @@ background-color: transparent;
   <action name="actMyInfo">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-paste.svg</normaloff>:/images/color_icon/color-paste.svg</iconset>
+     <normaloff>:/images/color_icon/color-idcard.svg</normaloff>:/images/color_icon/color-idcard.svg</iconset>
    </property>
    <property name="text">
-    <string>个人信息</string>
+    <string>我的</string>
    </property>
    <property name="toolTip">
-    <string>个人信息</string>
+    <string>我的资料</string>
    </property>
    <property name="font">
     <font>
@@ -9096,13 +9096,13 @@ background-color: transparent;
   <action name="actMessage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-computer.svg</normaloff>:/images/color_icon/color-computer.svg</iconset>
+     <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
    </property>
    <property name="text">
-    <string>在线聊天</string>
+    <string>畅聊</string>
    </property>
    <property name="toolTip">
-    <string>在线聊天</string>
+    <string>好友及消息</string>
    </property>
    <property name="font">
     <font>
@@ -9114,7 +9114,7 @@ background-color: transparent;
   <action name="actManage">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-proj.svg</normaloff>:/images/color_icon/color-proj.svg</iconset>
+     <normaloff>:/images/color_icon/color-newProj.svg</normaloff>:/images/color_icon/color-newProj.svg</iconset>
    </property>
    <property name="text">
     <string>活动管理</string>
@@ -9132,7 +9132,7 @@ background-color: transparent;
   <action name="action">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-widget.svg</normaloff>:/images/color_icon/color-widget.svg</iconset>
+     <normaloff>:/images/color_icon/color-support.svg</normaloff>:/images/color_icon/color-support.svg</iconset>
    </property>
    <property name="text">
     <string>活动</string>
@@ -9168,7 +9168,7 @@ background-color: transparent;
   <action name="actNotice">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/images/color_icon/color-date.svg</normaloff>:/images/color_icon/color-date.svg</iconset>
+     <normaloff>:/images/color_icon/color-info.svg</normaloff>:/images/color_icon/color-info.svg</iconset>
    </property>
    <property name="text">
     <string>动态</string>

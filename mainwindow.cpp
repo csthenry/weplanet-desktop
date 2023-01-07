@@ -566,6 +566,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         }
         else
             ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_2.svg"));
+        isSending = false;  //发送完成
         });
     connect(friendsWidget, &FriendsWidget::loadApplyInfoFinished, this, [=]() {
         ui->Msg_ApplyPage->setEnabled(true);
@@ -1144,6 +1145,8 @@ void MainWindow::setMsgPage()
     for (int i = 0; i < friendList.count(); i++)
     {
         QToolButton* msgMember = new QToolButton();
+        msgMember->setCheckable(true);
+        msgMember->setAutoExclusive(true);
         msgMember->setIcon(friendAvatar[i]);
         msgMember->setIconSize(QSize(50, 50));
         msgMember->setText(QString(" [%1] %2").arg(friendList[i], friendNameList[i]));
@@ -1250,15 +1253,17 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
             trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
         curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
     }
+    
+    //添加聊得火热
+    if(msgPusherService->getMsgStackCnt(sendToUid) >= 30 && ui->label_msgMemName->text().indexOf(" 🔥 ") == -1)
+		ui->label_msgMemName->setText(ui->label_msgMemName->text() + " 🔥 ");
 
     if (curMsgStackCnt > msgPusherService->getMsgStackCnt(sendToUid))  //消息历史过旧，才会推送新消息
         return;
     if (msgPusherService->getPreviousPushUid() != msgPusherService->getPushingUid()) //如果已切换用户，则跳过此次push
         return;
-
-    //添加聊得火热
-    if(msgPusherService->getMsgStackCnt(sendToUid) >= 30 && ui->label_msgMemName->text().indexOf(" 🔥 ") == -1)
-		ui->label_msgMemName->setText(ui->label_msgMemName->text() + " 🔥 ");
+	if (isSending)  //如果正在发送消息，则跳过此次push
+        return;
 
     QString from_uid, from_name, to_uid, to_name, msgText, send_time;
     
@@ -2877,6 +2882,7 @@ void MainWindow::on_btn_sendMsg_clicked()
     stream << uid << sendToUid << msgText << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     ui->label_send->setMovie(loadingMovie);
     emit sendMessage(array);
+    isSending = true;   //消息发送中...
 
     msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-size:10pt;'>%2 %3</p>").arg(ui->label_home_name->text(), curDateTime.toString("hh:mm:ss"));
     msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);

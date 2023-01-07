@@ -73,6 +73,8 @@ private:
 
     bool dbStatus = true;
 
+    bool isSending = false; //消息发送中
+
     bool isPushing = false; //消息推送中
 
     int curMsgStackCnt = 0; //当前消息栈数据量
