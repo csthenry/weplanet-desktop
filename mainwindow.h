@@ -23,6 +23,7 @@
 #include <QSystemTrayIcon>
 #include <QTextStream>
 #include <QWebChannel>
+#include <QClipboard>
 #include "service.h"
 #include "formlogin.h"
 #include "querymodel.h"
@@ -458,6 +459,8 @@ private slots:
     void on_btn_deleteMsgMem_clicked();
 
     void on_btn_friendInfo_clicked();
+    
+    void on_btn_shareMe_clicked();
 
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 

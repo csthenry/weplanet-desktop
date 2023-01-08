@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -433,7 +433,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>所属组群：</string>
+                <string>所属部门：</string>
                </property>
               </widget>
              </item>
@@ -2062,8 +2062,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>300</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
