@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     actionList.append(ui->actNoticeManage);
 
     connectStatusLable = new QLabel("服务状态: 正在连接...");
-    connectStatusLable->setMinimumWidth(1100);
+    connectStatusLable->setMinimumWidth(this->width() - 25);
 
     userAvatar = new QPixmap(":/images/color_icon/user.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
@@ -2948,6 +2948,14 @@ void MainWindow::on_btn_friendInfo_clicked()
     friendInfoWidget->showMinimized();
     friendInfoWidget->setUid(sendToUid);
     friendInfoWidget->showNormal();
+}
+
+void MainWindow::on_btn_shareMe_clicked()
+{
+    QClipboard* clipboard = QApplication::clipboard();  //获取系统剪切板指针
+    QString text = QString("WePlanet 用户名片：\nUID：%1\n姓名：%2\n类别：%3\n部门：%4\n\n来源：WePlanet 用户分享").arg(ui->label_home_uid->text(), ui->label_home_name->text(), ui->label_home_group->text(), ui->label_home_department->text());
+    clipboard->setText(text);
+    QMessageBox::information(this, "WePlanet 用户分享", "已将我的名片分享至剪切板。", QMessageBox::Ok);
 }
 
 void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
