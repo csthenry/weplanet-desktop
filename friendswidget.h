@@ -8,6 +8,10 @@
 #include "msgservice.h"
 #include "service.h"
 
+QT_BEGIN_NAMESPACE
+namespace Ui { class FriendsWidgetClass; };
+QT_END_NAMESPACE
+
 class FriendsWidget : public QWidget
 {
 	Q_OBJECT

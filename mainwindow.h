@@ -43,6 +43,7 @@
 #include "infowidget.h"
 #include "msgservice.h"
 #include "friendswidget.h"
+#include "friendinfowidget.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -210,6 +211,8 @@ private:
     InfoWidget* infoWidget;
 
     FriendsWidget* friendsWidget;
+    
+	FriendInfoWidget* friendInfoWidget;
 
     MsgService* msgService, *msgPusherService;
 
@@ -453,6 +456,8 @@ private slots:
     void on_btn_addMsgMem_clicked();
 
     void on_btn_deleteMsgMem_clicked();
+
+    void on_btn_friendInfo_clicked();
 
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 

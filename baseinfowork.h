@@ -44,7 +44,7 @@ public:
     QString getScore();
     QPixmap getAvatar();
     QString getVerifyType();
-    QString getVerufyInfo();
+    QString getVerifyInfo();
     QString getLastLoginTime();
 	QString getAnnouncementText();
 	int getVerifyTag();

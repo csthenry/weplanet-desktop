@@ -213,6 +213,7 @@
     <ClCompile Include="document.cpp" />
     <ClCompile Include="excelexport.cpp" />
     <ClCompile Include="formlogin.cpp" />
+    <ClCompile Include="friendinfowidget.cpp" />
     <ClCompile Include="friendswidget.cpp" />
     <ClCompile Include="groupmanagework.cpp" />
     <ClCompile Include="infowidget.cpp" />
@@ -251,6 +252,7 @@
     <QtMoc Include="infowidget.h" />
     <QtMoc Include="msgservice.h" />
     <QtMoc Include="friendswidget.h" />
+    <QtMoc Include="friendinfowidget.h" />
     <ClInclude Include="querymodel.h" />
     <ClInclude Include="readOnlyDelegate.h" />
     <ClInclude Include="resource.h" />
@@ -281,6 +283,7 @@
   <ItemGroup>
     <QtUic Include="formlogin.ui">
     </QtUic>
+    <QtUic Include="friendinfowidget.ui" />
     <QtUic Include="friendswidget.ui" />
     <QtUic Include="infowidget.ui" />
     <QtUic Include="mainwindow.ui">

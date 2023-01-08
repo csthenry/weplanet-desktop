@@ -24,6 +24,16 @@ void baseInfoWork::loadBaseInfoWorking()
         score = query.value("score").toString();
         lastLoginTime = query.value("last_login").toDateTime().toString("yyyy-MM-dd HH:mm:ss");
     }
+    else
+    {
+        name = "--";
+        gender = "--";
+		telephone = "--";
+		mail = "--";
+		avatarUrl = "";
+		score = "--";
+		lastLoginTime = "--";
+    }
 
     query.exec("SELECT * FROM magic_attendance WHERE a_uid='" + uid + "' AND today='" + curDateTime.date().toString("yyyy-MM-dd") + "';");
     if(query.next())
@@ -485,7 +495,7 @@ QString baseInfoWork::getVerifyType()
     return verifyType;
 }
 
-QString baseInfoWork::getVerufyInfo()
+QString baseInfoWork::getVerifyInfo()
 {
     return verifyInfo;
 }
