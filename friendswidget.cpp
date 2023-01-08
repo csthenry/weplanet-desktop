@@ -83,6 +83,7 @@ FriendsWidget::~FriendsWidget()
 
     delete msgService;
     delete thread;
+    delete ui;
 }
 
 void FriendsWidget::loading()

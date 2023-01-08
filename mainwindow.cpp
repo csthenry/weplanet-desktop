@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     infoWidget = new InfoWidget();  //初始化信息窗口
     friendsWidget = new FriendsWidget();    //初始化好友窗口
+	friendInfoWidget = new FriendInfoWidget();  //初始化好友资料窗口
 	
     statusIcon = new QLabel(this);     //用于显示状态图标的label
     statusIcon->setMaximumSize(25, 25);
@@ -671,6 +672,7 @@ MainWindow::~MainWindow()
 
     delete infoWidget;
     delete friendsWidget;
+    delete friendInfoWidget;
     delete loadingMovie;
     delete avatarLoadMovie;
     delete notice_page;
@@ -794,7 +796,7 @@ void MainWindow::setHomePageBaseInfo()
         else
             ui->label_verifyIcon->setPixmap(*verifyIcon_2);
         ui->label_verifyType->setText(setBaseInfoWork->getVerifyType() + "：");
-        ui->label_home_verifyInfo->setText(setBaseInfoWork->getVerufyInfo());
+        ui->label_home_verifyInfo->setText(setBaseInfoWork->getVerifyInfo());
     }
 
     ui->label_verifyIcon_2->setPixmap(*ui->label_verifyIcon->pixmap());
@@ -914,6 +916,7 @@ void MainWindow::on_actExit_triggered()
 
     infoWidget->close();
     friendsWidget->close();
+    friendInfoWidget->close();
 
     formLoginWindow = new formLogin();
     refTimer->stop();
@@ -1132,7 +1135,7 @@ void MainWindow::setMsgPage()
         ui->Msg_page_vLayout->removeItem(ui->Msg_page_vLayout->itemAt(0));
     while (ui->Msg_ApplyPage_vLayout->count())
         ui->Msg_ApplyPage_vLayout->removeItem(ui->Msg_ApplyPage_vLayout->itemAt(0));
-
+    bool isFriend = false;  //当前聊天对象是否仍为好友
     //好友列表
     for (auto curMem : msgMemberList)
     {
@@ -1157,6 +1160,13 @@ void MainWindow::setMsgPage()
         ui->Msg_page_vLayout->addWidget(msgMember);
         msgMemberList.append(msgMember);
 
+        //选中当前聊天对象并判断当前聊天对象是否仍为好友
+        if (sendToUid == friendList[i])
+        {
+            msgMember->setChecked(true);
+			isFriend = true;
+        }
+        
         //按钮事件
         connect(msgMember, &QToolButton::clicked, this, [=]() {
             ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
@@ -1207,6 +1217,9 @@ void MainWindow::setMsgPage()
             });
     }
     ui->Msg_ApplyPage_vLayout->addStretch(); //添加spacer
+    //当前聊天对象已不是好友
+    if (!isFriend)
+        initMsgSys();
 
     //添加提示
     if (friendList.isEmpty())
@@ -2923,6 +2936,18 @@ void MainWindow::on_btn_deleteMsgMem_clicked()
         ui->btn_deleteMsgMem->setText("处理中...");
         emit delFriend(uid, sendToUid);
     }
+}
+
+void MainWindow::on_btn_friendInfo_clicked()
+{
+	if (sendToUid == "-1")
+	{
+		QMessageBox::warning(this, "错误", "请选择一名好友后再试。", QMessageBox::Ok);
+		return;
+	}
+    friendInfoWidget->showMinimized();
+    friendInfoWidget->setUid(sendToUid);
+    friendInfoWidget->showNormal();
 }
 
 void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
