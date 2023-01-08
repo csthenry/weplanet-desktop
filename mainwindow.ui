@@ -2062,8 +2062,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
-             <height>557</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -2098,7 +2098,79 @@ padding: 0px 5px;</string>
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_45">
-           <item row="1" column="0" colspan="6">
+           <item row="2" column="4">
+            <spacer name="horizontalSpacer_23">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="6">
+            <widget class="QPushButton" name="btn_sendMsg">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>发送 Ctrl+Enter </string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="5">
+            <widget class="QLabel" name="label_send">
+             <property name="minimumSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="resource.qrc">:/images/color_icon/approve_3.svg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="btn_deleteMsgMem">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>删除好友</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="7">
             <widget class="QSplitter" name="splitter_5">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2144,93 +2216,41 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="2" column="3">
-            <spacer name="horizontalSpacer_23">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="2" column="0">
-            <widget class="QPushButton" name="btn_addMsgMem">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
-             </property>
+            <widget class="QCheckBox" name="checkBox_noMsgRem">
              <property name="text">
-              <string>添加好友</string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+              <string>勿扰模式</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="0" colspan="6">
+           <item row="0" column="0" colspan="7">
             <widget class="QGroupBox" name="groupBox_56">
              <property name="title">
               <string/>
              </property>
              <layout class="QGridLayout" name="gridLayout_80">
-              <item row="0" column="3">
-               <widget class="QLabel" name="label_newMsg">
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>[有新消息]</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="4">
-               <widget class="QPushButton" name="btn_newMsgCheacked">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="btn_friendInfo">
                 <property name="minimumSize">
                  <size>
-                  <width>50</width>
-                  <height>0</height>
+                  <width>34</width>
+                  <height>34</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>50</width>
-                  <height>16777215</height>
+                  <width>34</width>
+                  <height>34</height>
                  </size>
                 </property>
-                <property name="text">
-                 <string>已读</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_msgMemName">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
+                <property name="toolTip">
+                 <string>好友资料</string>
                 </property>
                 <property name="text">
-                 <string>--</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resource.qrc">
+                  <normaloff>:/images/color_icon/color-account.svg</normaloff>:/images/color_icon/color-account.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -2259,62 +2279,66 @@ padding: 0px 5px;</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="btn_friendInfo">
+              <item row="0" column="4">
+               <widget class="QPushButton" name="btn_newMsgCheacked">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="minimumSize">
                  <size>
-                  <width>35</width>
-                  <height>35</height>
+                  <width>50</width>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>35</width>
-                  <height>35</height>
+                  <width>50</width>
+                  <height>16777215</height>
                  </size>
                 </property>
-                <property name="toolTip">
-                 <string>好友资料</string>
+                <property name="text">
+                 <string>已读</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="label_newMsg">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
                 </property>
                 <property name="text">
-                 <string/>
+                 <string>[有新消息]</string>
                 </property>
-                <property name="icon">
-                 <iconset resource="resource.qrc">
-                  <normaloff>:/images/color_icon/color-account.svg</normaloff>:/images/color_icon/color-account.svg</iconset>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_msgMemName">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>--</string>
                 </property>
                </widget>
               </item>
              </layout>
             </widget>
            </item>
-           <item row="2" column="4">
-            <widget class="QLabel" name="label_send">
-             <property name="minimumSize">
-              <size>
-               <width>30</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>30</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="resource.qrc">:/images/color_icon/approve_3.svg</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QPushButton" name="btn_deleteMsgMem">
+           <item row="2" column="0">
+            <widget class="QPushButton" name="btn_addMsgMem">
              <property name="minimumSize">
               <size>
                <width>120</width>
@@ -2322,35 +2346,28 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="text">
-              <string>删除好友</string>
+              <string>添加好友</string>
              </property>
              <property name="icon">
               <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="5">
-            <widget class="QPushButton" name="btn_sendMsg">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>发送 Ctrl+Enter </string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-delivery.svg</normaloff>:/images/color_icon/color-delivery.svg</iconset>
+               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
              </property>
             </widget>
            </item>
            <item row="2" column="2">
-            <widget class="QCheckBox" name="checkBox_noMsgRem">
+            <widget class="QPushButton" name="btn_shareMe">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>40</height>
+              </size>
+             </property>
              <property name="text">
-              <string>勿扰模式</string>
+              <string>个人名片</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-idcard.svg</normaloff>:/images/color_icon/color-idcard.svg</iconset>
              </property>
             </widget>
            </item>

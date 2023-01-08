@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     actionList.append(ui->actNoticeManage);
 
     connectStatusLable = new QLabel("服务状态: 正在连接...");
-    connectStatusLable->setMinimumWidth(1100);
+    connectStatusLable->setMinimumWidth(this->width() - 25);
 
     userAvatar = new QPixmap(":/images/color_icon/user.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
