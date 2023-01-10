@@ -191,6 +191,10 @@ private:
 
     void initMsgSys();
 
+    bool checkLocalTime();
+
+    void disableDynamicItems(); //本地时间误差过大，禁用需要准确时间的项目
+
     SqlWork *sqlWork;
 
     baseInfoWork *setBaseInfoWork;
@@ -461,6 +465,8 @@ private slots:
     void on_btn_friendInfo_clicked();
     
     void on_btn_shareMe_clicked();
+
+    void on_btn_checkTime_clicked();
 
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 

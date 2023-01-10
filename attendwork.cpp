@@ -28,7 +28,7 @@ void AttendWork::working()
 
     //将未签退的考勤项签退，签退时间23:59:59
     DB_SECOND.open();
-    QDateTime curDateTime = QDateTime::currentDateTime();
+    QDateTime curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     QSqlQuery query(DB_SECOND);
     query.exec("UPDATE magic_attendance SET end_date='23:59:59' WHERE today<'" + curDateTime.date().toString("yyyy-MM-dd") + "' AND end_date IS NULL");
     query.clear();
@@ -58,7 +58,7 @@ void AttendWork::homeChartWorking()
     seriesObj.insert("data_yMem", weekWorkMem);
     
     QString date;
-    QDateTime curDateTime = QDateTime::currentDateTime();
+    QDateTime curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     curDateTime = curDateTime.addDays(-7);
     for (int i = 7; i >= 1; i--)
     {
@@ -77,7 +77,7 @@ void AttendWork::analyseWorkTime()
 {
     int cnt = 0;
     QTime workTime(0, 0, 0, 0), beginTime, endTime;
-    QDateTime today = QDateTime::currentDateTime();
+    QDateTime today = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     QJsonArray weekMyWorkTime = { 0, 0, 0, 0, 0, 0, 0 }, weekWorkMem = { 0, 0, 0, 0, 0, 0, 0 };
     QJsonArray weekAllWorkStatus = { "未签到", "未签到" , "未签到" , "未签到" , "未签到" , "未签到" ,"未签到" };
     QSqlRecord curRecord;
@@ -114,7 +114,7 @@ void AttendWork::analyseWorkTime()
             {
                 beginTime = QTime::fromString(curRecord.value("begin_date").toString(), "hh:mm:ss");
                 if (curRecord.value("end_date").isNull())
-                    endTime = QTime::fromString(QDateTime::currentDateTime().time().toString(), "hh:mm:ss");
+                    endTime = QTime::fromString(QDateTime::fromSecsSinceEpoch(service::getWebTime()).time().toString(), "hh:mm:ss");
                 else
                     endTime = QTime::fromString(curRecord.value("end_date").toString(), "hh:mm:ss");
                 workTime = workTime.addSecs(beginTime.secsTo(endTime));
@@ -191,13 +191,13 @@ QSqlDatabase AttendWork::getDB()
 
 void AttendWork::submitAll(int type)
 {
-    QDateTime cur = QDateTime::currentDateTime();
     if(type == 1)
         emit attendDone(relTableModel->submitAll());
     else
     {
         DB_SECOND.open();
         QSqlQuery query(DB_SECOND);
+        QDateTime cur = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
         bool res = query.exec("UPDATE magic_attendance SET end_date = '" + cur.time().toString("hh:mm:ss") + "' WHERE a_uid = '" + uid +"' AND today = '" + cur.date().toString("yyyy-MM-dd") + "';");
         query.clear();
         DB_SECOND.close();

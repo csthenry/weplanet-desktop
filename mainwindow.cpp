@@ -228,6 +228,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         emit actHomeWorking();
         refTimer->start(5 * 60 * 1000);  //开启心跳query定时器（5分钟心跳）
         msgPushTimer->start(msgPushTime * 1000);
+
+        //校验本地时间
+        if (!checkLocalTime())
+            disableDynamicItems();
     }, Qt::UniqueConnection);
 
     connect(this, &MainWindow::get_statistics, setBaseInfoWork, &baseInfoWork::get_statistics);
@@ -846,9 +850,10 @@ void MainWindow::setHomePageBaseInfo()
     ui->label_homePage_attendDate->setText(curDateTime.date().toString("yyyy年MM月dd日"));
 
     //首页LCD显示工时
+    QTime workTime(0, 0, 0, 0);
     QTime beginTime = QTime::fromString(setBaseInfoWork->getBeginTime(), "hh:mm:ss");
     QTime endTime = QTime::fromString(setBaseInfoWork->getEndTime(), "hh:mm:ss");
-    QTime workTime = workTime.addSecs(beginTime.secsTo(endTime));
+    workTime = workTime.addSecs(beginTime.secsTo(endTime));
     double workTimeHour = QString::asprintf("%.2f", workTime.hour() + workTime.minute() / 60.0).toDouble();
     
     if(setBaseInfoWork->getAttendToday())
@@ -1356,6 +1361,35 @@ void MainWindow::initMsgSys()
     ui->textBrowser_msgHistory->clear();
     ui->label_msgMemName->setText("--");
     on_btn_newMsgCheacked_clicked();
+}
+
+bool MainWindow::checkLocalTime()
+{
+    qint32 webTimeSinceEpoch = service::getWebTime();
+    if (webTimeSinceEpoch == -1)
+    {
+        QMessageBox::warning(this, "时间误差警告", "获取服务器时间失败，请检查网络连接。\n考勤、活动、畅聊等已被禁用，请前往【设置】页面重新验证时间以启动部分项。");
+        return false;
+    }
+	QDateTime webTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);   //获取网络时间
+	QDateTime localTime = QDateTime::currentDateTime();   //获取本地时间
+	double marginMinutes = localTime.secsTo(webTime) / 60.0;    //计算时间差
+    
+	if (marginMinutes > 3 || marginMinutes < -3)
+	{
+		QMessageBox::warning(this, "时间误差警告", "本地时间与Windows服务器时间的误差超出范围。\n考勤、活动、畅聊等已被禁用，请检查本地时间后前往【设置】页面重新验证时间以启动部分项。");
+		return false;
+	}
+    return true;
+}
+
+void MainWindow::disableDynamicItems()
+{
+    ui->btn_actJoin->setEnabled(false);
+    ui->btn_actCancel->setEnabled(false);
+    ui->btn_beginAttend->setEnabled(false);
+    ui->btn_endAttend->setEnabled(false);
+    ui->btn_sendMsg->setEnabled(false);
 }
 
 void MainWindow::on_PieSliceHighlight(bool show)
@@ -2158,7 +2192,13 @@ void MainWindow::on_btn_actUpdate_clicked()
 
 void MainWindow::on_btn_actJoin_clicked()
 {
-    curDateTime = QDateTime::currentDateTime();
+    if(!ui->checkBox_agreePrivacy->isChecked())
+	{
+		QMessageBox::warning(this, "警告", "请先阅读并同意《个人信息保护政策》。", QMessageBox::Ok);
+		return;
+	}
+
+    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     QSqlRecord rec = activityModel->record(myActListSelection->currentIndex().row());
     QString select_id = rec.value("act_id").toString();
     if (rec.value("act_id").toString().isEmpty())
@@ -2185,8 +2225,8 @@ void MainWindow::on_btn_actJoin_clicked()
 }
 
 void MainWindow::on_btn_actCancel_clicked()
-{
-    curDateTime = QDateTime::currentDateTime();
+{   
+    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     QSqlRecord rec = activityModel->record(myActListSelection->currentIndex().row()), memRec;
     QString select_id = rec.value("act_id").toString();
     QString pre_filter = activityMemModel->filter();
@@ -2445,7 +2485,7 @@ void MainWindow::on_btn_userManagePage_recovery_clicked()
 void MainWindow::on_btn_updateContent_clicked()
 {
     QModelIndex curIndex;
-    curDateTime = QDateTime::currentDateTime();
+    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     bool res = noticeEditMapper->submit();
     if(res)
     {
@@ -2500,7 +2540,7 @@ void MainWindow::on_btn_addContent_clicked()
             QMessageBox::warning(this, "警告", "请将标题、正文等编辑完成后再点击发布。", QMessageBox::Ok);
             return;
         }
-        curDateTime = QDateTime::currentDateTime();
+        curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
         noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("created")), curDateTime);
         noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("modified")), curDateTime);
         noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("author_id")), uid);
@@ -2648,7 +2688,8 @@ void MainWindow::on_comboBox_department_2_currentIndexChanged(const QString &arg
 
 void MainWindow::on_checkBox_agreePrivacy_stateChanged(int state)
 {
-    ui->btn_actJoin->setEnabled(bool(state));
+	Q_UNUSED(state);
+    //ui->btn_actJoin->setEnabled(bool(state));
 }
 
 void MainWindow::on_checkBox_autoRun_stateChanged(int state)
@@ -2757,13 +2798,13 @@ void MainWindow::on_btn_expAttend_clicked()
 }
 
 void MainWindow::on_btn_beginAttend_clicked()
-{
+{ 
     if(ui->label_attendPage_status->text() == "已签到")
     {
         QMessageBox::warning(this, "消息", "今天已经在" + ui->label_attendPage_beginTime->text() + "签到过啦~请勿连续签到哦！", QMessageBox::Ok);
         return;
     }
-    curDateTime = QDateTime::currentDateTime();
+	curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     attendPageModel->insertRow(attendPageModel->rowCount(), QModelIndex()); //在末尾添加一个记录
     QModelIndex curIndex = attendPageModel->index(attendPageModel->rowCount() - 1, 1);//创建最后一行的ModelIndex
     int currow = curIndex.row(); //获得当前行
@@ -2774,13 +2815,10 @@ void MainWindow::on_btn_beginAttend_clicked()
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("name")), 1);   //这里要填外键关联的字段！
 
     emit attendPageModelSubmitAll(1);
-
 }
 
 void MainWindow::on_btn_endAttend_clicked()
 {
-    curDateTime = QDateTime::currentDateTime();
-
     if(ui->label_attendPage_status->text() != "已签到")
     {
         QMessageBox::warning(this, "消息", "请先签到然后再进行签退哦。", QMessageBox::Ok);
@@ -2920,7 +2958,7 @@ void MainWindow::on_btn_sendMsg_clicked()
         return;
     QByteArray array;
     QDataStream stream(&array, QIODevice::WriteOnly);
-    QDateTime curDateTime = QDateTime::currentDateTime();
+    QDateTime curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());   //获取网络时间
     stream << uid << sendToUid << msgText << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     ui->label_send->setMovie(loadingMovie);
     emit sendMessage(array);
@@ -2985,6 +3023,45 @@ void MainWindow::on_btn_shareMe_clicked()
     QString text = QString("WePlanet 用户名片：\nUID：%1\n姓名：%2\n类别：%3\n部门：%4\n\n来源：WePlanet 用户分享").arg(ui->label_home_uid->text(), ui->label_home_name->text(), ui->label_home_group->text(), ui->label_home_department->text());
     clipboard->setText(text);
     QMessageBox::information(this, "WePlanet 用户分享", "已将我的名片分享至剪切板。", QMessageBox::Ok);
+}
+
+void MainWindow::on_btn_checkTime_clicked()
+{
+    qint32 webTimeSinceEpoch = service::getWebTime();
+    QDateTime webTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);
+    QDateTime localTime = QDateTime::currentDateTime();
+    ui->label_webTime->setText(webTime.toString("yyyy年MM月dd日 hh:mm:ss"));
+    ui->label_localTime->setText(localTime.toString("yyyy年MM月dd日 hh:mm:ss"));
+
+    if (webTimeSinceEpoch == -1)
+    {
+        ui->label_webTime->setText("--");
+        QMessageBox::information(this, "时间校验", "网络时间获取失败，请检查网络连接。");
+		return;
+    }
+    
+    double marginMinutes = localTime.secsTo(webTime) / 60.0;    //计算时间差
+    QString res;
+    if (marginMinutes > 3 || marginMinutes < -3)
+    {
+        res = QString("校验完成，当前时间误差为：%1 分钟，不满足误差要求（3 min），考勤、活动等已禁用。").arg(marginMinutes);
+        ui->btn_actJoin->setEnabled(false);
+        ui->btn_actCancel->setEnabled(false);
+        ui->btn_beginAttend->setEnabled(false);
+        ui->btn_endAttend->setEnabled(false);
+        ui->btn_sendMsg->setEnabled(false);
+    }
+    else
+    {
+        res = QString("校验完成，当前时间误差为：%1 分钟，满足误差要求（3 min），考勤、活动等已启用。").arg(marginMinutes);
+        ui->btn_actJoin->setEnabled(true);
+        ui->btn_actCancel->setEnabled(true);
+        ui->btn_beginAttend->setEnabled(true);
+        ui->btn_endAttend->setEnabled(true);
+        ui->btn_sendMsg->setEnabled(true);
+    }
+
+    QMessageBox::information(this, "时间校验", res);
 }
 
 void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
