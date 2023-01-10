@@ -74,7 +74,7 @@ void ActivityManageWork::updateActStatus()
 void ActivityManageWork::homeWorking()
 {
     DB.open();
-    QDateTime m_curDateTime = QDateTime::currentDateTime();
+    QDateTime m_curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     QString curDateTime = m_curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     tabModel->clear();
     tabModel->setTable("magic_activity");
@@ -88,7 +88,8 @@ void ActivityManageWork::homeWorking()
     tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal, "发布者UID");
     tabModel->setHeaderData(tabModel->fieldIndex("act_score"), Qt::Horizontal, "活动学时");
     tabModel->select();
-    tabModel->setFilter("beginDate <='" + curDateTime + "' AND endDate >='" + curDateTime + "'");
+    tabModel->setFilter("joinDate <= '" + curDateTime + "' AND beginDate >= '" + curDateTime + "'");
+    DB.close();
     emit actHomeWorkFinished();
 }
 
@@ -137,7 +138,7 @@ void ActivityManageWork::apply(const QString aid, const QString& uid)
 {
     DB_SECOND.open();
     QDateTime curDateTime;
-    curDateTime = QDateTime::currentDateTime();
+    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     QSqlQuery query(DB_SECOND);
     query.exec("INSERT INTO magic_activityMembers (act_id, actm_uid, actm_joinDate, status) VALUES (" + aid + ", " + uid + ", '" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + "', '待审核')");
     QString res = query.lastError().text();

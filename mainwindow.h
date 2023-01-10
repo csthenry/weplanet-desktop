@@ -191,6 +191,10 @@ private:
 
     void initMsgSys();
 
+    bool checkLocalTime();
+
+    void disableDynamicItems(); //本地时间误差过大，禁用需要准确时间的项目
+
     SqlWork *sqlWork;
 
     baseInfoWork *setBaseInfoWork;
@@ -462,6 +466,8 @@ private slots:
     
     void on_btn_shareMe_clicked();
 
+    void on_btn_checkTime_clicked();
+
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 
     void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
@@ -476,7 +482,10 @@ signals:
     void startSetAuth(const QString& uid);
 
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
+    
     void attendWorking();
+
+    void attendHomeChartWorking();
 
     void attendPageModelSubmitAll(int type);
 

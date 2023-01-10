@@ -16,6 +16,7 @@ class FriendInfoWidget : public QWidget
 	Q_OBJECT
 
 private:
+	bool isLoading = false;
 	QString m_uid;	//µ±«∞∫√”—UID
 	QThread* thread;
 	baseInfoWork* infoWork;

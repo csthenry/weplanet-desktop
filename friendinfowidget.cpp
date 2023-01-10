@@ -47,6 +47,7 @@ void FriendInfoWidget::setLoading()
 
 void FriendInfoWidget::setInfoPage()
 {
+    isLoading = false;
 	ui->uid->setText(m_uid);
 	ui->name->setText(infoWork->getName());
 	ui->department->setText(infoWork->getDepartment());
@@ -86,7 +87,11 @@ void FriendInfoWidget::setUid(const QString& uid)
 	m_uid = uid;
     infoWork->setUid(m_uid);
     setLoading();
-    emit getCurrentMemInfo();
+    if (!isLoading)
+    {
+        emit getCurrentMemInfo();
+        isLoading = true;
+    }
 }
 
 void FriendInfoWidget::on_btn_share_clicked()

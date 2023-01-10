@@ -18,9 +18,69 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "**********";
+    dataBasePassword = "ShEZRKm5Hehh2eZk";
 
     /*****************请在此处完善数据库信息*****************/
+}
+
+//网络授时 https://www.freesion.com/article/3807754024/
+qint32 service::getWebTime()
+{
+    QUdpSocket udpSocket;
+    udpSocket.connectToHost("time.windows.com", 123);
+    if (udpSocket.waitForConnected(3000)) {
+        qint8 LI = 0;
+        qint8 VN = 3;
+        qint8 MODE = 3;
+        qint8 STRATUM = 0;
+        qint8 POLL = 4;
+        qint8 PREC = -6;
+        QDateTime epoch(QDate(1900, 1, 1));
+        qint32 second = quint32(epoch.secsTo(QDateTime::currentDateTime()));
+        qint32 temp = 0;
+        QByteArray timeRequest(48, 0);
+        timeRequest[0] = (LI << 6) | (VN << 3) | (MODE);
+        timeRequest[1] = STRATUM;
+        timeRequest[2] = POLL;
+        timeRequest[3] = PREC & 0xff;
+        timeRequest[5] = 1;
+        timeRequest[9] = 1;
+        timeRequest[40] = (temp = (second & 0xff000000) >> 24);
+        temp = 0;
+        timeRequest[41] = (temp = (second & 0x00ff0000) >> 16);
+        temp = 0;
+        timeRequest[42] = (temp = (second & 0x0000ff00) >> 8);
+        temp = 0;
+        timeRequest[43] = ((second & 0x000000ff));
+        udpSocket.flush();
+        udpSocket.write(timeRequest);
+        udpSocket.flush();
+        if (udpSocket.waitForReadyRead(3000)) {
+            QByteArray newTime;
+            QDateTime epoch(QDate(1900, 1, 1));
+            QDateTime unixStart(QDate(1970, 1, 1));
+            do
+            {
+                newTime.resize(udpSocket.pendingDatagramSize());
+                udpSocket.read(newTime.data(), newTime.size());
+            } while (udpSocket.hasPendingDatagrams());
+            QByteArray TransmitTimeStamp;
+            TransmitTimeStamp = newTime.right(8);
+            quint32 seconds = TransmitTimeStamp[0];
+            quint8 temp = 0;
+            for (int j = 1; j <= 3; j++)
+            {
+                seconds = seconds << 8;
+                temp = TransmitTimeStamp[j];
+                seconds = seconds + temp;
+            }
+            quint32 t = seconds - epoch.secsTo(unixStart);
+            qDebug() << "网络时间戳：" << t;
+            return t;
+            //time.setTime_t(seconds-epoch.secsTo(unixStart));
+        }
+    }
+    return -1;
 }
 
 QString service::pwdEncrypt(const QString &str) //字符串MD5算法加密
@@ -292,10 +352,12 @@ bool service::initDatabaseTables(QSqlDatabase db)
     //聊天信息表
     creatTableStr =
         "CREATE TABLE IF NOT EXISTS magic_message"
-        "(from_uid      int(10)      NOT NULL,"
+        "(id            bigint(20)   NOT NULL AUTO_INCREMENT,"
+        "from_uid       int(10)      NOT NULL,"
         "to_uid         int(10)      NOT NULL,"
         "text           mediumtext   NOT NULL,"
-        "send_time      datetime     NOT NULL)"
+        "send_time      datetime     NOT NULL,"
+        "PRIMARY KEY (id))"
         "ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);
