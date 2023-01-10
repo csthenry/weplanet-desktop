@@ -40,6 +40,39 @@ void AttendWork::working()
     emit attendWorkFinished();
 }
 
+void AttendWork::homeChartWorking()
+{
+    DB.open();
+    relTableModel->setTable("magic_attendance");
+    relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
+    relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
+    relTableModel->select();
+    relTableModel->setFilter("a_uid='" + uid + "'");
+    analyseWorkTime();
+    
+    QJsonObject seriesObj;
+    QJsonArray dateArray;
+
+    seriesObj.insert("data_yStatus", weekAllWorkStatus);
+    seriesObj.insert("data_yTime", weekMyWorkTime);
+    seriesObj.insert("data_yMem", weekWorkMem);
+    
+    QString date;
+    QDateTime curDateTime = QDateTime::currentDateTime();
+    curDateTime = curDateTime.addDays(-7);
+    for (int i = 7; i >= 1; i--)
+    {
+        curDateTime = curDateTime.addDays(1);
+        date = curDateTime.date().toString("MM.dd");
+        dateArray.append(date);
+    }
+    seriesObj.insert("data_x", dateArray);
+    QString jsCode = QString("init(%1, 1)").arg(QString(QJsonDocument(seriesObj).toJson()));
+    
+    emit homeChartDone(jsCode);
+    DB.close();
+}
+
 void AttendWork::analyseWorkTime()
 {
     int cnt = 0;

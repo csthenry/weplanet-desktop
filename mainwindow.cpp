@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 	ui->webEngineView_panel->page()->setBackgroundColor(Qt::transparent);
     //ui->webEngineView->setUrl(QUrl("qrc:/images/loading.html"));
     ui->webEngineView_eCharts->page()->setBackgroundColor(Qt::transparent);
+    ui->webEngineView_homeAttendInfo->page()->setBackgroundColor(Qt::transparent);
 
     //用户权限设置（共8个）
     actionList.append(ui->actMessage);
@@ -222,8 +223,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
         emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
+		ui->label_homeLoading->setVisible(true);
+        emit attendHomeChartWorking();
         emit actHomeWorking();
-        refTimer->start(5*60*1000);  //开启心跳query定时器（5分钟心跳）
+        refTimer->start(5 * 60 * 1000);  //开启心跳query定时器（5分钟心跳）
         msgPushTimer->start(msgPushTime * 1000);
     }, Qt::UniqueConnection);
 
@@ -253,7 +256,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //首页活动信号槽
     connect(this, &MainWindow::actHomeWorking, activityManageWork, &ActivityManageWork::homeWorking);
-     connect(activityManageWork, &ActivityManageWork::actHomeWorkFinished, this, [=]()
+    connect(activityManageWork, &ActivityManageWork::actHomeWorkFinished, this, [=]()
          {
              ui->tableView_activityHome->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
              ui->tableView_activityHome->setModel(activityModel);
@@ -264,6 +267,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
              ui->tableView_activityHome->setEditTriggers(QAbstractItemView::NoEditTriggers);
              ui->stackedWidget->setCurrentIndex(0);
          });
+    //首页考勤图表
+	connect(this, &MainWindow::attendHomeChartWorking, attendWork, &AttendWork::homeChartWorking);
+	connect(attendWork, &AttendWork::homeChartDone, this, [=](QString jsCode) {
+		    ui->label_homeLoading->setVisible(false);
+		    ui->webEngineView_homeAttendInfo->page()->runJavaScript(jsCode);
+		});
     //账号权限验证信号槽
     connect(this, SIGNAL(startSetAuth(const QString&)), setBaseInfoWork, SLOT(setAuthority(const QString&)));
     connect(setBaseInfoWork, &baseInfoWork::authorityRes, this, [=](QSqlRecord res){
@@ -836,21 +845,39 @@ void MainWindow::setHomePageBaseInfo()
     curDateTime = QDateTime::currentDateTime();
     ui->label_homePage_attendDate->setText(curDateTime.date().toString("yyyy年MM月dd日"));
 
+    //首页LCD显示工时
+    QTime beginTime = QTime::fromString(setBaseInfoWork->getBeginTime(), "hh:mm:ss");
+    QTime endTime = QTime::fromString(setBaseInfoWork->getEndTime(), "hh:mm:ss");
+    QTime workTime = workTime.addSecs(beginTime.secsTo(endTime));
+    double workTimeHour = QString::asprintf("%.2f", workTime.hour() + workTime.minute() / 60.0).toDouble();
+    
     if(setBaseInfoWork->getAttendToday())
     {
         ui->label_homePage_attendStatus->setText("已签到");
         ui->label_homePage_beginTime->setText(setBaseInfoWork->getBeginTime());
-        if(setBaseInfoWork->getEndTime().isNull())
+        if (setBaseInfoWork->getEndTime().isNull())
+        {
             ui->label_homePage_endTime->setText("--");
+            workTime.setHMS(0, 0, 0);
+			workTime = workTime.addSecs(beginTime.secsTo(QDateTime::currentDateTime().time()));
+            workTimeHour = QString::asprintf("%.2f", workTime.hour() + workTime.minute() / 60.0).toDouble();
+            ui->lcdNumber->display(workTimeHour);
+        }
         else
+        {
             ui->label_homePage_endTime->setText(setBaseInfoWork->getEndTime());
+            ui->lcdNumber->display(workTimeHour);
+        }
+        
     }
     else
     {
         ui->label_homePage_attendStatus->setText("未签到");
         ui->label_homePage_beginTime->setText("--");
         ui->label_homePage_endTime->setText("--");
+        ui->lcdNumber->display(0);
     }
+
 	//更新首页状态图标
     ui->label_homeStatus->setMovie(&QMovie());
     if (ui->label_homeVer->text() >= ui->label_LatestVersion->text())
@@ -936,8 +963,9 @@ void MainWindow::on_actExit_triggered()
         ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
         emit startBaseInfoWork();
         emit actHomeWorking();
+        emit attendHomeChartWorking();
         ui->stackedWidget->setCurrentIndex(13);  //回到首页
-        refTimer->start(3 * 60 * 1000);  //开启心跳定时器（3分钟心跳）
+        refTimer->start(5 * 60 * 1000);  //开启心跳定时器（5分钟心跳）
         msgPushTimer->start(msgPushTime * 1000);
         delete formLoginWindow;
         this->showMinimized();
@@ -960,6 +988,7 @@ void MainWindow::on_actHome_triggered()
         return;
     ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
     emit startBaseInfoWork();   //刷新首页数据
+    emit attendHomeChartWorking();
     emit actHomeWorking();
 }
 
@@ -987,7 +1016,7 @@ void MainWindow::on_actAttend_triggered()
 void MainWindow::setAttendPage()
 {
     curDateTime = QDateTime::currentDateTime();
-
+    
     ui->tableView_attendPage->setModel(attendPageModel);
     ui->tableView_attendPage->hideColumn(0);   //隐藏考勤数据编号
     ui->tableView_attendPage->setEditTriggers(QAbstractItemView::NoEditTriggers); //不可编辑
@@ -1012,7 +1041,7 @@ void MainWindow::setAttendPage()
         ui->label_attendPage_endTime->setText("--");
     }
     ui->stackedWidget->setCurrentIndex(4);
-    ui->stackedWidget->currentWidget()->setEnabled(true);
+    
     //eCharts QChart
     int *workTimeSum = attendWork->getWorkTime();
     QJsonObject seriesObj;
@@ -2772,7 +2801,7 @@ void MainWindow::on_btn_switchChart_clicked()
     if (ui->label_chartMod->text() == "我的本周考勤数据")
     {
         eChartsJsCode = QString("init(%1, 2)").arg(eChartsJsCode);
-        ui->label_chartMod->setText("星球本周考勤概况");
+        ui->label_chartMod->setText("本周总体考勤概况");
         ui->webEngineView_eCharts->page()->runJavaScript(eChartsJsCode);
         eChartsJsCode = temp;
     }

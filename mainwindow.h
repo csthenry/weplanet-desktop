@@ -476,7 +476,10 @@ signals:
     void startSetAuth(const QString& uid);
 
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
+    
     void attendWorking();
+
+    void attendHomeChartWorking();
 
     void attendPageModelSubmitAll(int type);
 

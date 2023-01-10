@@ -19,6 +19,7 @@ class AttendWork : public QObject
 public:
     explicit AttendWork(QObject *parent = nullptr);
     void working();
+    void homeChartWorking();
     void analyseWorkTime();
     void analyseWorkStatus();
     QSqlRecord getRecord(const int index);
@@ -43,6 +44,7 @@ signals:
     void attendWorkFinished();
     void attendDone(bool);
     void attendOutDone(bool);
+	void homeChartDone(QString);
 };
 
 #endif // ATTENDWORK_H

@@ -88,7 +88,8 @@ void ActivityManageWork::homeWorking()
     tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal, "发布者UID");
     tabModel->setHeaderData(tabModel->fieldIndex("act_score"), Qt::Horizontal, "活动学时");
     tabModel->select();
-    tabModel->setFilter("beginDate <='" + curDateTime + "' AND endDate >='" + curDateTime + "'");
+    tabModel->setFilter("joinDate <= '" + curDateTime + "' AND beginDate >= '" + curDateTime + "'");
+    DB.close();
     emit actHomeWorkFinished();
 }
 
