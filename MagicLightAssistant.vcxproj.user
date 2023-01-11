@@ -2,9 +2,9 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtLastBackgroundBuild>2023-01-10T08:46:43.7054980Z</QtLastBackgroundBuild>
+    <QtLastBackgroundBuild>2023-01-10T13:00:01.6987944Z</QtLastBackgroundBuild>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtLastBackgroundBuild>2023-01-10T08:46:43.7992115Z</QtLastBackgroundBuild>
+    <QtLastBackgroundBuild>2023-01-10T13:00:01.8328264Z</QtLastBackgroundBuild>
   </PropertyGroup>
 </Project>

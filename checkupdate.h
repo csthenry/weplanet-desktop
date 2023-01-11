@@ -6,6 +6,8 @@
 
 #include <QObject>
 #include <QLabel>
+#include <QDir>
+#include <QFile>
 #include <QEventLoop>
 #include <QMessageBox>
 #include <QDesktopServices>
@@ -42,9 +44,11 @@ public:
 
     QString getErrorInfo();
 
-    QUrl getUrl();
+    //QUrl getUrl(); 已废弃
 
     QString getUpdateString();
+
+    bool getIsForce();
 
 private:
 
@@ -55,6 +59,8 @@ private:
     QString LatestVersion;
 
     QString Version;
+
+    bool isForce = false;
 
     QString Url;
 
@@ -67,6 +73,10 @@ private:
     QString errorInfo;
 
     QString updateStr;
+
+    int AutoUpdateToolVersion;
+
+    void writeVersion();
 
 signals:
 

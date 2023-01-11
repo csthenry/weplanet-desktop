@@ -230,10 +230,17 @@ void formLogin::updateFinished(bool res)
     else if(updateSoftWare->getLatestVersion() > updateSoftWare->getCurVersion())
     {
         QString str = updateSoftWare->getUpdateString();
-        int ret = QMessageBox::warning(this, "检查更新", str, "前往下载", "暂不更新");
+        int ret = 0;
+        if(updateSoftWare->getIsForce())
+            ret = QMessageBox::warning(this, "检查更新", str, "开始更新");
+        else
+			ret = QMessageBox::information(this, "检查更新", str, "开始更新", "暂不更新");
+ 
         if (ret == 0)
         {
-            QDesktopServices::openUrl(updateSoftWare->getUrl());
+            //QDesktopServices::openUrl(updateSoftWare->getUrl());
+            QString updateAppName = "./update/update.exe";
+            QProcess::startDetached(updateAppName, QStringList(), "./update");    //启动更新程序
             this->close();  //关闭窗口
         }
     }

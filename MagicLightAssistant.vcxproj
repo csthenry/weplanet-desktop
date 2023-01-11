@@ -67,12 +67,16 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>5.14.2_msvc2017_64</QtInstall>
     <QtModules>core;sql;network;gui;axcontainer;widgets;webchannel;webenginewidgets;charts</QtModules>
+    <QtInstall>5.15.2_msvc2019_64</QtInstall>
+    <QtLibrarySearchPath>
+    </QtLibrarySearchPath>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>5.14.2_msvc2017_64</QtInstall>
     <QtModules>core;sql;network;gui;axcontainer;widgets;webchannel;webenginewidgets;charts</QtModules>
+    <QtInstall>5.15.2_msvc2019_64</QtInstall>
+    <QtLibrarySearchPath>
+    </QtLibrarySearchPath>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />

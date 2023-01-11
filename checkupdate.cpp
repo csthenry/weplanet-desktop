@@ -3,7 +3,9 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "0.1.9.0";   //在此处定义软件当前版本
+    CurVersion = "0.2.0.0";   //在此处定义软件当前版本
+    AutoUpdateToolVersion = 10200;   //自动更新工具识别版本
+    writeVersion();
 }
 checkUpdate::~checkUpdate()
 {
@@ -18,6 +20,17 @@ bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
         emit finished();
     }
     return true;
+}
+
+void checkUpdate::writeVersion()   //用于更新工具识别版本
+{
+    QString configFilePath = QDir::currentPath() + "/update/version.dat";
+    configFilePath = QDir::toNativeSeparators(configFilePath);
+    QFile writeFile(configFilePath);
+    writeFile.open(QIODevice::WriteOnly);
+    QDataStream out(&writeFile);
+	out << AutoUpdateToolVersion;   //写入版本号
+    writeFile.close();
 }
 
 void checkUpdate::homeCheckUpdate()
@@ -59,10 +72,11 @@ bool checkUpdate::getUpdateInfo()
     if (root_Doc.isObject())
     {
         QJsonObject  root_Obj = root_Doc.object();   //创建JSON对象
-        QJsonObject PulseValue = root_Obj.value("MagicLightAssistant").toObject();
+        QJsonObject PulseValue = root_Obj.value("WePlanet").toObject();
 
+		isForce = PulseValue.value("isForce").toBool();
         Version = PulseValue.value("LatestVersion").toString();
-        Url = PulseValue.value("Url").toString();
+        //Url = PulseValue.value("Url").toString(); 已废弃
         Notice = PulseValue.value("Notice").toString();
         UpdateTime = PulseValue.value("UpdateTime").toString();
         ReleaseNote = PulseValue.value("ReleaseNote").toString();
@@ -79,14 +93,19 @@ QString checkUpdate::getErrorInfo()
     return errorInfo;
 }
 
-QUrl checkUpdate::getUrl()
-{
-    return QUrl(Url);
-}
+//QUrl checkUpdate::getUrl()
+//{
+//    return QUrl(Url);
+//}
 
 QString checkUpdate::getUpdateString()
 {
     return updateStr;
+}
+
+bool checkUpdate::getIsForce()
+{
+    return isForce;
 }
 
 
