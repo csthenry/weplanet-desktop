@@ -14,8 +14,8 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,8,0
- PRODUCTVERSION 0,1,8,0
+ FILEVERSION 0,2,0,0
+ PRODUCTVERSION 0,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -32,11 +32,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "bytecho.net"
             VALUE "FileDescription", "WePlanet"
-            VALUE "FileVersion", "0.1.8.0"
+            VALUE "FileVersion", "0.2.0.0"
             VALUE "LegalCopyright", "Copyright (c) 2017-2023 bytecho.net. Written by Henry."
             VALUE "OriginalFilename", "WePlanet.exe"
             VALUE "ProductName", "MagicLitePlanet(WePlanet) ×Ö½ÚÐÇÇò"
-            VALUE "ProductVersion", "0.1.8.0"
+            VALUE "ProductVersion", "0.2.0.0"
         END
     END
     BLOCK "VarFileInfo"
