@@ -239,8 +239,8 @@ void formLogin::updateFinished(bool res)
         if (ret == 0)
         {
             //QDesktopServices::openUrl(updateSoftWare->getUrl());
-            QString updateAppName = "./update/update.exe";
-            QProcess::startDetached(updateAppName, QStringList(), "./update");    //启动更新程序
+            QString updateAppPath = QApplication::applicationDirPath() + "/update";
+            QProcess::startDetached(updateAppPath + "/update.exe", QStringList(), updateAppPath);    //启动更新程序
             this->close();  //关闭窗口
         }
     }
