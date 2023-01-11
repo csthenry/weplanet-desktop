@@ -13,6 +13,7 @@
 
 #include <QObject>
 #include <QtSql>
+#include <QUdpSocket>
 #include <QtCharts>
 #include <QSettings>
 #include <QPainter>
@@ -25,6 +26,8 @@ QT_CHARTS_USE_NAMESPACE
 class service
 {
 public:
+    static qint32 getWebTime(); //网络时间，返回时间戳，错误返回-1
+    
     static QString pwdEncrypt(const QString& str);  //字符串加密
 
     void connectDatabase(QSqlDatabase& db);
