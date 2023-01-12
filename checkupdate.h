@@ -32,7 +32,7 @@ public:
 
     ~checkUpdate();
 
-    bool parse_UpdateJson(QLabel* label, QWidget* parent);
+    bool parse_UpdateJson();
 
     QString getCurVersion();
 
@@ -80,7 +80,7 @@ private:
 
 signals:
 
-	void finished();
+	void finished(QString res);
 
     void homeCheckUpdateFinished(bool res);
 };

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QFontDatabase>
+#include <QMessageBox>
 #include <QClipboard>
 #include "baseinfowork.h"
 #include "ui_friendinfowidget.h"

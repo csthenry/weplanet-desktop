@@ -3,22 +3,19 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "0.2.1.2";   //在此处定义软件当前版本
-    AutoUpdateToolVersion = 10212;   //自动更新工具识别版本
+    CurVersion = "0.2.2.0";   //在此处定义软件当前版本
+    AutoUpdateToolVersion = 10220;   //自动更新工具识别版本
     writeVersion();
 }
 checkUpdate::~checkUpdate()
 {
 }
-bool checkUpdate::parse_UpdateJson(QLabel* label, QWidget* parent)
+bool checkUpdate::parse_UpdateJson()
 {
     if (!getUpdateInfo())
         return false;
     else
-    {
-        label->setText(Notice);
-        emit finished();
-    }
+        emit finished(Notice);
     return true;
 }
 

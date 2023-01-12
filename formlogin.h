@@ -13,6 +13,9 @@
 
 #include <QDialog>
 #include <QMessageBox>
+#include <QFontDatabase>
+#include <QInputDialog>
+#include <QMovie>
 #include <QThread>
 #include <QTime>
 #include "sqlwork.h"

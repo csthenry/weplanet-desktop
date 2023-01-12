@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //ui->webEngineView->setUrl(QUrl("qrc:/images/loading.html"));
     ui->webEngineView_eCharts->page()->setBackgroundColor(Qt::transparent);
     ui->webEngineView_homeAttendInfo->page()->setBackgroundColor(Qt::transparent);
+    ui->webEngineView_workTime->page()->setBackgroundColor(Qt::transparent);
 
     //用户权限设置（共8个）
     actionList.append(ui->actMessage);
@@ -140,7 +141,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     connect(this, &MainWindow::beginUpdate, &updateSoftWare, &checkUpdate::parse_UpdateJson);
     connect(&updateSoftWare, &checkUpdate::finished, this, &MainWindow::updateFinished);
-    emit beginUpdate(ui->notice, this);
+    emit beginUpdate();
 
     //开启数据库连接线程
     dbThread->start();
@@ -732,8 +733,9 @@ void MainWindow::receiveData(QString uid)
     initMsgSys();
 }
 
-void MainWindow::updateFinished()
+void MainWindow::updateFinished(QString res)
 {
+    ui->notice->setText(res);
     ui->groupBox_33->setTitle("版本公告（软件版本：Ver " + updateSoftWare.getCurVersion() + "）");
     ui->label_homeVer->setText(updateSoftWare.getCurVersion());
     if (updateSoftWare.getLatestVersion().isEmpty())
@@ -1020,7 +1022,8 @@ void MainWindow::on_actAttend_triggered()
 
 void MainWindow::setAttendPage()
 {
-    curDateTime = QDateTime::currentDateTime();
+    ui->stackedWidget->setCurrentIndex(4);
+    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     
     ui->tableView_attendPage->setModel(attendPageModel);
     ui->tableView_attendPage->hideColumn(0);   //隐藏考勤数据编号
@@ -1045,7 +1048,6 @@ void MainWindow::setAttendPage()
         ui->label_attendPage_beginTime->setText("--");
         ui->label_attendPage_endTime->setText("--");
     }
-    ui->stackedWidget->setCurrentIndex(4);
     
     //eCharts QChart
     int *workTimeSum = attendWork->getWorkTime();
@@ -1067,9 +1069,31 @@ void MainWindow::setAttendPage()
     QString jsCode = QString("init(%1, 1)").arg(QString(QJsonDocument(seriesObj).toJson()));
     ui->label_chartMod->setText("我的本周考勤数据");
     ui->webEngineView_eCharts->page()->runJavaScript(jsCode);
-    service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), workTimeSum[0], workTimeSum[1], workTimeSum[2], workTimeSum[3]);  //绘制统计图
-
+    //service::buildAttendChart(ui->chartView_attend, this, ui->label->font(), workTimeSum[0], workTimeSum[1], workTimeSum[2], workTimeSum[3]);  //绘制统计图
     eChartsJsCode = QString(QJsonDocument(seriesObj).toJson());
+
+    QJsonObject myWorkTime[4], myWorkTimeJson;
+    myWorkTime[0].insert("value", workTimeSum[0]);
+    myWorkTime[0].insert("name", "4h 以下");
+    myWorkTime[1].insert("value", workTimeSum[1]);
+    myWorkTime[1].insert("name", "4~6h");
+    myWorkTime[2].insert("value", workTimeSum[2]);
+    myWorkTime[2].insert("name", "6~8h");
+    myWorkTime[3].insert("value", workTimeSum[3]);
+    myWorkTime[3].insert("name", "8h 以上");
+    
+	QJsonArray myWorkTimeArray;
+    for (auto workTime : myWorkTime)
+		myWorkTimeArray.append(workTime);
+    QString type = "作息时间很不错~";
+    if (workTimeSum[0] > (workTimeSum[1] + workTimeSum[2]))
+        type = "需要再勤奋一点哦！";
+    else if (workTimeSum[3] > (workTimeSum[1] + workTimeSum[2]))
+        type = "要注意休息哦，身体最重要~";
+    myWorkTimeJson.insert("type", type);
+    myWorkTimeJson.insert("data", myWorkTimeArray);
+    jsCode = QString("init(%1)").arg(QString(QJsonDocument(myWorkTimeJson).toJson()));
+    ui->webEngineView_workTime->page()->runJavaScript(jsCode);
 }
 
 void MainWindow::setStatisticsPanel(int option, int days)
@@ -1392,13 +1416,6 @@ void MainWindow::disableDynamicItems()
     ui->btn_sendMsg->setEnabled(false);
 }
 
-void MainWindow::on_PieSliceHighlight(bool show)
-{ //鼠标移入、移出时触发hovered()信号，动态设置setExploded()效果
-    QPieSlice *slice;
-    slice = (QPieSlice *)sender();
-//    slice->setLabelVisible(show);
-    slice->setExploded(show);
-}
 void MainWindow::on_actApply_triggered() const
 {
     ui->stackedWidget->setCurrentIndex(5);

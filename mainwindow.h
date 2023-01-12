@@ -16,10 +16,13 @@
 #include <QMainWindow>
 #include <QDataWidgetMapper>
 #include <QMessageBox>
+#include <QToolButton>
 #include <QPixmap>
 #include <QDateTime>
 #include <QLabel>
 #include <QMovie>
+#include <QMenu>
+#include <QScrollBar>
 #include <QSystemTrayIcon>
 #include <QTextStream>
 #include <QWebChannel>
@@ -45,8 +48,6 @@
 #include "msgservice.h"
 #include "friendswidget.h"
 #include "friendinfowidget.h"
-
-QT_CHARTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -179,7 +180,7 @@ private:
 
     void closeEvent(QCloseEvent* event);    //重写void closeEvent(QCloseEvent *event);
 
-    void updateFinished();
+    void updateFinished(QString res);
 
     void setStatisticsPanel(int option = 0, int days = -1);
 	
@@ -422,8 +423,6 @@ private slots:
 
     void on_btn_switchChart_clicked();
 
-    void on_PieSliceHighlight(bool show);
-
     void on_btn_personalSubmit_clicked();
 
     void on_btn_personalClear_clicked();
@@ -541,7 +540,7 @@ signals:
 
     void posterSubmitAll();
 
-    void beginUpdate(QLabel* label, QWidget* parent);
+    void beginUpdate();
 
     void attendDataOperate(int type);
 

@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "ShEZRKm5Hehh2eZk";
+    dataBasePassword = "drbXL2TR4Dz4jXLd";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -551,7 +551,8 @@ QString service::getDepartment(QSqlDatabase& db, const QString& uid)
         return "--";
     return query.value("dpt_name").toString();
 }
-
+//函数已废弃
+/*
 void service::buildAttendChart(QChartView *chartView_attend, const QWidget *parent, const QFont &font, int data_1, int data_2, int data_3, int data_4)
 {
     QChart* attendChart = new QChart();
@@ -600,3 +601,4 @@ void service::buildAttendChart(QChartView *chartView_attend, const QWidget *pare
     attendChart->legend()->setVisible(true); //图例
     attendChart->legend()->setAlignment(Qt::AlignBottom);
 }
+*/
