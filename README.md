@@ -17,7 +17,7 @@
 - 类型：Qt桌面应用程序
 - 数据库：MySQL
 - 语言：C++ 11
-- 框架：Qt5.14
+- 框架：Qt5.15
 
 -> 此项目由一名非科班励志自学成才的大学生呈现——我的第一个可上线项目。
 
@@ -36,9 +36,9 @@
 * [x] Markdown通知动态系统
 * [x] 数据统计图表
 * [x] 数据分类导出
-* [x] 更新检测
+* [x] 自动更新程序
 * [x] 异常登录限制
-* [x] 基于ECharts的数据大屏
+* [x] 基于ECharts的数据图表
 * [x] 好友及聊天系统
 
 **进行中：**
@@ -60,7 +60,7 @@
 
 ### 注意：
 
-项目已转换为Visual Studio项目，开发环境Visual Studio 2022， 请使用Visual Studio 2017+添加此项目。
+项目已转换为Visual Studio项目，开发环境Visual Studio 2022， 请使用Visual Studio 2019+添加此项目。
 
 在添加项目前，请先阅读：https://www.bytecho.net/archives/qt_mysql.html
 
