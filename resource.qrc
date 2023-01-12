@@ -117,6 +117,7 @@
         <file>eCharts/echarts_about.html</file>
         <file>eCharts/echarts_panel.html</file>
         <file>eCharts/2022.png</file>
+        <file>eCharts/echarts_workTime.html</file>
     </qresource>
     <qresource prefix="/src">
         <file>font/HarmonyOS_Sans_SC_Regular.ttf</file>

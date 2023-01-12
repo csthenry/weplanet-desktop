@@ -13,15 +13,14 @@
 
 #include <QObject>
 #include <QtSql>
+#include <QAction>
+#include <QPainterPath>
 #include <QUdpSocket>
-#include <QtCharts>
 #include <QSettings>
 #include <QPainter>
 #include <QCryptographicHash>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-
-QT_CHARTS_USE_NAMESPACE
 
 class service
 {
@@ -49,7 +48,7 @@ public:
 
     static QString getDepartment(QSqlDatabase& db, const QString& uid);
 
-    static void buildAttendChart(QChartView* chartView_attend, const QWidget* parent, const QFont& font, int data_1, int data_2, int data_3, int data_4);
+    //static void buildAttendChart(QChartView* chartView_attend, const QWidget* parent, const QFont& font, int data_1, int data_2, int data_3, int data_4);函数已废弃
 
     service();
 

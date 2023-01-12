@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -932,6 +932,7 @@
                </property>
                <property name="font">
                 <font>
+                 <family>微软雅黑</family>
                  <pointsize>11</pointsize>
                 </font>
                </property>
@@ -950,6 +951,7 @@
                </property>
                <property name="font">
                 <font>
+                 <family>微软雅黑</family>
                  <pointsize>11</pointsize>
                 </font>
                </property>
@@ -978,6 +980,7 @@
                </property>
                <property name="font">
                 <font>
+                 <family>微软雅黑</family>
                  <pointsize>11</pointsize>
                 </font>
                </property>
@@ -996,6 +999,7 @@
                </property>
                <property name="font">
                 <font>
+                 <family>微软雅黑</family>
                  <pointsize>11</pointsize>
                 </font>
                </property>
@@ -1062,6 +1066,7 @@
                </property>
                <property name="font">
                 <font>
+                 <family>微软雅黑</family>
                  <pointsize>10</pointsize>
                 </font>
                </property>
@@ -1076,6 +1081,7 @@
             <widget class="QLabel" name="label_71">
              <property name="font">
               <font>
+               <family>微软雅黑</family>
                <pointsize>11</pointsize>
               </font>
              </property>
@@ -1162,6 +1168,7 @@
              </property>
              <property name="font">
               <font>
+               <family>微软雅黑</family>
                <pointsize>9</pointsize>
               </font>
              </property>
@@ -1758,6 +1765,7 @@
              <property name="font">
               <font>
                <family>微软雅黑</family>
+               <pointsize>9</pointsize>
               </font>
              </property>
              <property name="styleSheet">
@@ -1803,6 +1811,7 @@ padding: 0px 5px;</string>
              <property name="font">
               <font>
                <family>微软雅黑</family>
+               <pointsize>9</pointsize>
               </font>
              </property>
              <property name="styleSheet">
@@ -1854,6 +1863,7 @@ padding: 0px 5px;</string>
              <property name="font">
               <font>
                <family>微软雅黑</family>
+               <pointsize>9</pointsize>
               </font>
              </property>
              <property name="styleSheet">
@@ -1902,6 +1912,7 @@ padding: 0px 5px;</string>
              <property name="font">
               <font>
                <family>微软雅黑</family>
+               <pointsize>9</pointsize>
               </font>
              </property>
              <property name="styleSheet">
@@ -1953,6 +1964,7 @@ padding: 0px 5px;</string>
              <property name="font">
               <font>
                <family>微软雅黑</family>
+               <pointsize>9</pointsize>
               </font>
              </property>
              <property name="styleSheet">
@@ -2010,6 +2022,7 @@ padding: 0px 5px;</string>
              <property name="font">
               <font>
                <family>微软雅黑</family>
+               <pointsize>9</pointsize>
               </font>
              </property>
              <property name="styleSheet">
@@ -2259,6 +2272,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -2278,6 +2292,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -2386,6 +2401,8 @@ padding: 0px 5px;</string>
                 </property>
                 <property name="font">
                  <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -2399,6 +2416,7 @@ padding: 0px 5px;</string>
                <widget class="QLabel" name="label_msgMemName">
                 <property name="font">
                  <font>
+                  <family>微软雅黑</family>
                   <pointsize>12</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
@@ -3390,490 +3408,374 @@ p, li { white-space: pre-wrap; }
            <attribute name="title">
             <string>我的考勤</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_38">
+           <layout class="QGridLayout" name="gridLayout_43">
             <item row="0" column="0">
-             <widget class="QSplitter" name="splitter_2">
-              <property name="palette">
-               <palette>
-                <active>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>255</red>
-                    <green>255</green>
-                    <blue>255</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Window">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="0">
-                    <red>255</red>
-                    <green>255</green>
-                    <blue>255</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                </active>
-                <inactive>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>255</red>
-                    <green>255</green>
-                    <blue>255</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Window">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="0">
-                    <red>255</red>
-                    <green>255</green>
-                    <blue>255</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                </inactive>
-                <disabled>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="0">
-                    <red>255</red>
-                    <green>255</green>
-                    <blue>255</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Window">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="0">
-                    <red>255</red>
-                    <green>255</green>
-                    <blue>255</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                </disabled>
-               </palette>
+             <widget class="QGroupBox" name="groupBox_21">
+              <property name="minimumSize">
+               <size>
+                <width>600</width>
+                <height>0</height>
+               </size>
               </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
               </property>
-              <widget class="QGroupBox" name="groupBox_21">
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="title">
-                <string>今日考勤</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_43">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="attendPage_avatar">
-                  <property name="minimumSize">
-                   <size>
-                    <width>120</width>
-                    <height>120</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>120</width>
-                    <height>120</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>16</pointsize>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">margin:5px;</string>
-                  </property>
-                  <property name="pixmap">
-                   <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
-                  </property>
-                  <property name="scaledContents">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <layout class="QGridLayout" name="gridLayout_37">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_31">
-                    <property name="maximumSize">
-                     <size>
-                      <width>55</width>
-                      <height>35</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>UID：</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QLabel" name="label_attendPage_uid">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_33">
-                    <property name="maximumSize">
-                     <size>
-                      <width>55</width>
-                      <height>35</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>姓名：</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLabel" name="label_attendPage_name">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_27">
-                    <property name="maximumSize">
-                     <size>
-                      <width>55</width>
-                      <height>35</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>类别：</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QLabel" name="label_attendPage_group">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="label_30">
-                    <property name="maximumSize">
-                     <size>
-                      <width>55</width>
-                      <height>35</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>部门：</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="1">
-                   <widget class="QLabel" name="label_attendPage_dpt">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="0" column="2">
-                 <layout class="QGridLayout" name="gridLayout_41">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_28">
-                    <property name="maximumSize">
-                     <size>
-                      <width>55</width>
-                      <height>35</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>当天：</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QLabel" name="label_attendPage_status">
-                    <property name="maximumSize">
-                     <size>
-                      <width>70</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QLabel" name="label_attendPage_isSupply">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_29">
-                    <property name="maximumSize">
-                     <size>
-                      <width>55</width>
-                      <height>35</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>签到：</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1" colspan="2">
-                   <widget class="QLabel" name="label_attendPage_beginTime">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_32">
-                    <property name="maximumSize">
-                     <size>
-                      <width>55</width>
-                      <height>35</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>签退：</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1" colspan="2">
-                   <widget class="QLabel" name="label_attendPage_endTime">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>--</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="1" column="0" colspan="3">
-                 <widget class="QChartView" name="chartView_attend">
-                  <property name="palette">
-                   <palette>
-                    <active>
-                     <colorrole role="Base">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="0">
-                        <red>255</red>
-                        <green>255</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                     <colorrole role="AlternateBase">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="255">
-                        <red>255</red>
-                        <green>255</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                    </active>
-                    <inactive>
-                     <colorrole role="Base">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="0">
-                        <red>255</red>
-                        <green>255</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                     <colorrole role="AlternateBase">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="255">
-                        <red>255</red>
-                        <green>255</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                    </inactive>
-                    <disabled>
-                     <colorrole role="Base">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="0">
-                        <red>255</red>
-                        <green>255</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                     <colorrole role="AlternateBase">
-                      <brush brushstyle="SolidPattern">
-                       <color alpha="255">
-                        <red>255</red>
-                        <green>255</green>
-                        <blue>255</blue>
-                       </color>
-                      </brush>
-                     </colorrole>
-                    </disabled>
-                   </palette>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>10</pointsize>
-                   </font>
-                  </property>
-                  <property name="acceptDrops">
-                   <bool>false</bool>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0" colspan="3">
-                 <layout class="QGridLayout" name="gridLayout_42">
-                  <item row="0" column="0">
-                   <widget class="QPushButton" name="btn_beginAttend">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>今日签到</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resource.qrc">
-                      <normaloff>:/images/color_icon/approve_3.svg</normaloff>:/images/color_icon/approve_3.svg</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QPushButton" name="btn_endAttend">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>今日签退</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resource.qrc">
-                      <normaloff>:/images/color_icon/approve_2.svg</normaloff>:/images/color_icon/approve_2.svg</iconset>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QPushButton" name="btn_expAttend">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>导出历史考勤数据</string>
-                    </property>
-                    <property name="icon">
-                     <iconset resource="resource.qrc">
-                      <normaloff>:/images/color_icon/color-input.svg</normaloff>:/images/color_icon/color-input.svg</iconset>
-                    </property>
-                    <property name="iconSize">
-                     <size>
-                      <width>20</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QGroupBox" name="groupBox_5">
-               <property name="minimumSize">
-                <size>
-                 <width>450</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>微软雅黑</family>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="title">
-                <string>历史考勤信息</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_8">
-                <item row="0" column="0">
-                 <widget class="QTableView" name="tableView_attendPage">
-                  <property name="editTriggers">
-                   <set>QAbstractItemView::NoEditTriggers</set>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
+              <property name="title">
+               <string>今日考勤</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_42">
+               <item row="2" column="0" colspan="3">
+                <layout class="QGridLayout" name="gridLayout_38">
+                 <item row="0" column="0" colspan="3">
+                  <widget class="QWebEngineView" name="webEngineView_workTime">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="contextMenuPolicy">
+                    <enum>Qt::NoContextMenu</enum>
+                   </property>
+                   <property name="url">
+                    <url>
+                     <string>qrc:/lib/eCharts/echarts_workTime.html</string>
+                    </url>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QPushButton" name="btn_beginAttend">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>今日签到</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resource.qrc">
+                     <normaloff>:/images/color_icon/approve_3.svg</normaloff>:/images/color_icon/approve_3.svg</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QPushButton" name="btn_endAttend">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>今日签退</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resource.qrc">
+                     <normaloff>:/images/color_icon/approve_2.svg</normaloff>:/images/color_icon/approve_2.svg</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QPushButton" name="btn_expAttend">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>导出历史考勤数据</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resource.qrc">
+                     <normaloff>:/images/color_icon/color-input.svg</normaloff>:/images/color_icon/color-input.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>20</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="attendPage_avatar">
+                 <property name="minimumSize">
+                  <size>
+                   <width>120</width>
+                   <height>120</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>120</width>
+                   <height>120</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>微软雅黑</family>
+                   <pointsize>16</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin:5px;</string>
+                 </property>
+                 <property name="pixmap">
+                  <pixmap resource="resource.qrc">:/images/color_icon/user.svg</pixmap>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <layout class="QGridLayout" name="gridLayout_41">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_28">
+                   <property name="maximumSize">
+                    <size>
+                     <width>55</width>
+                     <height>35</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>当天：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_attendPage_status">
+                   <property name="maximumSize">
+                    <size>
+                     <width>70</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="label_attendPage_isSupply">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_29">
+                   <property name="maximumSize">
+                    <size>
+                     <width>55</width>
+                     <height>35</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>签到：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1" colspan="2">
+                  <widget class="QLabel" name="label_attendPage_beginTime">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_32">
+                   <property name="maximumSize">
+                    <size>
+                     <width>55</width>
+                     <height>35</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>签退：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1" colspan="2">
+                  <widget class="QLabel" name="label_attendPage_endTime">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0" colspan="3">
+                <widget class="Line" name="line_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <layout class="QGridLayout" name="gridLayout_37">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_31">
+                   <property name="maximumSize">
+                    <size>
+                     <width>55</width>
+                     <height>35</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>UID：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_attendPage_uid">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_33">
+                   <property name="maximumSize">
+                    <size>
+                     <width>55</width>
+                     <height>35</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>姓名：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="label_attendPage_name">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_27">
+                   <property name="maximumSize">
+                    <size>
+                     <width>55</width>
+                     <height>35</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>类别：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLabel" name="label_attendPage_group">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_30">
+                   <property name="maximumSize">
+                    <size>
+                     <width>55</width>
+                     <height>35</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>部门：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLabel" name="label_attendPage_dpt">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>--</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="groupBox_5">
+              <property name="minimumSize">
+               <size>
+                <width>450</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>微软雅黑</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="title">
+               <string>历史考勤信息</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_8">
+               <item row="0" column="0">
+                <widget class="QTableView" name="tableView_attendPage">
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
            </layout>
@@ -4115,6 +4017,7 @@ p, li { white-space: pre-wrap; }
                  <property name="font">
                   <font>
                    <family>微软雅黑</family>
+                   <pointsize>9</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -4351,7 +4254,7 @@ padding: 0px 5px;</string>
             <item row="0" column="1" rowspan="2">
              <widget class="Line" name="line_3">
               <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
+               <enum>QFrame::Plain</enum>
               </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -4536,7 +4439,7 @@ padding: 0px 5px;</string>
             <item row="2" column="0" colspan="3">
              <widget class="Line" name="line">
               <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
+               <enum>QFrame::Plain</enum>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -4653,6 +4556,7 @@ padding: 0px 5px;</string>
                   <property name="font">
                    <font>
                     <family>微软雅黑</family>
+                    <pointsize>9</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -4699,6 +4603,7 @@ padding: 0px 5px;</string>
                   <property name="font">
                    <font>
                     <family>微软雅黑</family>
+                    <pointsize>9</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -5834,6 +5739,7 @@ padding: 0px 5px;</string>
          <widget class="QGroupBox" name="groupBox_39">
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
@@ -5987,6 +5893,7 @@ padding: 0px 5px;</string>
           </property>
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
@@ -6014,6 +5921,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6066,6 +5974,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6078,6 +5987,7 @@ padding: 0px 5px;</string>
              <widget class="QTextEdit" name="textEdit_activity">
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6121,6 +6031,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6145,6 +6056,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6189,6 +6101,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6213,6 +6126,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6257,6 +6171,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6281,6 +6196,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6319,6 +6235,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6341,6 +6258,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6369,6 +6287,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6413,6 +6332,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6465,6 +6385,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6477,6 +6398,7 @@ padding: 0px 5px;</string>
              <widget class="QTextEdit" name="textEdit_activity_2">
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6520,6 +6442,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6544,6 +6467,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6578,6 +6502,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6615,6 +6540,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6639,6 +6565,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6673,6 +6600,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6697,6 +6625,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6725,6 +6654,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6747,6 +6677,7 @@ padding: 0px 5px;</string>
               </property>
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -6770,6 +6701,7 @@ padding: 0px 5px;</string>
              <widget class="QGroupBox" name="groupBox_38">
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -6818,6 +6750,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6836,6 +6769,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6854,6 +6788,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6872,6 +6807,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6890,6 +6826,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6908,6 +6845,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6926,6 +6864,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6944,6 +6883,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>10</pointsize>
                   </font>
                  </property>
@@ -6975,6 +6915,7 @@ padding: 0px 5px;</string>
              <widget class="QGroupBox" name="groupBox_43">
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -7080,6 +7021,7 @@ padding: 0px 5px;</string>
              <widget class="QLabel" name="label_82">
               <property name="font">
                <font>
+                <family>微软雅黑</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -7128,6 +7070,7 @@ padding: 0px 5px;</string>
            </property>
            <property name="font">
             <font>
+             <family>微软雅黑</family>
              <pointsize>10</pointsize>
             </font>
            </property>
@@ -7163,6 +7106,7 @@ padding: 0px 5px;</string>
          <widget class="QGroupBox" name="groupBox_13">
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
@@ -7194,6 +7138,7 @@ padding: 0px 5px;</string>
          <widget class="QGroupBox" name="groupBox_14">
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
@@ -7606,6 +7551,7 @@ padding: 0px 5px;</string>
           </property>
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
@@ -7667,6 +7613,7 @@ padding: 0px 5px;</string>
          <widget class="QTabWidget" name="tabWidget_4">
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
@@ -7791,6 +7738,7 @@ padding: 0px 5px;</string>
                  </property>
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>12</pointsize>
                    <weight>75</weight>
                    <bold>true</bold>
@@ -7805,6 +7753,7 @@ padding: 0px 5px;</string>
                 <widget class="QLabel" name="label_mCTitle">
                  <property name="font">
                   <font>
+                   <family>微软雅黑</family>
                    <pointsize>12</pointsize>
                    <weight>75</weight>
                    <bold>true</bold>
@@ -7847,6 +7796,7 @@ padding: 0px 5px;</string>
          <widget class="QGroupBox" name="groupBox_27">
           <property name="font">
            <font>
+            <family>微软雅黑</family>
             <pointsize>10</pointsize>
            </font>
           </property>
@@ -8163,6 +8113,7 @@ padding: 0px 5px;</string>
             <widget class="QLabel" name="label_cTitle">
              <property name="font">
               <font>
+               <family>微软雅黑</family>
                <pointsize>12</pointsize>
                <weight>75</weight>
                <bold>true</bold>
@@ -8977,6 +8928,7 @@ padding: 0px 5px;</string>
            </property>
            <property name="font">
             <font>
+             <family>微软雅黑</family>
              <pointsize>20</pointsize>
             </font>
            </property>
@@ -9435,11 +9387,6 @@ background-color: transparent;
    <class>QWebEngineView</class>
    <extends>QWidget</extends>
    <header location="global">QtWebEngineWidgets/QWebEngineView</header>
-  </customwidget>
-  <customwidget>
-   <class>QChartView</class>
-   <extends>QGraphicsView</extends>
-   <header location="global">qchartview.h</header>
   </customwidget>
  </customwidgets>
  <resources>
