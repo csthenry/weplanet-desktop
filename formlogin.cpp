@@ -143,7 +143,7 @@ formLogin::formLogin(QDialog *parent) :
     auto listWidget = findChildren<QWidget*>();
     for (auto& widget : listWidget) //遍历所有组件
     {
-        font.setWeight(widget->font().weight());
+        font.setBold(widget->font().bold());
         font.setPointSize(widget->font().pointSize());
         widget->setFont(font);
     }

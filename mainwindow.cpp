@@ -175,7 +175,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 		
         //构造model
         attendPageModel = new QSqlRelationalTableModel(this, attendWork->getDB());
-        userManageModel = new QSqlRelationalTableModel(nullptr, userManageWork->getDB());
+        userManageModel = new QSqlRelationalTableModel(this, userManageWork->getDB());
+        attendUserModel = new QSqlRelationalTableModel(this, attendManageWork->getDB());
         attendManageModel = new QSqlRelationalTableModel(this, attendManageWork->getDB());
         groupModel = new QSqlTableModel(this, groupManageWork->getDB());
         departmentModel = new QSqlTableModel(this, groupManageWork->getDB());
@@ -185,6 +186,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         noticeManageModel = new QSqlTableModel(this, posterWork->getDB());
 
         userManagePageSelection = new QItemSelectionModel(userManageModel);
+		attendUserSelection = new QItemSelectionModel(attendUserModel);
         groupPageSelection_group = new QItemSelectionModel(groupModel);
         groupPageSelection_department = new QItemSelectionModel(departmentModel);
         activitySelection = new QItemSelectionModel(activityModel);
@@ -208,7 +210,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         userManageWork->setModel(userManageModel);
         userManageWork->setCombox(ui->comboBox_group, ui->comboBox_department);
 
-        attendManageWork->setUserModel(userManageModel);    //直接沿用用户管理界面的model
+        attendManageWork->setUserModel(attendUserModel);
         attendManageWork->setAttendModel(attendManageModel);
         attendManageWork->setCombox(ui->comboBox_group_2, ui->comboBox_department_2);
 
@@ -320,20 +322,20 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(attendWork, &AttendWork::attendDone, this, [=](bool res){
         if(res)
         {
-            QMessageBox::information(this, "消息", "签到成功，签到时间:\n" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 祝你今天元气满满~", QMessageBox::Ok);
-            on_actAttend_triggered();  //刷新信息
+            QMessageBox::information(this, "消息", "签到成功，签到时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + "\n祝你今天元气满满~", QMessageBox::Ok);
+            emit attendWorking();  //刷新信息
         }
         else
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息：\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
     }, Qt::UniqueConnection);
     connect(attendWork, &AttendWork::attendOutDone, this, [=](bool res){
         if(res)
         {
-            QMessageBox::information(this, "消息", "签退成功，签退时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + " 累了一天了，休息一下吧~", QMessageBox::Ok);
-            on_actAttend_triggered();  //刷新信息
+            QMessageBox::information(this, "消息", "签退成功，签退时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + "\n累了一天了，休息一下吧~", QMessageBox::Ok);
+            emit attendWorking();  //刷新信息
         }
         else
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息：\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
     }, Qt::UniqueConnection);
 
     //用户管理信号槽
@@ -399,7 +401,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     }, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::submitAllFinished, this, [=](bool res){
         if(!res)
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + userManageModel->lastError().text(),
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息：\n" + userManageModel->lastError().text(),
                                      QMessageBox::Ok);
         else{
             ui->btn_editUser_check->setEnabled(false);
@@ -435,12 +437,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(attendManageWork, &AttendManageWork::submitAddFinished, this, [=](bool res){
         if(res)
         {
-            QMessageBox::information(this, "消息", "补签成功，补签时间:\n" + curDateTime.toString("yyyy-MM-dd hh:mm:ss"),
+            QMessageBox::information(this, "消息", "补签成功，补签时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss"),
                                      QMessageBox::Ok);
             ui->label_attendManagePage_status->setText("已签到");
         }
         else
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendManageModel->lastError().text(),
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息：\n" + attendManageModel->lastError().text(),
                                      QMessageBox::Ok);
     });
     connect(attendManageWork, &AttendManageWork::submitDelFinished, this, [=](bool res){
@@ -450,7 +452,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->label_attendManagePage_status->setText("未签到");
         }
         else
-            QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + attendManageModel->lastError().text(),
+            QMessageBox::warning(this, "消息", "保存数据失败，错误信息：\n" + attendManageModel->lastError().text(),
                                      QMessageBox::Ok);
     });
     //活动管理信号槽
@@ -621,7 +623,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     auto listWidget = findChildren<QWidget*>();
     for (auto& widget : listWidget) //遍历所有组件
     {
-        font.setWeight(widget->font().weight());
+        font.setBold(widget->font().bold());
         font.setPointSize(widget->font().pointSize());
         widget->setFont(font);
     }
@@ -895,7 +897,7 @@ void MainWindow::setHomePageBaseInfo()
     sqlWork->beginThread();
 }
 
-void MainWindow::setUsersFilter_group(QComboBox *group, QComboBox *department)
+void MainWindow::setUsersFilter_group(int type, QComboBox *group, QComboBox *department)
 {
 
     QString sqlWhere = "group_name='" + group->currentText() + "'";
@@ -908,10 +910,13 @@ void MainWindow::setUsersFilter_group(QComboBox *group, QComboBox *department)
         else
             sqlWhere.clear();
     }
-    userManageModel->setFilter(sqlWhere);
+    if (type == 1)
+        userManageModel->setFilter(sqlWhere);
+    else
+        attendUserModel->setFilter(sqlWhere);
 }
 
-void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department) const
+void MainWindow::setUsersFilter_dpt(int type, QComboBox *group, QComboBox *department) const
 {
     QString sqlWhere = "dpt_name='" + department->currentText() + "'";
     if(group->currentIndex() != 0)
@@ -923,7 +928,10 @@ void MainWindow::setUsersFilter_dpt(QComboBox *group, QComboBox *department) con
         else
             sqlWhere.clear();
     }
-    userManageModel->setFilter(sqlWhere);
+    if (type == 1)
+        userManageModel->setFilter(sqlWhere);
+    else
+        attendUserModel->setFilter(sqlWhere);
 }
 
 void MainWindow::reloadModelBefore()
@@ -1473,16 +1481,16 @@ void MainWindow::on_actAttendManager_triggered()
 void MainWindow::setAttendManagePage() const
 {
     //用户列表
-    ui->tableView_attendUsers->setModel(userManageModel);
+    ui->tableView_attendUsers->setModel(attendUserModel);
     ui->tableView_attendUsers->hideColumn(1);  //隐藏密码
     ui->tableView_attendUsers->hideColumn(8);  //头像地址
     ui->tableView_attendUsers->hideColumn(9);  //学时
     ui->tableView_attendUsers->hideColumn(10); //用户状态
     
-    ui->tableView_attendUsers->setSelectionModel(userManagePageSelection);
+    ui->tableView_attendUsers->setSelectionModel(attendUserSelection);
     
     //当前行变化时触发currentRowChanged信号
-    connect(userManagePageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+    connect(attendUserSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
                 this, SLOT(on_attendManagePageUserscurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
     
     //签到列表
@@ -1517,7 +1525,10 @@ void MainWindow::setActivityManagePage()
     connect(activityMemSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
         this, SLOT(on_activityManagePageMemcurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
-    activityMemModel->setFilter("act_id='--'");
+    //activityMemModel->setFilter("act_id='--'");
+    for (int i = 0; i < activityMemModel->rowCount(); i++)
+            ui->tableView_actMember->hideRow(i);
+    
     activityModel->setFilter("editUid=" + uid);     //仅能管理自己发布的活动
     ui->stackedWidget->setCurrentIndex(8);
     ui->stackedWidget->currentWidget()->setEnabled(true);
@@ -1890,11 +1901,11 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     ui->btn_editUser_check->setEnabled(userManageModel->isDirty());
     ui->btn_editUser_cancel->setEnabled(userManageModel->isDirty());
     
-    if(curRecord.value("uid") == "1")
-        //ui->tableView_userManage->setItemDelegateForRow(current.row(), readOnlyDelegate);   //禁止编辑系统账号
-        ui->tableView_userManage->setRowHidden(current.row(), true);
-    else
-        ui->tableView_userManage->setRowHidden(0, false);   //允许编辑普通账号
+    //ui->tableView_userManage->setItemDelegateForRow(current.row(), readOnlyDelegate);   //禁止编辑系统账号
+    ui->tableView_userManage->setRowHidden(current.row(), curRecord.value("uid") == "1");
+    if (preRecord.value("uid") == "1" && curRecord.value("uid") != "1")
+		ui->tableView_userManage->setRowHidden(previous.row(), false);  //为选中系统账号时取消隐藏
+
     if (curRecord.value("uid") != "100000" && curRecord.value("uid") != "1" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
     {
         ui->btn_delUser->setEnabled(current.isValid());
@@ -1954,16 +1965,28 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
 void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     Q_UNUSED(previous);
-    QSqlRecord curRecord = userManageModel->record(current.row());
+    QSqlRecord curRecord = attendUserModel->record(current.row());
     QSqlRecord curAttendRecord;
     curDateTime = QDateTime::currentDateTime();
 
     ui->btn_attendManage_reAttend->setEnabled(current.isValid());
     ui->btn_attendManage_cancelAttend->setEnabled(current.isValid());
-
-    attendManageModel->setFilter("a_uid='" + curRecord.value("uid").toString() +"'");
-    curAttendRecord = attendManageModel->record(0);     //取最新考勤记录
-    ui->label_attendManagePage_uid->setText(curRecord.value("uid").toString());
+    QString uid = curRecord.value("uid").toString();
+    //attendManageModel->setFilter("a_uid='" + curRecord.value("uid").toString() +"'");
+    //curAttendRecord = attendManageModel->record(0);     //取最新考勤记录
+    ui->label_attendManagePage_uid->setText(uid);
+    
+    for (int i = 0; i < attendManageModel->rowCount(); i++)
+    {
+        if (attendManageModel->record(i).value("a_uid").toString() == uid)
+        {
+			if (attendManageModel->record(i).value("today").toString() == curDateTime.date().toString("yyyy-MM-dd"))
+                curAttendRecord = attendManageModel->record(i); //取最新考勤记录
+            ui->tableView_attendInfo->showRow(i);
+        }
+        else
+            ui->tableView_attendInfo->hideRow(i);
+    }
 
     //获取头像
     attendManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
@@ -2042,11 +2065,20 @@ void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& cu
 void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
-    QSqlRecord curRecord = activityMemModel->record(current.row());
-    QString pre_filter = activityModel->filter();
-    activityModel->setFilter("act_id=" + curRecord.value("act_id").toString());
-    QSqlRecord curActRec = activityModel->record(0);
-
+    QSqlRecord curRecord = activityMemModel->record(current.row()), curActRec;
+    QString active_id = curRecord.value("act_id").toString();
+    //QString pre_filter = activityModel->filter();
+    //activityModel->setFilter("act_id=" + curRecord.value("act_id").toString());
+    if (!activityModel->filter().isEmpty())
+        on_btn_actSearchClear_clicked();
+    for (int i = 0; i < activityMemModel->rowCount(); i++)
+    {
+		if (activityMemModel->record(i).value("act_id").toString() == active_id)
+		{
+            curActRec = activityModel->record(i);
+			break;
+		}
+    }
     if (curActRec.value("act_name").toString().isEmpty())
         ui->label_actName_2->setText("--");
     else
@@ -2070,7 +2102,7 @@ void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, 
     }else
         ui->label_curActStatus->setText(curRecord.value("status").toString());
 
-    activityModel->setFilter(pre_filter);
+    //activityModel->setFilter(pre_filter);
 }
 
 void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
@@ -2078,8 +2110,21 @@ void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &curre
     Q_UNUSED(previous);
     actEditMapper->setCurrentIndex(current.row());  //将映射移动到对应行
     QSqlRecord curRec = activityModel->record(current.row());
-    activityMemModel->setFilter("act_id=" + curRec.value("act_id").toString());
-    ui->lcdNumber_actMem->display(activityMemModel->rowCount());
+	active_id = curRec.value("act_id").toString();
+    //activityMemModel->setFilter("act_id=" + curRec.value("act_id").toString());
+    //报名成员列表
+    int mem_sum = 0;
+    for (int i = 0; i < activityMemModel->rowCount(); i++)
+    {
+        if(activityMemModel->record(i).value("act_id").toString() != active_id)
+            ui->tableView_actMember->hideRow(i);
+        else
+        {
+            mem_sum++;
+            ui->tableView_actMember->showRow(i);
+        }
+    }
+    ui->lcdNumber_actMem->display(mem_sum);
     ui->rBtn_actAll->setChecked(true);
 }
 
@@ -2433,14 +2478,21 @@ void MainWindow::on_btn_actCnt_clicked()
 
 void MainWindow::on_rBtn_actAll_clicked()
 {
-    int idx = -1;
-	QString pre_filter = activityMemModel->filter();
-    idx = pre_filter.indexOf("AND");
-    if (idx != -1)
-        pre_filter = pre_filter.mid(0, idx-1);
-    if (idx == -1 && pre_filter.indexOf("status") != -1)
-        pre_filter.clear();
-    activityMemModel->setFilter(pre_filter);
+ //   int idx = -1;
+	//QString pre_filter = activityMemModel->filter();
+ //   idx = pre_filter.indexOf("AND");
+ //   if (idx != -1)
+ //       pre_filter = pre_filter.mid(0, idx-1);
+ //   if (idx == -1 && pre_filter.indexOf("status") != -1)
+ //       pre_filter.clear();
+ //   activityMemModel->setFilter(pre_filter);
+    for (int i = 0; i < activityMemModel->rowCount(); i++)
+    {
+        if (activityMemModel->record(i).value("act_id").toString() != active_id)
+            ui->tableView_actMember->hideRow(i);
+        else
+			ui->tableView_actMember->showRow(i);
+    }
 }
 
 void MainWindow::on_btn_dyCnt_clicked()
@@ -2461,32 +2513,47 @@ void MainWindow::on_btn_saveSysSettings_clicked()
 
 void MainWindow::on_rBtn_actFinished_clicked()
 {
-    int idx = -1;
-    QString pre_filter = activityMemModel->filter();
-    idx = pre_filter.indexOf("AND");
-    if (idx != -1)
-        pre_filter = pre_filter.mid(0, idx-1);
-    if (idx == -1 && pre_filter.indexOf("status") != -1)
-        pre_filter.clear();
-    if(pre_filter == "")
-        activityMemModel->setFilter("status = '已录取' OR status = '未录取'");
-    else
-		activityMemModel->setFilter(pre_filter + " AND (status='已录取' OR status='未录取')");
+  //  int idx = -1;
+  //  QString pre_filter = activityMemModel->filter();
+  //  idx = pre_filter.indexOf("AND");
+  //  if (idx != -1)
+  //      pre_filter = pre_filter.mid(0, idx-1);
+  //  if (idx == -1 && pre_filter.indexOf("status") != -1)
+  //      pre_filter.clear();
+  //  if(pre_filter == "")
+  //      activityMemModel->setFilter("status = '已录取' OR status = '未录取'");
+  //  else
+		//activityMemModel->setFilter(pre_filter + " AND (status='已录取' OR status='未录取')");
+    for (int i = 0; i < activityMemModel->rowCount(); i++)
+    {
+		QString status = activityMemModel->record(i).value("status").toString();
+		if (activityMemModel->record(i).value("act_id").toString() == active_id && (status == "已录取" || status == "未录取" || status == "已完成"))
+            ui->tableView_actMember->showRow(i);
+        else
+            ui->tableView_actMember->hideRow(i);
+    }
 }
 
 void MainWindow::on_rBtn_actPending_clicked()
 {
-    int idx = -1;
-    QString pre_filter = activityMemModel->filter();
-    idx = pre_filter.indexOf("AND");
-    if (idx != -1)
-        pre_filter = pre_filter.mid(0, idx-1);
-    if (idx == -1 && pre_filter.indexOf("status") != -1)
-        pre_filter.clear();
-    if (pre_filter == "")
-        activityMemModel->setFilter("status = '待审核'");
-    else
-        activityMemModel->setFilter(pre_filter + " AND status = '待审核'");
+    //int idx = -1;
+    //QString pre_filter = activityMemModel->filter();
+    //idx = pre_filter.indexOf("AND");
+    //if (idx != -1)
+    //    pre_filter = pre_filter.mid(0, idx-1);
+    //if (idx == -1 && pre_filter.indexOf("status") != -1)
+    //    pre_filter.clear();
+    //if (pre_filter == "")
+    //    activityMemModel->setFilter("status = '待审核'");
+    //else
+    //    activityMemModel->setFilter(pre_filter + " AND status = '待审核'");
+    for (int i = 0; i < activityMemModel->rowCount(); i++)
+    {
+		if (activityMemModel->record(i).value("act_id").toString() == active_id && activityMemModel->record(i).value("status").toString() == "待审核")
+            ui->tableView_actMember->showRow(i);
+        else
+            ui->tableView_actMember->hideRow(i);
+    }
 }
 
 void MainWindow::on_btn_userManagePage_search_clicked()
@@ -2605,7 +2672,7 @@ void MainWindow::on_btn_searchContents_clicked()
 void MainWindow::on_comboBox_group_currentIndexChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
+    setUsersFilter_group(1, ui->comboBox_group, ui->comboBox_department);
 }
 
 void MainWindow::on_btn_switchPanel_clicked()
@@ -2670,7 +2737,7 @@ void MainWindow::on_btn_removeAll_clicked()
 void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    setUsersFilter_dpt(ui->comboBox_group, ui->comboBox_department);
+    setUsersFilter_dpt(1, ui->comboBox_group, ui->comboBox_department);
 }
 
 void MainWindow::on_btn_panel_clicked()
@@ -2694,13 +2761,13 @@ void MainWindow::on_btn_loginCnt_clicked()
 void MainWindow::on_comboBox_group_2_currentIndexChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    setUsersFilter_dpt(ui->comboBox_group_2, ui->comboBox_department_2);
+    setUsersFilter_group(2, ui->comboBox_group_2, ui->comboBox_department_2);
 }
 
 void MainWindow::on_comboBox_department_2_currentIndexChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    setUsersFilter_dpt(ui->comboBox_group_2, ui->comboBox_department_2);
+    setUsersFilter_dpt(2, ui->comboBox_group_2, ui->comboBox_department_2);
 }
 
 void MainWindow::on_checkBox_agreePrivacy_stateChanged(int state)
@@ -2729,7 +2796,7 @@ void MainWindow::on_btn_resetAutoRun_clicked()
 
 void MainWindow::on_btn_attendManagePage_recovery_clicked()
 {
-    userManageModel->setFilter("");
+    attendUserModel->setFilter("");
     attendManageModel->setFilter("");
     ui->comboBox_group_2->setCurrentIndex(0);
     ui->comboBox_department_2->setCurrentIndex(0);
@@ -2737,7 +2804,7 @@ void MainWindow::on_btn_attendManagePage_recovery_clicked()
 
 void MainWindow::on_btn_attendManagePage_search_clicked()
 {
-    userManageModel->setFilter("uid='" + ui->lineEdit_searchUid_attend->text()+ "' OR name='" + ui->lineEdit_searchUid_attend->text() + "'");
+    attendUserModel->setFilter("uid='" + ui->lineEdit_searchUid_attend->text()+ "' OR name='" + ui->lineEdit_searchUid_attend->text() + "'");
 }
 
 void MainWindow::on_btn_attendManage_reAttend_clicked()
@@ -2765,7 +2832,16 @@ void MainWindow::on_btn_attendManage_reAttend_clicked()
 void MainWindow::on_btn_attendManage_cancelAttend_clicked()
 {
     curDateTime = QDateTime::currentDateTime();
-    QSqlRecord curRecord = attendManageModel->record(0);   //取顶部的数据，因为是按照时间降序排列
+    QSqlRecord curRecord;
+    int delete_row;
+    for (delete_row = 0; delete_row < attendManageModel->rowCount(); delete_row++)
+    {
+        if (!ui->tableView_attendInfo->isRowHidden(delete_row) && attendManageModel->record(delete_row).value("today").toString() == curDateTime.date().toString("yyyy-MM-dd"))
+        {
+            curRecord = attendManageModel->record(delete_row);
+            break;
+        }
+    }
     if(ui->label_attendManagePage_status->text() == "未签到")
     {
         QMessageBox::warning(this, "消息", "当前用户未签到，无法退签。", QMessageBox::Ok);
@@ -2774,7 +2850,7 @@ void MainWindow::on_btn_attendManage_cancelAttend_clicked()
     //检测即将删除的数据是否与当前用户对应
     if(curRecord.value("a_uid").toString() == ui->label_attendManagePage_uid->text() && curRecord.value("today").toString() == curDateTime.date().toString("yyyy-MM-dd"))
     {
-        attendManageModel->removeRow(0); //删除顶部的数据
+        attendManageModel->removeRow(delete_row); //删除顶部的数据
         emit attendManageModelSubmitAll(0);
     }
     else
