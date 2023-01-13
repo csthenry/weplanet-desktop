@@ -127,28 +127,28 @@ void UserManageWork::setCombox(QComboBox* group, QComboBox* department)
 
 void UserManageWork::getVerify(const QString& uid)
 {
-    this->uid = uid;
-    DB_SECOND.open();
-    QSqlQuery query(DB_SECOND);
-    bool res = query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
-    if (query.next())
-    {
-        verifyTag = query.value("vid").toInt();
-        verifyInfo = query.value("info").toString();
+	this->uid = uid;
+	DB_SECOND.open();
+	QSqlQuery query(DB_SECOND);
+	bool res = query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
+	if (query.next())
+	{
+		verifyTag = query.value("vid").toInt();
+		verifyInfo = query.value("info").toString();
 
-        query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
-        query.next();
-        verifyType = query.value("verify_name").toString();
-    }
-    else
-    {
-        verifyTag = -1;
-        verifyType = "";
-        verifyInfo = "";
-    }
-    query.clear();
+		query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
+		query.next();
+		verifyType = query.value("verify_name").toString();
+	}
+	else
+	{
+		verifyTag = -1;
+		verifyType = "";
+		verifyInfo = "";
+	}
+	query.clear();
 	DB_SECOND.close();
-    emit getVerifyFinished(res);
+	emit getVerifyFinished(res);
 }
 
 void UserManageWork::updateVerify(int type, int verifyTag, const QString& info)

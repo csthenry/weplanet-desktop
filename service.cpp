@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "****************";
+    dataBasePassword = "**************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -499,12 +499,13 @@ bool service::setAuthority(QSqlDatabase& db, const QString &uid, const QVector<Q
     return true;
 }
 
+//https://stackoverflow.com/questions/6326237/qnetworkaccessmanager-crashes-on-delete
 QPixmap service::getAvatar(const QString& url)
 {
     QUrl picUrl(url);
     QNetworkAccessManager manager;
     QEventLoop loop;
-    QNetworkReply *reply = manager.get(QNetworkRequest(picUrl));
+    QNetworkReply *reply = manager.get(QNetworkRequest(picUrl));    //可能产生潜在的栈溢出？
     //请求结束并下载完成后，退出子事件循环
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     //开启子事件循环
@@ -512,6 +513,8 @@ QPixmap service::getAvatar(const QString& url)
     QByteArray jpegData = reply->readAll();
     QPixmap pixmap;
     pixmap.loadFromData(jpegData);
+    
+    reply->deleteLater();
     return pixmap;
 }
 

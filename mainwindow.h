@@ -108,11 +108,11 @@ private:
 
     QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel, *noticeModel, *noticeManageModel;  //数据模型
 
-    QSqlRelationalTableModel *userManageModel, *attendManageModel, *attendPageModel;
+    QSqlRelationalTableModel *userManageModel, *attendUserModel, *attendManageModel, *attendPageModel;
 
     QDataWidgetMapper* actEditMapper, *noticeEditMapper;
 
-    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManageSelection, *noticeSelection; //选择模型
+    QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManageSelection, *noticeSelection, *attendUserSelection; //选择模型
 
     queryModel *relTableModel, *relTableModel_attend;
 
@@ -137,6 +137,8 @@ private:
     QString msgApplyMemBtn_Text;
 
     QLabel* msgListTips_1, *msgListTips_2;
+
+    QString active_id = -1; //活动管理页面当前选择的ID
 
     int msgListTipsType = -1;
 	
@@ -166,9 +168,9 @@ private:
 
     void setActivityPage();
 
-    void setUsersFilter_group(QComboBox* group, QComboBox* department);
+    void setUsersFilter_group(int type, QComboBox* group, QComboBox* department);
 
-    void setUsersFilter_dpt(QComboBox* group, QComboBox* department) const;
+    void setUsersFilter_dpt(int type, QComboBox* group, QComboBox* department) const;
 
     void reloadModelBefore();   //用于relationModel跨线程刷新，一般model似乎线程安全！
 
