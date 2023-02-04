@@ -139,6 +139,23 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //检查更新
     updateSoftWare.moveToThread(sqlThread_SECOND);
 
+    //校验、更新本地时间
+    if (!checkLocalTime())
+        disableDynamicItems();
+    currentTimeUpdate = new QTimer(this);
+    connect(currentTimeUpdate, &QTimer::timeout, this, [=]() {
+        static int cnt = 0;
+        cnt += 1;
+        curDateTime = curDateTime.addSecs(1);
+		qDebug() << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
+        if (cnt > 30 * 60)  //三十分钟校验一次网络时间
+        {
+            checkLocalTime();
+			cnt = 0;
+        }
+        });
+    currentTimeUpdate->start(1000);
+        
     connect(this, &MainWindow::beginUpdate, &updateSoftWare, &checkUpdate::parse_UpdateJson);
     connect(&updateSoftWare, &checkUpdate::finished, this, &MainWindow::updateFinished);
     emit beginUpdate();
@@ -231,10 +248,6 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         emit actHomeWorking();
         refTimer->start(5 * 60 * 1000);  //开启心跳query定时器（5分钟心跳）
         msgPushTimer->start(msgPushTime * 1000);
-
-        //校验本地时间
-        if (!checkLocalTime())
-            disableDynamicItems();
     }, Qt::UniqueConnection);
 
     connect(this, &MainWindow::get_statistics, setBaseInfoWork, &baseInfoWork::get_statistics);
@@ -681,6 +694,7 @@ MainWindow::~MainWindow()
     }
     refTimer->stop();
     msgPushTimer->stop();
+    currentTimeUpdate->stop();
     loadingMovie->stop();
     avatarLoadMovie->stop();
 
@@ -726,7 +740,7 @@ void MainWindow::receiveData(QString uid)
     this->uid = uid;
     ui->label_home_uid->setText(uid);
     ui->label_info_uid->setText(uid);
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
     ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
     ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
@@ -850,7 +864,7 @@ void MainWindow::setHomePageBaseInfo()
     ui->attendPage_avatar->setPixmap(*ui->avatar->pixmap());
 
     //首页考勤信息初始化
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     ui->label_homePage_attendDate->setText(curDateTime.date().toString("yyyy年MM月dd日"));
 
     //首页LCD显示工时
@@ -1031,7 +1045,7 @@ void MainWindow::on_actAttend_triggered()
 void MainWindow::setAttendPage()
 {
     ui->stackedWidget->setCurrentIndex(4);
-    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
+    //curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     
     ui->tableView_attendPage->setModel(attendPageModel);
     ui->tableView_attendPage->hideColumn(0);   //隐藏考勤数据编号
@@ -1065,7 +1079,7 @@ void MainWindow::setAttendPage()
     seriesObj.insert("data_yTime", weekWorkTime);
     seriesObj.insert("data_yMem", weekWorkMem);
     QString date;
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     curDateTime = curDateTime.addDays(-7);
     for (int i = 7; i >= 1; i--)
     {
@@ -1142,7 +1156,7 @@ void MainWindow::setStatisticsPanel(int option, int days)
     }
     QString date;
     QString jsCode;
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     curDateTime = curDateTime.addDays(-panel_series_count);
     for (int i = panel_series_count; i >= 1; i--)
     {
@@ -1245,7 +1259,7 @@ void MainWindow::setMsgPage()
 
             ui->textBrowser_msgHistory->clear();
             ui->textBrowser_msgHistory->setCurrentFont(QFont(HarmonyOS_Font.family(), 10));
-            ui->textBrowser_msgHistory->append("<br><p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 消息加载中...  ---</p><br>");
+            ui->textBrowser_msgHistory->append("<br><p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 消息加载中  ---</p><br>");
             });
     }
     ui->Msg_page_vLayout->addStretch(); //添加spacer
@@ -1328,26 +1342,26 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
             ui->label_newMsg->setVisible(true);
             ui->btn_newMsgCheacked->setEnabled(true);
         }
-        if(curMsgStackCnt != 0 && !ui->checkBox_noMsgRem->isChecked())
+        if (curMsgStackCnt != 0 && !ui->checkBox_noMsgRem->isChecked())
             trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
         curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
     }
-    
+
     //添加聊得火热
-    if(msgPusherService->getMsgStackCnt(sendToUid) >= 30 && ui->label_msgMemName->text().indexOf(" 🔥 ") == -1)
-		ui->label_msgMemName->setText(ui->label_msgMemName->text() + " 🔥 ");
+    if (msgPusherService->getMsgStackCnt(sendToUid) >= 30 && ui->label_msgMemName->text().indexOf(" 🔥 ") == -1)
+        ui->label_msgMemName->setText(ui->label_msgMemName->text() + " 🔥 ");
 
     if (curMsgStackCnt > msgPusherService->getMsgStackCnt(sendToUid))  //消息历史过旧，才会推送新消息
         return;
     if (msgPusherService->getPreviousPushUid() != msgPusherService->getPushingUid()) //如果已切换用户，则跳过此次push
         return;
-	if (isSending)  //如果正在发送消息，则跳过此次push
+    if (isSending)  //如果正在发送消息，则跳过此次push
         return;
 
     QString from_uid, from_name, to_uid, to_name, msgText, send_time;
     
-    int beforePos = ui->textBrowser_msgHistory->verticalScrollBar()->value();   //滚动条位置
-    bool atEnd = beforePos >= ui->textBrowser_msgHistory->verticalScrollBar()->maximum();
+    msgBeforePos = ui->textBrowser_msgHistory->verticalScrollBar()->value();   //滚动条位置
+    bool atEnd = ui->textBrowser_msgHistory->verticalScrollBar()->maximum() <= msgBeforePos;  //是否在底部
     ui->textBrowser_msgHistory->clear();
 
     if (msgStack.isEmpty())
@@ -1358,11 +1372,11 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
     msg_contents.clear();
     while (!msgStack.isEmpty())
     {
-        QDataStream stream(&msgStack.pop(), QIODevice::ReadOnly);
+        QDataStream stream(&msgStack.pop(), QIODevice::ReadOnly);   //消息出栈
         stream >> from_uid >> from_name >> to_uid >> to_name >> msgText >> send_time;
         QDateTime sendDate = QDateTime::fromString(send_time, "yyyy-MM-dd hh:mm:ss");
 
-        if (sendDate.date() == QDateTime::currentDateTime().date())
+        if (sendDate.date() == curDateTime.date())
             send_time = sendDate.time().toString("hh:mm:ss");   //若时间为当前，则简化显示
         if (from_uid == uid)
         {
@@ -1375,12 +1389,22 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
             msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'> 📣 %1</p>").arg(msgText);
         }
     }
-    ui->textBrowser_msgHistory->append(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
+    ui->textBrowser_msgHistory->insertHtml(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
 
+    //修复滚动条最大高度可能不正确的问题(未研究QT源码，暂不清楚误差产生原因...)
+    int pageStep = ui->textBrowser_msgHistory->verticalScrollBar()->pageStep();
+    int documentHeight = ui->textBrowser_msgHistory->document()->size().height();
+	int scrollBarMax = ui->textBrowser_msgHistory->verticalScrollBar()->maximum();
+    if (documentHeight - pageStep > scrollBarMax)
+    {
+        ui->textBrowser_msgHistory->verticalScrollBar()->setMaximum(documentHeight - pageStep);
+        scrollBarMax = documentHeight - pageStep;
+    }
+    
     if (!atEnd)
-        ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(beforePos);  //滚动条不在末尾，则恢复原位置
+        ui->textBrowser_msgHistory->verticalScrollBar()->setValue(msgBeforePos);  //滚动条不在末尾，则恢复原位置，这里也有偶尔会下移一段距离的问题
     else
-        ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(ui->textBrowser_msgHistory->verticalScrollBar()->maximum());
+        ui->textBrowser_msgHistory->verticalScrollBar()->setValue(scrollBarMax);
 }
 
 void MainWindow::initMsgSys()
@@ -1398,6 +1422,7 @@ void MainWindow::initMsgSys()
 bool MainWindow::checkLocalTime()
 {
     qint32 webTimeSinceEpoch = service::getWebTime();
+    curDateTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch); //获取网络时间
     if (webTimeSinceEpoch == -1)
     {
         QMessageBox::warning(this, "时间误差警告", "获取服务器时间失败，请检查网络连接。\n考勤、活动、畅聊等已被禁用，请前往【设置】页面重新验证时间以启动部分项。");
@@ -1406,7 +1431,10 @@ bool MainWindow::checkLocalTime()
 	QDateTime webTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);   //获取网络时间
 	QDateTime localTime = QDateTime::currentDateTime();   //获取本地时间
 	double marginMinutes = localTime.secsTo(webTime) / 60.0;    //计算时间差
+	double marginSeconds = curDateTime.secsTo(webTime);    //计算内存中的时间差
     
+    if(marginSeconds > 5 || marginSeconds < -5)
+        curDateTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch); //更新网络时间
 	if (marginMinutes > 3 || marginMinutes < -3)
 	{
 		QMessageBox::warning(this, "时间误差警告", "本地时间与Windows服务器时间的误差超出范围。\n考勤、活动、畅聊等已被禁用，请检查本地时间后前往【设置】页面重新验证时间以启动部分项。");
@@ -1676,7 +1704,7 @@ void MainWindow::on_actManage_triggered()
 
     activityManageWork->setType(2);
     emit activityManageWorking();
-    curDateTime = QDateTime::currentDateTime();
+    // curDateTime = QDateTime::currentDateTime();
     // ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
     // ui->dateTimeEdit_actEnd->setDateTime(curDateTime);
     // ui->dateTimeEdit_actJoin->setDateTime(curDateTime);
@@ -1827,7 +1855,7 @@ void MainWindow::on_actPanel_triggered()
 
 void MainWindow::on_actRefresh_triggered()
 {
-    qDebug() << "心跳query...";
+    qDebug() << "心跳请求...";
     emit get_statistics();  //统计心跳请求量
     trayIcon->setToolTip("WePlanet - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
     int index = ui->stackedWidget->currentIndex(); 
@@ -1835,18 +1863,18 @@ void MainWindow::on_actRefresh_triggered()
     {
     case 0: on_actHome_triggered(); break;
     case 1: on_actMyInfo_triggered(); break;
-    case 2: on_actMessage_triggered(); break;
-    case 3: on_action_triggered(); break;
-    case 4: on_actAttend_triggered(); break;
+    case 2: emit loadMsgMemList(uid); break;
+    case 3: emit activityManageWorking(); break;
+    case 4: emit attendWorking(); break;
     case 5: break;
     case 6: on_actUserManager_triggered(); break;
     case 7: on_actAttendManager_triggered(); break;
-    case 8: on_actManage_triggered(); break;
+    case 8: emit activityManageWorking(); break;
     case 9: break;
     case 10: break;
     case 11: on_actGroup_triggered(); break;
-    case 14: on_actNoticeManage_triggered(); break;
-    case 15: on_actNotice_triggered(); break;
+    case 14: emit posterWorking(); break;
+    case 15: emit posterWorking(); break;
     case 16: on_actPanel_triggered(); break;
     case 17: on_actSettings_triggered(); break;
 
@@ -1940,7 +1968,11 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     ui->label_verifyType_manage->setText("加载中...");
     ui->btn_verifyInfo->setEnabled(false);
     ui->btn_delVerify->setEnabled(false);
+    
+    if(!getVerifyQueue.isEmpty())
+		getVerifyQueue.clear(); //队列未处理完时清空队列
     emit getVerify(curRecord.value("uid").toString());
+	getVerifyQueue.append(curRecord.value("uid").toString());   //加载项入栈
 	
     //密码修改
     if(!ui->lineEdit_editPwd->text().isEmpty())
@@ -1967,7 +1999,7 @@ void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &cu
     Q_UNUSED(previous);
     QSqlRecord curRecord = attendUserModel->record(current.row());
     QSqlRecord curAttendRecord;
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
 
     ui->btn_attendManage_reAttend->setEnabled(current.isValid());
     ui->btn_attendManage_cancelAttend->setEnabled(current.isValid());
@@ -2130,7 +2162,7 @@ void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &curre
 
 void MainWindow::on_comboBox_activity_currentIndexChanged(const QString& arg1)
 {
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     QString dateTime = curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     if (arg1 == "所有活动")
         activityModel->setFilter("");
@@ -2140,7 +2172,7 @@ void MainWindow::on_comboBox_activity_currentIndexChanged(const QString& arg1)
 
 void MainWindow::on_comboBox_myAct_currentIndexChanged(const QString& arg1)
 {
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     QString dateTime = curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     if (arg1 == "所有活动")
         activityMemModel->setFilter("actm_uid=" + uid);
@@ -2260,7 +2292,7 @@ void MainWindow::on_btn_actJoin_clicked()
 		return;
 	}
 
-    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
+    //curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     QSqlRecord rec = activityModel->record(myActListSelection->currentIndex().row());
     QString select_id = rec.value("act_id").toString();
     if (rec.value("act_id").toString().isEmpty())
@@ -2288,7 +2320,7 @@ void MainWindow::on_btn_actJoin_clicked()
 
 void MainWindow::on_btn_actCancel_clicked()
 {   
-    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
+    //curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     QSqlRecord rec = activityModel->record(myActListSelection->currentIndex().row()), memRec;
     QString select_id = rec.value("act_id").toString();
     QString pre_filter = activityMemModel->filter();
@@ -2569,7 +2601,7 @@ void MainWindow::on_btn_userManagePage_recovery_clicked()
 void MainWindow::on_btn_updateContent_clicked()
 {
     QModelIndex curIndex;
-    curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
+    //curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     bool res = noticeEditMapper->submit();
     if(res)
     {
@@ -2624,7 +2656,7 @@ void MainWindow::on_btn_addContent_clicked()
             QMessageBox::warning(this, "警告", "请将标题、正文等编辑完成后再点击发布。", QMessageBox::Ok);
             return;
         }
-        curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
+        //curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
         noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("created")), curDateTime);
         noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("modified")), curDateTime);
         noticeManageModel->setData(noticeManageModel->index(posterWork->cacheRow, noticeManageModel->fieldIndex("author_id")), uid);
@@ -2816,7 +2848,7 @@ void MainWindow::on_btn_attendManage_reAttend_clicked()
         QMessageBox::warning(this, "消息", "当前用户已签到，无需补签。", QMessageBox::Ok);
         return;
     }
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     attendManageModel->insertRow(attendManageModel->rowCount(), QModelIndex()); //在末尾添加一个记录
     QModelIndex curIndex = attendManageModel->index(attendManageModel->rowCount() - 1, 1);//创建最后一行的ModelIndex
     int currow = curIndex.row(); //获得当前行
@@ -2831,7 +2863,7 @@ void MainWindow::on_btn_attendManage_reAttend_clicked()
 
 void MainWindow::on_btn_attendManage_cancelAttend_clicked()
 {
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     QSqlRecord curRecord;
     int delete_row;
     for (delete_row = 0; delete_row < attendManageModel->rowCount(); delete_row++)
@@ -2870,7 +2902,7 @@ void MainWindow::on_btn_attendManagePage_exp_clicked()
         type = 2;
     if(ui->rBtn__attendManagePage_curAll->isChecked())
         type = 3;
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     QString filePath = QFileDialog::getSaveFileName(this, "导出数据", "考勤数据_" + curDateTime.toString("yyyy-MM-dd_hh-mm-ss"), "Microsoft Excel(*.xlsx)");
     if(expExcel.WriteExcel(filePath, attendManageModel, ui->label_attendManagePage_uid->text(), type))
         QMessageBox::information(this, "消息", "考勤数据已成功导出到：" + filePath, QMessageBox::Ok);
@@ -2882,7 +2914,7 @@ void MainWindow::on_btn_expAttend_clicked()
 {
     ExcelExport expExcel(this);
     QSqlRecord re = attendPageModel->record();
-    curDateTime = QDateTime::currentDateTime();
+    //curDateTime = QDateTime::currentDateTime();
     QString filePath = QFileDialog::getSaveFileName(this, "导出数据", "考勤数据_" + curDateTime.toString("yyyy-MM-dd_hh-mm-ss"), "Microsoft Excel(*.xlsx)");
     if(expExcel.WriteExcel(filePath, attendPageModel, ui->label_attendPage_uid->text(), 3))
         QMessageBox::information(this, "消息", "考勤数据已成功导出到：" + filePath, QMessageBox::Ok);
@@ -2897,7 +2929,7 @@ void MainWindow::on_btn_beginAttend_clicked()
         QMessageBox::warning(this, "消息", "今天已经在" + ui->label_attendPage_beginTime->text() + "签到过啦~请勿连续签到哦！", QMessageBox::Ok);
         return;
     }
-	curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
+	//curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     attendPageModel->insertRow(attendPageModel->rowCount(), QModelIndex()); //在末尾添加一个记录
     QModelIndex curIndex = attendPageModel->index(attendPageModel->rowCount() - 1, 1);//创建最后一行的ModelIndex
     int currow = curIndex.row(); //获得当前行
@@ -3051,7 +3083,7 @@ void MainWindow::on_btn_sendMsg_clicked()
         return;
     QByteArray array;
     QDataStream stream(&array, QIODevice::WriteOnly);
-    QDateTime curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());   //获取网络时间
+    //QDateTime curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());   //获取网络时间
     stream << uid << sendToUid << msgText << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     ui->label_send->setMovie(loadingMovie);
     emit sendMessage(array);
@@ -3060,8 +3092,18 @@ void MainWindow::on_btn_sendMsg_clicked()
     msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-size:10pt;'>%2 %3</p>").arg(ui->label_home_name->text(), curDateTime.toString("hh:mm:ss"));
     msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);
     ui->textBrowser_msgHistory->clear();
-    ui->textBrowser_msgHistory->append(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
-    ui->textBrowser_msgHistory->verticalScrollBar()->setSliderPosition(ui->textBrowser_msgHistory->verticalScrollBar()->maximum()); //移动至末尾
+    ui->textBrowser_msgHistory->insertHtml(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
+    
+    //修复滚动条最大高度可能不正确的问题(未研究QT源码，暂不清楚误差产生原因...)
+    int pageStep = ui->textBrowser_msgHistory->verticalScrollBar()->pageStep();
+    int documentHeight = ui->textBrowser_msgHistory->document()->size().height();
+    int scrollBarMax = ui->textBrowser_msgHistory->verticalScrollBar()->maximum();
+    if (documentHeight - pageStep > scrollBarMax)
+    {
+        ui->textBrowser_msgHistory->verticalScrollBar()->setMaximum(documentHeight - pageStep);
+        scrollBarMax = documentHeight - pageStep;
+    }
+	ui->textBrowser_msgHistory->verticalScrollBar()->setValue(scrollBarMax);    //滚动条移动至最大值
     ui->textEdit_msg->clear();
 }
 

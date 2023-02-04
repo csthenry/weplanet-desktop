@@ -58,6 +58,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    
     QFont HarmonyOS_Font;
 
     QString HarmonyOS_Font_Family;
@@ -68,7 +69,7 @@ private:
 
     Document m_content, c_content;
 
-    QTimer *refTimer, *msgPushTimer;
+    QTimer *refTimer, *msgPushTimer, *currentTimeUpdate;
 
     QMovie *loadingMovie, *avatarLoadMovie;
     
@@ -80,6 +81,8 @@ private:
 
     bool isPushing = false; //消息推送中
 
+    int msgBeforePos = 0;   //消息记录光标位置
+
     int curMsgStackCnt = 0; //当前消息栈数据量
 
     int msgStackMax = 30; //聊天记录最大数量
@@ -88,7 +91,9 @@ private:
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
 
-    QString msg_contents, msgHistoryInfo; //聊天记录、说明
+    QString msg_contents, msgHistoryInfo; //聊天记录、当前聊天信息
+
+    QQueue<QString> getVerifyQueue;
 
     QSystemTrayIcon* trayIcon;
 
