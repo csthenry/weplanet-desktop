@@ -365,6 +365,14 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 			QMessageBox::warning(this, "错误", "认证系统：操作失败，请联系技术支持。", QMessageBox::Ok);
         }, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::getVerifyFinished, this, [=](bool res) {
+		getVerifyQueue.dequeue();
+        if (!getVerifyQueue.isEmpty())
+        {
+            QString back = getVerifyQueue.back();
+            emit getVerify(back);  //若任务堆积，则加载队尾即可
+            getVerifyQueue.clear();
+            getVerifyQueue.enqueue(back);
+        }
         QString verifyType;
         ui->btn_updateVerify->setEnabled(res);
         if (res)
@@ -407,6 +415,15 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 		
 		}, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar){
+        getAvatarQueue.dequeue();
+        if (!getAvatarQueue.isEmpty())
+        {
+            QString back = getAvatarQueue.back();
+            userManageWork->setCurAvatarUrl(back);  //若任务堆积，则加载队尾即可
+            emit userManageGetAvatar();
+            getAvatarQueue.clear();
+            getAvatarQueue.enqueue(back);
+        }
         if(avatar.isNull())
             ui->userManagePage_avatar->setPixmap(*userAvatar);
         else
@@ -442,6 +459,15 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         }, Qt::UniqueConnection);
     connect(attendManageWork, &AttendManageWork::attendManageWorkFinished, this, &MainWindow::setAttendManagePage);
     connect(attendManageWork, &AttendManageWork::avatarFinished, this, [=](QPixmap avatar){
+        getAvatarQueue.dequeue();
+        if (!getAvatarQueue.isEmpty())
+        {
+            QString back = getAvatarQueue.back();
+            attendManageWork->setCurAvatarUrl(back);  //若任务堆积，则加载队尾即可
+            emit attendManageGetAvatar();
+            getAvatarQueue.clear();
+            getAvatarQueue.enqueue(back);
+        }
         if(avatar.isNull())
             ui->attendManagePage_avatar->setPixmap(*userAvatar);
         else
@@ -1644,8 +1670,12 @@ void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
         ui->label_actMail->setText(rec.value("mail").toString());
 
     //子线程加载头像
-    userManageWork->setCurAvatarUrl(rec.value("user_avatar").toString());
-    emit userManageGetAvatar();
+    if (getAvatarQueue.isEmpty())
+    {
+        userManageWork->setCurAvatarUrl(rec.value("user_avatar").toString());
+        emit userManageGetAvatar();
+    }
+    getAvatarQueue.enqueue(rec.value("user_avatar").toString());   //加载项入栈
 }
 
 void MainWindow::on_action_triggered()
@@ -1960,20 +1990,24 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
         ui->label_userStatus->setText("状态：封禁");
 
     //子线程加载头像
-    userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
     ui->userManagePage_avatar->setPixmap(QPixmap(":/images/color_icon/user.svg"));
-    emit userManageGetAvatar();
+    
+    if (getAvatarQueue.isEmpty())
+    {
+        userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
+        emit userManageGetAvatar();
+    }
+    getAvatarQueue.enqueue(curRecord.value("user_avatar").toString());   //加载项入栈
     
 	//子线程获取认证信息
     ui->label_verifyType_manage->setText("加载中...");
     ui->btn_verifyInfo->setEnabled(false);
     ui->btn_delVerify->setEnabled(false);
     
-    if(!getVerifyQueue.isEmpty())
-		getVerifyQueue.clear(); //队列未处理完时清空队列
-    emit getVerify(curRecord.value("uid").toString());
-	getVerifyQueue.append(curRecord.value("uid").toString());   //加载项入栈
-	
+    if (getVerifyQueue.isEmpty())
+        emit getVerify(curRecord.value("uid").toString());
+    getVerifyQueue.enqueue(curRecord.value("uid").toString());   //加载项入栈
+    
     //密码修改
     if(!ui->lineEdit_editPwd->text().isEmpty())
     {
@@ -2020,9 +2054,13 @@ void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &cu
             ui->tableView_attendInfo->hideRow(i);
     }
 
-    //获取头像
-    attendManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
-    emit attendManageGetAvatar();
+    //子线程加载头像
+    if (getAvatarQueue.isEmpty())
+    {
+        attendManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
+        emit attendManageGetAvatar();
+    }
+    getAvatarQueue.enqueue(curRecord.value("user_avatar").toString());   //加载项入栈
 
     if(curAttendRecord.value("today").toString() == curDateTime.date().toString("yyyy-MM-dd"))
     {

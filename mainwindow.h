@@ -93,7 +93,7 @@ private:
 
     QString msg_contents, msgHistoryInfo; //聊天记录、当前聊天信息
 
-    QQueue<QString> getVerifyQueue;
+    QQueue<QString> getVerifyQueue, getAvatarQueue;
 
     QSystemTrayIcon* trayIcon;
 
