@@ -48,6 +48,7 @@
 #include "msgservice.h"
 #include "friendswidget.h"
 #include "friendinfowidget.h"
+#include "approvalwork.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -145,11 +146,29 @@ private:
 
     QString active_id = -1; //活动管理页面当前选择的ID
 
+	QHash<QString, QString> applyItemsOptions, applyItemsAuditorList, applyItemsIsHide; //申请表单、审核人、是否隐藏
+
+	QList<QToolButton*> manageApplyItemProcess, applyItemProcess; //申请表单审核进度
+
+    QList<QToolButton*> manageApplyAuditorList; //审批人员总列表
+
+	QList<QString> currentApplyItemAuditorList, currentApplyItemOptions;    //当前编辑的申请表单的审核人员、申请表单填写项
+    
+    QList<QLabel*> processArrow;
+    
+	QString currentApplyItemID; //当前编辑的申请表单的ID
+
+	QByteArray newApplyItem; //新增的申请项（标题->选项->发布者->流程->isHide）
+    
+	bool isApplyItemEdit = false;   //是否正在编辑申请表单
+
     int msgListTipsType = -1;
 	
 	int panel_series_count = 14, panel_option = -1;
 
     int msgPushTime = 5;
+
+    void updateManageApplyItemProcess(QList<QString> list);
 
     void setProcessAutoRun(const QString& appPath, bool flag = false);  //自启函数
 
@@ -195,6 +214,8 @@ private:
 
     void setMsgPage();
 
+    void setApplyItemsManagePage();
+
     void msgPusher(QStack<QByteArray> msgStack);
 
     void initMsgSys();
@@ -229,6 +250,8 @@ private:
 
     MsgService* msgService, *msgPusherService;
 
+	ApprovalWork* approvalWork;
+
     QSettings* config_ini;
 
 public:
@@ -248,19 +271,19 @@ private slots:
 
     void on_actAttend_triggered();
 
-    void on_actApply_triggered() const;
+    void on_actApply_triggered() ;
 
     void on_actUserManager_triggered();
 
     void on_actAttendManager_triggered();
 
-    void on_actApplyList_triggered() const;
+    void on_actApplyList_triggered() ;
 
-    void on_actApplyItems_triggered() const;
+    void on_actApplyItems_triggered() ;
 
     void on_actGroup_triggered();
 
-    void on_actMore_triggered() const;
+    void on_actMore_triggered() ;
 
     void on_actPanel_triggered();
 
@@ -474,6 +497,16 @@ private slots:
 
     void on_btn_checkTime_clicked();
 
+    void on_btn_reManageApplyProcess_clicked();
+
+    void on_btn_reManageApplyOptions_clicked();
+
+    void on_btn_manageApplyAddOption_clicked();
+    
+    void on_btn_manageApplyModify_clicked();
+
+    void on_btn_manageApplyAddApply_clicked();
+
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 
     void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
@@ -572,6 +605,8 @@ signals:
     void startPushMsg(QString me, QString member, int limit);
 
     void delFriend(const QString& me, const QString& member);
+
+	void loadManagePageApplyItems(const QString& uid);
 private:
     Ui::MainWindow *ui;
 };

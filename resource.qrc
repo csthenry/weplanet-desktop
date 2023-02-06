@@ -110,6 +110,14 @@
         <file>img/Loading10.gif</file>
         <file>img/loading.gif</file>
         <file>img/qq-nt-logo.png</file>
+        <file>color_icon/arrow_down.svg</file>
+        <file>color_icon/arrow_down_2.svg</file>
+        <file>color_icon/arrow_left.svg</file>
+        <file>color_icon/arrow_left_2.svg</file>
+        <file>color_icon/arrow_right.svg</file>
+        <file>color_icon/arrow_right_2.svg</file>
+        <file>color_icon/arrow_up.svg</file>
+        <file>color_icon/arrow_up_2.svg</file>
     </qresource>
     <qresource prefix="/lib">
         <file>eCharts/echarts.html</file>

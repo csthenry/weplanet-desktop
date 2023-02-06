@@ -123,6 +123,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     posterWork = new PosterWork();
     msgService = new MsgService();
     msgPusherService = new MsgService();
+	approvalWork = new ApprovalWork();
 
     sqlThread = new QThread(), sqlThread_MSG = new QThread(), sqlThread_MSGPUSHER = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
     sqlWork->moveToThread(dbThread);
@@ -135,6 +136,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     posterWork->moveToThread(sqlThread);
     msgService->moveToThread(sqlThread_MSG);
     msgPusherService->moveToThread(sqlThread_MSGPUSHER);
+    approvalWork->moveToThread(sqlThread);
     
     //检查更新
     updateSoftWare.moveToThread(sqlThread_SECOND);
@@ -643,16 +645,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         else
             QMessageBox::warning(this, "消息", res, QMessageBox::Ok);
         });
-
-    //好友列表样式
-    msgListTips_1 = new QLabel();
-    msgListTips_2 = new QLabel();
-    msgListTips_1->setMinimumWidth(ui->toolBox_Msg->width());
-    msgListTips_1->setMaximumWidth(ui->toolBox_Msg->width());
-    msgListTips_1->setAlignment(Qt::AlignHCenter);
-    msgListTips_2->setMinimumWidth(ui->toolBox_Msg->width());
-    msgListTips_2->setMaximumWidth(ui->toolBox_Msg->width());
-    msgListTips_2->setAlignment(Qt::AlignHCenter);
+    //审批系统信号槽
+	connect(this, &MainWindow::loadManagePageApplyItems, approvalWork, &ApprovalWork::getManagePageApplyItems);
+	connect(approvalWork, &ApprovalWork::getManagePageApplyItemsFinished, this, &MainWindow::setApplyItemsManagePage);
     
     //更新HarmonyOS字体
     QFont font;
@@ -667,9 +662,22 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         widget->setFont(font);
     }
     HarmonyOS_Font = font;
-    ui->toolBox_Msg->setStyleSheet(QString("QToolBox::tab,QToolTip{padding-left:5px;border-radius:5px;color:#E7ECF0;background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #667481,stop:1 #566373)}QToolBox::tab:selected{ background:qlineargradient(spread : pad,x1 : 0,y1 : 0,x2 : 0,y2 : 1,stop : 0 #778899,stop:1 #708090) }QToolButton{font: 10pt \"%1\"; }QLabel{font: 10pt \"%1\";}QToolBox QScrollBar{width:0;height:0}").arg(fontName.at(0)));
     HarmonyOS_Font_Family = fontName.at(0);
 
+    //好友列表样式
+    msgListTips_1 = new QLabel();
+    msgListTips_2 = new QLabel();
+    msgListTips_1->setMinimumWidth(ui->toolBox_Msg->width());
+    msgListTips_1->setMaximumWidth(ui->toolBox_Msg->width());
+    msgListTips_1->setAlignment(Qt::AlignHCenter);
+    msgListTips_2->setMinimumWidth(ui->toolBox_Msg->width());
+    msgListTips_2->setMaximumWidth(ui->toolBox_Msg->width());
+    msgListTips_2->setAlignment(Qt::AlignHCenter);
+    ui->toolBox_Msg->setStyleSheet(QString("QToolBox::tab,QToolTip{padding-left:5px;border-radius:5px;color:#E7ECF0;background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #667481,stop:1 #566373)}QToolBox::tab:selected{ background:qlineargradient(spread : pad,x1 : 0,y1 : 0,x2 : 0,y2 : 1,stop : 0 #778899,stop:1 #708090) }QToolButton{font: 10pt \"%1\"; }QLabel{font: 10pt \"%1\";}QToolBox QScrollBar{width:0;height:0}").arg(fontName.at(0)));
+    //审批项列表样式
+    ui->toolBox_Approval->setStyleSheet(QString("QToolBox::tab,QToolTip{padding-left:5px;border-radius:5px;color:#E7ECF0;background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #667481,stop:1 #566373)}QToolBox::tab:selected{ background:qlineargradient(spread : pad,x1 : 0,y1 : 0,x2 : 0,y2 : 1,stop : 0 #778899,stop:1 #708090) }QToolButton{font: 10pt \"%1\"; }QLabel{font: 10pt \"%1\";}QToolBox QScrollBar{width:0;height:0}").arg(fontName.at(0)));
+    ui->scrollArea_2->setStyleSheet(QString("QToolButton{font: 10pt \"%1\"; }QScrollArea QScrollBar{width:0;height:0}").arg(fontName.at(0)));
+        
     //检测开机启动
     ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
 
@@ -750,6 +758,7 @@ MainWindow::~MainWindow()
     delete activityManageWork;
     delete msgService;
     delete msgPusherService;
+    delete approvalWork;
 
     delete sqlThread;
     delete sqlThread_MSG;
@@ -785,6 +794,7 @@ void MainWindow::updateFinished(QString res)
     else
         ui->label_LatestVersion->setText(updateSoftWare.getLatestVersion());
 }
+
 /*******************************
  * 功能：开启/关闭 进程开机自动启动
  * 参数：
@@ -1354,6 +1364,172 @@ void MainWindow::setMsgPage()
     }
 }
 
+void MainWindow::setApplyItemsManagePage()
+{
+    ui->stackedWidget->setCurrentIndex(10);
+    
+    QList<QByteArray> applyItems = approvalWork->getApplyItems();
+    
+    //清除所有widget
+    while (ui->ApprovalItem_page_on_vLayout->count())
+        ui->ApprovalItem_page_on_vLayout->removeItem(ui->ApprovalItem_page_on_vLayout->itemAt(0));
+    while (ui->ApprovalItem_page_off_vLayout->count())
+        ui->ApprovalItem_page_off_vLayout->removeItem(ui->ApprovalItem_page_off_vLayout->itemAt(0));
+
+	static QList<QToolButton*> applyItemBtnList;
+    //申请项列表
+    for (auto item : applyItemBtnList)
+    {
+        if (item != nullptr)
+        {
+            applyItemBtnList.pop_front();
+            delete item;  //析构上一次的列表
+        }
+    }
+    for (auto array : applyItems)
+    {
+        QString applyItemId;
+        QString applyItemTitle;
+        QString applyItemOptions;
+        QString applyItemAuditorList;
+        QString applyItemPublisher;
+        QString applyItemIsHide;
+        QDataStream stream(&array, QIODevice::ReadOnly);
+        stream >> applyItemId >> applyItemTitle >> applyItemOptions >> applyItemPublisher >> applyItemAuditorList >> applyItemIsHide;
+
+		applyItemsOptions.insert(applyItemId, applyItemOptions);
+        applyItemsAuditorList.insert(applyItemId, applyItemAuditorList);
+        applyItemsIsHide.insert(applyItemId, applyItemIsHide);
+
+        QToolButton* applyItemBtn = new QToolButton();
+        applyItemBtn->setText(QString(" [%1] %2 ").arg(applyItemId, applyItemTitle));
+        applyItemBtn->setMinimumHeight(50);
+        applyItemBtn->setToolTip(applyItemId);
+        applyItemBtn->setMinimumWidth(ui->toolBox_Approval->width());
+        applyItemBtn->setMaximumWidth(ui->toolBox_Approval->width());
+        applyItemBtnList.append(applyItemBtn);
+        if (applyItemIsHide == "1")
+            ui->ApprovalItem_page_off_vLayout->addWidget(applyItemBtn);
+        else
+            ui->ApprovalItem_page_on_vLayout->addWidget(applyItemBtn);
+        
+        //按钮事件
+        connect(applyItemBtn, &QToolButton::clicked, this, [=]() {
+            //切换后，编辑状态取消
+            isApplyItemEdit = false;
+            ui->groupBox_newApply->setEnabled(true);
+            ui->btn_manageApplyPublish->setEnabled(false);
+            ui->btn_manageApplyPublish->setText("发布申请项目");
+            ui->btn_manageApplyModify->setEnabled(true);
+
+            currentApplyItemID = applyItemBtn->toolTip();
+            ui->label_manageApplyItemTitle->setText(applyItemBtn->text());
+            QString applyItemOptions;
+            currentApplyItemOptions.clear();
+            currentApplyItemAuditorList.clear();
+            for (auto option : applyItemsOptions[applyItemBtn->toolTip()].split("$", QString::SkipEmptyParts))
+            {
+                applyItemOptions += QString("【%1】").arg(option);
+                currentApplyItemOptions.push_back(option);
+            }
+            ui->label_manageApplyOptions->setText(applyItemOptions);
+            for (auto auditor : applyItemsAuditorList[applyItemBtn->toolTip()].split(";", QString::SkipEmptyParts))
+                currentApplyItemAuditorList.push_back(auditor);
+            updateManageApplyItemProcess(applyItemsAuditorList[applyItemBtn->toolTip()].split(";", QString::SkipEmptyParts));   //更新审批流程列表
+            });
+    }
+    ui->ApprovalItem_page_on_vLayout->addStretch(); //添加spacer
+    ui->ApprovalItem_page_off_vLayout->addStretch(); //添加spacer
+
+    //审批人员总列表
+    //清除所有widget
+    while (ui->manageApplyAuditorList_Layout->count())
+        ui->manageApplyAuditorList_Layout->removeItem(ui->manageApplyAuditorList_Layout->itemAt(0));
+    for (auto item : manageApplyAuditorList)
+    {
+        if (item != nullptr)
+        {
+            manageApplyAuditorList.pop_front();
+            delete item;  //析构上一次的列表
+        }
+    }
+    for (auto auditor_uid : approvalWork->getAuditorList())
+    {
+        QToolButton* auditor = new QToolButton();
+        auditor->setMinimumSize(140, 40);
+        auditor->setText(QString(" [%1] %2 ").arg(auditor_uid, approvalWork->getAuditorName(auditor_uid)));
+        auditor->setMinimumHeight(50);
+        auditor->setToolTip(auditor_uid);
+        auditor->setMinimumWidth(ui->scrollArea_2->width());
+        auditor->setMaximumWidth(ui->scrollArea_2->width());
+        ui->manageApplyAuditorList_Layout->addWidget(auditor);
+        manageApplyAuditorList.push_back(auditor);
+        connect(auditor, &QToolButton::clicked, this, [=]() {
+            auditor->setEnabled(false);
+            currentApplyItemAuditorList.push_back(auditor->toolTip());
+            updateManageApplyItemProcess(currentApplyItemAuditorList);
+        });
+    }
+    ui->manageApplyAuditorList_Layout->addStretch(); //添加spacer
+}
+
+void MainWindow::updateManageApplyItemProcess(QList<QString> list)
+{
+    //清除所有widget
+    while (ui->manageApplyProcess_Layout->count())
+        ui->manageApplyProcess_Layout->removeItem(ui->manageApplyProcess_Layout->itemAt(0));
+
+    //申请项列表
+    for (auto item : manageApplyItemProcess)
+    {
+        if (item != nullptr)
+        {
+            manageApplyItemProcess.pop_front();
+            delete item;  //析构上一次的列表
+        }
+    }
+    for (auto item : processArrow)
+    {
+        if (item != nullptr)
+        {
+            processArrow.pop_front();
+            delete item;  //析构上一次的列表
+        }
+    }
+    static int step = 1;
+    step = 1;
+    for (auto auditor_uid : list)
+    {
+        QToolButton* process = new QToolButton();
+        process->setMinimumSize(140, 40);
+        process->setToolTip(QString("审批流程第 %1 步：[%2]审核").arg(QString::number(step), approvalWork->getAuditorName(auditor_uid)));
+        process->setText(QString(" [%1] %2 ").arg(auditor_uid, approvalWork->getAuditorName(auditor_uid)));
+        manageApplyItemProcess.append(process);
+        ui->manageApplyProcess_Layout->addWidget(process);
+
+        QLabel* arrow = new QLabel();
+        arrow->setMinimumSize(45, 40);
+        arrow->setMaximumSize(45, 40);
+        arrow->setScaledContents(true);
+        arrow->setPixmap(QPixmap(":/images/color_icon/arrow_right.svg"));
+        processArrow.append(arrow);
+        ui->manageApplyProcess_Layout->addWidget(arrow);
+
+        step++;
+    }
+    if (!list.isEmpty())
+    {
+        QLabel* icon = new QLabel();
+        icon->setMinimumSize(40, 40);
+        icon->setMaximumSize(40, 40);
+        icon->setScaledContents(true);
+        icon->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+        processArrow.append(icon);
+        ui->manageApplyProcess_Layout->addWidget(icon);
+        ui->manageApplyProcess_Layout->addStretch();
+    }
+}
+
 void MainWindow::msgPusher(QStack<QByteArray> msgStack)
 {
     isPushing = false;  //消息推送队列已经处理完成
@@ -1478,7 +1654,7 @@ void MainWindow::disableDynamicItems()
     ui->btn_sendMsg->setEnabled(false);
 }
 
-void MainWindow::on_actApply_triggered() const
+void MainWindow::on_actApply_triggered()
 {
     ui->stackedWidget->setCurrentIndex(5);
 }
@@ -1678,6 +1854,17 @@ void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
     getAvatarQueue.enqueue(rec.value("user_avatar").toString());   //加载项入栈
 }
 
+void MainWindow::on_btn_manageApplyAddApply_clicked()
+{
+    if (ui->lineEdit_newApplyTitle->text().isEmpty())
+        return;
+    QDataStream stream(&newApplyItem, QIODevice::WriteOnly);
+    stream << ui->lineEdit_newApplyTitle->text();
+    ui->btn_manageApplyPublish->setEnabled(true);
+    ui->groupBox_addAuditors->setEnabled(true);
+    ui->groupBox_addApplyOptions->setEnabled(true);
+}
+
 void MainWindow::on_action_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
@@ -1805,14 +1992,15 @@ void MainWindow::on_actNoticeManage_triggered()
     ui->tableView_mContents->setEditTriggers(QAbstractItemView::NoEditTriggers);    //禁止编辑
 }
 
-void MainWindow::on_actApplyList_triggered() const
+void MainWindow::on_actApplyList_triggered() 
 {
     ui->stackedWidget->setCurrentIndex(9);
 }
 
-void MainWindow::on_actApplyItems_triggered() const
+void MainWindow::on_actApplyItems_triggered() 
 {
-    ui->stackedWidget->setCurrentIndex(10);
+    ui->stackedWidget->setCurrentIndex(13);
+    emit loadManagePageApplyItems(uid);
 }
 
 void MainWindow::on_actGroup_triggered()
@@ -1872,7 +2060,7 @@ void MainWindow::setGroupManagePage()
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
 
-void MainWindow::on_actMore_triggered() const
+void MainWindow::on_actMore_triggered() 
 {
     ui->stackedWidget->setCurrentIndex(12);
 }
@@ -3235,6 +3423,49 @@ void MainWindow::on_btn_checkTime_clicked()
     }
 
     QMessageBox::information(this, "时间校验", res);
+}
+
+void MainWindow::on_btn_reManageApplyProcess_clicked()
+{
+    currentApplyItemAuditorList.clear();
+    updateManageApplyItemProcess(QList<QString>());
+    for (auto item : manageApplyAuditorList)
+    {
+        if (item != nullptr)
+            item->setEnabled(true);
+    }
+}
+
+void MainWindow::on_btn_reManageApplyOptions_clicked()
+{
+    ui->label_manageApplyOptions->clear();
+    currentApplyItemOptions.clear();
+}
+
+void MainWindow::on_btn_manageApplyAddOption_clicked()
+{
+    //禁止空字段和$分割标识符
+    if (ui->lineEdit_newApplyOption->text().isEmpty() || ui->lineEdit_newApplyOption->text().indexOf("$") != -1)
+        return;
+    currentApplyItemOptions.push_back(ui->lineEdit_newApplyOption->text());
+    QString options;
+    for (auto item : currentApplyItemOptions)
+        options += QString("【%1】").arg(item);
+    ui->label_manageApplyOptions->setText(options);
+    ui->lineEdit_newApplyOption->clear();
+}
+
+void MainWindow::on_btn_manageApplyModify_clicked()
+{
+    if (currentApplyItemID.isEmpty())
+        return;
+    ui->btn_manageApplyPublish->setEnabled(true);
+    ui->groupBox_newApply->setEnabled(false);
+    ui->btn_manageApplyPublish->setText("更新申请项目");
+    isApplyItemEdit = true; //正在编辑
+    ui->btn_manageApplyModify->setEnabled(false);
+    ui->groupBox_addAuditors->setEnabled(true);
+    ui->groupBox_addApplyOptions->setEnabled(true);
 }
 
 void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
