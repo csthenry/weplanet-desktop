@@ -63,6 +63,25 @@ void ApprovalWork::getManagePageAuditorList()
 	DB.close();
 }
 
+void ApprovalWork::addOrModifyApplyItem(int type, QByteArray array)
+{
+	QDataStream stream(&array, QIODevice::ReadOnly);
+	QString title, options, auditorList, publisher, isHide;
+	stream >> title >> options >> publisher >> auditorList >> isHide;
+	DB.open();
+	QSqlQuery query(DB);
+	bool res = false;
+	if (type == 0)
+		res = query.exec(QString("INSERT INTO magic_applyItems (title, options, publisher, auditor_list, isHide) VALUES ('%1', '%2', '%3', '%4', '%5')").arg(title, options, publisher, auditorList, isHide));
+	else
+		res = query.exec(QString("UPDATE magic_applyItems SET options='%1', auditor_list='%2' WHERE item_id='%3'").arg(options, auditorList, modifyItemID));
+	qDebug() << QString("('%1', '%2', '%3', '%4', '%5')").arg(title, options, publisher, auditorList, isHide);
+	qDebug() << query.lastError().text();
+	query.clear();
+	DB.close();
+	emit addOrModifyApplyItemFinished(res);
+}
+
 QList<QByteArray> ApprovalWork::getApplyItems()
 {
 	return applyItems;
@@ -76,6 +95,33 @@ QList<QString> ApprovalWork::getAuditorList()
 QString ApprovalWork::getAuditorName(const QString& uid)
 {
 	return auditorName[uid];
+}
+
+void ApprovalWork::setModifyItemID(const QString& id)
+{
+	modifyItemID = id;
+}
+
+void ApprovalWork::deleteOrSwitchApplyItem(int type, const QString& id)
+{
+	DB.open();
+	QSqlQuery query(DB);
+	bool res = false;
+	if(type == 0)
+		res = query.exec("DELETE FROM magic_applyItems WHERE item_id=" + id);
+	else
+	{
+		query.exec("SELECT isHide FROM magic_applyItems WHERE item_id=" + id);
+		query.next();
+		if (query.value("isHide").toString() == "0")
+			res = query.exec("UPDATE magic_applyItems SET isHide=1 WHERE item_id=" + id);
+		else
+			res = query.exec("UPDATE magic_applyItems SET isHide=0 WHERE item_id=" + id);
+	}
+	query.clear();
+	DB.close();
+
+	emit deleteOrSwitchApplyItemFinished(res);
 }
 
 ApprovalWork::~ApprovalWork()

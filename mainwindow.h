@@ -507,6 +507,12 @@ private slots:
 
     void on_btn_manageApplyAddApply_clicked();
 
+    void on_btn_manageApplyPublish_clicked();
+
+	void on_btn_manageApplyDelete_clicked();
+
+    void on_btn_manageApplySwitch_clicked();
+
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 
     void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
@@ -607,6 +613,10 @@ signals:
     void delFriend(const QString& me, const QString& member);
 
 	void loadManagePageApplyItems(const QString& uid);
+    
+	void addOrModifyApplyItem(int type, QByteArray array);  //type==0添加，type==1修改
+
+    void deleteOrSwitchApplyItem(int type, const QString& id);  //0删除或 1开放/暂停 申请项
 private:
     Ui::MainWindow *ui;
 };

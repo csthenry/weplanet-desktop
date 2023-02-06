@@ -149,7 +149,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         static int cnt = 0;
         cnt += 1;
         curDateTime = curDateTime.addSecs(1);
-		qDebug() << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
+		//qDebug() << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
         if (cnt > 30 * 60)  //三十分钟校验一次网络时间
         {
             checkLocalTime();
@@ -648,7 +648,44 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //审批系统信号槽
 	connect(this, &MainWindow::loadManagePageApplyItems, approvalWork, &ApprovalWork::getManagePageApplyItems);
 	connect(approvalWork, &ApprovalWork::getManagePageApplyItemsFinished, this, &MainWindow::setApplyItemsManagePage);
-    
+	connect(this, &MainWindow::addOrModifyApplyItem, approvalWork, &ApprovalWork::addOrModifyApplyItem);
+	connect(this, &MainWindow::deleteOrSwitchApplyItem, approvalWork, &ApprovalWork::deleteOrSwitchApplyItem);
+    connect(approvalWork, &ApprovalWork::addOrModifyApplyItemFinished, this, [=](bool res) {
+        if (res)
+        {
+            isApplyItemEdit = false;
+            currentApplyItemID.clear();
+			ui->btn_manageApplyPublish->setEnabled(false);
+            ui->btn_manageApplyModify->setEnabled(true);
+            ui->groupBox_newApply->setEnabled(true);
+            ui->groupBox_addApplyOptions->setEnabled(false);
+            ui->lineEdit_newApplyTitle->clear();
+            QMessageBox::information(this, "消息", "操作完成，正在刷新数据。", QMessageBox::Ok);
+            ui->btn_manageApplyPublish->setText("发布申请项");
+			emit loadManagePageApplyItems(uid);
+        }
+        else
+			QMessageBox::warning(this, "消息", "操作失败，请检查网络或联系管理员。", QMessageBox::Ok);
+    });
+    connect(approvalWork, &ApprovalWork::deleteOrSwitchApplyItemFinished, this, [=](bool res) {
+        if (res)
+        {
+            isApplyItemEdit = false;
+            currentApplyItemID.clear();
+            ui->btn_manageApplyPublish->setEnabled(false);
+            ui->btn_manageApplyModify->setEnabled(true);
+            ui->groupBox_newApply->setEnabled(true);
+            ui->groupBox_addApplyOptions->setEnabled(false);
+            ui->btn_manageApplyDelete->setEnabled(false);
+            ui->btn_manageApplySwitch->setEnabled(false);
+            ui->btn_manageApplyPublish->setText("发布申请项");
+            QMessageBox::information(this, "消息", "操作完成，正在刷新数据。", QMessageBox::Ok);
+            emit loadManagePageApplyItems(uid);
+        }
+        else
+			QMessageBox::warning(this, "消息", "操作失败，请检查网络或联系管理员。", QMessageBox::Ok);
+        });
+
     //更新HarmonyOS字体
     QFont font;
     int font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");
@@ -1863,6 +1900,49 @@ void MainWindow::on_btn_manageApplyAddApply_clicked()
     ui->btn_manageApplyPublish->setEnabled(true);
     ui->groupBox_addAuditors->setEnabled(true);
     ui->groupBox_addApplyOptions->setEnabled(true);
+    
+    ui->label_manageApplyItemTitle->setText(ui->lineEdit_newApplyTitle->text());
+    ui->label_manageApplyOptions->setText("--");
+    on_btn_reManageApplyProcess_clicked();  //重置审批流程
+    on_btn_reManageApplyOptions_clicked();  //重置审批表单
+}
+
+void MainWindow::on_btn_manageApplyPublish_clicked()
+{
+	if (currentApplyItemAuditorList.isEmpty() || currentApplyItemOptions.isEmpty())
+		return;
+    QByteArray array;
+    QDataStream stream(&array, QIODevice::WriteOnly);
+    QString applyItemAuditorList, applyItemOptions; //格式化数据
+	for (auto auditor : currentApplyItemAuditorList)
+		applyItemAuditorList += auditor + ";";
+	for (auto option : currentApplyItemOptions)
+		applyItemOptions += option + "$";
+    if (isApplyItemEdit)
+    {
+        approvalWork->setModifyItemID(currentApplyItemID);  //正在编辑的编号
+        stream << QString("NULL") << applyItemOptions << uid << applyItemAuditorList << QString("NULL");
+        emit addOrModifyApplyItem(1, array);
+    }
+    else
+    {
+        if (ui->lineEdit_newApplyTitle->text().isEmpty())
+            return;
+        stream << ui->lineEdit_newApplyTitle->text() << applyItemOptions << uid << applyItemAuditorList << QString("0");
+        emit addOrModifyApplyItem(0, array);
+    }
+}
+
+void MainWindow::on_btn_manageApplyDelete_clicked()
+{
+    const QMessageBox::StandardButton res = QMessageBox::warning(this, "警告", QString("确认要删除申请项目%1吗？").arg(ui->label_manageApplyItemTitle->text()), QMessageBox::Yes | QMessageBox::No);
+    if (res == QMessageBox::Yes)
+        emit deleteOrSwitchApplyItem(0, currentApplyItemID);
+}
+
+void MainWindow::on_btn_manageApplySwitch_clicked()
+{
+    emit deleteOrSwitchApplyItem(1, currentApplyItemID);
 }
 
 void MainWindow::on_action_triggered()
@@ -3466,6 +3546,9 @@ void MainWindow::on_btn_manageApplyModify_clicked()
     ui->btn_manageApplyModify->setEnabled(false);
     ui->groupBox_addAuditors->setEnabled(true);
     ui->groupBox_addApplyOptions->setEnabled(true);
+    
+    ui->btn_manageApplyDelete->setEnabled(true);
+    ui->btn_manageApplySwitch->setEnabled(true);
 }
 
 void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
