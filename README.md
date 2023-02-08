@@ -1,4 +1,4 @@
-# MagicLitePlanet
+# MagicLitePlanet（WePlanet）
 
 [English Readme](https://github.com/csthenry/MagicLitePlanet/blob/master/README_en.md)
 
@@ -15,9 +15,9 @@
 - 平台：Windows x64
 - 开发环境：Visual Studio 2022 MSVC
 - 类型：Qt桌面应用程序
-- 数据库：MySQL
+- 数据库：MySQL5.7
 - 语言：C++ 11
-- 框架：Qt5.14
+- 框架：Qt5.15.x
 
 -> 此项目由一名非科班励志自学成才的大学生呈现——我的第一个可上线项目。
 
@@ -40,12 +40,12 @@
 * [x] 登录检测
 * [x] ECharts 数据大屏
 * [x] 认证系统
-* [x] 好友系统
+* [x] 好友系统（测试版）
+* [x] 审批系统
+* [x] 审批流程设计
 
 **进行中：**
 
-* [ ] 审批系统
-* [ ] 审批流程设计
 * [ ] 更多...
 
 ### 开发进度截图
@@ -73,4 +73,4 @@
 
 ---
 
-Copyright (C) 2017-2022 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
+Copyright (C) 2017-2023 [字节星球](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 

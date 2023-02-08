@@ -17,6 +17,11 @@ InfoWidget::InfoWidget(QWidget *parent)
         font.setPointSize(widget->font().pointSize());
         widget->setFont(font);
     }
+    
+    //背景透明
+    QPalette pal = ui.textBrowser_info->palette();
+	pal.setBrush(QPalette::Base, QBrush(QColor(255, 0, 0, 0)));
+    ui.textBrowser_info->setPalette(pal);
 }
 
 InfoWidget::~InfoWidget()
@@ -25,7 +30,9 @@ InfoWidget::~InfoWidget()
 
 void InfoWidget::setInfo(const QString& info)
 {
-    ui.label_info->setText(info);
+    ui.textBrowser_info->setText(info);
+    //ui.textBrowser_info->adjustSize();
+    //this->adjustSize(); //自动调整大小
 }
 
 void InfoWidget::setInfoTitle(const QString& title)

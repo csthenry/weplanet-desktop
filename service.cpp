@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "**************";
+    dataBasePassword = "***************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -87,9 +87,11 @@ QString service::pwdEncrypt(const QString &str) //字符串MD5算法加密
 {
     QByteArray btArray;
     btArray.append(str);//加入原始字符串
-    QCryptographicHash hash(QCryptographicHash::Md5);  //Md5加密算法
-    hash.addData(btArray);  //添加数据到加密哈希值
-    QByteArray resultArray =hash.result();  //返回最终的哈希值
+    //::CryptGenRandom()// 加盐（随机数）函数 #include <Windows.h>
+    //QCryptographicHash hash_sha512(QCryptographicHash::Sha512);  //SHA512加密算法
+    QCryptographicHash hash_md5(QCryptographicHash::Md5);  //Md5加密算法
+    hash_md5.addData(btArray);  //添加数据到加密哈希值
+    QByteArray resultArray = hash_md5.result();  //返回最终的哈希值
     QString md5 = resultArray.toHex();  //转换为16进制字符串
     return md5;
 }
@@ -210,34 +212,51 @@ bool service::initDatabaseTables(QSqlDatabase db)
     creatTableStr =
         "CREATE TABLE IF NOT EXISTS magic_apply"
         "(apply_id       int(10)      NOT NULL    AUTO_INCREMENT,"
-        "apply_uid       int(10)      NOT NUll,"
-        "alist_id        int(10)      NOT NUll,"
-        "op1_text        text,"
-        "op2_text        text,"
-        "op3_text        text,"
-        "process_uidList varchar(64),"
+        "uid             int(10)      NOT NUll,"
+        "item_id         int(10)      NOT NUll,"
+        "options         text,"
         "status          tinyint(1)   NOT NUll,"
-        "check_uidList   varchar(64),"
-        "reject_uid      int(10),"
-        "PRIMARY KEY (apply_id, apply_uid)"
+        "operate_time    datetime     NOT NUll,"
+        "token           varchar(32),"
+        "PRIMARY KEY (apply_id)"
         ")ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);
 
     //审批流程项目表
     creatTableStr =
-        "CREATE TABLE IF NOT EXISTS magic_applyList"
-        "(alist_id      int(10)      NOT NULL    AUTO_INCREMENT,"
+        "CREATE TABLE IF NOT EXISTS magic_applyItems"
+        "(item_id       int(10)      NOT NULL   AUTO_INCREMENT,"
         "title          varchar(32)  NOT NUll,"
-        "op1_title      varchar(32),"
-        "op2_title      varchar(32),"
-        "op3_title      varchar(32),"
-        "option_num     tinyint(1), "
-        "PRIMARY KEY (alist_id)"
+        "options        text,"
+        "publisher      int(10), "
+        "auditor_list   varchar(64),"
+        "isHide         tinyint(1)   NOT NUll,"
+        "PRIMARY KEY (item_id)"
+        ")ENGINE=InnoDB;"
+        "INSERT INTO magic_applyItems"
+		"(item_id, title, options, publisher, auditor_list, isHide)"
+        "VALUES (1, '修改用户名', '新的用户名$申请理由$', 1, '100000;', 0);"
+        "INSERT INTO magic_applyItems"
+        "(item_id, title, options, publisher, auditor_list, isHide)"
+        "VALUES (2, '变更组织架构', '用户组$部门$', 1, '100000;', 0);";
+
+    if (res)
+        res = query.exec(creatTableStr);
+    qDebug() << query.lastError().text();
+    
+	//审批流程结果表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_applyProcess"
+        "(apply_id       int(10)     NOT NULL,"
+        "auditor         int(10)     NOT NUll,"
+        "result          tinyint(1),"
+        "result_text     text,"
+        "operate_time    datetime    NOT NUll"
         ")ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);
-
+    
     //用户认证信息表
     creatTableStr =
         "CREATE TABLE IF NOT EXISTS magic_verify"
