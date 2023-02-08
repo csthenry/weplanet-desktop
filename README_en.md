@@ -45,12 +45,12 @@
 
 ### Screenshots
 
-![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_12.png)
-![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_10.png)
-![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_2.jpg)
-![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_3.jpg)
-![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_6.png)
-![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_9.png)
+![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/1.png)
+![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/2.png)
+![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/3.png)
+![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/4.png)
+![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/5.png)
+![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/6.png)
 
 more screenshots：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
 
