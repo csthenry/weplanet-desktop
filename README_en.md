@@ -1,4 +1,4 @@
-# MagicLitePlanet EN
+# MagicLitePlanet（WePlanet）
 
 ![GitHub license](https://img.shields.io/github/license/CSTHenry/MagicLitePlanet?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/CSTHenry/MagicLitePlanet?style=flat-square)
@@ -8,14 +8,14 @@
 
 🚀MagicLitePlanet - Interactive system for small groups
 
-  The functions of communication, analysis, management, approval... are all incredibly integrated in **Magic<Lite\>Planet**.
-  
+  The functions of communication, management, approval... are all incredibly integrated in **Magic<Lite\>Planet**.
+
 - OS：Windows x64
 - IDE：Visual Studio 2022 MSVC
-- Type：Qt desktop application
-- Database：MySQL
+- Type：Qt Desktop Application
+- Database：MySQL5.7
 - Language：C++ 11
-- Framework：Qt5.14
+- Framework：Qt5.15.x
 
 ### Development progress
 
@@ -23,24 +23,24 @@
 
 * [x] Register/Login
 * [x] Attendance System
-* [x] Personal profile management
+* [x] Personal management
 * [x] User management
-* [x] Announcement of version
+* [x] Announcement
 * [x] Activity system
-* [x] Custom authority system of users
-* [x] Organizational structure management
-* [x] Announcement and Dynamic System based on Markdown
+* [x] Authority system
+* [x] Organization structure
+* [x] Announcement and Dynamic (Markdown)
 * [x] Statistics charts
-* [x] Data classification export
-* [x] Auto-Check for updates
-* [x] Login Security System
-* [x] Great data panel based on ECharts
+* [x] Data export
+* [x] Auto update
+* [x] Login security
+* [x] Data Panel (ECharts)
+* [x] Chat Module (beta)
+* [x] Approval System
+* [x] Approval Process Design Module
 
 **Developing：**
 
-* [ ] Approval System
-* [ ] Approval Process Design Module
-* [ ] Community Chat System
 * [ ] More...
 
 ### Screenshots
@@ -68,4 +68,4 @@ Please read before dev the project：https://www.bytecho.net/archives/qt_mysql.h
 
 ---
 
-Copyright (C) 2017-2022 [bytecho.net](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 
+Copyright (C) 2017-2023 [bytecho.net](https://www.bytecho.net/) [Henry](https://www.bytecho.net/about.html) 

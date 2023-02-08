@@ -19,7 +19,7 @@ FriendInfoWidget::FriendInfoWidget(QWidget *parent)
     }
 
     clipboard = QApplication::clipboard();  //获取系统剪切板指针
-    
+    setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);   // 禁止改变窗口大小
     //子线程
     thread = new QThread();
     infoWork = new baseInfoWork();
@@ -92,6 +92,18 @@ void FriendInfoWidget::setUid(const QString& uid)
         emit getCurrentMemInfo();
         isLoading = true;
     }
+}
+
+void FriendInfoWidget::setTitle(const QString& title)
+{
+	this->setWindowTitle(title);
+}
+
+void FriendInfoWidget::hideButton(bool isHide)
+{
+	bool isVisible = !isHide;
+    ui->stackedWidget->setVisible(isVisible);
+    this->adjustSize();
 }
 
 void FriendInfoWidget::on_btn_share_clicked()

@@ -116,6 +116,9 @@
     <ClCompile Include="friendinfowidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="approvalwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -182,6 +185,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="friendinfowidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="approvalwork.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

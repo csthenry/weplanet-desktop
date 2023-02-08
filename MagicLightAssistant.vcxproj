@@ -209,6 +209,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="activitymanagework.cpp" />
+    <ClCompile Include="approvalwork.cpp" />
     <ClCompile Include="attendmanagework.cpp" />
     <ClCompile Include="attendwork.cpp" />
     <ClCompile Include="baseinfowork.cpp" />
@@ -244,6 +245,7 @@
     <QtMoc Include="comboboxdelegate.h">
     </QtMoc>
     <QtMoc Include="document.h" />
+    <QtMoc Include="approvalwork.h" />
     <ClInclude Include="excelexport.h" />
     <QtMoc Include="formlogin.h">
     </QtMoc>

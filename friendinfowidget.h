@@ -26,6 +26,8 @@ private:
 	QClipboard *clipboard;
 public:
 	void setUid(const QString& uid);
+	void setTitle(const QString& title);
+	void hideButton(bool isHide);
 	QString getUid();
 public:
 	FriendInfoWidget(QWidget *parent = nullptr);

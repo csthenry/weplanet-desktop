@@ -20,7 +20,7 @@ formLogin::formLogin(QDialog *parent) :
 {
     ui->setupUi(this);
     ui->groupBox->setVisible(false);
-    //限制登录注册输入
+    //限制登录注册输入，防止sql注入
     QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
     QValidator* validator_account = new QRegExpValidator(regx_account), *validator_pwd= new QRegExpValidator(regx_pwd);
     ui->lineEdit_Uid->setValidator(validator_account);
@@ -32,7 +32,8 @@ formLogin::formLogin(QDialog *parent) :
     ui->labelStatus->setWhatsThis("如果显示绿色图标，表示数据库连接正常，否则请检查网络或联系技术支持。\nEmail: cst@bytecho.net");
 
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
-    setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
+    setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);               // 禁止改变窗口大小
+    //setFixedSize(this->width(),this->height());                     // 禁止改变窗口大小
     //QPixmap mainicon(":/images/color_icon/main.svg");
     //QPixmap mainicon(":/images/logo/planet.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
@@ -120,6 +121,8 @@ formLogin::formLogin(QDialog *parent) :
         if (res)
         {
 			ui->label_announcement->setText(loginWork->getAnnouncementText());
+			ui->label_announcement->adjustSize();   //自动调整大小
+            this->adjustSize();
             if (loginWork->getAnnouncementTag() == 1)
                 ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-tips.svg"));
             else

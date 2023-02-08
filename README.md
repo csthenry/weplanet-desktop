@@ -1,4 +1,4 @@
-# MagicLitePlanet
+# MagicLitePlanet（WePlanet）
 
 [English Readme](https://github.com/csthenry/MagicLitePlanet/blob/master/README_en.md)
 
@@ -15,7 +15,7 @@
 - 平台：Windows x64
 - 开发环境：Visual Studio 2022 MSVC
 - 类型：Qt桌面应用程序
-- 数据库：MySQL
+- 数据库：MySQL5.7
 - 语言：C++ 11
 - 框架：Qt5.15.x
 
@@ -40,28 +40,30 @@
 * [x] 登录检测
 * [x] ECharts 数据大屏
 * [x] 认证系统
-* [x] 好友系统
+* [x] 好友系统（测试版）
+* [x] 审批系统
+* [x] 审批流程设计
 
 **进行中：**
 
-* [ ] 审批系统
-* [ ] 审批流程设计
 * [ ] 更多...
+
+
 
 ### 开发进度截图
 
-![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_12.png)
-![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_10.png)
-![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_2.jpg)
-![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_3.jpg)
-![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_6.png)
-![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/screenshot_9.png)
+![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/1.png)
+![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/2.png)
+![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/3.jpg)
+![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/4.jpg)
+![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/5.png)
+![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/6.png)
 
 更多截图请查看：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
 
 ### 注意：
 
-项目已转换为Visual Studio项目，开发环境Visual Studio 2022， 请使用Visual Studio 2019+添加此项目。
+项目已转换为Visual Studio项目，开发环境Visual Studio 2022， 请使用Visual Studio 2017+添加此项目。
 
 在添加项目前，请先阅读：https://www.bytecho.net/archives/qt_mysql.html
 

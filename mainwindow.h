@@ -48,6 +48,7 @@
 #include "msgservice.h"
 #include "friendswidget.h"
 #include "friendinfowidget.h"
+#include "approvalwork.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -58,6 +59,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    
     QFont HarmonyOS_Font;
 
     QString HarmonyOS_Font_Family;
@@ -68,7 +70,7 @@ private:
 
     Document m_content, c_content;
 
-    QTimer *refTimer, *msgPushTimer;
+    QTimer *refTimer, *msgPushTimer, *currentTimeUpdate;
 
     QMovie *loadingMovie, *avatarLoadMovie;
     
@@ -80,6 +82,8 @@ private:
 
     bool isPushing = false; //消息推送中
 
+    int msgBeforePos = 0;   //消息记录光标位置
+
     int curMsgStackCnt = 0; //当前消息栈数据量
 
     int msgStackMax = 30; //聊天记录最大数量
@@ -88,13 +92,15 @@ private:
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
 
-    QString msg_contents, msgHistoryInfo; //聊天记录、说明
+    QString msg_contents, msgHistoryInfo; //聊天记录、当前聊天信息
+
+    QQueue<QString> getVerifyQueue, getAvatarQueue;
 
     QSystemTrayIcon* trayIcon;
 
     QMenu *trayIconMenu;
 
-    QAction* mShowMainAction, *mExitAppAction;
+    QAction* mShowMainAction, *mExitAppAction, *mShowExitAction;
 
     QDateTime curDateTime;
 
@@ -140,11 +146,39 @@ private:
 
     QString active_id = -1; //活动管理页面当前选择的ID
 
+	QHash<QString, QString> applyItemsOptions, applyItemsAuditorList, applyItemsIsHide; //申请表单、审核人、是否隐藏
+
+	QList<QToolButton*> manageApplyItemProcess, applyItemProcess; //申请表单审核进度
+
+	QList<QTextEdit*> applyItemOptions_textEdit, applyItemOptions_manage_textEdit; //申请表单填写框
+
+    QList<QToolButton*> manageApplyAuditorList; //审批人员总列表
+
+	QList<QString> currentApplyItemAuditorList, currentApplyItemOptions;    //当前编辑的申请表单的审核人员、申请表单填写项
+    
+    QList<QLabel*> manage_processArrow, user_processArrow;  //用于流程图的指示箭头
+    
+	QString currentApplyItemID_user, currentApplyItemID_manage, currentApplyFormID_user, currentApplyFormID_manage; //当前编辑的申请项目的ID，当前申请表ID
+
+    QString currentApplyFormUid;    //当前审核申请表的申请人UID
+
+	QByteArray newApplyItem; //新增的申请项（标题->选项->发布者->流程->isHide）
+    
+	bool isApplyItemEdit = false;   //是否正在编辑申请表单
+
     int msgListTipsType = -1;
 	
 	int panel_series_count = 14, panel_option = -1;
 
     int msgPushTime = 5;
+
+    void updateManageApplyItemProcess(QList<QString> list);
+
+    void updateApplyItemProcess(int type, QString apply_id, QList<QString> list);   //0审批流程 1审批进度
+    
+    void updateApplyItemProcess(QList<QString> list);
+
+	void updateApplyItemOptions(int type, QList<QString> list);//0用户页面，1审核页面
 
     void setProcessAutoRun(const QString& appPath, bool flag = false);  //自启函数
 
@@ -190,6 +224,12 @@ private:
 
     void setMsgPage();
 
+    void setApplyItemsManagePage();
+
+    void setApplyItemsUserPage();
+
+    void setApplyListManagePage();
+
     void msgPusher(QStack<QByteArray> msgStack);
 
     void initMsgSys();
@@ -224,6 +264,8 @@ private:
 
     MsgService* msgService, *msgPusherService;
 
+	ApprovalWork* approvalWork;
+
     QSettings* config_ini;
 
 public:
@@ -243,19 +285,19 @@ private slots:
 
     void on_actAttend_triggered();
 
-    void on_actApply_triggered() const;
+    void on_actApply_triggered() ;
 
     void on_actUserManager_triggered();
 
     void on_actAttendManager_triggered();
 
-    void on_actApplyList_triggered() const;
+    void on_actApplyList_triggered() ;
 
-    void on_actApplyItems_triggered() const;
+    void on_actApplyItems_triggered() ;
 
     void on_actGroup_triggered();
 
-    void on_actMore_triggered() const;
+    void on_actMore_triggered() ;
 
     void on_actPanel_triggered();
 
@@ -469,6 +511,36 @@ private slots:
 
     void on_btn_checkTime_clicked();
 
+    void on_btn_reManageApplyProcess_clicked();
+
+    void on_btn_reManageApplyOptions_clicked();
+
+    void on_btn_manageApplyAddOption_clicked();
+    
+    void on_btn_manageApplyModify_clicked();
+
+    void on_btn_manageApplyAddApply_clicked();
+
+    void on_btn_manageApplyPublish_clicked();
+
+	void on_btn_manageApplyDelete_clicked();
+
+    void on_btn_manageApplySwitch_clicked();
+
+    void on_btn_submitApply_clicked();
+
+	void on_btn_cancelApply_clicked();
+    
+    void on_btn_setApplyToken_clicked();
+
+    void on_btn_getApplyUserInfo_clicked();
+
+	void on_btn_submitApplyResult_argee_clicked();
+
+    void on_btn_submitApplyResult_reject_clicked();
+
+    void on_btn_authApplyToken_clicked();
+
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 
     void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
@@ -567,6 +639,24 @@ signals:
     void startPushMsg(QString me, QString member, int limit);
 
     void delFriend(const QString& me, const QString& member);
+
+	void loadManagePageApplyItems(const QString& uid);
+    
+    void loadUserPageApplyItems(const QString& uid);
+
+    void loadApplyFormList(const QString& uid);
+    
+	void addOrModifyApplyItem(int type, QByteArray array);  //type==0添加，type==1修改
+
+    void deleteOrSwitchApplyItem(int type, const QString& id);  //0删除或 1开放/暂停 申请项
+
+	void submitOrCancelApply(int type, const QString& apply_id, QByteArray array = QByteArray());  //0撤销 1提交
+
+    void agreeOrRejectApply(const QString& apply_id, const QString& auditor, const QString& result, const QString& text);
+
+    void getApplyToken(const QString& id);
+
+    void authApplyToken(const QString& token);
 private:
     Ui::MainWindow *ui;
 };
