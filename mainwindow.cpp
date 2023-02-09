@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //加载动画
     avatarLoadMovie = new QMovie(":/images/img/Loading6.gif");
     loadingMovie = new QMovie(":/images/img/Loading4.gif"); //:/images/color_icon/loading.gif
-    ui->label_loading->setMovie(loadingMovie);
+    //ui->label_loading->setMovie(loadingMovie);
     loadingMovie->start();
     avatarLoadMovie->start();
 
@@ -91,9 +91,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         });
     msgPushTimer = new QTimer(this);
     connect(msgPushTimer, &QTimer::timeout, this, [=]() {
-        if (!isPushing)  //Push队列处理中时跳过，避免任务堆积
+        if (!isPushing && openChat)  //Push队列处理中时跳过，避免任务堆积
         {
             isPushing = true;
+            qDebug() << "正在刷新聊天记录";
             emit startPushMsg(uid, sendToUid, msgStackMax);
         }
         });
@@ -158,7 +159,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         static int cnt = 0;
         cnt += 1;
         curDateTime = curDateTime.addSecs(1);
-		//qDebug() << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
+		//qDebug() << "本地时间校验：" << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
         if (cnt > 30 * 60)  //三十分钟校验一次网络时间
         {
             checkLocalTime();
@@ -629,7 +630,6 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         {
             ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
             curMsgStackCnt++;   //发送成功，当前消息数据量+1
-            //qDebug() << "发送后cur:" << curMsgStackCnt << "stack:" << msgPusherService->getMsgStackCnt(sendToUid);
         }
         else
             ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_2.svg"));
@@ -1330,11 +1330,23 @@ void MainWindow::setSystemSettings()
         ui->rBtn_debugOpen->setChecked(true);
     else
 		ui->rBtn_debugClose->setChecked(true);
+    if (setBaseInfoWork->getSys_isOpenChat())
+        ui->rBtn_openChat->setChecked(true);
+    else
+        ui->rBtn_closeChat->setChecked(true);
     ui->textEdit_announcement->setText(setBaseInfoWork->getSys_announcementText());
 }
 
 void MainWindow::setMsgPage()
 {
+    if (!msgService->getIsOpen())
+    {
+        openChat = false;
+        ui->stackedWidget->setCurrentIndex(18); //聊天系统已关闭
+        return;
+    }else
+        openChat = true;
+    
     ui->stackedWidget->setCurrentIndex(2);
     //好友列表
     QList<QString> friendList = msgService->getMsgMemList();
@@ -3409,6 +3421,7 @@ void MainWindow::on_btn_saveSysSettings_clicked()
     setBaseInfoWork->setSys_isAnnounceOpen(ui->rBtn_announceOpen->isChecked());
     setBaseInfoWork->setSys_isTipsAnnounce(ui->rBtn_tipsAnnounce->isChecked());
     setBaseInfoWork->setSys_isDebugOpen(ui->rBtn_debugOpen->isChecked());
+    setBaseInfoWork->setSys_openChat(ui->rBtn_openChat->isChecked());
     setBaseInfoWork->setSys_announcementText(ui->textEdit_announcement->toPlainText());
 	
     ui->label_loadingSettings->setMovie(loadingMovie);

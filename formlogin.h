@@ -79,7 +79,7 @@ private slots:
 
     void on_autoLoginAuthAccountRes(int res);
 
-    void on_signUpFinished(bool res);
+    void on_signUpFinished(int res);
 
 private:
     Ui::formLogin *ui;

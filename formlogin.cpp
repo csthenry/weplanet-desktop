@@ -96,7 +96,7 @@ formLogin::formLogin(QDialog *parent) :
     connect(loginWork, SIGNAL(autoAuthRes(int)), this, SLOT(on_autoLoginAuthAccountRes(int)));
     //注册相关
     connect(this, SIGNAL(signUp(const QString&, const QString&, const QString&, const QString&)), loginWork, SLOT(signUp(const QString&, const QString&, const QString&, const QString&)));
-    connect(loginWork, SIGNAL(signupRes(bool)), SLOT(on_signUpFinished(bool)));
+    connect(loginWork, SIGNAL(signupRes(int)), SLOT(on_signUpFinished(int)));
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
     //更新检测
@@ -334,12 +334,12 @@ void formLogin::on_btn_Signup_clicked()
     emit signUp(ui->lineEdit_SignupPwd->text(), ui->lineEdit_SignupName->text(), ui->lineEdit_SignupTel->text(), ui->comBox_gender->currentText());
 }
 
-void formLogin::on_signUpFinished(bool res)
+void formLogin::on_signUpFinished(int res)
 {
     loadingMovie->stop();
     ui->btn_Signup->setIcon(QIcon());
     ui->btn_Login->setIcon(QIcon());
-    if(res)
+    if(res == 100)
     {
         QMessageBox::information(this, "通知", "注册成功，你的信息如下：\n账号：" + loginWork->getLastSignupUid() + "\n姓名：" + ui->lineEdit_SignupName->text() +"\n手机号：" + ui->lineEdit_SignupTel->text() + "\n请妥善保管以上信息，可使用手机号登录。", QMessageBox::Ok);
         ui->lineEdit_SignupName->clear();
@@ -348,8 +348,10 @@ void formLogin::on_signUpFinished(bool res)
         ui->lineEdit_SignupPwdAgain->clear();
         ui->comBox_gender->setCurrentIndex(0);
     }
-    else
+    else if(res == 101)
         QMessageBox::warning(this, "警告", "注册失败，错误信息：" + sqlWork->getDb().lastError().text(), QMessageBox::Ok);
+    else
+        QMessageBox::warning(this, "警告", QString("手机号：%1，已被注册，请更换手机号。").arg(ui->lineEdit_SignupTel->text()), QMessageBox::Ok);
 }
 
 void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)

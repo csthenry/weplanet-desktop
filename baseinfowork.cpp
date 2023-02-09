@@ -96,6 +96,11 @@ bool baseInfoWork::getAttendToday()
     return isAttend;
 }
 
+bool baseInfoWork::getSys_isOpenChat()
+{
+    return sys_openChat;
+}
+
 void baseInfoWork::bindQQAvatar(QString qqMail)
 {
     DB.open();
@@ -219,7 +224,7 @@ QString baseInfoWork::loadDepartment(const QString& uid)
 void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
 {
     DB.open();
-        emit autoAuthRes(service::authAccount(DB, loginUid, account, pwd));
+    emit autoAuthRes(service::authAccount(DB, loginUid, account, pwd));
     DB.close();
 }
 
@@ -236,7 +241,15 @@ void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString
     else
         statistics.exec("INSERT INTO magic_statistics (date, register_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
     statistics.clear();
-	
+    
+	query.exec(QString("SELECT uid FROM magic_users WHERE telephone = '%1';").arg(tel));    //判断手机号是否已注册
+	if (query.next())
+	{
+		emit signupRes(102);
+        query.clear();
+        DB.close();
+		return;
+	}
     creatQueryStr =
             "INSERT INTO magic_users"
             "(password, name, user_group, user_dpt, telephone, gender, score, user_status)"
@@ -247,7 +260,10 @@ void baseInfoWork::signUp(const QString& pwd, const QString& name, const QString
     query.bindValue(1, name);
     query.bindValue(2, tel);
     query.bindValue(3, gender);
-    emit signupRes(query.exec());
+    if(query.exec())
+        emit signupRes(100);
+    else
+		emit signupRes(101);
     lastSignupUid = query.lastInsertId().toString();
     query.clear();
     DB.close();
@@ -280,12 +296,12 @@ void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, c
 
 void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)
 {
+    DB.open();
     int res = service::authAccount(DB, loginUid, account, pwd);
     if(res == 403)
-    {
         res = service::authAccount(DB, loginUid, account, editPwd);
-    }
     emit authRes(res);
+    DB.close();
 }
 
 void baseInfoWork::setAuthority(const QString &uid)
@@ -428,6 +444,13 @@ void baseInfoWork::loadSystemSettings()
         QSqlRecord record = query.record();
         sys_isDebugOpen = record.value("field_1").toBool();
     }
+    query.exec("SELECT * FROM magic_system WHERE sys_name='openChat'");
+    res = query.next();
+    if (res)
+    {
+        QSqlRecord record = query.record();
+        sys_openChat = record.value("field_1").toBool();
+    }
     query.clear();
     DB.close();
     emit loadSystemSettingsFinished(res);
@@ -439,6 +462,7 @@ void baseInfoWork::saveSystemSettings()
     DB.open();
     QSqlQuery query(DB);
 	query.exec("UPDATE magic_system SET field_1='" + QString::number(sys_isDebugOpen) + "' WHERE sys_name='debug'");
+    query.exec("UPDATE magic_system SET field_1='" + QString::number(sys_openChat) + "' WHERE sys_name='openChat'");
 	res = query.exec("UPDATE magic_system SET field_1='" + QString::number(sys_isTipsAnnounce) + "', field_2='" + sys_announcementText + "', field_3='" + QString::number(sys_isAnnounceOpen) + "' WHERE sys_name='announcement'");
 	query.clear();
 	DB.close();
@@ -558,6 +582,11 @@ void baseInfoWork::setSys_isDebugOpen(bool arg)
 void baseInfoWork::setSys_announcementText(const QString& arg)
 {
     sys_announcementText = arg;
+}
+
+void baseInfoWork::setSys_openChat(bool arg)
+{
+    sys_openChat = arg;
 }
 
 QString baseInfoWork::getSys_announcementText()

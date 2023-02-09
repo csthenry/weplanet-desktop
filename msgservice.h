@@ -22,6 +22,7 @@ private:
 	QList<QPixmap> avatar, applyAvatar;
 	QList<QString> getMsgMem(QString uid);
 	QStack<QByteArray> msgStack;
+	bool isOpen;
 	void getAvatar(const QString& member, int path);
 	QString getName(const QString& uid, int path);
 
@@ -43,6 +44,7 @@ public:
 	int getMsgStackCnt(const QString& uid);
 	void operateApply(const QString& me, const QString& member, int flag);
 	void delFriend(const QString& me, const QString& member);
+	bool getIsOpen();
 
 public:
 	MsgService(QObject *parent = nullptr, int path = 1);

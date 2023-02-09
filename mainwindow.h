@@ -78,6 +78,8 @@ private:
 
     bool dbStatus = true;
 
+    bool openChat = false;  //是否开启聊天
+
     bool isSending = false; //消息发送中
 
     bool isPushing = false; //消息推送中
