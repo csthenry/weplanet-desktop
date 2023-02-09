@@ -148,10 +148,10 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "last_login    datetime     NULL ,"
         "PRIMARY KEY (uid)                "
         ")ENGINE=InnoDB;                  "
-        "INSERT INTO magic_users          "
+        "INSERT IGNORE INTO magic_users          "
         "(uid, password, name, user_group, user_dpt, score, user_status)"
         "VALUES(1, 'kH9bV0rP5dF8oW7g', '系统', 2, 1, 0, 0);"
-        "INSERT INTO magic_users          "
+        "INSERT IGNORE INTO magic_users          "
         "(uid, password, name, user_group, user_dpt, score, user_status)"
         "VALUES                           "
         "(                                "
@@ -172,10 +172,10 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "send_message     tinyint(1)  NOT NUll,"
         "notice_manage    tinyint(1)  NOT NUll,"
         "PRIMARY KEY (group_id)) ENGINE=InnoDB;"
-        "INSERT INTO magic_group"
+        "INSERT IGNORE INTO magic_group"
         "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message, notice_manage)"
         "VALUES(1, '超级管理员', 1, 1, 1, 1, 1, 1, 1, 1);"
-        "INSERT INTO magic_group"
+        "INSERT IGNORE INTO magic_group"
         "(group_id, group_name, users_manage, attend_manage, apply_manage, applyItem_manage, group_manage, activity_manage, send_message, notice_manage)"
         "VALUES(2, '普通用户', 0, 0, 0, 0, 0, 0, 1, 0);";
     if(res)
@@ -187,7 +187,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "(dpt_id      int(10)      NOT NULL    AUTO_INCREMENT,"
         "dpt_name     varchar(32)  NOT NUll,"
         "PRIMARY KEY (dpt_id))ENGINE=InnoDB;"
-        "INSERT INTO magic_department"
+        "INSERT IGNORE INTO magic_department"
         "(dpt_id, dpt_name)"
         "VALUES(1, '默认部门');";
     if (res)
@@ -234,16 +234,15 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "isHide         tinyint(1)   NOT NUll,"
         "PRIMARY KEY (item_id)"
         ")ENGINE=InnoDB;"
-        "INSERT INTO magic_applyItems"
+        "INSERT IGNORE INTO magic_applyItems"
 		"(item_id, title, options, publisher, auditor_list, isHide)"
         "VALUES (1, '修改用户名', '新的用户名$申请理由$', 1, '100000;', 0);"
-        "INSERT INTO magic_applyItems"
+        "INSERT IGNORE INTO magic_applyItems"
         "(item_id, title, options, publisher, auditor_list, isHide)"
         "VALUES (2, '变更组织架构', '用户组$部门$', 1, '100000;', 0);";
 
     if (res)
         res = query.exec(creatTableStr);
-    qDebug() << query.lastError().text();
     
 	//审批流程结果表
     creatTableStr =
@@ -276,10 +275,10 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "icon            tinyint(1)   NOT NUll,"
         "PRIMARY KEY (v_id)"
         ")ENGINE=InnoDB;"
-        "INSERT INTO magic_verifyList"
+        "INSERT IGNORE INTO magic_verifyList"
         "(v_id, verify_name, icon)"
         "VALUES (1, '个人认证', 0);"
-        "INSERT INTO magic_verifyList"
+        "INSERT IGNORE INTO magic_verifyList"
         "(v_id, verify_name, icon)"
         "VALUES (2, '机构认证', 1);";
     if (res)
@@ -348,14 +347,19 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "field_2       varchar(256)   NULL,"
         "field_3       varchar(128)   NULL,"
         "field_4       varchar(128)   NULL,"
-        "field_5       varchar(128)   NULL)"
-        "ENGINE=InnoDB;"
-        "INSERT INTO magic_system"
+        "field_5       varchar(128)   NULL,"
+        "PRIMARY KEY (sys_name)"
+        ")ENGINE=InnoDB;"
+        "INSERT IGNORE INTO magic_system"
         "(sys_name, field_3)"
         "VALUES ('announcement', 0);"
-        "INSERT INTO magic_system"
+        "INSERT IGNORE INTO magic_system"
         "(sys_name, field_1)"
-        "VALUES ('debug', 0);";
+        "VALUES ('debug', 0);"
+        "INSERT IGNORE INTO magic_system"
+        "(sys_name, field_1)"
+        "VALUES ('openChat', 1);";
+    
     if (res)
         res = query.exec(creatTableStr);
     //好友关系表
@@ -387,7 +391,6 @@ bool service::initDatabaseTables(QSqlDatabase db)
 
 int service::authAccount(QSqlDatabase& db, QString& uid, const long long account, const QString& pwd)
 {
-    db.open();
     QSqlQuery query(db), statistics(db);
 
     if (account == 0 || QString::number(account).isEmpty() || pwd.isEmpty())
