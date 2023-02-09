@@ -9,7 +9,18 @@ MsgService::MsgService(QObject *parent, int path)
 
 void MsgService::loadMsgMemList(QString uid)
 {
-	getMsgMem(uid);
+	DB.open();
+	QSqlQuery query(DB);
+	query.exec("SELECT * FROM magic_system WHERE sys_name='openChat';");
+	if (query.next())
+	{
+		QSqlRecord record = query.record();
+		isOpen = record.value("field_1").toBool();
+		if(isOpen)
+			getMsgMem(uid);
+	}
+	else
+		isOpen = false;
 	emit loadMsgMemListFinished();
 }
 
@@ -162,6 +173,11 @@ void MsgService::delFriend(const QString& me, const QString& member)
 	DB.close();
 
 	emit delFriendFinished(res);
+}
+
+bool MsgService::getIsOpen()
+{
+	return isOpen;
 }
 
 int MsgService::getMsgStackCnt(const QString& uid)

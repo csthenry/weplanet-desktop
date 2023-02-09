@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
+    <width>510</width>
     <height>570</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>510</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>530</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -26,12 +38,6 @@
   <layout class="QGridLayout" name="gridLayout_8">
    <item row="0" column="0">
     <widget class="QGroupBox" name="group_userInfo">
-     <property name="minimumSize">
-      <size>
-       <width>485</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="font">
       <font>
        <family>微软雅黑</family>

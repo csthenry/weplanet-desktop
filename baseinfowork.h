@@ -50,6 +50,7 @@ public:
 	int getVerifyTag();
     int getAnnouncementTag();
     bool getIsDebug();
+    bool getSys_isOpenChat();
     bool getSys_isAnnounceOpen();
     bool getSys_isTipsAnnounce();
     bool getSys_isDebugOpen();
@@ -57,6 +58,7 @@ public:
 	void setSys_isTipsAnnounce(bool arg);
 	void setSys_isDebugOpen(bool arg);
 	void setSys_announcementText(const QString& arg);
+    void setSys_openChat(bool arg);
     QString getSys_announcementText();
 
 private slots:
@@ -93,14 +95,14 @@ private:
     int announcementTag;
 	bool isDebug = false;
     QJsonObject panelSeriesObj, panelSeriesObj_half;
-    bool sys_isAnnounceOpen, sys_isTipsAnnounce, sys_isDebugOpen;
+    bool sys_isAnnounceOpen, sys_isTipsAnnounce, sys_isDebugOpen, sys_openChat;
     QString sys_announcementText;
 
 signals:
     void baseInfoFinished();
     void authRes(int);     //返回账号验证结果
     void autoAuthRes(int);
-    void signupRes(bool);   //返回注册结果
+	void signupRes(int);   //返回注册结果 100注册成功，101注册失败，102手机号已注册
     void authorityRes(QSqlRecord);    //返回账号权限鉴权结果
     void editPersonalInfoRes(int);  //个人信息修改结果：1修改成功（不包含密码），2修改成功（包含密码，需要注销），-1修改失败（旧密码验证失败）
     void initDatabaseFinished(bool);
