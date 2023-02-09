@@ -151,7 +151,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //检查更新
     updateSoftWare.moveToThread(sqlThread_SECOND);
 
-    //校验、更新本地时间
+    //校验、更新本地时间，本对象中curDateTime即为30分钟更新一次的网络时间
     if (!checkLocalTime())
         disableDynamicItems();
     currentTimeUpdate = new QTimer(this);
