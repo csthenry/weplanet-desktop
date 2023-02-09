@@ -77,13 +77,27 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->tableView_userManage->setItemDelegateForColumn(3, &comboxDelegateGender);
     ui->tableView_userManage->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_userManage));
 
-    //加载动画
-    avatarLoadMovie = new QMovie(":/images/img/Loading6.gif");
-    loadingMovie = new QMovie(":/images/img/Loading4.gif"); //:/images/color_icon/loading.gif
-    //ui->label_loading->setMovie(loadingMovie);
+    //加载动画（PNG序列）
+    loadingMovie = new QMovie(":/images/img/ae_loading.gif"); 
     loadingMovie->start();
-    avatarLoadMovie->start();
-
+    aeMovieTimer = new QTimer(this);
+    QDir aeDir("ae/loading");
+    QFileInfoList listInfo = aeDir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+    QStringList m_strListImg;
+    foreach(QFileInfo strFileInfo, listInfo) {
+        m_strListImg.append(strFileInfo.filePath());
+    }
+    connect(aeMovieTimer, &QTimer::timeout, this, [=]() {
+        static int cnt = 0;
+	    if (cnt >= m_strListImg.size())
+		    cnt = 0;
+        if(homeLoading)
+		    ui->label_homeStatus->setPixmap(QPixmap(m_strListImg.at(cnt++)));
+        if(settingLoading)
+            ui->label_loadingSettings->setPixmap(QPixmap(m_strListImg.at(cnt++)));
+		});
+    aeMovieTimer->start(25);
+    
     //心跳query
     refTimer = new QTimer(this);
     connect(refTimer, &QTimer::timeout, this, [=]()  {
@@ -252,7 +266,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         posterWork->setManageModel(noticeManageModel);
         posterWork->setModel(noticeModel);
 		
-        ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
+        //ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
+        homeLoading = true;
         emit startSetAuth(uid);
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
 		ui->label_homeLoading->setVisible(true);
@@ -273,7 +288,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 	connect(setBaseInfoWork, &baseInfoWork::loadSystemSettingsFinished, this, &MainWindow::setSystemSettings);
     connect(this, &MainWindow::saveSystemSettings, setBaseInfoWork, &baseInfoWork::saveSystemSettings);
     connect(setBaseInfoWork, &baseInfoWork::saveSystemSettingsFinished, this, [=](bool res) {
-        ui->label_loadingSettings->setMovie(&QMovie());
+        //ui->label_loadingSettings->setMovie(&QMovie());
+        settingLoading = false;
         if (res)
         {
             ui->label_loadingSettings->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
@@ -838,7 +854,6 @@ MainWindow::~MainWindow()
     msgPushTimer->stop();
     currentTimeUpdate->stop();
     loadingMovie->stop();
-    avatarLoadMovie->stop();
 
     delete config_ini;
 
@@ -846,7 +861,6 @@ MainWindow::~MainWindow()
     delete friendsWidget;
     delete friendInfoWidget;
     delete loadingMovie;
-    delete avatarLoadMovie;
     delete notice_page;
     delete c_channel;
     delete m_channel;
@@ -1046,7 +1060,8 @@ void MainWindow::setHomePageBaseInfo()
     }
 
 	//更新首页状态图标
-    ui->label_homeStatus->setMovie(&QMovie());
+    //ui->label_homeStatus->setMovie(&QMovie());
+    homeLoading = false;
     if (ui->label_homeVer->text() >= ui->label_LatestVersion->text())
         ui->label_homeStatus->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
     else
@@ -1133,7 +1148,8 @@ void MainWindow::on_actExit_triggered()
         formLoginWindow->send();    //发送信号
         resetUID();
         emit startSetAuth(uid);
-        ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
+        //ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
+        homeLoading = true;
         emit startBaseInfoWork();
         emit actHomeWorking();
         emit attendHomeChartWorking();
@@ -1159,7 +1175,8 @@ void MainWindow::on_actHome_triggered()
         sqlWork->stopThread();  //等待sqlWork暂停时再停止，避免数据库未连接
     else
         return;
-    ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
+    //ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
+    homeLoading = true;
     emit startBaseInfoWork();   //刷新首页数据
     emit attendHomeChartWorking();
     emit actHomeWorking();
@@ -1317,7 +1334,9 @@ void MainWindow::setStatisticsPanel(int option, int days)
 
 void MainWindow::setSystemSettings()
 {
-    ui->label_loadingSettings->setMovie(&QMovie());
+    //ui->label_loadingSettings->setMovie(&QMovie());
+    settingLoading = false;
+    ui->label_loadingSettings->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
     if (setBaseInfoWork->getSys_isAnnounceOpen())
         ui->rBtn_announceOpen->setChecked(true);
     else
@@ -2737,7 +2756,7 @@ void MainWindow::on_actRefresh_triggered()
     int index = ui->stackedWidget->currentIndex(); 
     switch (index)
     {
-    case 0: on_actHome_triggered(); break;
+    case 0: emit startBaseInfoWork(); emit attendHomeChartWorking(); emit actHomeWorking(); break;   //刷新首页数据
     case 1: on_actMyInfo_triggered(); break;
     case 2: emit loadMsgMemList(uid); break;
     case 3: emit activityManageWorking(); break;
@@ -2747,7 +2766,7 @@ void MainWindow::on_actRefresh_triggered()
     case 7: on_actAttendManager_triggered(); break;
     case 8: emit activityManageWorking(); break;
     case 9: emit loadApplyFormList(uid); break;
-    case 10: loadManagePageApplyItems(uid); break;
+    case 10: emit loadManagePageApplyItems(uid); break;
     case 11: on_actGroup_triggered(); break;
     case 14: emit posterWorking(); break;
     case 15: emit posterWorking(); break;
@@ -2764,7 +2783,8 @@ void MainWindow::on_actSettings_triggered()
     if (ui->groupBox_system->isEnabled())
     {
         emit loadSystemSettings();
-        ui->label_loadingSettings->setMovie(loadingMovie);
+        //ui->label_loadingSettings->setMovie(loadingMovie);
+		settingLoading = true;
     }
     ui->stackedWidget->setCurrentIndex(17);
 }
@@ -3424,7 +3444,8 @@ void MainWindow::on_btn_saveSysSettings_clicked()
     setBaseInfoWork->setSys_openChat(ui->rBtn_openChat->isChecked());
     setBaseInfoWork->setSys_announcementText(ui->textEdit_announcement->toPlainText());
 	
-    ui->label_loadingSettings->setMovie(loadingMovie);
+    //ui->label_loadingSettings->setMovie(loadingMovie);
+    settingLoading = true;
     emit saveSystemSettings();
 }
 

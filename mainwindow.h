@@ -70,11 +70,13 @@ private:
 
     Document m_content, c_content;
 
-    QTimer *refTimer, *msgPushTimer, *currentTimeUpdate;
+    QTimer *refTimer, *msgPushTimer, *currentTimeUpdate, *aeMovieTimer;
 
     QMovie *loadingMovie, *avatarLoadMovie;
     
     QMutex mutex;
+
+    bool homeLoading = false, settingLoading = false;   //用于加载动画判断
 
     bool dbStatus = true;
 
