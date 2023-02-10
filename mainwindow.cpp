@@ -1839,6 +1839,8 @@ void MainWindow::setApplyItemsUserPage()
             currentApplyFormID_user = applyFormId;
             ui->btn_submitApply->setEnabled(false);  //提交申请按钮
             ui->btn_cancelApply->setEnabled(true);  //撤销申请按钮
+            if(applyFormBtn->parentWidget() == ui->ApprovalDone_vLayout_)
+                ui->btn_cancelApply->setEnabled(false);  //撤销申请按钮
             ui->btn_setApplyToken->setEnabled(true);  //效验码按钮
 		    ui->label_ApplyItemTitle->setText("申请表 " + applyFormBtn->text());
             updateApplyItemProcess(1, applyFormId, applyItemsAuditorList[applyFormItemId].split(";", QString::SkipEmptyParts));
@@ -2023,7 +2025,6 @@ void MainWindow::updateApplyItemProcess(int type, QString apply_id, QList<QStrin
         {
             process->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             process->setIcon(QIcon(":/images/color_icon/approve.svg"));  //等待审核
-            ui->label_applyStatus->setText(QString("等待[%1]审核").arg(approvalWork->getAuditorName(auditor_uid)));
             if(isReject)
                 process->setIcon(QIcon(":/images/color_icon/color-delete.svg"));  //已终止
         }
@@ -2043,6 +2044,7 @@ void MainWindow::updateApplyItemProcess(int type, QString apply_id, QList<QStrin
                 isReject = false;
                 process->setIcon(QIcon(":/images/color_icon/approve_3.svg"));  //通过
             }
+            step++;
             //点击事件，输出审核意见
             connect(process, &QToolButton::clicked, this, [=]() {
                 infoWidget->setBoxTitle("审核结果");
@@ -2072,13 +2074,14 @@ void MainWindow::updateApplyItemProcess(int type, QString apply_id, QList<QStrin
         arrow->setPixmap(QPixmap(":/images/color_icon/arrow_right.svg"));
         user_processArrow.append(arrow);
         ui->ApplyProcess_Layout->addWidget(arrow);
-
-        step++;
     }
-    if (step - 1 == processResultList.count() && isReject == false)
+    if (type == 1 && step <= list.count())
+        ui->label_applyStatus->setText(QString("等待[%1]审核").arg(approvalWork->getAuditorName(list[step - 1])));
+    if (step > list.count() && isReject == false)
         ui->label_applyStatus->setText("审批流程已通过");
     else if(isReject)
-        ui->label_applyStatus->setText("审批流程已终止");
+        ui->label_applyStatus->setText("审批流程已终止（未通过）");
+
     if (!list.isEmpty())
     {
         QLabel* icon = new QLabel();
@@ -2087,8 +2090,12 @@ void MainWindow::updateApplyItemProcess(int type, QString apply_id, QList<QStrin
         icon->setScaledContents(true);
 		if (isReject)
 			icon->setPixmap(QPixmap(":/images/color_icon/color-delete.svg"));
-		else
+		else if(step > list.count())
 			icon->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
+        else
+            icon->setPixmap(QPixmap(":/images/color_icon/approve.svg"));
+        if(type == 0)
+            icon->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
         user_processArrow.append(icon);
         ui->ApplyProcess_Layout->addWidget(icon);
         ui->ApplyProcess_Layout->addStretch();

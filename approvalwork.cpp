@@ -154,7 +154,16 @@ void ApprovalWork::getUserPageApplyItems(const QString& uid)
 		stream << record.value("apply_id").toString() << record.value("uid").toString() << record.value("item_id").toString() << record.value("options").toString() << record.value("status").toString() << record.value("token").toString() << record.value("operate_time").toDateTime().toString("yyyy-MM-dd hh:mm:ss");
 		applyForms.push_back(array);
 		currentFormOptionsText.insert(record.value("apply_id").toString(), record.value("options").toString());
-		getApplyProcess(record.value("apply_id").toString(), record.value("item_id").toString());	//获取当前申请表审批进度
+		int new_status = getApplyProcess(record.value("apply_id").toString(), record.value("item_id").toString());	//获取当前申请表审批进度
+		if (QString::number(new_status) != record.value("status").toString())
+		{
+			//更新申请表状态
+			QByteArray array;
+			QDataStream stream(&array, QIODevice::WriteOnly);
+			applyForms.pop_back();
+			stream << record.value("apply_id").toString() << record.value("uid").toString() << record.value("item_id").toString() << record.value("options").toString() << QString::number(new_status) << record.value("token").toString() << record.value("operate_time").toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+			applyForms.push_back(array);
+		}
 	}
 	query.clear();
 	DB.close();
@@ -162,12 +171,12 @@ void ApprovalWork::getUserPageApplyItems(const QString& uid)
 	emit getUserPageApplyItemsFinished();
 }
 
-void ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_id)
+int ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_id)
 {
 	DB_SECOND.open();
 	QSqlQuery query(DB_SECOND);
 	currentProcess.clear();
-	int step = 0;	//已成功通过的流程
+	int step = 0, apply_status = 0;	//已成功通过的流程，申请表状态
 	for (auto uid : applyAuditorList[item_id])
 	{
 		QByteArray processOneStep;	//申请表流程中的一步
@@ -181,6 +190,7 @@ void ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_
 			if (record.value("result").toString() == "0")	//0为拒绝通过，流程终止
 			{
 				query.exec(QString("UPDATE magic_apply SET status=2 WHERE apply_id='%1'").arg(apply_id));	//将申请表状态改为已终止
+				apply_status = 2;
 				break;	//流程终止
 			}
 			step++;
@@ -188,12 +198,16 @@ void ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_
 		else
 			break;	//流程终止
 	}
-	if(step == applyAuditorList[item_id].count())
+	if (step == applyAuditorList[item_id].count())
+	{
 		query.exec(QString("UPDATE magic_apply SET status=1 WHERE apply_id='%1'").arg(apply_id));	//已通过
+		apply_status = 1;
+	}
 	applyFormsProcess.insert(apply_id, currentProcess);	//将所有已审核的步骤存入对应id键值
 	
 	query.clear();
 	DB_SECOND.close();
+	return apply_status;
 }
 
 void ApprovalWork::getManagePageAuditorList()

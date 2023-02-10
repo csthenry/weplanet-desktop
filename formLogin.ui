@@ -743,7 +743,7 @@ padding: 0px 5px;</string>
           </size>
          </property>
          <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
+          <enum>Qt::LeftToRight</enum>
          </property>
          <property name="text">
           <string>注     册</string>
@@ -839,9 +839,6 @@ padding: 0px 5px;</string>
          </property>
          <property name="text">
           <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="resource.qrc">:/images/color_icon/loading.gif</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>

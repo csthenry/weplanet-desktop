@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>17</number>
+       <number>10</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2123,8 +2123,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>300</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -2156,8 +2156,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -3937,8 +3937,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>519</height>
             </rect>
            </property>
            <property name="font">
@@ -3970,8 +3970,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -4003,8 +4003,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <attribute name="label">
@@ -4109,8 +4109,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1071</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="ApplyProcess_Layout">
@@ -4149,8 +4149,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>1069</width>
+                   <height>309</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_Layout">
@@ -7526,8 +7526,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -7559,8 +7559,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -7730,8 +7730,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1093</width>
+                   <height>283</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_manage_Layout">
@@ -7936,8 +7936,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>300</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -7969,8 +7969,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -8116,7 +8116,7 @@ padding: 0px 5px;</string>
               </size>
              </property>
              <property name="title">
-              <string>当前审批流程</string>
+              <string>当前项目审批流程</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_9">
               <item row="0" column="0">
@@ -8132,8 +8132,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1051</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="manageApplyProcess_Layout">
@@ -8306,43 +8306,6 @@ padding: 0px 5px;</string>
               </item>
               <item row="2" column="0">
                <layout class="QGridLayout" name="gridLayout_139">
-                <item row="0" column="1">
-                 <widget class="QPushButton" name="btn_manageApplyDelete">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>45</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>删除申请项目</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="resource.qrc">
-                    <normaloff>:/images/color_icon/color-trash.svg</normaloff>:/images/color_icon/color-trash.svg</iconset>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="3">
-                 <widget class="QPushButton" name="btn_reManageApplyProcess">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>45</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>重置审批流程</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="resource.qrc">
-                    <normaloff>:/images/color_icon/color-reply.svg</normaloff>:/images/color_icon/color-reply.svg</iconset>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="0">
                  <widget class="QPushButton" name="btn_manageApplyPublish">
                   <property name="enabled">
@@ -8363,8 +8326,11 @@ padding: 0px 5px;</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="4">
-                 <widget class="QPushButton" name="btn_reManageApplyOptions">
+                <item row="0" column="1">
+                 <widget class="QPushButton" name="btn_manageApplyDelete">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -8372,11 +8338,11 @@ padding: 0px 5px;</string>
                    </size>
                   </property>
                   <property name="text">
-                   <string>重置申请表单</string>
+                   <string>删除申请项目</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resource.qrc">
-                    <normaloff>:/images/color_icon/color-reply.svg</normaloff>:/images/color_icon/color-reply.svg</iconset>
+                    <normaloff>:/images/color_icon/color-trash.svg</normaloff>:/images/color_icon/color-trash.svg</iconset>
                   </property>
                  </widget>
                 </item>
@@ -8397,6 +8363,40 @@ padding: 0px 5px;</string>
                   <property name="icon">
                    <iconset resource="resource.qrc">
                     <normaloff>:/images/color_icon/refresh.svg</normaloff>:/images/color_icon/refresh.svg</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QPushButton" name="btn_reManageApplyOptions">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>重置申请表单</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resource.qrc">
+                    <normaloff>:/images/color_icon/color-reply.svg</normaloff>:/images/color_icon/color-reply.svg</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="4">
+                 <widget class="QPushButton" name="btn_reManageApplyProcess">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>重置审批流程</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resource.qrc">
+                    <normaloff>:/images/color_icon/color-reply.svg</normaloff>:/images/color_icon/color-reply.svg</iconset>
                   </property>
                  </widget>
                 </item>
@@ -8442,8 +8442,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>246</width>
+                   <height>267</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="manageApplyAuditorList_Layout">
