@@ -36,6 +36,7 @@ public:
     ~formLogin();
 
 private:
+    bool homeLoading = false, signInbuttonLoading = false, signUpbuttonLoading = false;    //加载动画判断
     bool isAutoLogin;
     bool isQuit = false;    //标记线程已停止
     int loginErrCnt = 0;
@@ -45,7 +46,8 @@ private:
     baseInfoWork *loginWork;
     QThread *sqlThread, *dbThread;
 
-    QMovie *loadingMovie, *loadingMovie_2;
+    QTimer *aeMovieTimer;
+    //QMovie *loadingMovie, *loadingMovie_2;
     QString readPwd;    //保存的密码
     QString loginUid;   //登录成功的uid
     void writeLoginSettings();

@@ -28,7 +28,7 @@ public:
 	void getUserPageApplyItems(const QString& uid);
 	void getManagePageAuditorList();	//获取具有审核权限的人员列表
 	void getAllApplyFormList(const QString& uid);	//获取审批队列供管理员审核
-	void getApplyProcess(const QString& apply_id, const QString& item_id);
+	int getApplyProcess(const QString& apply_id, const QString& item_id);	//返回最新申请表状态
 	void addOrModifyApplyItem(int type, QByteArray array);	//0新增或1修改申请项 ByteArray 标题->选项->发布者->流程->isHide
 	QByteArray getSimpleApplyItems(const QString& item_id);
 	QList<QByteArray> getApplyFormList();

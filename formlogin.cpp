@@ -43,22 +43,29 @@ formLogin::formLogin(QDialog *parent) :
     //ui->mainIcon->setPixmap(mainicon);
     //ui->labelIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
 
-    //加载动画
-    loadingMovie = new QMovie(":/images/color_icon/loading.gif");
-    loadingMovie_2 = new QMovie(":/images/color_icon/loading.gif");
-    connect(loadingMovie_2, &QMovie::frameChanged, this, [=](int tmp)
-        {
-            Q_UNUSED(tmp);
-            ui->labelIcon->setPixmap(loadingMovie_2->currentPixmap());
+    //加载动画（PNG序列）
+    aeMovieTimer = new QTimer(this);
+    QDir aeDir("ae/loading");
+    QFileInfoList listInfo = aeDir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+    QStringList m_strListImg;
+    foreach(QFileInfo strFileInfo, listInfo) {
+        m_strListImg.append(strFileInfo.filePath());
+    }
+    connect(aeMovieTimer, &QTimer::timeout, this, [=]() {
+        static int cnt = 0;
+        if (cnt >= m_strListImg.size())
+            cnt = 0;
+        qDebug() << "Ok" << homeLoading;
+        if (homeLoading)
+            ui->labelIcon->setPixmap(QPixmap(m_strListImg.at(cnt)));
+        if (signInbuttonLoading)
+            ui->btn_Login->setIcon(QIcon(QPixmap(m_strListImg.at(cnt))));
+        if (signUpbuttonLoading)
+            ui->btn_Signup->setIcon(QIcon(QPixmap(m_strListImg.at(cnt))));
+        cnt++;
         });
-    connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
-        {
-            Q_UNUSED(tmp);
-            ui->btn_Login->setIcon(QIcon(loadingMovie->currentPixmap()));
-			ui->btn_Signup->setIcon(QIcon(loadingMovie->currentPixmap()));
-        });
-    loadingMovie_2->start();
-    ui->labelIcon->setMovie(loadingMovie_2);
+    aeMovieTimer->start(25);
+    homeLoading = true;
 
     //多线程相关
     sqlWork = new SqlWork("loginDB");    //sql异步连接
@@ -108,7 +115,8 @@ formLogin::formLogin(QDialog *parent) :
         {
             if (!isDebug)
             {
-                loadingMovie->start();
+                //loadingMovie->start();
+                signInbuttonLoading = true;
                 emit autoLoginAuthAccount(ui->lineEdit_Uid->text().toLongLong(), readPwd);
             }
         }
@@ -157,13 +165,9 @@ formLogin::~formLogin()
     //在此处等待所有线程停止
     if (!isQuit)
         beforeAccept();
-    loadingMovie->stop();
-    loadingMovie_2->stop();
 
     delete config_ini;
 
-    delete loadingMovie;
-    delete loadingMovie_2;
     delete ui;
     delete updateSoftWare;
     delete loginWork;
@@ -284,11 +288,13 @@ void formLogin::on_btn_Login_clicked()
             text = input.textValue();
         }
         loginErrCnt--;
-        loadingMovie->start();
+        //loadingMovie->start();
+        signInbuttonLoading = true;
         emit authAccount(ui->lineEdit_Uid->text().toLongLong(), pwd, service::pwdEncrypt(ui->lineEdit_Pwd->text()));
         return;
     }
-    loadingMovie->start();
+    //loadingMovie->start();
+    signInbuttonLoading = true;
     emit authAccount(ui->lineEdit_Uid->text().toLongLong(), pwd, service::pwdEncrypt(ui->lineEdit_Pwd->text()));
 }
 
@@ -330,13 +336,15 @@ void formLogin::on_btn_Signup_clicked()
         QMessageBox::warning(this, "警告", "注册失败，请输入6~16位的密码以确保安全。", QMessageBox::Ok);
         return;
     }
-    loadingMovie->start();
+    //loadingMovie->start();
+    signUpbuttonLoading = true;
     emit signUp(ui->lineEdit_SignupPwd->text(), ui->lineEdit_SignupName->text(), ui->lineEdit_SignupTel->text(), ui->comBox_gender->currentText());
 }
 
 void formLogin::on_signUpFinished(int res)
 {
-    loadingMovie->stop();
+    //loadingMovie->stop();
+    signUpbuttonLoading = false;
     ui->btn_Signup->setIcon(QIcon());
     ui->btn_Login->setIcon(QIcon());
     if(res == 100)
@@ -366,7 +374,8 @@ void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)
 
 void formLogin::on_statusChanged(const bool status)
 {
-    loadingMovie_2->stop();
+    //loadingMovie_2->stop();
+    homeLoading = false;
     ui->btn_Login->setEnabled(status);
     ui->btn_Signup->setEnabled(status);
     if(status)
@@ -393,9 +402,10 @@ void formLogin::on_authAccountRes(int res)
     }
     else
     {
-        loadingMovie->stop();
+        //loadingMovie->stop();
+        signInbuttonLoading = false;
         ui->btn_Signup->setIcon(QIcon());
-        ui->btn_Login->setIcon(QIcon());
+        ui->btn_Login->setIcon(QIcon(":/images/color_icon/arrow_up_2.svg"));
         if (res == 403)
         {
             QMessageBox::warning(this, "登录失败", "错误代码：403\n用户验证失败，请检查用户名（UID）和密码。", QMessageBox::Yes);
@@ -424,7 +434,8 @@ void formLogin::on_autoLoginAuthAccountRes(int res)
     {
         autoLoginSuccess = false;
         ui->checkBox_autoLogin->setCheckable(false);
-        loadingMovie->stop();
+        //loadingMovie->stop();
+        signInbuttonLoading = false;
         ui->btn_Signup->setIcon(QIcon());
         ui->btn_Login->setIcon(QIcon());
         if (res == 403)
