@@ -92,9 +92,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 	    if (cnt >= m_strListImg.size())
 		    cnt = 0;
         if(homeLoading)
-		    ui->label_homeStatus->setPixmap(QPixmap(m_strListImg.at(cnt++)));
+		    ui->label_homeStatus->setPixmap(QPixmap(m_strListImg.at(cnt)));
+
         if(settingLoading)
-            ui->label_loadingSettings->setPixmap(QPixmap(m_strListImg.at(cnt++)));
+            ui->label_loadingSettings->setPixmap(QPixmap(m_strListImg.at(cnt)));
+        if(msgSending)
+            ui->label_send->setPixmap(QPixmap(m_strListImg.at(cnt)));
+        cnt++;
 		});
     aeMovieTimer->start(25);
     
@@ -641,7 +645,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(msgService, &MsgService::pusher, this, &MainWindow::msgPusher);
     connect(this, &MainWindow::delFriend, msgService, &MsgService::delFriend);
     connect(msgService, &MsgService::sendMessageFinished, [=](bool res) {
-        ui->label_send->setMovie(&QMovie());
+        msgSending = false;
         if (res)
         {
             ui->label_send->setPixmap(QPixmap(":/images/color_icon/approve_3.svg"));
@@ -1575,7 +1579,10 @@ void MainWindow::setApplyListManagePage()
                 if (textEdit != nullptr)
                 {
                     textEdit->setReadOnly(true);
-                    textEdit->setPlainText(QString("%1：%2").arg(currentFormOptionsList[i], applyText[i]));
+                    if (i < applyText.count())
+                        textEdit->setPlainText(QString("%1：%2").arg(currentFormOptionsList[i], applyText[i]));
+                    else
+                        textEdit->setPlainText(QString("%1：[由于审批流程已更改，该字段申请人暂未填写]").arg(currentFormOptionsList[i]));
                     i++;
                 }
             }
@@ -1612,7 +1619,10 @@ void MainWindow::setApplyListManagePage()
                 if (textEdit != nullptr)
                 {
                     textEdit->setReadOnly(true);
-                    textEdit->setPlainText(QString("%1：%2").arg(currentFormOptionsList[i], applyText[i]));
+                    if (i < applyText.count())
+                        textEdit->setPlainText(QString("%1：%2").arg(currentFormOptionsList[i], applyText[i]));
+                    else 
+                        textEdit->setPlainText(QString("%1：[由于审批流程已更改，该字段申请人暂未填写]").arg(currentFormOptionsList[i]));
                     i++;
                 }
             }
@@ -1842,7 +1852,10 @@ void MainWindow::setApplyItemsUserPage()
                 if (textEdit != nullptr)
                 {
                     textEdit->setReadOnly(true);
-                    textEdit->setPlainText(QString("%1：%2").arg(applyOptions[i], applyText[i]));
+                    if (i < applyText.count())
+                        textEdit->setPlainText(QString("%1：%2").arg(applyOptions[i], applyText[i]));
+                    else
+                        textEdit->setPlainText(QString("%1：[由于审批流程已更改，该字段申请人暂未填写]").arg(applyOptions[i]));
                     i++;
                 }
             }
@@ -1944,9 +1957,9 @@ void MainWindow::updateApplyItemOptions(int type, QList<QString> list)
 	for (auto item : list)
 	{
 		QTextEdit* textEdit = new QTextEdit();
-        textEdit->setPlaceholderText(QString("请输入%1...").arg(item));
         if (type == 0)
         {
+            textEdit->setPlaceholderText(QString("请输入%1...").arg(item));
             textEdit->setMinimumSize(ui->scrollArea_applyForm->width() - 22, 100);
             textEdit->setMaximumSize(ui->scrollArea_applyForm->width() - 22, 100);
             applyItemOptions_textEdit.push_back(textEdit);
@@ -3991,7 +4004,8 @@ void MainWindow::on_btn_sendMsg_clicked()
     QDataStream stream(&array, QIODevice::WriteOnly);
     //QDateTime curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());   //获取网络时间
     stream << uid << sendToUid << msgText << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
-    ui->label_send->setMovie(loadingMovie);
+    //ui->label_send->setMovie(loadingMovie);
+    msgSending = true;
     emit sendMessage(array);
     isSending = true;   //消息发送中...
 
