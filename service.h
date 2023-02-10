@@ -21,6 +21,7 @@
 #include <QCryptographicHash>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <./smtp/SmtpMime>  //邮件服务
 
 class service
 {
@@ -48,7 +49,7 @@ public:
 
     static QString getDepartment(QSqlDatabase& db, const QString& uid);
 
-    //static void buildAttendChart(QChartView* chartView_attend, const QWidget* parent, const QFont& font, int data_1, int data_2, int data_3, int data_4);函数已废弃
+    static int sendMail(const QList<QString> smtp_config, const QString& mailto, const QString& title, const QString& mailtext);
 
     service();
 

@@ -27,6 +27,7 @@ public:
     void loadStatisticsPanel();
     void loadSystemSettings();
     void saveSystemSettings();
+    void saveSmtpSettings(const QString& add, const QString& user, const QString& password);
     void getAnnouncement();
     QJsonObject getPanelSeriesObj(int type);
 
@@ -59,7 +60,9 @@ public:
 	void setSys_isDebugOpen(bool arg);
 	void setSys_announcementText(const QString& arg);
     void setSys_openChat(bool arg);
+    void setSmtp_isNewConfig(bool arg);
     QString getSys_announcementText();
+    QList<QString> getSmtpConfig();
 
 private slots:
     void autoAuthAccount(const long long account, const QString& pwd);
@@ -68,6 +71,7 @@ private slots:
     void signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender);
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
 private:
+    bool smtp_isNewConfig = false;  //smtp配置已更新
     bool isAttend;
     QDateTime curDateTime;
     service db_service;
@@ -97,6 +101,7 @@ private:
     QJsonObject panelSeriesObj, panelSeriesObj_half;
     bool sys_isAnnounceOpen, sys_isTipsAnnounce, sys_isDebugOpen, sys_openChat;
     QString sys_announcementText;
+    QList<QString> smtp_config;  //smtp配置，0地址、1用户、2密码 
 
 signals:
     void baseInfoFinished();
@@ -111,6 +116,7 @@ signals:
 	void getAnnouncementFinished(bool);
     void loadSystemSettingsFinished(bool);
     void saveSystemSettingsFinished(bool);
+    void saveSmtpSettingsFinished(bool);
 };
 
 #endif // BASEINFOWORK_H

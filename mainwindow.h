@@ -71,12 +71,10 @@ private:
     Document m_content, c_content;
 
     QTimer *refTimer, *msgPushTimer, *currentTimeUpdate, *aeMovieTimer;
-
-    QMovie *loadingMovie, *avatarLoadMovie;
     
     QMutex mutex;
 
-    bool homeLoading = false, settingLoading = false, msgSending = false;   //用于加载动画判断
+    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting, qqAvatarBinding = false;   //用于加载动画判断
 
     bool dbStatus = true;
 
@@ -545,6 +543,8 @@ private slots:
 
     void on_btn_authApplyToken_clicked();
 
+    void on_btn_smtpSave_clicked();
+
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
 
     void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
@@ -661,6 +661,8 @@ signals:
     void getApplyToken(const QString& id);
 
     void authApplyToken(const QString& token);
+
+    void saveSmtpSettings(const QString& add, const QString& user, const QString& password);
 private:
     Ui::MainWindow *ui;
 };

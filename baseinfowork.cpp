@@ -61,7 +61,17 @@ void baseInfoWork::loadBaseInfoWorking()
 		verifyType = "";
         verifyInfo = "";
     }
-	
+    if (smtp_config.isEmpty() || smtp_isNewConfig)
+    {
+        query.exec("SELECT * FROM magic_system WHERE sys_name='smtp';");
+        if (query.next() && !query.value("field_1").toString().isEmpty())
+        {
+            smtp_config.clear();
+            smtp_config.push_back(query.value("field_1").toString());
+            smtp_config.push_back(query.value("field_2").toString());
+            smtp_config.push_back(query.value("field_3").toString());
+        }
+    }
     query.clear();
     DB.close();
 
@@ -469,6 +479,17 @@ void baseInfoWork::saveSystemSettings()
 	emit saveSystemSettingsFinished(res);
 }
 
+void baseInfoWork::saveSmtpSettings(const QString& add, const QString& user, const QString& password)
+{
+    bool res;
+    DB.open();
+    QSqlQuery query(DB);
+    res = query.exec(QString("UPDATE magic_system SET field_1='%1', field_2='%2', field_3='%3' WHERE sys_name='smtp'").arg(add, user, password));
+    query.clear();
+    DB.close();
+    emit saveSmtpSettingsFinished(res);
+}
+
 QJsonObject baseInfoWork::getPanelSeriesObj(int type)
 {
     return type == 1 ? panelSeriesObj : panelSeriesObj_half;
@@ -589,9 +610,19 @@ void baseInfoWork::setSys_openChat(bool arg)
     sys_openChat = arg;
 }
 
+void baseInfoWork::setSmtp_isNewConfig(bool arg)
+{
+    smtp_isNewConfig = true;
+}
+
 QString baseInfoWork::getSys_announcementText()
 {
     return sys_announcementText;
+}
+
+QList<QString> baseInfoWork::getSmtpConfig()
+{
+    return smtp_config;
 }
 
 QPixmap baseInfoWork::loadAvatar(const QString &url)
