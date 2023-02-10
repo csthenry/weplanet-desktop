@@ -78,8 +78,6 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->tableView_userManage->setItemDelegate(new QSqlRelationalDelegate(ui->tableView_userManage));
 
     //加载动画（PNG序列）
-    loadingMovie = new QMovie(":/images/img/ae_loading.gif"); 
-    loadingMovie->start();
     aeMovieTimer = new QTimer(this);
     QDir aeDir("ae/loading");
     QFileInfoList listInfo = aeDir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
@@ -98,6 +96,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->label_loadingSettings->setPixmap(QPixmap(m_strListImg.at(cnt)));
         if(msgSending)
             ui->label_send->setPixmap(QPixmap(m_strListImg.at(cnt)));
+        if(personalSubmitting)
+            ui->btn_personalSubmit->setIcon(QPixmap(m_strListImg.at(cnt)));
+        if(qqAvatarBinding)
+            ui->btn_getQQAvatar->setIcon(QPixmap(m_strListImg.at(cnt)));
         cnt++;
 		});
     aeMovieTimer->start(25);
@@ -291,6 +293,16 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 	connect(this, &MainWindow::loadSystemSettings, setBaseInfoWork, &baseInfoWork::loadSystemSettings);
 	connect(setBaseInfoWork, &baseInfoWork::loadSystemSettingsFinished, this, &MainWindow::setSystemSettings);
     connect(this, &MainWindow::saveSystemSettings, setBaseInfoWork, &baseInfoWork::saveSystemSettings);
+    connect(this, &MainWindow::saveSmtpSettings, setBaseInfoWork, &baseInfoWork::saveSmtpSettings);
+    connect(setBaseInfoWork, &baseInfoWork::saveSmtpSettingsFinished, this, [=](bool res) {
+        if (res)
+        {
+            setBaseInfoWork->setSmtp_isNewConfig(true);
+            QMessageBox::information(this, "提示", "SMTP配置保存成功，重启程序以载入最新SMTP配置。");
+        }
+        else
+            QMessageBox::warning(this, "警告", "SMTP配置保存失败。");
+        });
     connect(setBaseInfoWork, &baseInfoWork::saveSystemSettingsFinished, this, [=](bool res) {
         //ui->label_loadingSettings->setMovie(&QMovie());
         settingLoading = false;
@@ -345,12 +357,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(setBaseInfoWork, SIGNAL(editPersonalInfoRes(int)), this, SLOT(on_editPersonalInfoRes(int)));
     connect(this, &MainWindow::bindQQAvatar, setBaseInfoWork, &baseInfoWork::bindQQAvatar);
     connect(setBaseInfoWork, &baseInfoWork::bindQQAvatarFinished, this, [=](int tag)
-    {
-    	disconnect(loadingMovie, &QMovie::frameChanged, this, 0);
+        {
+        qqAvatarBinding = false;
     	ui->btn_getQQAvatar->setIcon(QIcon(QPixmap(":/images/color_icon/user.svg")));
     	if (tag == 1)
     	{
-            ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
     		emit startBaseInfoWork();      //刷新个人信息
     		QMessageBox::information(this, "消息", "QQ头像绑定成功，你的头像将会随QQ头像更新。", QMessageBox::Ok);
     	}
@@ -477,10 +488,6 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::attendManageModelSubmitAll, attendManageWork, &AttendManageWork::submitAll);
     connect(this, &MainWindow::attendDataOperate, attendManageWork, &AttendManageWork::dataOperate);
     connect(attendManageWork, &AttendManageWork::dataOperateFinished, this, [=](bool res) {
-        disconnect(loadingMovie, &QMovie::frameChanged, this, 0);
-        ui->btn_oneMonth->setIcon(QIcon());
-        ui->btn_threeMonth->setIcon(QIcon());
-        ui->btn_removeAll->setIcon(QIcon(":/images/color_icon/color-warning_2.svg"));
         if (res)
         {
             QMessageBox::information(this, "消息", "考勤数据更新完成，页面即将刷新。", QMessageBox::Ok);
@@ -857,14 +864,12 @@ MainWindow::~MainWindow()
     refTimer->stop();
     msgPushTimer->stop();
     currentTimeUpdate->stop();
-    loadingMovie->stop();
 
     delete config_ini;
 
     delete infoWidget;
     delete friendsWidget;
     delete friendInfoWidget;
-    delete loadingMovie;
     delete notice_page;
     delete c_channel;
     delete m_channel;
@@ -1358,6 +1363,14 @@ void MainWindow::setSystemSettings()
     else
         ui->rBtn_closeChat->setChecked(true);
     ui->textEdit_announcement->setText(setBaseInfoWork->getSys_announcementText());
+
+    //smtp
+    if (setBaseInfoWork->getSmtpConfig().count() == 3)
+    {
+        ui->lineEdit_smtpAdd->setText(setBaseInfoWork->getSmtpConfig().at(0));
+		ui->lineEdit_smtpUser->setText(setBaseInfoWork->getSmtpConfig().at(1));
+        ui->lineEdit_smtpPwd->setText("**********");
+    }
 }
 
 void MainWindow::setMsgPage()
@@ -3652,14 +3665,7 @@ void MainWindow::on_btn_oneMonth_clicked()
     QMessageBox::StandardButton res;
     res = QMessageBox::warning(this, "警告", "确认仅保留所有用户一个月考勤数据吗？", QMessageBox::Yes | QMessageBox::No);
     if (res == QMessageBox::Yes)
-    {
-        connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
-            {
-                Q_UNUSED(tmp);
-                ui->btn_oneMonth->setIcon(QIcon(loadingMovie->currentPixmap()));
-            });
         emit attendDataOperate(1);
-    }
 }
 
 void MainWindow::on_btn_threeMonth_clicked()
@@ -3667,14 +3673,7 @@ void MainWindow::on_btn_threeMonth_clicked()
     QMessageBox::StandardButton res;
     res = QMessageBox::warning(this, "警告", "确认仅保留所有用户三个月考勤数据吗？", QMessageBox::Yes | QMessageBox::No);
     if (res == QMessageBox::Yes)
-    {
-        connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
-            {
-                Q_UNUSED(tmp);
-                ui->btn_threeMonth->setIcon(QIcon(loadingMovie->currentPixmap()));
-            });
         emit attendDataOperate(2);
-    }
 }
 
 void MainWindow::on_btn_removeAll_clicked()
@@ -3682,14 +3681,7 @@ void MainWindow::on_btn_removeAll_clicked()
     QMessageBox::StandardButton res;
     res = QMessageBox::warning(this, "警告", "确认清除所有用户考勤数据吗？该操作不可逆，请谨慎操作。", QMessageBox::Yes | QMessageBox::No);
     if (res == QMessageBox::Yes)
-    {
-        connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
-            {
-                Q_UNUSED(tmp);
-                ui->btn_removeAll->setIcon(QIcon(loadingMovie->currentPixmap()));
-            });
         emit attendDataOperate(3);
-    }
 }
 
 void MainWindow::on_comboBox_department_currentIndexChanged(const QString &arg1)
@@ -3903,6 +3895,16 @@ void MainWindow::on_btn_switchChart_clicked()
     }
 }
 
+void MainWindow::on_btn_smtpSave_clicked()
+{
+    if (ui->lineEdit_smtpPwd->text() == "**********")
+        return;
+    if (!ui->lineEdit_smtpAdd->text().isEmpty() && !ui->lineEdit_smtpUser->text().isEmpty() && !ui->lineEdit_smtpPwd->text().isEmpty())
+        emit saveSmtpSettings(ui->lineEdit_smtpAdd->text(), ui->lineEdit_smtpUser->text(), ui->lineEdit_smtpPwd->text());
+    else
+        QMessageBox::warning(this, "消息", "请填写完整的SMTP服务信息。", QMessageBox::Ok);
+}
+
 void MainWindow::on_btn_personalSubmit_clicked()
 {
     QString newPwd, newTel, newMail, newAvatar;
@@ -3931,17 +3933,46 @@ void MainWindow::on_btn_personalSubmit_clicked()
         QMessageBox::warning(this, "警告", "请输入6~16位的密码以确保安全。", QMessageBox::Ok);
         return;
     }
-    connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
+    personalSubmitting = true;
+    //修改邮箱时还需填写邮箱验证码
+    if (!ui->lineEdit_personalMail->text().isEmpty())
+    {
+        qsrand(curDateTime.time().msec() + curDateTime.time().second() * 1000);
+        QString tmpKey = QString::number(qrand() % 89999 + 10000);    //产生随机验证码
+        int smtp_rescode = service::sendMail(setBaseInfoWork->getSmtpConfig(), ui->lineEdit_personalMail->text(), QString("WePlanet 邮件验证"), QString("你的验证码为：%1").arg(tmpKey));
+        if (smtp_rescode != 1)
         {
-            Q_UNUSED(tmp);
-            ui->btn_personalSubmit->setIcon(QIcon(loadingMovie->currentPixmap()));
-        });
+			QMessageBox::warning(this, "警告", "邮件发送失败，请检查邮箱是否正确或联系管理员检查SMTP配置。", QMessageBox::Ok);
+            personalSubmitting = false;
+            ui->btn_personalSubmit->setIcon(QIcon());
+			return;
+		}
+        QInputDialog input(this);
+        input.setFont(HarmonyOS_Font);
+        input.setWindowTitle("WePlanet 邮件验证");
+        input.setLabelText(QString("已向邮箱[%1]发送验证码，请查看后输入验证码：").arg(ui->lineEdit_personalMail->text()));
+        input.setTextEchoMode(QLineEdit::Normal);
+        bool res = input.exec();
+        QString text = input.textValue();
+        if (!res || text != tmpKey)
+        {
+            QMessageBox::warning(this, "警告", "验证码错误。", QMessageBox::Ok);
+            personalSubmitting = false;
+            ui->btn_personalSubmit->setIcon(QIcon());
+			return;
+        }
+        else
+        {
+            emit editPersonalInfo(ui->lineEdit_checkOldPwd->text(), newTel, newMail, newAvatar, newPwd);
+            return;
+        }
+    }
     emit editPersonalInfo(ui->lineEdit_checkOldPwd->text(), newTel, newMail, newAvatar, newPwd);
 }
 
 void MainWindow::on_editPersonalInfoRes(int res)
 {
-    disconnect(loadingMovie, &QMovie::frameChanged, this, 0);
+    personalSubmitting = false;
     ui->btn_personalSubmit->setIcon(QIcon());
     if(res == -1)
     {
@@ -3963,12 +3994,12 @@ void MainWindow::on_editPersonalInfoRes(int res)
 
 void MainWindow::on_btn_getQQAvatar_clicked()
 {
-    connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
-        {
-            Q_UNUSED(tmp);
-            ui->btn_getQQAvatar->setIcon(QIcon(loadingMovie->currentPixmap()));
-        });
-
+    //connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
+    //    {
+    //        Q_UNUSED(tmp);
+    //        ui->btn_getQQAvatar->setIcon(QIcon(loadingMovie->currentPixmap()));
+    //    });
+    qqAvatarBinding = true;
     emit bindQQAvatar(ui->label_info_mail->text());
 }
 
@@ -4338,12 +4369,16 @@ void MainWindow::initToolbar(QSqlRecord rec)
         actionList[6]->setVisible(false);
         ui->groupBox_system->setEnabled(false);
         ui->groupBox_system->setVisible(false);
+        ui->scrollArea_smtp->setEnabled(false);
+        ui->scrollArea_smtp->setVisible(false);
     }
     else {
         actionList[6]->setEnabled(true);
         actionList[6]->setVisible(true);
         ui->groupBox_system->setEnabled(true);
         ui->groupBox_system->setVisible(true);
+        ui->scrollArea_smtp->setEnabled(true);
+        ui->scrollArea_smtp->setVisible(true);
     }
     if (rec.value("notice_manage").toString() == '0')
     {

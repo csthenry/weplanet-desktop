@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "***************";
+    dataBasePassword = "*************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -358,7 +358,10 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "VALUES ('debug', 0);"
         "INSERT IGNORE INTO magic_system"
         "(sys_name, field_1)"
-        "VALUES ('openChat', 1);";
+        "VALUES ('openChat', 1);"
+        "INSERT IGNORE INTO magic_system"
+        "(sys_name)"
+        "VALUES ('smtp');";
     
     if (res)
         res = query.exec(creatTableStr);
@@ -576,54 +579,38 @@ QString service::getDepartment(QSqlDatabase& db, const QString& uid)
         return "--";
     return query.value("dpt_name").toString();
 }
-//函数已废弃
-/*
-void service::buildAttendChart(QChartView *chartView_attend, const QWidget *parent, const QFont &font, int data_1, int data_2, int data_3, int data_4)
+int service::sendMail(const QList<QString> smtp_config, const QString& mailto, const QString& title, const QString& mailtext)
 {
-    QChart* attendChart = new QChart();
-	QChart* oldChart = chartView_attend->chart();
+    qDebug() << smtp_config;
+    if(smtp_config.count() != 3)
+        return -1;
+    SmtpClient smtp(smtp_config[0], 465, SmtpClient::SslConnection);
+    MimeMessage message;
+    message.setSender(EmailAddress(smtp_config[1], "WePlanet"));
+    message.addRecipient(EmailAddress(mailto, "WePlanet 用户"));
+    message.setSubject(title);
 
-    chartView_attend->setChart(attendChart);
-    chartView_attend->setRenderHint(QPainter::Antialiasing);
+    MimeText text;
+    text.setText(mailtext);
+    message.addPart(&text);
 
-    if (oldChart != nullptr)
-    {
-        delete oldChart;
-        oldChart = nullptr;
+    smtp.connectToHost();
+    if (!smtp.waitForReadyConnected()) {
+        qDebug() << "Failed to connect to host!";
+        return -1;
     }
 
-    attendChart->setTitle("工作时长统计（作息时间很不错~）");
-    attendChart->setAnimationOptions(QChart::SeriesAnimations);
-    QPieSeries *series = new QPieSeries(attendChart); //创建饼图序列
-    series->setHoleSize(0.1);   //饼图空心大小
-    //添加分块数据 6- 6-8 8-10 10+
-    series->append("4h以下", data_1); //添加一个饼图分块数据,标签，数值
-    series->append("4~6h", data_2);
-    series->append("6~8h", data_3);
-    series->append("8h以上", data_4);
-
-	//设置每个分块的标签文字
-    for(int i = 0; i < 4; i++)
-    {
-        QPieSlice* slice = series->slices().at(i);  //获取分块
-        slice->setLabel(slice->label() + QString::asprintf(":%.0f次", slice->value()));    //设置分块的标签
-        //信号与槽函数关联，鼠标落在某个分块上时，此分块弹出
-        slice->setLabelFont(font);
-        slice->setLabelVisible(true);
-        if(slice->value() < 1)
-            slice->setLabelVisible(false);  //过小就不显示label
-        parent->connect(slice, SIGNAL(hovered(bool)), parent, SLOT(on_PieSliceHighlight(bool)));
+    smtp.login(smtp_config[1], smtp_config[2]);
+    if (!smtp.waitForAuthenticated()) {
+        qDebug() << "Failed to login!";
+        return -2;
     }
-    //series->setLabelsVisible(true); //只影响当前的slices，必须添加完slice之后再设置
-    attendChart->addSeries(series); //添加饼图序列
 
-    if(series->slices().at(0)->percentage() > (series->slices().at(1)->percentage() + series->slices().at(2)->percentage()))
-        attendChart->setTitle("工作时长统计（需要再勤奋一点哦！）");
-    if(series->slices().at(3)->percentage() > (series->slices().at(1)->percentage() + series->slices().at(2)->percentage()))
-        attendChart->setTitle("工作时长统计（要注意休息哦，身体最重要~）");
-    attendChart->legend()->setFont(font);
-    attendChart->setTitleFont(font);
-    attendChart->legend()->setVisible(true); //图例
-    attendChart->legend()->setAlignment(Qt::AlignBottom);
+    smtp.sendMail(message);
+    if (!smtp.waitForMailSent()) {
+        qDebug() << "Failed to send mail!";
+        return -3;
+    }
+    smtp.quit();
+    return 1;
 }
-*/

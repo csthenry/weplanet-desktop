@@ -55,7 +55,6 @@ formLogin::formLogin(QDialog *parent) :
         static int cnt = 0;
         if (cnt >= m_strListImg.size())
             cnt = 0;
-        qDebug() << "Ok" << homeLoading;
         if (homeLoading)
             ui->labelIcon->setPixmap(QPixmap(m_strListImg.at(cnt)));
         if (signInbuttonLoading)
@@ -272,7 +271,7 @@ void formLogin::on_btn_Login_clicked()
     {
         curTime = QTime::currentTime();
         qsrand(curTime.msec() + curTime.second() * 1000);
-        QString tmpKey = QString::number(qrand() % 8999 + 1000);    //产生随机验证码(1000~9999)
+        QString tmpKey = QString::number(qrand() % 89999 + 10000);    //产生随机验证码(100000~999998)
         input.setLabelText("你尝试登录的失败次数过多，请输入验证码：" + tmpKey);
         input.setTextValue("");
         bool res = input.exec();
@@ -281,7 +280,7 @@ void formLogin::on_btn_Login_clicked()
         {
             curTime = QTime::currentTime();
             qsrand(curTime.msec() + curTime.second() * 1000);
-            tmpKey = QString::number(qrand() % 8999 + 1000);    //产生随机验证码(1000~9999)
+            tmpKey = QString::number(qrand() % 89999 + 10000);    //产生随机验证码
             input.setLabelText("验证码错误，请重新输入验证码：" + tmpKey);
             input.setTextValue("");
             res = input.exec();

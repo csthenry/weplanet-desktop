@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>10</number>
+       <number>17</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2123,8 +2123,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -2156,8 +2156,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -3937,8 +3937,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>280</width>
-             <height>519</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -3970,8 +3970,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -4003,8 +4003,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <attribute name="label">
@@ -4109,8 +4109,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1071</width>
-                   <height>83</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="ApplyProcess_Layout">
@@ -4149,8 +4149,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1069</width>
-                   <height>309</height>
+                   <width>98</width>
+                   <height>28</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_Layout">
@@ -7526,8 +7526,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>280</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -7559,8 +7559,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -7730,8 +7730,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1093</width>
-                   <height>283</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_manage_Layout">
@@ -7936,8 +7936,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -7969,8 +7969,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -8132,8 +8132,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1051</width>
-                   <height>83</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="manageApplyProcess_Layout">
@@ -8442,8 +8442,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>267</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="manageApplyAuditorList_Layout">
@@ -9591,8 +9591,417 @@ padding: 0px 5px;</string>
        </layout>
       </widget>
       <widget class="QWidget" name="page_6">
-       <layout class="QGridLayout" name="gridLayout_126">
-        <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_155">
+        <item row="1" column="0">
+         <widget class="QScrollArea" name="scrollArea_4">
+          <property name="minimumSize">
+           <size>
+            <width>480</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>420</width>
+            <height>300</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_6">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>459</width>
+             <height>280</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_126">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_55">
+              <property name="minimumSize">
+               <size>
+                <width>170</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>系统设置</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_125">
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="checkBox_autoRun">
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="inputMethodHints">
+                  <set>Qt::ImhNoPredictiveText</set>
+                 </property>
+                 <property name="text">
+                  <string>开机时启动应用</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="btn_resetAutoRun">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>重置开机自启</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="resource.qrc">
+                   <normaloff>:/images/color_icon/color-launch.svg</normaloff>:/images/color_icon/color-launch.svg</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="groupBox_59">
+              <property name="maximumSize">
+               <size>
+                <width>220</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>在线聊天</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_153">
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_128">
+                 <item row="0" column="0">
+                  <widget class="QLineEdit" name="lineEdit_msgPushTime">
+                   <property name="maximumSize">
+                    <size>
+                     <width>40</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>5</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1" colspan="2">
+                  <widget class="QLabel" name="label_110">
+                   <property name="text">
+                    <string>秒后刷新消息列表</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0" colspan="2">
+                  <widget class="QLabel" name="label_117">
+                   <property name="text">
+                    <string>最多加载消息数量</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLineEdit" name="lineEdit_msgPushMaxCnt">
+                   <property name="maximumSize">
+                    <size>
+                     <width>40</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>30</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="1">
+                <spacer name="horizontalSpacer_25">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QGroupBox" name="groupBox_32">
+              <property name="title">
+               <string>时间校验</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_130">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_127">
+                 <property name="maximumSize">
+                  <size>
+                   <width>85</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>网络时间：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_localTime">
+                 <property name="minimumSize">
+                  <size>
+                   <width>260</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>--</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_126">
+                 <property name="maximumSize">
+                  <size>
+                   <width>85</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>本机时间：</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLabel" name="label_webTime">
+                 <property name="minimumSize">
+                  <size>
+                   <width>260</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>--</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <widget class="QLabel" name="label_128">
+                 <property name="text">
+                  <string>授时服务器：time.windows.com</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2" rowspan="3">
+                <widget class="QPushButton" name="btn_checkTime">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>60</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>50</width>
+                   <height>90</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>校验
+时间</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QScrollArea" name="scrollArea_smtp">
+          <property name="minimumSize">
+           <size>
+            <width>460</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>480</width>
+            <height>300</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_7">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>439</width>
+             <height>305</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_154">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_67">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>380</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>SMTP邮件配置</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_133">
+               <item row="1" column="0" colspan="3">
+                <widget class="QLineEdit" name="lineEdit_smtpAdd">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0" colspan="3">
+                <widget class="QLineEdit" name="lineEdit_smtpPwd">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_133">
+                 <property name="text">
+                  <string>SMTP地址</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0" colspan="3">
+                <widget class="QLineEdit" name="lineEdit_smtpUser">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_114">
+                 <property name="text">
+                  <string>注：本SMTP默认使用SSL，端口为465</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_135">
+                 <property name="text">
+                  <string>SMTP密码</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_134">
+                 <property name="text">
+                  <string>SMTP用户（即邮箱名）</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="2">
+                <widget class="QPushButton" name="btn_smtpSave">
+                 <property name="minimumSize">
+                  <size>
+                   <width>80</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>35</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>保存</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="resource.qrc">
+                   <normaloff>:/images/color_icon/color-approve.svg</normaloff>:/images/color_icon/color-approve.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>25</width>
+                   <height>25</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <spacer name="horizontalSpacer_29">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="3">
          <widget class="QGroupBox" name="groupBox_system">
           <property name="title">
            <string>系统设置</string>
@@ -9977,222 +10386,31 @@ padding: 0px 5px;</string>
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_allSettings">
-          <property name="title">
-           <string/>
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_28">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-          <layout class="QGridLayout" name="gridLayout_133">
-           <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox_55">
-             <property name="title">
-              <string>系统设置</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_125">
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox_autoRun">
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="inputMethodHints">
-                 <set>Qt::ImhNoPredictiveText</set>
-                </property>
-                <property name="text">
-                 <string>开机时启动应用</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QPushButton" name="btn_resetAutoRun">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>重置开机自启</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resource.qrc">
-                  <normaloff>:/images/color_icon/color-launch.svg</normaloff>:/images/color_icon/color-launch.svg</iconset>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QGroupBox" name="groupBox_59">
-             <property name="title">
-              <string>在线聊天</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_128">
-              <item row="0" column="0">
-               <widget class="QLineEdit" name="lineEdit_msgPushTime">
-                <property name="maximumSize">
-                 <size>
-                  <width>40</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>5</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1" colspan="2">
-               <widget class="QLabel" name="label_110">
-                <property name="text">
-                 <string>秒后刷新消息列表</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0" colspan="2">
-               <widget class="QLabel" name="label_117">
-                <property name="text">
-                 <string>最多加载消息数量</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLineEdit" name="lineEdit_msgPushMaxCnt">
-                <property name="maximumSize">
-                 <size>
-                  <width>40</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>30</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QGroupBox" name="groupBox_32">
-             <property name="title">
-              <string>时间校验</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_130">
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_127">
-                <property name="maximumSize">
-                 <size>
-                  <width>85</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>网络时间：</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_localTime">
-                <property name="minimumSize">
-                 <size>
-                  <width>260</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>--</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_126">
-                <property name="maximumSize">
-                 <size>
-                  <width>85</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>本机时间：</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="label_webTime">
-                <property name="minimumSize">
-                 <size>
-                  <width>260</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>--</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QLabel" name="label_128">
-                <property name="text">
-                 <string>授时服务器：time.windows.com</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2" rowspan="3">
-               <widget class="QPushButton" name="btn_checkTime">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>60</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>90</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>校验
-时间</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <spacer name="horizontalSpacer_25">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>1179</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="1" column="0" colspan="4">
-            <spacer name="verticalSpacer_10">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>215</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>449</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <spacer name="verticalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
