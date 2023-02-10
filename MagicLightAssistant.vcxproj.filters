@@ -462,5 +462,6 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\SmtpMime2.lib" />
+    <Library Include="lib\qsqlmysql.lib" />
   </ItemGroup>
 </Project>
