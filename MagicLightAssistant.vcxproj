@@ -384,6 +384,7 @@
     <Image Include="MagicLightAssistant.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="lib\qsqlmysql.lib" />
     <Library Include="lib\SmtpMime2.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
