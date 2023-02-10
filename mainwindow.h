@@ -76,7 +76,7 @@ private:
     
     QMutex mutex;
 
-    bool homeLoading = false, settingLoading = false;   //用于加载动画判断
+    bool homeLoading = false, settingLoading = false, msgSending = false;   //用于加载动画判断
 
     bool dbStatus = true;
 
