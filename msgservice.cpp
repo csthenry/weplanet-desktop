@@ -70,6 +70,22 @@ void MsgService::pushMessage(QString me, QString member, int limit)
 		cnt++;
 	}
 	query.clear();
+	//在线状态检测
+	query.exec(QString("INSERT INTO magic_online (uid, latest) VALUES ('%1', '%2') ON DUPLICATE KEY UPDATE latest = '%2';").arg(me, SecsSinceEpoch));	//更新自己的状态
+	qDebug() << query.lastError().text() << SecsSinceEpoch;
+	query.exec(QString("SELECT * FROM magic_online WHERE uid = '%1';").arg(member));
+	if (query.next())
+	{
+		QSqlRecord record = query.record();
+		int latest = record.value("latest").toInt();
+		if (SecsSinceEpoch.toInt() - latest > 180)	//180s的检测间隔，超过则代表下线
+			isOnline.insert(member, false);
+		else
+			isOnline.insert(member, true);
+	}
+	else
+		isOnline.insert(member, false);
+	query.exec();
 	DB_PUSHER.close();
 
 	previousPushUid = member;
@@ -178,6 +194,14 @@ void MsgService::delFriend(const QString& me, const QString& member)
 bool MsgService::getIsOpen()
 {
 	return isOpen;
+}
+
+bool MsgService::getIsOnline(const QString& member)
+{
+	if (isOnline.contains(member))
+		return isOnline[member];
+	else
+		return false;
 }
 
 int MsgService::getMsgStackCnt(const QString& uid)

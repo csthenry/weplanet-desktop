@@ -18,22 +18,31 @@ class FriendInfoWidget : public QWidget
 
 private:
 	bool isLoading = false;
-	QString m_uid;	//当前好友UID
+	QString m_uid, m_mail;	//当前好友UID、邮箱
+	QString fromUserInfo;	//发送者信息
 	QThread* thread;
 	baseInfoWork* infoWork;
 	void setLoading();
 	void setInfoPage();
 	QClipboard *clipboard;
+	QTimer* aeMovieTimer;
+	bool Mailsending = false;
+	QList<QString> smtp_config;
 public:
 	void setUid(const QString& uid);
 	void setTitle(const QString& title);
+	void setFromUserInfo(const QString& fromUserInfo);
+	void setSmtpConfig(const QList<QString> smtp_config);
 	void hideButton(bool isHide);
+	QString getMail();
 	QString getUid();
+
 public:
 	FriendInfoWidget(QWidget *parent = nullptr);
 	~FriendInfoWidget();
 private slots:
 	void on_btn_share_clicked();
+	void on_btn_sendMsg_clicked();
 signals:
 	void getCurrentMemInfo();
 private:

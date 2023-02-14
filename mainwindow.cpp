@@ -102,9 +102,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->btn_getQQAvatar->setIcon(QPixmap(m_strListImg.at(cnt)));
         cnt++;
 		});
-    aeMovieTimer->start(25);
+    aeMovieTimer->start(20);
     
-    //心跳query
+    //心跳
     refTimer = new QTimer(this);
     connect(refTimer, &QTimer::timeout, this, [=]()  {
             on_actRefresh_triggered();
@@ -114,8 +114,20 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         if (!isPushing && openChat)  //Push队列处理中时跳过，避免任务堆积
         {
             isPushing = true;
-            qDebug() << "正在刷新聊天记录";
+            qDebug() << "正在刷新聊天记录：" << curDateTime.toSecsSinceEpoch();
+            msgPusherService->SecsSinceEpoch = tr("%1").arg(curDateTime.toSecsSinceEpoch());    //更新时间
             emit startPushMsg(uid, sendToUid, msgStackMax);
+            //在线状态 #7fba00 #f44336
+            if (msgPusherService->getIsOnline(sendToUid))
+            {
+                ui->btn_online_status->setStyleSheet("QPushButton{background-color:#7fba00;border-radius:8px}");
+                ui->btn_online_status->setToolTip("在线");
+            }
+            else
+            {
+                ui->btn_online_status->setStyleSheet("QPushButton{background-color:#f44336;border-radius:8px}");
+                ui->btn_online_status->setToolTip("离线");
+            }
         }
         });
 
@@ -179,7 +191,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         static int cnt = 0;
         cnt += 1;
         curDateTime = curDateTime.addSecs(1);
-		//qDebug() << "本地时间校验：" << curDateTime.toString("yyyy-MM-dd hh:mm:ss");
+		//qDebug() << "本地时间校验：" << curDateTime.toString("yyyy-MM-dd hh:mm:ss") << curDateTime.toSecsSinceEpoch();
         if (cnt > 30 * 60)  //三十分钟校验一次网络时间
         {
             checkLocalTime();
@@ -816,9 +828,6 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //检测开机启动
     ui->checkBox_autoRun->setChecked(isAutoRun(QApplication::applicationFilePath()));
 
-    //绑定快捷键
-    ui->btn_sendMsg->setShortcut(QKeySequence(tr("ctrl+return")));   //消息发送
-
     //系统配置
     config_ini = new QSettings("config.ini", QSettings::IniFormat);
     if (!config_ini->value("/System/MsgPushTime").toBool())
@@ -830,6 +839,31 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         config_ini->setValue("/System/MsgStackMaxCnt", msgStackMax);
     else
         ui->lineEdit_msgPushMaxCnt->setText(config_ini->value("/System/MsgStackMaxCnt").toString());
+
+    //事件过滤器
+    ui->textEdit_msg->installEventFilter(this);
+
+    //绑定快捷键
+    shortcut = new QShortcut(this);
+    shortcut->setContext(Qt::ApplicationShortcut);
+    connect(shortcut, &QShortcut::activated, ui->btn_sendMsg, &QPushButton::click);
+
+    if (!config_ini->value("/Hotkey/MsgSubmit").toBool())
+    {
+        shortcut->setKey(QKeySequence(tr("ctrl+return")));
+        config_ini->setValue("/Hotkey/MsgSubmit", "ctrl+enter");
+        ui->btn_sendMsg->setText("发送 Ctrl+Enter");
+    }
+    else
+    {
+        if (config_ini->value("/Hotkey/MsgSubmit").toString() == "ctrl+enter")
+        {
+            ui->btn_sendMsg->setText("发送 Ctrl+Enter");
+            shortcut->setKey(QKeySequence(tr("ctrl+return")));
+        }
+        else
+            ui->btn_sendMsg->setText("发送 Enter");
+    }
 }
 MainWindow::~MainWindow()
 {
@@ -4035,6 +4069,7 @@ void MainWindow::on_btn_updateVerify_clicked()
 
 void MainWindow::on_btn_sendMsg_clicked()
 {
+    on_btn_newMsgCheacked_clicked();    //已读
     QString msgText = ui->textEdit_msg->toPlainText();
     if (msgText.isEmpty() || sendToUid == "-1")
         return;
@@ -4109,6 +4144,8 @@ void MainWindow::on_btn_friendInfo_clicked()
     friendInfoWidget->hideButton(false);
     friendInfoWidget->showMinimized();
     friendInfoWidget->setUid(sendToUid);
+    friendInfoWidget->setSmtpConfig(setBaseInfoWork->getSmtpConfig());
+    friendInfoWidget->setFromUserInfo(QString("[%1] %2").arg(uid, ui->label_home_name->text()));
     friendInfoWidget->showNormal();
 }
 
@@ -4216,6 +4253,23 @@ void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
     }
     else
         ui->lineEdit_msgPushTime->setText(QString::number(msgPushTime));
+}
+
+void MainWindow::on_btn_submitHotkey_clicked()
+{
+    if (config_ini->value("/Hotkey/MsgSubmit").toString() == "ctrl+enter")
+    {
+
+        shortcut->setKey(Qt::Key_Return);
+        ui->btn_sendMsg->setText("发送 Enter");
+        config_ini->setValue("/Hotkey/MsgSubmit", "enter");
+    }
+    else
+    {
+        shortcut->setKey(QKeySequence(tr("ctrl+return")));
+        ui->btn_sendMsg->setText("发送 Ctrl+Enter");
+        config_ini->setValue("/Hotkey/MsgSubmit", "ctrl+enter");
+    }
 }
 
 void MainWindow::on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg)
@@ -4369,16 +4423,12 @@ void MainWindow::initToolbar(QSqlRecord rec)
         actionList[6]->setVisible(false);
         ui->groupBox_system->setEnabled(false);
         ui->groupBox_system->setVisible(false);
-        ui->scrollArea_smtp->setEnabled(false);
-        ui->scrollArea_smtp->setVisible(false);
     }
     else {
         actionList[6]->setEnabled(true);
         actionList[6]->setVisible(true);
         ui->groupBox_system->setEnabled(true);
         ui->groupBox_system->setVisible(true);
-        ui->scrollArea_smtp->setEnabled(true);
-        ui->scrollArea_smtp->setVisible(true);
     }
     if (rec.value("notice_manage").toString() == '0')
     {
@@ -4449,4 +4499,21 @@ void MainWindow::closeEvent(QCloseEvent* event)
 {
     this->hide();
     event->ignore();
+}
+
+bool MainWindow::eventFilter(QObject* target, QEvent* event)
+{
+    if (target == ui->textEdit_msg)
+    {
+        if (event->type() == QEvent::KeyPress)
+        {
+            QKeyEvent* k = static_cast<QKeyEvent*>(event);  //回车键
+            if (k->key() == Qt::Key_Return && config_ini->value("/Hotkey/MsgSubmit").toString() == "enter")
+            {
+                on_btn_sendMsg_clicked();		//函数事件，发送信息
+                return true;
+            }
+        }
+    }
+    return QWidget::eventFilter(target, event);
 }

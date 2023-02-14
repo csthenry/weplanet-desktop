@@ -486,7 +486,11 @@
             </size>
            </property>
            <property name="text">
-            <string>分享</string>
+            <string>分享好友名片</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resource.qrc">
+             <normaloff>:/images/color_icon/color-reply.svg</normaloff>:/images/color_icon/color-reply.svg</iconset>
            </property>
           </widget>
          </item>
@@ -499,7 +503,11 @@
             </size>
            </property>
            <property name="text">
-            <string>发送消息</string>
+            <string>发送邮件提醒</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resource.qrc">
+             <normaloff>:/images/color_icon/color-mail.svg</normaloff>:/images/color_icon/color-mail.svg</iconset>
            </property>
           </widget>
          </item>
@@ -516,22 +524,5 @@
  <resources>
   <include location="resource.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>btn_sendMsg</sender>
-   <signal>clicked()</signal>
-   <receiver>FriendInfoWidgetClass</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>370</x>
-     <y>538</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>249</x>
-     <y>283</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

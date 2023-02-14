@@ -387,6 +387,15 @@ bool service::initDatabaseTables(QSqlDatabase db)
         "ENGINE=InnoDB;";
     if (res)
         res = query.exec(creatTableStr);
+    //在线情况表
+    creatTableStr =
+        "CREATE TABLE IF NOT EXISTS magic_online"
+        "(uid           int(10)      NOT NULL,"
+        "latest         int(10)      NOT NULL,"
+        "PRIMARY KEY (uid))"
+        "ENGINE=InnoDB;";
+    if (res)
+        res = query.exec(creatTableStr);
     query.clear();
     
     return res;
