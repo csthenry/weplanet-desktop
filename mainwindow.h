@@ -27,6 +27,7 @@
 #include <QTextStream>
 #include <QWebChannel>
 #include <QClipboard>
+#include <QShortcut>
 #include "service.h"
 #include "formlogin.h"
 #include "querymodel.h"
@@ -71,8 +72,8 @@ private:
     Document m_content, c_content;
 
     QTimer *refTimer, *msgPushTimer, *currentTimeUpdate, *aeMovieTimer;
-    
-    QMutex mutex;
+
+    QShortcut* shortcut;
 
     bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting, qqAvatarBinding = false;   //用于加载动画判断
 
@@ -269,6 +270,9 @@ private:
 	ApprovalWork* approvalWork;
 
     QSettings* config_ini;
+
+protected:
+    bool eventFilter(QObject* target, QEvent* event);//事件过滤器
 
 public:
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
@@ -500,6 +504,8 @@ private slots:
     void on_btn_updateVerify_clicked();
 
     void on_btn_sendMsg_clicked();
+
+    void on_btn_submitHotkey_clicked();
 
     void on_btn_newMsgCheacked_clicked();
 

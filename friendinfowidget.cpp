@@ -18,6 +18,24 @@ FriendInfoWidget::FriendInfoWidget(QWidget *parent)
         widget->setFont(font);
     }
 
+    //加载动画（PNG序列）
+    aeMovieTimer = new QTimer(this);
+    QDir aeDir("ae/loading");
+    QFileInfoList listInfo = aeDir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+    QStringList m_strListImg;
+    foreach(QFileInfo strFileInfo, listInfo) {
+        m_strListImg.append(strFileInfo.filePath());
+    }
+    connect(aeMovieTimer, &QTimer::timeout, this, [=]() {
+        static int cnt = 0;
+        if (cnt >= m_strListImg.size())
+            cnt = 0;
+        if (Mailsending)
+            ui->btn_sendMsg->setIcon(QPixmap(m_strListImg.at(cnt)));
+        cnt++;
+        });
+    aeMovieTimer->start(20);
+
     clipboard = QApplication::clipboard();  //获取系统剪切板指针
     setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);   // 禁止改变窗口大小
     //子线程
@@ -33,6 +51,7 @@ FriendInfoWidget::FriendInfoWidget(QWidget *parent)
 void FriendInfoWidget::setLoading()
 {
     ui->btn_share->setEnabled(false);
+    ui->btn_sendMsg->setEnabled(false);
     ui->uid->setText("加载中...");
     ui->name->setText("加载中...");
     ui->department->setText("加载中...");
@@ -56,10 +75,16 @@ void FriendInfoWidget::setInfoPage()
 		ui->phone->setText("--");
     else
 		ui->phone->setText(infoWork->getTel());
-	if(infoWork->getMail().isEmpty())
-		ui->mail->setText("--");
-	else
-		ui->mail->setText(infoWork->getMail());
+    if (infoWork->getMail().isEmpty())
+    {
+        m_mail.clear();
+        ui->mail->setText("--");
+    }
+    else
+    {
+        ui->mail->setText(infoWork->getMail());
+        m_mail = infoWork->getMail();
+    }
 	ui->verifyType->setText(infoWork->getVerifyType());
 	ui->verifyInfo->setText(infoWork->getVerifyInfo());
     if(infoWork->getAvatar().isNull())
@@ -80,6 +105,7 @@ void FriendInfoWidget::setInfoPage()
         ui->verifyInfo->setText("--");
     }
     ui->btn_share->setEnabled(true);
+    ui->btn_sendMsg->setEnabled(true);
 }
 
 void FriendInfoWidget::setUid(const QString& uid)
@@ -99,11 +125,26 @@ void FriendInfoWidget::setTitle(const QString& title)
 	this->setWindowTitle(title);
 }
 
+void FriendInfoWidget::setFromUserInfo(const QString& fromUserInfo)
+{
+    this->fromUserInfo = fromUserInfo;
+}
+
+void FriendInfoWidget::setSmtpConfig(const QList<QString> smtp_config)
+{
+    this->smtp_config = smtp_config;
+}
+
 void FriendInfoWidget::hideButton(bool isHide)
 {
 	bool isVisible = !isHide;
     ui->stackedWidget->setVisible(isVisible);
     this->adjustSize();
+}
+
+QString FriendInfoWidget::getMail()
+{
+    return m_mail;
 }
 
 void FriendInfoWidget::on_btn_share_clicked()
@@ -130,4 +171,22 @@ FriendInfoWidget::~FriendInfoWidget()
     delete infoWork;
     delete thread;
 	delete ui;
+}
+
+void FriendInfoWidget::on_btn_sendMsg_clicked()
+{
+    if (m_mail.isEmpty())
+    {
+        QMessageBox::warning(this, "警告", "该用户未设置邮箱，无法发送邮件提醒。", QMessageBox::Ok);
+		return;
+    }
+    Mailsending = true;
+    int smtp_rescode = service::sendMail(smtp_config, m_mail, QString("WePlanet 消息提醒"), QString("你的好友 %1 正在通过【WePlanet 畅聊】给你发送信息，请尽快前往【WePlanet 畅聊】查看/回复好友最新消息。").arg(fromUserInfo));
+
+    if (smtp_rescode != 1)
+        QMessageBox::warning(this, "警告", "邮件发送失败，请检查邮箱是否正确或联系管理员检查SMTP配置。", QMessageBox::Ok);
+    else
+		QMessageBox::information(this, "提示", "邮件提醒发送成功。", QMessageBox::Ok);
+    Mailsending = false;
+    ui->btn_sendMsg->setIcon(QIcon(":/images/color_icon/color-mail.svg"));
 }
