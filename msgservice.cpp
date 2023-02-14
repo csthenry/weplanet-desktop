@@ -72,13 +72,12 @@ void MsgService::pushMessage(QString me, QString member, int limit)
 	query.clear();
 	//在线状态检测
 	query.exec(QString("INSERT INTO magic_online (uid, latest) VALUES ('%1', '%2') ON DUPLICATE KEY UPDATE latest = '%2';").arg(me, SecsSinceEpoch));	//更新自己的状态
-	qDebug() << query.lastError().text() << SecsSinceEpoch;
 	query.exec(QString("SELECT * FROM magic_online WHERE uid = '%1';").arg(member));
 	if (query.next())
 	{
 		QSqlRecord record = query.record();
 		int latest = record.value("latest").toInt();
-		if (SecsSinceEpoch.toInt() - latest > 180)	//180s的检测间隔，超过则代表下线
+		if (SecsSinceEpoch.toInt() - latest > 120)	//120s的检测间隔，超过则代表下线
 			isOnline.insert(member, false);
 		else
 			isOnline.insert(member, true);
