@@ -125,7 +125,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             }
             else
             {
-                ui->btn_online_status->setStyleSheet("QPushButton{background-color:#f44336;border-radius:8px}");
+                ui->btn_online_status->setStyleSheet("QPushButton{background-color:#c2c2c2;border-radius:8px}");
                 ui->btn_online_status->setToolTip("离线");
             }
         }
@@ -1475,7 +1475,8 @@ void MainWindow::setMsgPage()
         
         //按钮事件
         connect(msgMember, &QToolButton::clicked, this, [=]() {
-            ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
+            //ui->label_msgMemName->setText("正在和 " + msgMember->text() + " 聊天");
+            ui->label_msgMemName->setText(msgMember->text());
             msgHistoryInfo = QString("<p align='center' style='color:#8d8d8d;font-size:10pt;'>--- 和%1 的聊天记录 ---</p>").arg(msgMember->text());
 
             curMsgStackCnt = 0;    //切换用户时初始化消息数据量
@@ -2169,9 +2170,12 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
     }
 
     //添加聊得火热
-    if (msgPusherService->getMsgStackCnt(sendToUid) >= 30 && ui->label_msgMemName->text().indexOf(" 🔥 ") == -1)
-        ui->label_msgMemName->setText(ui->label_msgMemName->text() + " 🔥 ");
-
+    if (msgPusherService->getMsgStackCnt(sendToUid) >= 30 && ui->label_msgMemName->text().indexOf(" 🔥") == -1)
+        ui->label_msgMemName->setText(ui->label_msgMemName->text() + " 🔥");
+    if (msgPusherService->getMsgStackCnt(sendToUid) >= 80 && ui->label_msgMemName->text().indexOf(" 🔥🔥") == -1)
+        ui->label_msgMemName->setText(ui->label_msgMemName->text() + "🔥");
+    if (msgPusherService->getMsgStackCnt(sendToUid) >= 150 && ui->label_msgMemName->text().indexOf(" 🔥🔥🔥") == -1)
+        ui->label_msgMemName->setText(ui->label_msgMemName->text() + "🔥");
     if (curMsgStackCnt > msgPusherService->getMsgStackCnt(sendToUid))  //消息历史过旧，才会推送新消息
         return;
     if (msgPusherService->getPreviousPushUid() != msgPusherService->getPushingUid()) //如果已切换用户，则跳过此次push
