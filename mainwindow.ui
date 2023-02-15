@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1390</width>
+    <width>1405</width>
     <height>770</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1390</width>
+    <width>1405</width>
     <height>770</height>
    </size>
   </property>
@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>17</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2123,8 +2123,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -10210,7 +10210,7 @@ padding: 0px 5px;</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>421</width>
+                <width>439</width>
                 <height>291</height>
                </rect>
               </property>
@@ -10572,7 +10572,7 @@ padding: 0px 5px;</string>
              </font>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;【畅聊系统】已被系统管理员暂停使用&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#7a7a7a;&quot;&gt;WePlanet权限系统&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;畅聊系统已被系统管理员暂停使用&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#7a7a7a;&quot;&gt;WePlanet权限系统&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

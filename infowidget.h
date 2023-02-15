@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QFontDatabase>
+#include <QKeyEvent>
 #include "ui_infowidget.h"
 
 class InfoWidget : public QWidget
@@ -16,6 +17,9 @@ public:
 	void setInfoTitle(const QString& title);
 	void setInfoIcon(const QPixmap& icon);
 	void setBoxTitle(const QString& title);
+
+protected:
+	void keyPressEvent(QKeyEvent* event);	//ÊÂ¼þ¹ýÂËÆ÷
 	
 private:
 	Ui::InfoWidgetClass ui;
