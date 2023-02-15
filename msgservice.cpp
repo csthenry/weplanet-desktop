@@ -76,11 +76,11 @@ void MsgService::pushMessage(QString me, QString member, int limit)
 	if (query.next())
 	{
 		QSqlRecord record = query.record();
-		int latest = record.value("latest").toInt();
-		if (SecsSinceEpoch.toInt() - latest > 120)	//120s的检测间隔，超过则代表下线
-			isOnline.insert(member, false);
-		else
+		qlonglong latest = record.value("latest").toLongLong();
+		if (SecsSinceEpoch.toLongLong() - latest < 180 && SecsSinceEpoch.toLongLong() - latest > -180)	//180s的检测间隔，超过则代表下线
 			isOnline.insert(member, true);
+		else
+			isOnline.insert(member, false);
 	}
 	else
 		isOnline.insert(member, false);

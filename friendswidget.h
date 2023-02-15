@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QFontDatabase>
 #include <QMessageBox>
+#include <QKeyEvent>
 #include "ui_friendswidget.h"
 #include "msgservice.h"
 #include "service.h"
@@ -19,6 +20,10 @@ class FriendsWidget : public QWidget
 public:
 	FriendsWidget(QWidget *parent = nullptr);
 	~FriendsWidget();
+
+protected:
+	void keyPressEvent(QKeyEvent* event);	//ÊÂ¼þ¹ýÂËÆ÷
+
 private:
 	QString uid = "-1", searchUid = "-1", applyUid = "-1";
 	QThread* thread;

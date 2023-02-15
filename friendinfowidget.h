@@ -5,6 +5,7 @@
 #include <QFontDatabase>
 #include <QMessageBox>
 #include <QClipboard>
+#include <QKeyEvent>
 #include "baseinfowork.h"
 #include "ui_friendinfowidget.h"
 
@@ -36,6 +37,9 @@ public:
 	void hideButton(bool isHide);
 	QString getMail();
 	QString getUid();
+
+protected:
+	void keyPressEvent(QKeyEvent* event);	//ÊÂ¼þ¹ýÂËÆ÷
 
 public:
 	FriendInfoWidget(QWidget *parent = nullptr);

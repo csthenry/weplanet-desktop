@@ -54,3 +54,14 @@ void InfoWidget::on_btn_ok_clicked()
 {
 	this->close();
 }
+
+void InfoWidget::keyPressEvent(QKeyEvent* event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_Escape:
+        this->close(); break;
+    default:
+        QWidget::keyPressEvent(event);
+    }
+}

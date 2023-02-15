@@ -119,6 +119,8 @@ void FriendsWidget::loadApply(const QString& uid)
     emit loadApplyInfo(this->uid, applyUid);
     ui->group_addFriends->setEnabled(false);
     ui->group_applyInfo->setEnabled(true);
+    ui->group_applyInfo->setVisible(true);
+    this->adjustSize();
 }
 
 void FriendsWidget::setMemberInfo(QByteArray array)
@@ -195,9 +197,22 @@ void FriendsWidget::setUid(const QString& uid)
 void FriendsWidget::set_group_applyInfo_enabled(bool flag)
 {
     ui->group_applyInfo->setEnabled(flag);
+    ui->group_applyInfo->setVisible(flag);
+    this->adjustSize();
 }
 
 void FriendsWidget::set_group_addFriends_enabled(bool flag)
 {
     ui->group_addFriends->setEnabled(flag);
+}
+
+void FriendsWidget::keyPressEvent(QKeyEvent* event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_Escape:
+        this->close(); break;
+    default:
+        QWidget::keyPressEvent(event);
+    }
 }
