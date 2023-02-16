@@ -22,6 +22,7 @@ public:
     void setUid(QString uid);
     void initDatabaseTables();
     void bindQQAvatar(QString qqNumber);   //tag==0该邮箱不是qq邮箱，tag==1获取头像成功，tag==-1其他错误
+    void bindMailAvatar(QString mail);
     void updateScore(float score);
     void get_statistics();
     void loadStatisticsPanel();
@@ -112,6 +113,7 @@ signals:
     void editPersonalInfoRes(int);  //个人信息修改结果：1修改成功（不包含密码），2修改成功（包含密码，需要注销），-1修改失败（旧密码验证失败）
     void initDatabaseFinished(bool);
     void bindQQAvatarFinished(int);
+    void bindMailAvatarFinished(bool);
     void loadStatisticsPanelFinished(int, int);
 	void getAnnouncementFinished(bool);
     void loadSystemSettingsFinished(bool);

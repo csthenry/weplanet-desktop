@@ -113,8 +113,6 @@ bool baseInfoWork::getSys_isOpenChat()
 
 void baseInfoWork::bindQQAvatar(QString qqMail)
 {
-    DB.open();
-    QSqlQuery query(DB);
     int pos = 0;
     QNetworkRequest quest;
     QNetworkReply* reply;
@@ -140,7 +138,7 @@ void baseInfoWork::bindQQAvatar(QString qqMail)
             loop.exec();
 
             QString res = reply->readAll();
-            qDebug() << "这是请求到的头像地址Header" << res;
+            qDebug() << "请求到的头像地址Header" << res;
             if (res.isEmpty())
             {
                 qDebug() << "QQ头像地址获取失败：服务器错误!\n错误信息：" + reply->errorString();
@@ -153,10 +151,12 @@ void baseInfoWork::bindQQAvatar(QString qqMail)
             avatarUrl += avatarSdk;
             qDebug() << "头像SDK" << avatarSdk << " 头像地址" + avatarUrl;
 
-            query.exec("UPDATE magic_users SET user_avatar='" + avatarUrl + "' WHERE uid='" + uid + "';");
-            bool query_res = query.lastError().text().isEmpty();
+            DB.open();
+            QSqlQuery query(DB);
+            bool query_res = query.exec("UPDATE magic_users SET user_avatar='" + avatarUrl + "' WHERE uid='" + uid + "';");
             query.clear();
             DB.close();
+
             if (!query_res)
             {
                 emit bindQQAvatarFinished(-1);
@@ -175,6 +175,20 @@ void baseInfoWork::bindQQAvatar(QString qqMail)
         return;
     }
     emit bindQQAvatarFinished(1);
+}
+
+void baseInfoWork::bindMailAvatar(QString mail)
+{
+    mail.trimmed(); //去空格
+    QString hash = service::pwdEncrypt(mail);
+    QString avatarUrl = QString("https://cravatar.cn/avatar/%1?s=120&r=G&d=mp").arg(hash);
+    DB.open();
+    QSqlQuery query(DB);
+    bool query_res = query.exec("UPDATE magic_users SET user_avatar='" + avatarUrl + "' WHERE uid='" + uid + "';");
+    query.clear();
+    DB.close();
+
+    emit bindMailAvatarFinished(query_res);
 }
 
 QString baseInfoWork::getBeginTime()

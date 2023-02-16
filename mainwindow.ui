@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>17</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -1667,15 +1667,18 @@
             </spacer>
            </item>
            <item row="9" column="0" colspan="3">
-            <widget class="QPushButton" name="btn_getQQAvatar">
+            <widget class="QPushButton" name="btn_getMailAvatar">
              <property name="minimumSize">
               <size>
                <width>0</width>
                <height>40</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>支持Gravatar和QQ头像</string>
+             </property>
              <property name="text">
-              <string>绑定QQ头像</string>
+              <string>绑定邮箱头像</string>
              </property>
              <property name="icon">
               <iconset resource="resource.qrc">
@@ -1714,7 +1717,7 @@
           </widget>
           <zorder>info_avatar</zorder>
           <zorder>label_verifyIcon_2</zorder>
-          <zorder>btn_getQQAvatar</zorder>
+          <zorder>btn_getMailAvatar</zorder>
          </widget>
         </item>
         <item row="1" column="1">

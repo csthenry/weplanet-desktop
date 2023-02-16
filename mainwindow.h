@@ -75,7 +75,7 @@ private:
 
     QShortcut* shortcut;
 
-    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting, qqAvatarBinding = false;   //用于加载动画判断
+    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting, avatarBinding = false;   //用于加载动画判断
 
     bool dbStatus = true;
 
@@ -113,7 +113,7 @@ private:
 
     QStringList comboxList;
 
-    QLabel *connectStatusLable, *statusIcon;
+    QLabel *connectStatusLable, *statusIcon, *timeLabel;
 
     QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel, *noticeModel, *noticeManageModel;  //数据模型
 
@@ -495,7 +495,7 @@ private slots:
 
     void on_editPersonalInfoRes(int res);
 
-    void on_btn_getQQAvatar_clicked();
+    void on_btn_getMailAvatar_clicked();
 
     void on_btn_verifyInfo_clicked();
 
@@ -614,7 +614,7 @@ signals:
 
     void fixUser(int type, const QString& removedId);
 
-    void bindQQAvatar(QString qqMail);
+    void bindMailAvatar(QString mail);
 
     void updateActStatus();
 
