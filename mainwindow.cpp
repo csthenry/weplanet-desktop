@@ -50,8 +50,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     actionList.append(ui->actGroup);
     actionList.append(ui->actNoticeManage);
 
+    timeLabel = new QLabel(this);
     connectStatusLable = new QLabel("服务状态: 正在连接...");
-    connectStatusLable->setMinimumWidth(this->width() - 25);
+    //connectStatusLable->setMinimumWidth(this->width() - 25);
 
     userAvatar = new QPixmap(":/images/color_icon/user.svg");
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
@@ -61,8 +62,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     verifyIcon_2 = new QPixmap(":/images/color_icon/verify_2.svg");
     verifyNone = new QPixmap(":/images/color_icon/color-delete.svg");
 
+    ui->statusbar->setStyleSheet(QString("QStatusBar::item{border: 0px}"));
     ui->statusbar->addWidget(statusIcon);   //将状态组件添加至statusBar
     ui->statusbar->addWidget(connectStatusLable);
+    ui->statusbar->addPermanentWidget(timeLabel);
     ui->stackedWidget->setCurrentIndex(13);  //转到加载首页
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     readOnlyDelegate = new class readOnlyDelegate(this);    //用于tableView只读
@@ -98,8 +101,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->label_send->setPixmap(QPixmap(m_strListImg.at(cnt)));
         if(personalSubmitting)
             ui->btn_personalSubmit->setIcon(QPixmap(m_strListImg.at(cnt)));
-        if(qqAvatarBinding)
-            ui->btn_getQQAvatar->setIcon(QPixmap(m_strListImg.at(cnt)));
+        if(avatarBinding)
+            ui->btn_getMailAvatar->setIcon(QPixmap(m_strListImg.at(cnt)));
         cnt++;
 		});
     aeMovieTimer->start(20);
@@ -191,6 +194,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         static int cnt = 0;
         cnt += 1;
         curDateTime = curDateTime.addSecs(1);
+        timeLabel->setText("程序时间：" + curDateTime.toString("yyyy年MM月dd日 hh:mm:ss"));
 		//qDebug() << "本地时间校验：" << curDateTime.toString("yyyy-MM-dd hh:mm:ss") << curDateTime.toSecsSinceEpoch();
         if (cnt > 5 * 60)  //校验一次网络时间
         {
@@ -367,7 +371,19 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //个人信息编辑信号槽
     connect(this, SIGNAL(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)), setBaseInfoWork, SLOT(editPersonalInfo(const QString&, const QString&, const QString&, const QString&, const QString&)));
     connect(setBaseInfoWork, SIGNAL(editPersonalInfoRes(int)), this, SLOT(on_editPersonalInfoRes(int)));
-    connect(this, &MainWindow::bindQQAvatar, setBaseInfoWork, &baseInfoWork::bindQQAvatar);
+    connect(this, &MainWindow::bindMailAvatar, setBaseInfoWork, &baseInfoWork::bindMailAvatar);
+    connect(setBaseInfoWork, &baseInfoWork::bindMailAvatarFinished, this, [=](bool res) {
+        avatarBinding = false;
+        ui->btn_getMailAvatar->setIcon(QIcon(QPixmap(":/images/color_icon/user.svg")));
+        if (res)
+        {
+            emit startBaseInfoWork();      //刷新个人信息
+            QMessageBox::information(this, "消息", "用户头像绑定成功，你的头像将会随QQ/Gravatar头像更新。", QMessageBox::Ok);
+        }
+        else
+            QMessageBox::warning(this, "错误", "未知错误，请检查网络情况或联系管理员。", QMessageBox::Ok);
+        });
+    /*
     connect(setBaseInfoWork, &baseInfoWork::bindQQAvatarFinished, this, [=](int tag)
         {
         qqAvatarBinding = false;
@@ -382,6 +398,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         else
             QMessageBox::warning(this, "错误", "未知错误，请检查网络情况或联系管理员。", QMessageBox::Ok);
     });
+    */
 
     //个人考勤页面信号槽
     connect(this, &MainWindow::attendWorking, attendWork, &AttendWork::working);
@@ -4028,15 +4045,15 @@ void MainWindow::on_editPersonalInfoRes(int res)
     }
 }
 
-void MainWindow::on_btn_getQQAvatar_clicked()
+void MainWindow::on_btn_getMailAvatar_clicked()
 {
     //connect(loadingMovie, &QMovie::frameChanged, this, [=](int tmp)
     //    {
     //        Q_UNUSED(tmp);
     //        ui->btn_getQQAvatar->setIcon(QIcon(loadingMovie->currentPixmap()));
     //    });
-    qqAvatarBinding = true;
-    emit bindQQAvatar(ui->label_info_mail->text());
+    avatarBinding = true;
+    emit bindMailAvatar(ui->label_info_mail->text());
 }
 
 void MainWindow::on_btn_verifyInfo_clicked()
