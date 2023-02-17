@@ -36,7 +36,7 @@ public:
     ~formLogin();
 
 private:
-    bool homeLoading = false, signInbuttonLoading = false, signUpbuttonLoading = false;    //加载动画判断
+    bool homeLoading = false, signInbuttonLoading = false, signUpbuttonLoading = false, forgetAccountLoading = false, renewLoading = false;    //加载动画判断
     bool isAutoLogin;
     bool isQuit = false;    //标记线程已停止
     int loginErrCnt = 0;
@@ -45,6 +45,7 @@ private:
     SqlWork *sqlWork;
     baseInfoWork *loginWork;
     QThread *sqlThread, *dbThread;
+    QString token;  //找回验证码
 
     QTimer *aeMovieTimer;
     //QMovie *loadingMovie, *loadingMovie_2;
@@ -68,6 +69,10 @@ private slots:
     void on_btn_Login_clicked();
 
     void on_checkBox_remPwd_clicked(bool checked);
+
+    void on_btn_sendToken_clicked();
+
+    void on_btn_renew_clicked();
 
     void on_lineEdit_Uid_textEdited(const QString &arg1);
 
@@ -95,6 +100,8 @@ signals:
     void initDatabase();
     void beginUpdate();
 	void getAnnouncement();
+    void getForgetAccount(const QString& mail);
+    void renewForgetAccounts(const QList<QString> uid_list, const QString& new_pwd);
 };
 
 #endif // FORMLOGIN_H
