@@ -23,6 +23,11 @@ formLogin::formLogin(QDialog *parent) :
     //限制登录注册输入，防止sql注入
     QRegExp regx_account("[0-9]{1,11}$"), regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$");
     QValidator* validator_account = new QRegExpValidator(regx_account), *validator_pwd= new QRegExpValidator(regx_pwd);
+    QRegExp exp("[a-zA-Z0-9-_]+@[a-zA-Z0-9-_]+\\.[a-zA-Z]+");//邮箱正则表达式
+    QRegExpValidator* rval = new QRegExpValidator(exp);
+
+    ui->lineEdit_foget_renew->setValidator(validator_pwd);
+    ui->lineEdit_foget_mail->setValidator(rval);
     ui->lineEdit_Uid->setValidator(validator_account);
     ui->lineEdit_SignupTel->setValidator(validator_account);
     ui->lineEdit_Pwd->setValidator(validator_pwd);
@@ -61,9 +66,13 @@ formLogin::formLogin(QDialog *parent) :
             ui->btn_Login->setIcon(QIcon(QPixmap(m_strListImg.at(cnt))));
         if (signUpbuttonLoading)
             ui->btn_Signup->setIcon(QIcon(QPixmap(m_strListImg.at(cnt))));
+        if (forgetAccountLoading)
+            ui->btn_sendToken->setIcon(QIcon(QPixmap(m_strListImg.at(cnt))));
+        if (renewLoading)
+            ui->btn_renew->setIcon(QIcon(QPixmap(m_strListImg.at(cnt))));
         cnt++;
         });
-    aeMovieTimer->start(25);
+    aeMovieTimer->start(20);
     homeLoading = true;
 
     //多线程相关
@@ -103,6 +112,57 @@ formLogin::formLogin(QDialog *parent) :
     //注册相关
     connect(this, SIGNAL(signUp(const QString&, const QString&, const QString&, const QString&)), loginWork, SLOT(signUp(const QString&, const QString&, const QString&, const QString&)));
     connect(loginWork, SIGNAL(signupRes(int)), SLOT(on_signUpFinished(int)));
+    //找回密码相关
+    qRegisterMetaType<QList<QString>>("QList<QString>");
+    connect(this, &formLogin::getForgetAccount, loginWork, &baseInfoWork::getForgetAccount);
+    connect(this, SIGNAL(renewForgetAccounts(const QList<QString>, const QString&)), loginWork, SLOT(renewForgetAccounts(const QList<QString>, const QString&)));
+    connect(loginWork, &baseInfoWork::renewForgetAccountsFinished, this, [=](bool res) {
+        renewLoading = false;
+        ui->btn_renew->setIcon(QIcon(":/images/color_icon/arrow_up_2.svg"));
+        if(res)
+            QMessageBox::information(this, "提示", "密码重置成功，请重新登录。", QMessageBox::Ok);
+		else
+			QMessageBox::information(this, "提示", "密码重置失败，请检查网络或联系管理员。", QMessageBox::Ok);
+        ui->btn_renew->setEnabled(false);
+        token.clear();
+        ui->lineEdit_foget_mail->clear();
+        ui->lineEdit_foget_token->clear();
+        ui->lineEdit_foget_renew->clear();
+        ui->label_foget_uid->setText("待找回的账号：--");
+        });
+    connect(loginWork, &baseInfoWork::getForgetAccountFinished, this, [=](bool res) {
+        forgetAccountLoading = false;
+        ui->btn_sendToken->setIcon(QIcon());
+        if (res)
+        {
+            int i = 0;
+            QString accountList;
+            for (auto account : loginWork->getForgetUid())
+                accountList += QString("[%1]%2；").arg(account, loginWork->getForgetName().at(i++));
+            ui->label_foget_uid->setText("待找回的账号：" + accountList);
+
+            curTime = QTime::currentTime();
+            qsrand(curTime.msec() + curTime.second() * 1000);
+            QString tmpKey = QString::number(qrand() % 89999 + 10000);
+            token = service::pwdEncrypt(tmpKey + QString::number(QDateTime::currentDateTime().toSecsSinceEpoch()));
+            forgetAccountLoading = true;
+            int smtp_rescode = service::sendMail(loginWork->getSmtpConfig(), ui->lineEdit_foget_mail->text(), "WePlanet 找回账号", QString("您的账号：%1正在找回，找回验证码为：%2\n\n若非本人操作，请无视该邮件。").arg(accountList, token));
+            if (smtp_rescode != 1)
+                QMessageBox::warning(this, "警告", "邮件发送失败，请检查邮箱是否正确或联系管理员检查SMTP配置。", QMessageBox::Ok);
+            else
+            {
+                ui->btn_renew->setEnabled(true);
+                QMessageBox::information(this, "提醒", "已向邮箱发送找回验证码，请查看后输入验证码。", QMessageBox::Ok);
+            }
+            forgetAccountLoading = false;
+            ui->btn_sendToken->setIcon(QIcon());
+        }
+        else
+        {
+            ui->label_foget_uid->setText("待找回的账号：--");
+            QMessageBox::warning(this, "找回密码", "当前邮箱未绑定任何账号或网络出现错误。");
+        }
+        });
     //初始化相关
     readPwd = readLoginSettings();  //载入保存的账号信息
     //更新检测
@@ -305,6 +365,38 @@ void formLogin::on_checkBox_remPwd_clicked(bool checked)
         readPwd.clear();
     }
     writeLoginSettings();
+}
+
+void formLogin::on_btn_sendToken_clicked()
+{
+    if (ui->lineEdit_foget_mail->text().isEmpty())
+    {
+        QMessageBox::warning(this, "警告", "请输入找回账号所绑定的邮箱。", QMessageBox::Ok);
+		return;
+    }
+    forgetAccountLoading = true;
+    emit getForgetAccount(ui->lineEdit_foget_mail->text());
+}
+
+void formLogin::on_btn_renew_clicked()
+{
+    if (ui->lineEdit_foget_renew->text().isEmpty())
+    {
+        QMessageBox::warning(this, "警告", "你还没有填写新密码。", QMessageBox::Ok);
+        return;
+    }
+    if (ui->lineEdit_foget_renew->text().length() < 6)
+    {
+        QMessageBox::warning(this, "警告", "请输入6~16位的密码以确保安全。", QMessageBox::Ok);
+        return;
+    }
+    if (ui->lineEdit_foget_token->text() == token)
+    {
+        renewLoading = true;
+        emit renewForgetAccounts(loginWork->getForgetUid(), ui->lineEdit_foget_renew->text());
+    }
+    else
+        QMessageBox::warning(this, "警告", "邮件验证码错误，请检查邮件中的验证码是否填写正确。", QMessageBox::Ok);
 }
 
 

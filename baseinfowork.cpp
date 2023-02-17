@@ -179,7 +179,7 @@ void baseInfoWork::bindQQAvatar(QString qqMail)
 
 void baseInfoWork::bindMailAvatar(QString mail)
 {
-    mail.trimmed(); //去空格
+    mail = mail.trimmed(); //去空格
     QString hash = service::pwdEncrypt(mail);
     QString avatarUrl = QString("https://cravatar.cn/avatar/%1?s=120&r=G&d=mp").arg(hash);
     DB.open();
@@ -318,6 +318,21 @@ void baseInfoWork::editPersonalInfo(const QString& oldPwd, const QString &tel, c
     DB.close();
 }
 
+void baseInfoWork::renewForgetAccounts(const QList<QString> uid_list, const QString& new_pwd)
+{
+    DB.open();
+	QSqlQuery query(DB);
+    bool res = true;
+    for (int i = 0; i < uid_list.count() && res; i++)
+    {
+        qDebug() << uid_list[i];
+        res = query.exec("UPDATE magic_users SET password='" + service::pwdEncrypt(new_pwd) +"' WHERE uid='" + uid_list[i] +"';");
+	}
+	query.clear();
+	DB.close();
+	emit renewForgetAccountsFinished(res);
+}
+
 void baseInfoWork::authAccount(const long long account, const QString &pwd, const QString& editPwd)
 {
     DB.open();
@@ -389,6 +404,48 @@ void baseInfoWork::getAnnouncement()
 	DB.close();
 
 	emit getAnnouncementFinished(res);
+}
+
+void baseInfoWork::getForgetAccount(const QString& mail)
+{
+    DB.open();
+    QSqlQuery query(DB);
+    forgetUid.clear();
+    forgetName.clear();
+    bool res = query.exec("SELECT uid, name FROM magic_users WHERE mail='" + mail + "';");
+    while (query.next())
+    {
+        forgetUid.push_back(query.value("uid").toString());
+        forgetName.push_back(query.value("name").toString());
+    }
+    if(forgetUid.isEmpty())
+        res = false;
+    //加载smtp配置
+    if (smtp_config.isEmpty())
+    {
+        query.exec("SELECT * FROM magic_system WHERE sys_name='smtp';");
+        if (query.next() && !query.value("field_1").toString().isEmpty())
+        {
+            smtp_config.clear();
+            smtp_config.push_back(query.value("field_1").toString());
+            smtp_config.push_back(query.value("field_2").toString());
+            smtp_config.push_back(query.value("field_3").toString());
+        }
+    }
+    query.clear();
+    DB.close();
+
+	emit getForgetAccountFinished(res);
+}
+
+QList<QString> baseInfoWork::getForgetUid()
+{
+    return forgetUid;
+}
+
+QList<QString> baseInfoWork::getForgetName()
+{
+    return forgetName;
 }
 
 void baseInfoWork::loadStatisticsPanel()
@@ -626,7 +683,7 @@ void baseInfoWork::setSys_openChat(bool arg)
 
 void baseInfoWork::setSmtp_isNewConfig(bool arg)
 {
-    smtp_isNewConfig = true;
+    smtp_isNewConfig = arg;
 }
 
 QString baseInfoWork::getSys_announcementText()

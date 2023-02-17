@@ -30,6 +30,9 @@ public:
     void saveSystemSettings();
     void saveSmtpSettings(const QString& add, const QString& user, const QString& password);
     void getAnnouncement();
+    void getForgetAccount(const QString& mail);
+    QList<QString> getForgetUid();
+    QList<QString> getForgetName();
     QJsonObject getPanelSeriesObj(int type);
 
     bool getAttendToday();
@@ -71,7 +74,9 @@ private slots:
     void setAuthority(const QString &uid);
     void signUp(const QString& pwd, const QString& name, const QString& tel, const QString& gender);
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
+    void renewForgetAccounts(const QList<QString> uid_list, const QString& new_pwd);
 private:
+    QList<QString> forgetUid, forgetName;   //用户记录待找回的账号
     bool smtp_isNewConfig = false;  //smtp配置已更新
     bool isAttend;
     QDateTime curDateTime;
@@ -119,6 +124,8 @@ signals:
     void loadSystemSettingsFinished(bool);
     void saveSystemSettingsFinished(bool);
     void saveSmtpSettingsFinished(bool);
+    void getForgetAccountFinished(bool);
+    void renewForgetAccountsFinished(bool);
 };
 
 #endif // BASEINFOWORK_H
