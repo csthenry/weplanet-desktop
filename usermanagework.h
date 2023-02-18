@@ -13,10 +13,12 @@ class UserManageWork : public QObject
     Q_OBJECT
 public:
     explicit UserManageWork(QObject *parent = nullptr);
+    ~UserManageWork();
     void working();
     void setModel(QSqlRelationalTableModel* model);
     QSqlDatabase getDB();
     void submitAll();
+    void setFilter(const QString& filter);
     void loadAvatar();
     void queryAccount(const QString& account);
     void setCurAvatarUrl(const QString& url);

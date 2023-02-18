@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>11</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2126,8 +2126,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>16</height>
             </rect>
            </property>
            <property name="font">
@@ -2159,8 +2159,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -4007,8 +4007,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>16</height>
             </rect>
            </property>
            <property name="font">
@@ -4040,8 +4040,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -4073,8 +4073,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <attribute name="label">
@@ -4179,8 +4179,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>22</width>
+                   <height>16</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="ApplyProcess_Layout">
@@ -4219,8 +4219,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>20</width>
+                   <height>284</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_Layout">
@@ -4907,33 +4907,7 @@ padding: 0px 5px;</string>
                 <string>编辑用户</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_89">
-                <item row="1" column="0">
-                 <widget class="QPushButton" name="btn_delUser">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>注销账号（谨慎操作*）</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="resource.qrc">
-                    <normaloff>:/images/color_icon/color-warning_2.svg</normaloff>:/images/color_icon/color-warning_2.svg</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
+                <item row="0" column="0" colspan="2">
                  <widget class="QPushButton" name="btn_addUser">
                   <property name="minimumSize">
                    <size>
@@ -4956,7 +4930,33 @@ padding: 0px 5px;</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
+                <item row="1" column="0">
+                 <widget class="QPushButton" name="btn_delUser">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>注销账号*</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="resource.qrc">
+                    <normaloff>:/images/color_icon/color-warning_2.svg</normaloff>:/images/color_icon/color-warning_2.svg</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
                  <widget class="QPushButton" name="btn_banUser">
                   <property name="enabled">
                    <bool>false</bool>
@@ -4979,6 +4979,25 @@ padding: 0px 5px;</string>
                     <width>20</width>
                     <height>20</height>
                    </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="2">
+                 <widget class="QLabel" name="label_137">
+                  <property name="text">
+                   <string>[注] 注销账号会删除该UID下的用户数据；
+该操作可能导致其余数据表产生无关联的UID；
+非必要情况不使用此功能，可用封禁账号代替注销账号；
+封禁账号同样有注销账号后的无法登录等效果。</string>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>false</bool>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -5030,6 +5049,9 @@ padding: 0px 5px;</string>
                   </property>
                   <property name="scaledContents">
                    <bool>false</bool>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
                   </property>
                   <property name="wordWrap">
                    <bool>true</bool>
@@ -7596,8 +7618,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -7629,8 +7651,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -7800,8 +7822,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1048</width>
+                   <height>283</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_manage_Layout">
@@ -8006,8 +8028,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>290</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -8039,8 +8061,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -8202,8 +8224,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1016</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="manageApplyProcess_Layout">
@@ -8512,8 +8534,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>226</width>
+                   <height>267</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="manageApplyAuditorList_Layout">
@@ -8536,233 +8558,218 @@ padding: 0px 5px;</string>
        </layout>
       </widget>
       <widget class="QWidget" name="page_Group">
-       <layout class="QGridLayout" name="gridLayout_26">
+       <layout class="QGridLayout" name="gridLayout_25">
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_18">
-          <property name="font">
-           <font>
-            <family>微软雅黑</family>
-            <pointsize>10</pointsize>
-           </font>
+         <widget class="QGroupBox" name="groupBox_24">
+          <property name="title">
+           <string>当前部门</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_27">
+           <item row="0" column="0">
+            <widget class="QTableView" name="tableView_department"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_25">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="title">
-           <string>组织架构</string>
+           <string>部门管理</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_25">
-           <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox_24">
-             <property name="title">
-              <string>当前部门</string>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="2" column="1">
+            <widget class="QPushButton" name="btn_editDpt_check">
+             <property name="enabled">
+              <bool>false</bool>
              </property>
-             <layout class="QGridLayout" name="gridLayout_27">
-              <item row="0" column="0">
-               <widget class="QTableView" name="tableView_department"/>
-              </item>
-             </layout>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>45</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>确认操作</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="btn_delDpt">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>45</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>删除部门</string>
+             </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QGroupBox" name="groupBox_25">
+            <widget class="QPushButton" name="btn_addDpt">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>300</width>
+               <width>0</width>
+               <height>45</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>新增部门</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="btn_editDpt_cancel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>45</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>取消操作</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QGroupBox" name="groupBox_19">
+          <property name="minimumSize">
+           <size>
+            <width>360</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>说明</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_21">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>
-             <property name="title">
-              <string>部门管理</string>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;[超级管理员]为系统内置用户组，&lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;请勿编辑&lt;/span&gt;。&lt;/p&gt;&lt;p&gt;如需要指定不同用户的权限，请新增用户组。&lt;/p&gt;&lt;p&gt;对于用户组权限值：1为[是]，0为[否]。&lt;/p&gt;&lt;p&gt;对内容进行修改后，&lt;span style=&quot; font-weight:600;&quot;&gt;点击[确认操作]才会生效&lt;/span&gt;。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_6">
-              <item row="2" column="1">
-               <widget class="QPushButton" name="btn_editDpt_check">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>确认操作</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QPushButton" name="btn_delDpt">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>删除部门</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QPushButton" name="btn_addDpt">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>新增部门</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QPushButton" name="btn_editDpt_cancel">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>取消操作</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QGroupBox" name="groupBox_19">
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox_23">
+          <property name="title">
+           <string>当前用户组</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_22">
+           <item row="0" column="0">
+            <widget class="QTableView" name="tableView_group"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QGroupBox" name="groupBox_26">
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>用户组管理</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_23">
+           <item row="3" column="0">
+            <widget class="QPushButton" name="btn_editGroup_cancel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>360</width>
-               <height>0</height>
+               <width>0</width>
+               <height>45</height>
               </size>
              </property>
-             <property name="title">
-              <string>说明</string>
+             <property name="text">
+              <string>取消操作</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_21">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;[超级管理员]为系统内置用户组，&lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;请勿编辑&lt;/span&gt;。&lt;/p&gt;&lt;p&gt;如需要指定不同用户的权限，请新增用户组。&lt;/p&gt;&lt;p&gt;对于用户组权限值：1为[是]，0为[否]。&lt;/p&gt;&lt;p&gt;对内容进行修改后，&lt;span style=&quot; font-weight:600;&quot;&gt;点击[确认操作]才会生效&lt;/span&gt;。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-                <property name="wordWrap">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </widget>
            </item>
-           <item row="1" column="0" colspan="2">
-            <widget class="QGroupBox" name="groupBox_23">
-             <property name="title">
-              <string>当前用户组</string>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="btn_editGroup_check">
+             <property name="enabled">
+              <bool>false</bool>
              </property>
-             <layout class="QGridLayout" name="gridLayout_22">
-              <item row="0" column="0">
-               <widget class="QTableView" name="tableView_group"/>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QGroupBox" name="groupBox_26">
              <property name="minimumSize">
               <size>
-               <width>250</width>
-               <height>0</height>
+               <width>0</width>
+               <height>45</height>
               </size>
              </property>
-             <property name="title">
-              <string>用户组管理</string>
+             <property name="text">
+              <string>确认操作</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_23">
-              <item row="3" column="0">
-               <widget class="QPushButton" name="btn_editGroup_cancel">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>取消操作</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="btn_editGroup_check">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>确认操作</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="btn_addGroup">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>新增用户组</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="btn_delGroup">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>45</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>删除用户组</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="btn_addGroup">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>45</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>新增用户组</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="btn_delGroup">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>45</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>删除用户组</string>
+             </property>
             </widget>
            </item>
           </layout>

@@ -4,13 +4,19 @@ AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "AttendManageWork_DB");
     db_service.addDatabase(DB_SECOND, "AttendManageWork_DB_SECOND");
+
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    DB.open();
+}
+
+AttendManageWork::~AttendManageWork()
+{
+    DB.close();
 }
 
 void AttendManageWork::working()
 {
-    DB.open();
-    userModel->database().open();   //该model数据库和AttendManageWork中不一致
-    
+    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...   
     userModel->setTable("magic_users");
     userModel->setSort(userModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
     userModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
@@ -32,7 +38,7 @@ void AttendManageWork::working()
 
     attendModel->setTable("magic_attendance");
     attendModel->setSort(attendModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
-    attendModel->setEditStrategy(QSqlTableModel::OnRowChange);  //自动提交
+    attendModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     attendModel->setHeaderData(attendModel->fieldIndex("num"), Qt::Horizontal,"编号");
     attendModel->setHeaderData(attendModel->fieldIndex("a_uid"), Qt::Horizontal,"账号（UID）");
     attendModel->setHeaderData(attendModel->fieldIndex("begin_date"), Qt::Horizontal,"签到时间");
@@ -87,6 +93,14 @@ void AttendManageWork::dataOperate(int type)
         emit dataOperateFinished(true);
     query.clear();
     DB_SECOND.close();
+}
+
+void AttendManageWork::setFilter(int type, const QString& filter)
+{
+    if (type == 0)
+        userModel->setFilter(filter);
+    else
+        attendModel->setFilter(filter);
 }
 
 

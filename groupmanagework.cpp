@@ -4,19 +4,18 @@ GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "GroupManageWork_DB");
     db_service.addDatabase(DB_SECOND, "GroupManageWork_DB_SECOND");
+
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    DB.open();
+}
+
+GroupManageWork::~GroupManageWork()
+{
+    DB.close();
 }
 
 void GroupManageWork::working()
 {
-    DB.open();
-    if(!isFirst)
-    {
-        groupModel->select();
-        departmentModel->select();
-
-        emit groupManageWorkFinished();
-        return;
-    }
     groupModel->setTable("magic_group");
     groupModel->setSort(groupModel->fieldIndex("group_id"), Qt::AscendingOrder);    //升序排列
     groupModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -39,7 +38,6 @@ void GroupManageWork::working()
     departmentModel->setHeaderData(departmentModel->fieldIndex("dpt_name"),Qt::Horizontal,"部门名称");
     departmentModel->select();
 
-    isFirst = false;
     emit groupManageWorkFinished();
 }
 

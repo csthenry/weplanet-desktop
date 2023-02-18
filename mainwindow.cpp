@@ -424,6 +424,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     }, Qt::UniqueConnection);
 
     //用户管理信号槽
+    connect(this, &MainWindow::userManageModelSetFilter, userManageWork, &UserManageWork::setFilter);
     connect(this, &MainWindow::userManageWorking, userManageWork, &UserManageWork::working);
     connect(this, &MainWindow::userManageGetAvatar, userManageWork, &UserManageWork::loadAvatar);
     connect(this, &MainWindow::userManageModelSubmitAll, userManageWork, &UserManageWork::submitAll);
@@ -508,10 +509,13 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         else{
             ui->btn_editUser_check->setEnabled(false);
             ui->btn_editUser_cancel->setEnabled(false);
+            QMessageBox::information(this, "消息", "保存数据成功，即将刷新页面。",
+                QMessageBox::Ok);
         }
     }, Qt::UniqueConnection);
 
     //考勤管理信号槽
+    connect(this, &MainWindow::attendManageModelSetFilter, attendManageWork, &AttendManageWork::setFilter);
     connect(this, &MainWindow::attendManageWorking, attendManageWork, &AttendManageWork::working);
     connect(this, &MainWindow::attendManageGetAvatar, attendManageWork, &AttendManageWork::loadAvatar);
     connect(this, &MainWindow::attendManageModelSubmitAll, attendManageWork, &AttendManageWork::submitAll);
@@ -563,6 +567,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
                                      QMessageBox::Ok);
     });
     //活动管理信号槽
+    connect(this, &MainWindow::setActivityModelFilter, activityManageWork, &ActivityManageWork::setFilter);
     connect(this, &MainWindow::activityManageWorking, activityManageWork, &ActivityManageWork::working);
     connect(this, &MainWindow::activityManageModelSubmitAll, activityManageWork, &ActivityManageWork::submitAll);
     connect(this, &MainWindow::approveActivity, activityManageWork, &ActivityManageWork::m_approve);
@@ -631,6 +636,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         });
 
     //通知动态信号槽
+    connect(this, &MainWindow::posterModelSubmitAll, posterWork, &PosterWork::submitAll);
+    connect(this, &MainWindow::posterModelSetFilter, posterWork, &PosterWork::setFilter);
     connect(this, &MainWindow::posterWorking, posterWork, &PosterWork::working);
     connect(posterWork, &PosterWork::contentsManageWorkFinished, this, &MainWindow::setNoticeManagePage);
     connect(posterWork, &PosterWork::contentsWorkFinished, this, &MainWindow::setNoticePage);
@@ -1144,12 +1151,12 @@ void MainWindow::setUsersFilter_group(int type, QComboBox *group, QComboBox *dep
             sqlWhere.clear();
     }
     if (type == 1)
-        userManageModel->setFilter(sqlWhere);
+        emit userManageModelSetFilter(sqlWhere);
     else
-        attendUserModel->setFilter(sqlWhere);
+        emit attendManageModelSetFilter(0, sqlWhere);
 }
 
-void MainWindow::setUsersFilter_dpt(int type, QComboBox *group, QComboBox *department) const
+void MainWindow::setUsersFilter_dpt(int type, QComboBox *group, QComboBox *department)
 {
     QString sqlWhere = "dpt_name='" + department->currentText() + "'";
     if(group->currentIndex() != 0)
@@ -1162,9 +1169,9 @@ void MainWindow::setUsersFilter_dpt(int type, QComboBox *group, QComboBox *depar
             sqlWhere.clear();
     }
     if (type == 1)
-        userManageModel->setFilter(sqlWhere);
+        emit userManageModelSetFilter(sqlWhere);
     else
-        attendUserModel->setFilter(sqlWhere);
+        emit attendManageModelSetFilter(0, sqlWhere);
 }
 
 void MainWindow::reloadModelBefore()
@@ -2313,7 +2320,7 @@ void MainWindow::on_actUserManager_triggered()
     emit userManageWorking();
 }
 
-void MainWindow::setUserManagePage() const
+void MainWindow::setUserManagePage()
 {
     ui->tableView_userManage->setModel(userManageModel);
     ui->tableView_userManage->hideColumn(1);  //隐藏密码列
@@ -2328,6 +2335,10 @@ void MainWindow::setUserManagePage() const
     //当前行变化时触发currentRowChanged信号
     connect(userManagePageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
                 this, SLOT(on_userManagePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+
+    //移动到下一行（第0行为系统账号）
+    QModelIndex next_index = userManageModel->index(1, 1);
+    userManagePageSelection->setCurrentIndex(next_index, QItemSelectionModel::Select);
 
     ui->stackedWidget->setCurrentIndex(6);
     ui->stackedWidget->currentWidget()->setEnabled(true);
@@ -2350,7 +2361,7 @@ void MainWindow::on_actAttendManager_triggered()
     emit attendManageWorking();
 }
 
-void MainWindow::setAttendManagePage() const
+void MainWindow::setAttendManagePage()
 {
     //用户列表
     ui->tableView_attendUsers->setModel(attendUserModel);
@@ -2397,11 +2408,10 @@ void MainWindow::setActivityManagePage()
     connect(activityMemSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
         this, SLOT(on_activityManagePageMemcurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
-    //activityMemModel->setFilter("act_id='--'");
     for (int i = 0; i < activityMemModel->rowCount(); i++)
             ui->tableView_actMember->hideRow(i);
     
-    activityModel->setFilter("editUid=" + uid);     //仅能管理自己发布的活动
+    setActivityModelFilter(0, "editUid=" + uid);     //仅能管理自己发布的活动
     ui->stackedWidget->setCurrentIndex(8);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
@@ -2419,6 +2429,8 @@ void MainWindow::setNoticeManagePage()
     ui->tableView_mContents->hideColumn(6);
     ui->tableView_mContents->hideColumn(7);
     ui->tableView_mContents->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//填充整个view
+    ui->tableView_mContents->verticalHeader()->hide();
+
     //SelectionModel
     ui->tableView_mContents->setSelectionModel(noticeManageSelection);
     connect(noticeManageSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
@@ -2431,7 +2443,7 @@ void MainWindow::setNoticeManagePage()
     noticeEditMapper->addMapping(ui->checkBox_mCisHide, 6);
     noticeEditMapper->addMapping(ui->rBtn_mCPost, 5);
 
-    noticeManageModel->setFilter("author_id=" + uid);
+    posterModelSetFilter(1, "author_id=" + uid);
     ui->stackedWidget->setCurrentIndex(14);
 }
 
@@ -2448,6 +2460,7 @@ void MainWindow::setNoticePage()
     ui->tableView_contents->hideColumn(6);
     ui->tableView_contents->hideColumn(7);
     ui->tableView_contents->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//填充整个view
+    ui->tableView_contents->verticalHeader()->hide();
 
     //SelectionModel
     ui->tableView_contents->setSelectionModel(noticeSelection);
@@ -2659,7 +2672,7 @@ void MainWindow::setActivityPage()
         this, SLOT(on_activityPagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
     connect(myActSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
         this, SLOT(on_myActivityPagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
-    activityMemModel->setFilter("actm_uid=" + uid);
+    setActivityModelFilter(1, "actm_uid=" + uid);
     ui->comboBox_myAct->setCurrentIndex(0);
     ui->comboBox_activity->setCurrentIndex(0);
 
@@ -2693,6 +2706,7 @@ void MainWindow::on_actManage_triggered()
     ui->tableView_actList->setItemDelegateForColumn(0, readOnlyDelegate);
     ui->tableView_actList->setItemDelegateForColumn(6, readOnlyDelegate);
     ui->tableView_actMember->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableView_actMember->verticalHeader()->hide();
 }
 
 void MainWindow::on_actMessage_triggered()
@@ -2786,6 +2800,8 @@ void MainWindow::on_actGroup_triggered()
 
     ui->tableView_department->setItemDelegateForColumn(0, readOnlyDelegate);    //第一列不可编辑
     ui->tableView_group->setItemDelegateForColumn(0, readOnlyDelegate);
+    ui->tableView_group->verticalHeader()->hide();
+    ui->tableView_department->verticalHeader()->hide();
 
     //当前项变化时触发currentChanged信号
     connect(groupPageSelection_group, SIGNAL(currentChanged(QModelIndex, QModelIndex)),
@@ -2914,7 +2930,7 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     //ui->tableView_userManage->setItemDelegateForRow(current.row(), readOnlyDelegate);   //禁止编辑系统账号
     ui->tableView_userManage->setRowHidden(current.row(), curRecord.value("uid") == "1");
     if (preRecord.value("uid") == "1" && curRecord.value("uid") != "1")
-		ui->tableView_userManage->setRowHidden(previous.row(), false);  //为选中系统账号时取消隐藏
+		ui->tableView_userManage->setRowHidden(previous.row(), false);  //未选中系统账号时取消隐藏
 
     if (curRecord.value("uid") != "100000" && curRecord.value("uid") != "1" && curRecord.value("uid") != uid)  //避免删除初始用户和当前用户
     {
@@ -2990,8 +3006,7 @@ void MainWindow::on_attendManagePageUserscurrentRowChanged(const QModelIndex &cu
     ui->btn_attendManage_reAttend->setEnabled(current.isValid());
     ui->btn_attendManage_cancelAttend->setEnabled(current.isValid());
     QString uid = curRecord.value("uid").toString();
-    //attendManageModel->setFilter("a_uid='" + curRecord.value("uid").toString() +"'");
-    //curAttendRecord = attendManageModel->record(0);     //取最新考勤记录
+
     ui->label_attendManagePage_uid->setText(uid);
     
     for (int i = 0; i < attendManageModel->rowCount(); i++)
@@ -3089,13 +3104,12 @@ void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, 
     Q_UNUSED(previous);
     QSqlRecord curRecord = activityMemModel->record(current.row()), curActRec;
     QString active_id = curRecord.value("act_id").toString();
-    //QString pre_filter = activityModel->filter();
-    //activityModel->setFilter("act_id=" + curRecord.value("act_id").toString());
+
     if (!activityModel->filter().isEmpty())
         on_btn_actSearchClear_clicked();
-    for (int i = 0; i < activityMemModel->rowCount(); i++)
+    for (int i = 0; i < activityModel->rowCount(); i++)
     {
-		if (activityMemModel->record(i).value("act_id").toString() == active_id)
+		if (activityModel->record(i).value("act_id").toString() == active_id)
 		{
             curActRec = activityModel->record(i);
 			break;
@@ -3124,7 +3138,6 @@ void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, 
     }else
         ui->label_curActStatus->setText(curRecord.value("status").toString());
 
-    //activityModel->setFilter(pre_filter);
 }
 
 void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
@@ -3133,7 +3146,7 @@ void MainWindow::on_activityManagePagecurrentRowChanged(const QModelIndex &curre
     actEditMapper->setCurrentIndex(current.row());  //将映射移动到对应行
     QSqlRecord curRec = activityModel->record(current.row());
 	active_id = curRec.value("act_id").toString();
-    //activityMemModel->setFilter("act_id=" + curRec.value("act_id").toString());
+
     //报名成员列表
     int mem_sum = 0;
     for (int i = 0; i < activityMemModel->rowCount(); i++)
@@ -3155,9 +3168,9 @@ void MainWindow::on_comboBox_activity_currentIndexChanged(const QString& arg1)
     //curDateTime = QDateTime::currentDateTime();
     QString dateTime = curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     if (arg1 == "所有活动")
-        activityModel->setFilter("");
+        setActivityModelFilter(0, "");
     else
-        activityModel->setFilter("joinDate <= '" + dateTime + "' AND beginDate >= '" + dateTime + "'");
+        setActivityModelFilter(0, "joinDate <= '" + dateTime + "' AND beginDate >= '" + dateTime + "'");
 }
 
 void MainWindow::on_comboBox_myAct_currentIndexChanged(const QString& arg1)
@@ -3165,13 +3178,13 @@ void MainWindow::on_comboBox_myAct_currentIndexChanged(const QString& arg1)
     //curDateTime = QDateTime::currentDateTime();
     QString dateTime = curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     if (arg1 == "所有活动")
-        activityMemModel->setFilter("actm_uid=" + uid);
+        setActivityModelFilter(1, "actm_uid=" + uid);
     else if (arg1 == "未录取")
-        activityMemModel->setFilter("actm_uid=" + uid + " AND status='未录取'");
+        setActivityModelFilter(1, "actm_uid=" + uid + " AND status='未录取'");
     else if (arg1 == "待审核")
-        activityMemModel->setFilter("actm_uid=" + uid + " AND status='待审核'");
+        setActivityModelFilter(1, "actm_uid=" + uid + " AND status='待审核'");
     else
-        activityMemModel->setFilter("actm_uid=" + uid + " AND (status='已录取' OR status='已完成')");
+        setActivityModelFilter(1, "actm_uid=" + uid + " AND (status='已录取' OR status='已完成')");
 }
 
 void MainWindow::on_noticeManagePagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -3295,15 +3308,18 @@ void MainWindow::on_btn_actJoin_clicked()
         QMessageBox::warning(this, "错误", "该活动不在报名时间内。");
         return;
     }
-    QString pre_filter = activityMemModel->filter();
-    activityMemModel->setFilter("actm_uid = " + uid + " AND act_id = " + rec.value("act_id").toString());
-    rec = activityMemModel->record(0);
-    activityMemModel->setFilter(pre_filter);
-    if(!rec.value(0).toString().isEmpty())
+
+    QString activity_id = rec.value("act_id").toString();
+    for (int i = 0; i < activityMemModel->rowCount(); i++)
     {
-        QMessageBox::warning(this, "错误", "你已经报名了该活动，请勿重复报名。");
-        return;
+        rec = activityMemModel->record(i);
+        if (rec.value("actm_uid").toString() == uid && rec.value("act_id").toString() == activity_id)
+        {
+            QMessageBox::warning(this, "错误", "你已经报名了该活动，请勿重复报名。");
+            return;
+        }
     }
+
     ui->checkBox_agreePrivacy->setChecked(false);
     emit applyActivity(select_id, uid);
 }
@@ -3314,9 +3330,9 @@ void MainWindow::on_btn_actCancel_clicked()
     QSqlRecord rec = activityModel->record(myActListSelection->currentIndex().row()), memRec;
     QString select_id = rec.value("act_id").toString();
     QString pre_filter = activityMemModel->filter();
-    activityMemModel->setFilter("actm_uid = " + uid + " AND act_id = " + rec.value("act_id").toString());
+    setActivityModelFilter(1, "actm_uid = " + uid + " AND act_id = " + rec.value("act_id").toString());
     memRec = activityMemModel->record(0);
-    activityMemModel->setFilter(pre_filter);
+    setActivityModelFilter(1, pre_filter);
     if (memRec.value(0).toString().isEmpty())
     {
         QMessageBox::warning(this, "错误", "你还没有报名此活动呢，无法取消哦。");
@@ -3334,13 +3350,13 @@ void MainWindow::on_btn_actSearch_clicked()
 {
     if (ui->comboBox_activity->currentIndex())
         ui->comboBox_activity->setCurrentIndex(0);
-    activityModel->setFilter("act_name LIKE '%" + ui->lineEdit_actSearch->text() + "%' OR act_id = '" + ui->lineEdit_actSearch->text() + "'");
+    setActivityModelFilter(0, "act_name LIKE '%" + ui->lineEdit_actSearch->text() + "%' OR act_id = '" + ui->lineEdit_actSearch->text() + "'");
 }
 
 void MainWindow::on_btn_actSearchClear_clicked()
 {
     ui->lineEdit_actSearch->clear();
-    activityModel->setFilter("");
+    setActivityModelFilter(0, "");
 }
 
 void MainWindow::on_btn_editGroup_check_clicked()
@@ -3466,7 +3482,7 @@ void MainWindow::on_rBtn_man_clicked()
 {
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
-    userManageModel->setFilter("gender='男'");
+    emit userManageModelSetFilter("gender='男'");
 }
 
 void MainWindow::on_btn_getCnt_clicked()
@@ -3478,7 +3494,7 @@ void MainWindow::on_rBtn_woman_clicked()
 {
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
-    userManageModel->setFilter("gender='女'");
+    emit userManageModelSetFilter("gender='女'");
 }
 
 void MainWindow::on_btn_registerCnt_clicked()
@@ -3490,7 +3506,7 @@ void MainWindow::on_rBtn_all_clicked()
 {
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
-    userManageModel->setFilter("");
+    emit userManageModelSetFilter("");
 }
 
 void MainWindow::on_btn_actCnt_clicked()
@@ -3500,14 +3516,6 @@ void MainWindow::on_btn_actCnt_clicked()
 
 void MainWindow::on_rBtn_actAll_clicked()
 {
- //   int idx = -1;
-	//QString pre_filter = activityMemModel->filter();
- //   idx = pre_filter.indexOf("AND");
- //   if (idx != -1)
- //       pre_filter = pre_filter.mid(0, idx-1);
- //   if (idx == -1 && pre_filter.indexOf("status") != -1)
- //       pre_filter.clear();
- //   activityMemModel->setFilter(pre_filter);
     for (int i = 0; i < activityMemModel->rowCount(); i++)
     {
         if (activityMemModel->record(i).value("act_id").toString() != active_id)
@@ -3537,17 +3545,6 @@ void MainWindow::on_btn_saveSysSettings_clicked()
 
 void MainWindow::on_rBtn_actFinished_clicked()
 {
-  //  int idx = -1;
-  //  QString pre_filter = activityMemModel->filter();
-  //  idx = pre_filter.indexOf("AND");
-  //  if (idx != -1)
-  //      pre_filter = pre_filter.mid(0, idx-1);
-  //  if (idx == -1 && pre_filter.indexOf("status") != -1)
-  //      pre_filter.clear();
-  //  if(pre_filter == "")
-  //      activityMemModel->setFilter("status = '已录取' OR status = '未录取'");
-  //  else
-		//activityMemModel->setFilter(pre_filter + " AND (status='已录取' OR status='未录取')");
     for (int i = 0; i < activityMemModel->rowCount(); i++)
     {
 		QString status = activityMemModel->record(i).value("status").toString();
@@ -3560,17 +3557,6 @@ void MainWindow::on_rBtn_actFinished_clicked()
 
 void MainWindow::on_rBtn_actPending_clicked()
 {
-    //int idx = -1;
-    //QString pre_filter = activityMemModel->filter();
-    //idx = pre_filter.indexOf("AND");
-    //if (idx != -1)
-    //    pre_filter = pre_filter.mid(0, idx-1);
-    //if (idx == -1 && pre_filter.indexOf("status") != -1)
-    //    pre_filter.clear();
-    //if (pre_filter == "")
-    //    activityMemModel->setFilter("status = '待审核'");
-    //else
-    //    activityMemModel->setFilter(pre_filter + " AND status = '待审核'");
     for (int i = 0; i < activityMemModel->rowCount(); i++)
     {
 		if (activityMemModel->record(i).value("act_id").toString() == active_id && activityMemModel->record(i).value("status").toString() == "待审核")
@@ -3582,12 +3568,13 @@ void MainWindow::on_rBtn_actPending_clicked()
 
 void MainWindow::on_btn_userManagePage_search_clicked()
 {
-    userManageModel->setFilter("uid='" + ui->lineEdit_searchUid->text()+ "' OR name='" + ui->lineEdit_searchUid->text() + "'");
+    emit userManageModelSetFilter("uid='" + ui->lineEdit_searchUid->text()+ "' OR name='" + ui->lineEdit_searchUid->text() + "'");
 }
 
 void MainWindow::on_btn_userManagePage_recovery_clicked()
 {
-    userManageModel->setFilter("");
+    ui->lineEdit_searchUid->clear();
+    emit userManageModelSetFilter("");
 }
 
 void MainWindow::on_btn_updateContent_clicked()
@@ -3677,8 +3664,7 @@ void MainWindow::on_btn_delContent_clicked()
 	{
         const QModelIndex curIndex = noticeManageSelection->currentIndex();//获取当前选择单元格的模型索引
         noticeManageModel->removeRow(curIndex.row());
-        noticeManageModel->submitAll();
-        on_actNoticeManage_triggered();
+        emit posterModelSubmitAll();
     }
 }
 
@@ -3690,7 +3676,7 @@ void MainWindow::on_lineEdit_manageContents_textChanged(const QString& arg1)
 void MainWindow::on_btn_searchContents_clicked()
 {
     QString arg = "(c_id='" + ui->lineEdit_searchContents->text() + "' OR title LIKE '%" + ui->lineEdit_searchContents->text() + "%' OR text LIKE '%" + ui->lineEdit_searchContents->text() + "%' OR author_id='" + ui->lineEdit_searchContents->text() + "') AND isHide=0";
-    noticeModel->setFilter(arg);
+    posterModelSetFilter(0, arg);
 }
 
 void MainWindow::on_comboBox_group_currentIndexChanged(const QString &arg1)
@@ -3709,7 +3695,7 @@ void MainWindow::on_btn_switchPanel_clicked()
 
 void MainWindow::on_btn_recoveryContents_clicked()
 {
-    noticeModel->setFilter("isHide=0");
+    posterModelSetFilter(0, "isHide=0");
     ui->lineEdit_searchContents->clear();
 }
 
@@ -3750,7 +3736,7 @@ void MainWindow::on_btn_panel_clicked()
 
 void MainWindow::on_btn_userManagePage_recovery_2_clicked()
 {
-    userManageModel->setFilter("");
+    emit userManageModelSetFilter("");
     ui->comboBox_group->setCurrentIndex(0);
     ui->comboBox_department->setCurrentIndex(0);
     ui->rBtn_all->setChecked(true);
@@ -3799,15 +3785,16 @@ void MainWindow::on_btn_resetAutoRun_clicked()
 
 void MainWindow::on_btn_attendManagePage_recovery_clicked()
 {
-    attendUserModel->setFilter("");
-    attendManageModel->setFilter("");
+    emit attendManageModelSetFilter(0, "");
+    emit attendManageModelSetFilter(1, "");
     ui->comboBox_group_2->setCurrentIndex(0);
     ui->comboBox_department_2->setCurrentIndex(0);
+    ui->lineEdit_searchUid_attend->clear();
 }
 
 void MainWindow::on_btn_attendManagePage_search_clicked()
 {
-    attendUserModel->setFilter("uid='" + ui->lineEdit_searchUid_attend->text()+ "' OR name='" + ui->lineEdit_searchUid_attend->text() + "'");
+    emit attendManageModelSetFilter(0, "uid='" + ui->lineEdit_searchUid_attend->text()+ "' OR name='" + ui->lineEdit_searchUid_attend->text() + "'");
 }
 
 void MainWindow::on_btn_attendManage_reAttend_clicked()

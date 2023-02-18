@@ -4,11 +4,19 @@ UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "UserManageWork_DB");
     db_service.addDatabase(DB_SECOND, "UserManageWork_DB_SECOND");
+
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    DB.open();
+}
+
+UserManageWork::~UserManageWork()
+{
+    DB.close();
 }
 
 void UserManageWork::working()
 {
-    DB.open();  //使用model时，数据库应保持开启
+    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...      
     relTableModel->setTable("magic_users");
     relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
@@ -70,9 +78,13 @@ void UserManageWork::setModel(QSqlRelationalTableModel *model)
 void UserManageWork::submitAll()
 {
     bool res = true;
-    if (relTableModel->isDirty())
-        res = relTableModel->submitAll();
+    res = relTableModel->submitAll();
     emit submitAllFinished(res);
+}
+
+void UserManageWork::setFilter(const QString& filter)
+{
+    relTableModel->setFilter(filter);
 }
 
 void UserManageWork::loadAvatar()
