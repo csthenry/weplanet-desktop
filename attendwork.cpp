@@ -4,12 +4,18 @@ AttendWork::AttendWork(QObject *parent) : QObject(parent)
 {
     db_service.addDatabase(DB, "AttendWork_DB");
     db_service.addDatabase(DB_SECOND, "AttendWork_DB_SECOND");
+
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    DB.open();
+}
+
+AttendWork::~AttendWork()
+{
+    DB.close();
 }
 
 void AttendWork::working()
 {
-    DB.open();
-
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -42,7 +48,6 @@ void AttendWork::working()
 
 void AttendWork::homeChartWorking()
 {
-    DB.open();
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -70,7 +75,6 @@ void AttendWork::homeChartWorking()
     QString jsCode = QString("init(%1, 1)").arg(QString(QJsonDocument(seriesObj).toJson()));
     
     emit homeChartDone(jsCode);
-    DB.close();
 }
 
 void AttendWork::analyseWorkTime()

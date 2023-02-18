@@ -191,9 +191,9 @@ private:
 
     void setAttendPage();
 
-    void setUserManagePage() const;
+    void setUserManagePage();
 
-    void setAttendManagePage() const;
+    void setAttendManagePage();
 
     void setGroupManagePage();
 
@@ -207,7 +207,7 @@ private:
 
     void setUsersFilter_group(int type, QComboBox* group, QComboBox* department);
 
-    void setUsersFilter_dpt(int type, QComboBox* group, QComboBox* department) const;
+    void setUsersFilter_dpt(int type, QComboBox* group, QComboBox* department);
 
     void reloadModelBefore();   //用于relationModel跨线程刷新，一般model似乎线程安全！
 
@@ -580,11 +580,15 @@ signals:
 
     void userManageSetCombox();
 
+    void userManageModelSetFilter(const QString& filter);
+
     void attendManageWorking();
 
     void attendManageGetAvatar();
 
     void attendManageModelSubmitAll(int type);
+
+    void attendManageModelSetFilter(int type, const QString& filter);
 
     void groupManageWorking();
 
@@ -595,6 +599,8 @@ signals:
     void activityManageWorking();
 
     void activityManageModelSubmitAll();
+
+    void setActivityModelFilter(int flag, const QString& filter);
 
     void applyActivity(const QString aid, const QString& uid);
 
@@ -622,7 +628,9 @@ signals:
 
     void posterWorking();
 
-    void posterSubmitAll();
+    void posterModelSetFilter(int type, const QString& filter);
+
+    void posterModelSubmitAll();
 
     void beginUpdate();
 

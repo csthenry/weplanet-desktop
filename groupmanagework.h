@@ -15,6 +15,7 @@ class GroupManageWork : public QObject
     Q_OBJECT
 public:
     explicit GroupManageWork(QObject *parent = nullptr);
+    ~GroupManageWork();
     void working();
     void setGroupModel(QSqlTableModel* group);
     QSqlDatabase getDB();
@@ -23,7 +24,6 @@ public:
     void fixUser(int type, const QString& removedId);
 private:
     service db_service;
-    bool isFirst = true;
     QSqlDatabase DB, DB_SECOND;
     QSqlTableModel *groupModel, *departmentModel;
 

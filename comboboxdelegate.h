@@ -14,6 +14,7 @@ class ComboBoxDelegate : public QStyledItemDelegate
 private:
     QStringList m_ItemList;//选择列表
     bool m_isEdit; //是否可编辑
+    int type = 1;   //0编号映射，1文本映射
 
 public:
     ComboBoxDelegate(QObject *parent = 0);
@@ -27,6 +28,8 @@ public:
     void setModelData(QWidget *editor, QAbstractItemModel *model,const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+    void setType(int type);
 };
 
 #endif // QWCOMBOBOXDELEGATE_H

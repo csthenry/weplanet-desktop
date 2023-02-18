@@ -1,20 +1,22 @@
 #include "posterwork.h"
-#include <QDebug>
 
 PosterWork::PosterWork(QObject *parent)
 	: QObject(parent)
 {
     db_service.addDatabase(DB, "PosterManageWork_DB");
     db_service.addDatabase(DB_SECOND, "PosterManageWork_DB_SECOND");
+
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //³¬Ê±ÖØÁ¬
+    DB.open();
 }
 
 PosterWork::~PosterWork()
 {
+    DB.close();
 }
 
 void PosterWork::working()
 {
-    DB.open();
     if (workType == -1)
         return;
     if (workType != 1)
@@ -80,4 +82,12 @@ void PosterWork::poster_statistics()
         statistics.exec("INSERT INTO magic_statistics (date, dynamics_cnt) VALUES ('" + QDateTime::currentDateTime().date().toString("yyyy-MM-dd") + "', 1)");
     statistics.clear();
     DB_SECOND.close();
+}
+
+void PosterWork::setFilter(int type, const QString& filter)
+{
+    if (type == 0)
+        tabModel->setFilter(filter);
+    else
+        manageModel->setFilter(filter);
 }

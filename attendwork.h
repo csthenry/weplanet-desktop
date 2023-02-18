@@ -18,6 +18,7 @@ class AttendWork : public QObject
     Q_OBJECT
 public:
     explicit AttendWork(QObject *parent = nullptr);
+    ~AttendWork();
     void working();
     void homeChartWorking();
     void analyseWorkTime();

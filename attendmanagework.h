@@ -13,6 +13,7 @@ class AttendManageWork : public QObject
     Q_OBJECT
 public:
     explicit AttendManageWork(QObject *parent = nullptr);
+    ~AttendManageWork();
     bool isFirst = true;    //是否为首次加载model
     void working();
     void setCurAvatarUrl(const QString url);
@@ -23,6 +24,7 @@ public:
     void loadAvatar();
     void setCombox(QComboBox* group, QComboBox* department);
     void dataOperate(int type);
+    void setFilter(int type, const QString& filter);
     QSqlDatabase getDB();
 private:
     service db_service;

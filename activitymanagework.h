@@ -28,6 +28,7 @@ public:
 	void m_reject(const QString actm_id);
 	void m_delete(const QString actm_id);
 	void setType(int t);
+	void setFilter(int flag, const QString& filter);
 	float getCurScore();
 
 private:
