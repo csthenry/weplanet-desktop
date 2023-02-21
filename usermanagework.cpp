@@ -187,7 +187,6 @@ void UserManageWork::updateVerify(int type, int verifyTag, const QString& info)
 		res = query.exec("INSERT INTO magic_verify (v_uid, vid, info) VALUES (" + uid + ", " + QString::number(verifyTag) + ", '" + info + "')");
     else
 		res = query.exec("UPDATE magic_verify SET vid = " + QString::number(verifyTag) + ", info = '" + info + "' WHERE v_uid = " + uid);
-    qDebug() << query.lastError().text() << " " << query.lastQuery();
     query.clear();
     DB_SECOND.close();
     if (res)
