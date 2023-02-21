@@ -450,7 +450,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 			QMessageBox::warning(this, "错误", "认证系统：操作失败，请联系技术支持。", QMessageBox::Ok);
         }, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::getVerifyFinished, this, [=](bool res) {
-		getVerifyQueue.dequeue();
+        if(getVerifyQueue.count() != 0)
+            getVerifyQueue.dequeue();
         if (!getVerifyQueue.isEmpty())
         {
             QString back = getVerifyQueue.back();
