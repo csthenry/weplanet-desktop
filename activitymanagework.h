@@ -30,8 +30,10 @@ public:
 	void setType(int t);
 	void setFilter(int flag, const QString& filter);
 	float getCurScore();
+	bool isDisplay = false;	//当前页正在展示
 
 private:
+	QTimer *heartBeat;
 	float curScore = 0;
 	int type;	//1为活动页面，2为活动管理页面
 	QString uid;	//用于统计当前用户已完成活动

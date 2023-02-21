@@ -30,6 +30,7 @@ public:
     QString getVerifyType();
     int getVerifyTag();
     QString getUid();
+    bool isDisplay = false;
 	
 private slots:
 
@@ -42,6 +43,7 @@ private:
     QSqlRelationalTableModel *relTableModel;
     QStringList comboxItems_group, comboxItems_department;
     QString verifyInfo, verifyType;
+    QTimer *heartBeat;
     int verifyTag;
     void getComboxItems();
 signals:

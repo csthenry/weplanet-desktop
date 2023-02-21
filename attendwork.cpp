@@ -5,17 +5,30 @@ AttendWork::AttendWork(QObject *parent) : QObject(parent)
     db_service.addDatabase(DB, "AttendWork_DB");
     db_service.addDatabase(DB_SECOND, "AttendWork_DB_SECOND");
 
-    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    DB.open();
+    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    heartBeat = new QTimer(this);
+    connect(heartBeat, &QTimer::timeout, this, [=]() {
+        if (isDisplay)
+            relTableModel->select();
+        else
+            if (DB.isOpen())
+                DB.close();
+        });
+    heartBeat->start(MYSQL_TIME_OUT);
 }
 
 AttendWork::~AttendWork()
 {
-    DB.close();
+    heartBeat->stop();
+    if (DB.isOpen())
+        DB.close();
 }
 
 void AttendWork::working()
 {
+    if (!DB.isOpen())
+        DB.open();
+    isDisplay = true;
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
@@ -48,6 +61,9 @@ void AttendWork::working()
 
 void AttendWork::homeChartWorking()
 {
+    if (!DB.isOpen())
+        DB.open();
+    isDisplay = true;
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交

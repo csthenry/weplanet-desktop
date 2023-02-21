@@ -9,6 +9,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+void MainWindow::initModelViewIsDisplay()
+{
+    activityManageWork->isDisplay = false;
+    userManageWork->isDisplay = false;
+    attendWork->isDisplay = false;
+    attendManageWork->isDisplay = false;
+    posterWork->isDisplay = false;
+    groupManageWork->isDisplay = false;
+}
+
 MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -66,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     ui->statusbar->addWidget(statusIcon);   //将状态组件添加至statusBar
     ui->statusbar->addWidget(connectStatusLable);
     ui->statusbar->addPermanentWidget(timeLabel);
-    ui->stackedWidget->setCurrentIndex(13);  //转到加载首页
+    ui->stackedWidget->setCurrentIndex(0);  //转到加载首页
     connect(formLoginWindow, SIGNAL(sendData(QString)), this, SLOT(receiveData(QString)));    //接收登录窗口的信号
     readOnlyDelegate = new class readOnlyDelegate(this);    //用于tableView只读
 
@@ -108,10 +118,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     aeMovieTimer->start(20);
     
     //心跳
-    refTimer = new QTimer(this);
-    connect(refTimer, &QTimer::timeout, this, [=]()  {
-            on_actRefresh_triggered();
-        });
+    //refTimer = new QTimer(this);
+    //connect(refTimer, &QTimer::timeout, this, [=]()  {
+    //        on_actRefresh_triggered();
+    //    });
     msgPushTimer = new QTimer(this);
     connect(msgPushTimer, &QTimer::timeout, this, [=]() {
         msgPusherService->SecsSinceEpoch = tr("%1").arg(curDateTime.toSecsSinceEpoch());    //更新时间
@@ -294,8 +304,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         emit startBaseInfoWork();   //等待数据库第一次连接成功后再调用
 		ui->label_homeLoading->setVisible(true);
         emit attendHomeChartWorking();
-        emit actHomeWorking();
-        refTimer->start(5 * 60 * 1000);  //开启心跳query定时器（5分钟心跳）
+        //emit actHomeWorking();
+        //refTimer->start(5 * 60 * 1000);  //开启心跳query定时器（5分钟心跳）
         msgPushTimer->start(msgPushTime * 1000);
     }, Qt::UniqueConnection);
 
@@ -335,6 +345,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         });
 
     //首页活动信号槽
+    /*
     connect(this, &MainWindow::actHomeWorking, activityManageWork, &ActivityManageWork::homeWorking);
     connect(activityManageWork, &ActivityManageWork::actHomeWorkFinished, this, [=]()
          {
@@ -347,6 +358,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
              ui->tableView_activityHome->setEditTriggers(QAbstractItemView::NoEditTriggers);
              ui->stackedWidget->setCurrentIndex(0);
          });
+         */
     //首页考勤图表
 	connect(this, &MainWindow::attendHomeChartWorking, attendWork, &AttendWork::homeChartWorking);
 	connect(attendWork, &AttendWork::homeChartDone, this, [=](QString jsCode) {
@@ -919,7 +931,7 @@ MainWindow::~MainWindow()
         dbThread->quit();
         dbThread->wait();
     }
-    refTimer->stop();
+    //refTimer->stop();
     msgPushTimer->stop();
     currentTimeUpdate->stop();
 
@@ -1196,12 +1208,14 @@ void MainWindow::on_actExit_triggered()
     QSettings settings("bytecho", "MagicLightAssistant");
     settings.setValue("isAutoLogin", false);    //注销后自动登录失效
 
+    initModelViewIsDisplay();
+
     infoWidget->close();
     friendsWidget->close();
     friendInfoWidget->close();
 
     formLoginWindow = new formLogin();
-    refTimer->stop();
+    //refTimer->stop();
     msgPushTimer->stop();
 
     //重置在线聊天
@@ -1215,13 +1229,12 @@ void MainWindow::on_actExit_triggered()
         formLoginWindow->send();    //发送信号
         resetUID();
         emit startSetAuth(uid);
-        //ui->label_homeStatus->setMovie(loadingMovie);   //首页状态图标
         homeLoading = true;
         emit startBaseInfoWork();
-        emit actHomeWorking();
+        //emit actHomeWorking();
         emit attendHomeChartWorking();
-        ui->stackedWidget->setCurrentIndex(13);  //回到首页
-        refTimer->start(5 * 60 * 1000);  //开启心跳定时器（5分钟心跳）
+        ui->stackedWidget->setCurrentIndex(0);  //回到首页
+        //refTimer->start(5 * 60 * 1000);  //开启心跳定时器（5分钟心跳）
         msgPushTimer->start(msgPushTime * 1000);
         delete formLoginWindow;
         this->showMinimized();
@@ -1237,7 +1250,8 @@ void MainWindow::on_actHome_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
-    ui->stackedWidget->setCurrentIndex(13);
+    initModelViewIsDisplay();
+    ui->stackedWidget->setCurrentIndex(0);
     if(sqlWork->getisPaused())
         sqlWork->stopThread();  //等待sqlWork暂停时再停止，避免数据库未连接
     else
@@ -1246,11 +1260,12 @@ void MainWindow::on_actHome_triggered()
     homeLoading = true;
     emit startBaseInfoWork();   //刷新首页数据
     emit attendHomeChartWorking();
-    emit actHomeWorking();
+    //emit actHomeWorking();
 }
 
 void MainWindow::on_actMyInfo_triggered()
 {
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(1);
     QRegExp regx_pwd("[0-9A-Za-z!@#$%^&*.?]{1,16}$"), regx_num("[0-9]{1,11}$");
     QValidator* validator_pwd = new QRegExpValidator(regx_pwd), * validator_tel = new QRegExpValidator(regx_num);
@@ -1263,6 +1278,7 @@ void MainWindow::on_actAttend_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -2304,6 +2320,7 @@ void MainWindow::on_actApply_triggered()
     //ui->stackedWidget->setCurrentIndex(5);
    if (ui->stackedWidget->currentIndex() == 13)
         return;
+   initModelViewIsDisplay();
    ui->stackedWidget->setCurrentIndex(13);
    emit loadUserPageApplyItems(uid);
 }
@@ -2312,6 +2329,7 @@ void MainWindow::on_actUserManager_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -2348,6 +2366,7 @@ void MainWindow::on_actAttendManager_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_attendUsers->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_attendUsers->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -2640,12 +2659,14 @@ void MainWindow::on_action_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     ui->lineEdit_actSearch->clear();
     if(ui->comboBox_activity->currentIndex() != 0)
 		ui->comboBox_activity->setCurrentIndex(0);
     activityManageWork->setType(1);
     //activityManageWork->setUid(uid);
+
     emit activityManageWorking();
     ui->tableView_activity->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_activity->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -2689,7 +2710,7 @@ void MainWindow::on_actManage_triggered()
     if (ui->stackedWidget->currentIndex() == 13)
         return;
     ui->stackedWidget->setCurrentIndex(13);
-
+    initModelViewIsDisplay();
     activityManageWork->setType(2);
     emit activityManageWorking();
     // curDateTime = QDateTime::currentDateTime();
@@ -2713,6 +2734,7 @@ void MainWindow::on_actMessage_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     emit loadMsgMemList(uid);
 }
@@ -2721,6 +2743,7 @@ void MainWindow::on_actNotice_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     posterWork->setWorkType(0);
     emit posterWorking();
@@ -2747,6 +2770,7 @@ void MainWindow::on_actNoticeManage_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     posterWork->setWorkType(1);
     emit posterWorking();
@@ -2768,6 +2792,7 @@ void MainWindow::on_actApplyList_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     emit loadApplyFormList(uid);
 }
@@ -2776,6 +2801,7 @@ void MainWindow::on_actApplyItems_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     emit loadManagePageApplyItems(uid);
 }
@@ -2784,6 +2810,7 @@ void MainWindow::on_actGroup_triggered()
 {
     if (ui->stackedWidget->currentIndex() == 13)
         return;
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
 
     emit groupManageWorking();      //开始加载model
@@ -2841,11 +2868,13 @@ void MainWindow::setGroupManagePage()
 
 void MainWindow::on_actMore_triggered() 
 {
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(12);
 }
 
 void MainWindow::on_actPanel_triggered()
 {
+    initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     emit loadStatisticsPanel();
 }
@@ -2858,20 +2887,20 @@ void MainWindow::on_actRefresh_triggered()
     int index = ui->stackedWidget->currentIndex(); 
     switch (index)
     {
-    case 0: emit startBaseInfoWork(); emit attendHomeChartWorking(); emit actHomeWorking(); break;   //刷新首页数据
+    case 0: on_actHome_triggered(); break;   //刷新首页数据
     case 1: on_actMyInfo_triggered(); break;
-    case 2: emit loadMsgMemList(uid); break;
-    case 3: emit activityManageWorking(); break;
-    case 4: emit attendWorking(); break;
-    case 5: emit loadUserPageApplyItems(uid); break;
+    case 2: on_actMessage_triggered(); break;
+    case 3: on_action_triggered(); break;
+    case 4: on_actAttend_triggered(); break;
+    case 5: on_actApply_triggered(); break;
     case 6: on_actUserManager_triggered(); break;
     case 7: on_actAttendManager_triggered(); break;
-    case 8: emit activityManageWorking(); break;
-    case 9: emit loadApplyFormList(uid); break;
-    case 10: emit loadManagePageApplyItems(uid); break;
+    case 8: on_actManage_triggered(); break;
+    case 9: on_actApplyList_triggered(); break;
+    case 10: on_actApplyItems_triggered(); break;
     case 11: on_actGroup_triggered(); break;
-    case 14: emit posterWorking(); break;
-    case 15: emit posterWorking(); break;
+    case 14: on_actNotice_triggered(); break;
+    case 15: on_actNoticeManage_triggered(); break;
     case 16: on_actPanel_triggered(); break;
     case 17: on_actSettings_triggered(); break;
 
@@ -2882,6 +2911,7 @@ void MainWindow::on_actRefresh_triggered()
 
 void MainWindow::on_actSettings_triggered()
 {
+    initModelViewIsDisplay();
     if (ui->groupBox_system->isEnabled())
     {
         emit loadSystemSettings();

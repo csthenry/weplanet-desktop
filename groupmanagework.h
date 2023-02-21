@@ -22,10 +22,12 @@ public:
     void setDepartmentModel(QSqlTableModel* department);
     void submitAll(int type);   //1代表提交用户组model，0为部门
     void fixUser(int type, const QString& removedId);
+    bool isDisplay = false;
 private:
     service db_service;
     QSqlDatabase DB, DB_SECOND;
     QSqlTableModel *groupModel, *departmentModel;
+    QTimer* heartBeat;
 
 signals:
     void groupManageWorkFinished();

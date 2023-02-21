@@ -6,17 +6,33 @@ ActivityManageWork::ActivityManageWork(QObject *parent)
     db_service.addDatabase(DB, "ActivityManageWork_DB");
     db_service.addDatabase(DB_SECOND, "ActivityManageWork_DB_SECOND");
 
-    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    DB.open();
+    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    heartBeat = new QTimer(this);
+    connect(heartBeat, &QTimer::timeout, this, [=]() {
+        if (isDisplay)
+        {
+            tabModel->select();
+            memberTabModel->select();
+        }
+        else
+            if(DB.isOpen())
+                DB.close();
+        });
+    heartBeat->start(MYSQL_TIME_OUT);
 }
 
 ActivityManageWork::~ActivityManageWork()
 {
-    DB.close();
+    heartBeat->stop();
+    if(DB.isOpen())
+        DB.close();
 }
 
 void ActivityManageWork::working()
 {
+    if (!DB.isOpen())
+        DB.open();
+    isDisplay = true;
     tabModel->setTable("magic_activity");
     tabModel->setSort(tabModel->fieldIndex("joinDate"), Qt::DescendingOrder);
     tabModel->setEditStrategy(QSqlTableModel::OnRowChange);
@@ -73,8 +89,11 @@ void ActivityManageWork::updateActStatus()
     qDebug() << "当前待新增的总学时:" + QString::number(curScore);
 }
 
-void ActivityManageWork::homeWorking()
+void ActivityManageWork::homeWorking()//已废弃
 {
+    if (!DB.isOpen())
+        DB.open();
+    isDisplay = true;
     QDateTime m_curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime()); //获取网络时间
     QString curDateTime = m_curDateTime.toString("yyyy-MM-dd hh:mm:ss");
     tabModel->clear();
