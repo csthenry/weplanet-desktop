@@ -5,17 +5,33 @@ GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
     db_service.addDatabase(DB, "GroupManageWork_DB");
     db_service.addDatabase(DB_SECOND, "GroupManageWork_DB_SECOND");
 
-    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    DB.open();
+    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    heartBeat = new QTimer(this);
+    connect(heartBeat, &QTimer::timeout, this, [=]() {
+        if (isDisplay)
+        {
+            groupModel->select();
+            departmentModel->select();
+        }
+        else
+            if (DB.isOpen())
+                DB.close();
+        });
+    heartBeat->start(MYSQL_TIME_OUT);
 }
 
 GroupManageWork::~GroupManageWork()
 {
-    DB.close();
+    heartBeat->stop();
+    if (DB.isOpen())
+        DB.close();
 }
 
 void GroupManageWork::working()
 {
+    if (!DB.isOpen())
+        DB.open();
+    isDisplay = true;
     groupModel->setTable("magic_group");
     groupModel->setSort(groupModel->fieldIndex("group_id"), Qt::AscendingOrder);    //升序排列
     groupModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交

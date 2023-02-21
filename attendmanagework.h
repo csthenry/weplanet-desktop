@@ -25,6 +25,7 @@ public:
     void setCombox(QComboBox* group, QComboBox* department);
     void dataOperate(int type);
     void setFilter(int type, const QString& filter);
+    bool isDisplay = false;
     QSqlDatabase getDB();
 private:
     service db_service;
@@ -34,6 +35,7 @@ private:
     QSqlDatabase DB, DB_SECOND;
     QStringList comboxItems_group, comboxItems_department;
     QSqlRelationalTableModel *userModel, *attendModel;
+    QTimer* heartBeat;
     void getComboxItems();
 signals:
     void attendManageWorkFinished();

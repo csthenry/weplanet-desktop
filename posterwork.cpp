@@ -6,13 +6,28 @@ PosterWork::PosterWork(QObject *parent)
     db_service.addDatabase(DB, "PosterManageWork_DB");
     db_service.addDatabase(DB_SECOND, "PosterManageWork_DB_SECOND");
 
-    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    DB.open();
+    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    heartBeat = new QTimer(this);
+    connect(heartBeat, &QTimer::timeout, this, [=]() {
+        if (isDisplay)
+        {
+            if(workType == 1)
+                manageModel->select();
+			else if(workType == 2)
+				tabModel->select();
+        }
+        else
+            if (DB.isOpen())
+                DB.close();
+        });
+    heartBeat->start(MYSQL_TIME_OUT);
 }
 
 PosterWork::~PosterWork()
 {
-    DB.close();
+    heartBeat->stop();
+    if (DB.isOpen())
+        DB.close();
 }
 
 void PosterWork::working()
@@ -21,6 +36,9 @@ void PosterWork::working()
         return;
     if (workType != 1)
     {
+        if (!DB.isOpen())
+            DB.open();
+        isDisplay = true;
         tabModel->setTable("magic_contents");
         tabModel->setSort(tabModel->fieldIndex("c_id"), Qt::DescendingOrder);
         tabModel->setHeaderData(tabModel->fieldIndex("c_id"), Qt::Horizontal, "编号");
@@ -33,6 +51,9 @@ void PosterWork::working()
     }
     else
     {
+        if (!DB.isOpen())
+            DB.open();
+        isDisplay = true;
         manageModel->setTable("magic_contents");
         manageModel->setSort(manageModel->fieldIndex("c_id"), Qt::DescendingOrder);
         manageModel->setEditStrategy(QSqlTableModel::OnRowChange);

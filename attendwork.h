@@ -32,6 +32,7 @@ public:
     QJsonArray getWeekMyWorkTime();
     QJsonArray getWeekAllWorkStatus();
     QJsonArray getWeekWorkMem();
+    bool isDisplay = false;
 private slots:
     void submitAll(int type);   //1代表签到，0代表签退
 private:
@@ -41,6 +42,7 @@ private:
     QSqlDatabase DB, DB_SECOND;
     QSqlRelationalTableModel *relTableModel;
     QJsonArray weekMyWorkTime, weekAllWorkStatus, weekWorkMem;
+    QTimer* heartBeat;
 signals:
     void attendWorkFinished();
     void attendDone(bool);

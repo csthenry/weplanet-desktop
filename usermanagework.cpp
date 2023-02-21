@@ -5,17 +5,30 @@ UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
     db_service.addDatabase(DB, "UserManageWork_DB");
     db_service.addDatabase(DB_SECOND, "UserManageWork_DB_SECOND");
 
-    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    DB.open();
+    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    heartBeat = new QTimer(this);
+    connect(heartBeat, &QTimer::timeout, this, [=]() {
+        if (isDisplay)
+            relTableModel->select();
+        else
+            if (DB.isOpen())
+                DB.close();
+        });
+    heartBeat->start(MYSQL_TIME_OUT);
 }
 
 UserManageWork::~UserManageWork()
 {
-    DB.close();
+    heartBeat->stop();
+    if (DB.isOpen())
+        DB.close();
 }
 
 void UserManageWork::working()
 {
+    if (!DB.isOpen())
+        DB.open();
+    isDisplay = true;
     //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...      
     relTableModel->setTable("magic_users");
     relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列

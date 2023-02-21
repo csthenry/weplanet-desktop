@@ -26,12 +26,14 @@ public:
 
 	bool cache = false;		//新内容缓存
 	int cacheRow = -1;		//缓存row
+	bool isDisplay = false;
 
 private:
 	int workType = -1;	//1管理页面；2用户页面
 	service db_service;
 	QSqlDatabase DB, DB_SECOND;
 	QSqlTableModel* tabModel, *manageModel;
+	QTimer* heartBeat;
 signals:
 	void contentsManageWorkFinished();
 	void contentsWorkFinished();

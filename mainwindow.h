@@ -71,11 +71,11 @@ private:
 
     Document m_content, c_content;
 
-    QTimer *refTimer, *msgPushTimer, *currentTimeUpdate, *aeMovieTimer;
+    QTimer *msgPushTimer, *currentTimeUpdate, *aeMovieTimer;
 
     QShortcut* shortcut;
 
-    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting, avatarBinding = false;   //用于加载动画判断
+    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting = false, avatarBinding = false;   //用于加载动画判断
 
     bool dbStatus = true;
 
@@ -240,6 +240,8 @@ private:
     bool checkLocalTime();
 
     void disableDynamicItems(); //本地时间误差过大，禁用需要准确时间的项目
+
+    void initModelViewIsDisplay();  //重置各work的状态
 
     SqlWork *sqlWork;
 
