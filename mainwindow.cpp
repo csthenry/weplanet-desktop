@@ -198,14 +198,16 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 
     //校验、更新本地时间，本对象中curDateTime即为5分钟更新一次的网络时间
     if (!checkLocalTime())
+    {
         disableDynamicItems();
+        curDateTime = QDateTime::currentDateTime();
+    }
     currentTimeUpdate = new QTimer(this);
     connect(currentTimeUpdate, &QTimer::timeout, this, [=]() {
         static int cnt = 0;
         cnt += 1;
         curDateTime = curDateTime.addSecs(1);
         timeLabel->setText("程序时间：" + curDateTime.toString("yyyy年MM月dd日 hh:mm:ss"));
-		//qDebug() << "本地时间校验：" << curDateTime.toString("yyyy-MM-dd hh:mm:ss") << curDateTime.toSecsSinceEpoch();
         if (cnt > 5 * 60)  //校验一次网络时间
         {
             checkLocalTime();
@@ -501,7 +503,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 		
 		}, Qt::UniqueConnection);
     connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar){
-        getAvatarQueue.dequeue();
+        if(getAvatarQueue.count() != 0)
+            getAvatarQueue.dequeue();
         if (!getAvatarQueue.isEmpty())
         {
             QString back = getAvatarQueue.back();
@@ -2287,13 +2290,15 @@ void MainWindow::initMsgSys()
 
 bool MainWindow::checkLocalTime()
 {
-    qint32 webTimeSinceEpoch = service::getWebTime(); //更新网络时间
-    curDateTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch); //获取网络时间
+    qint32 webTimeSinceEpoch = service::getWebTime(); //网络时间
+
     if (webTimeSinceEpoch == -1)
     {
         QMessageBox::warning(this, "时间误差警告", "获取服务器时间失败，请检查网络连接。\n考勤、活动、畅聊等已被禁用，请前往【设置】页面重新验证时间以启动部分项。");
+        disableDynamicItems();
         return false;
     }
+    curDateTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch); //更新网络时间
 	QDateTime webTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);   //获取网络时间
 	QDateTime localTime = QDateTime::currentDateTime();   //获取本地时间
 	double marginMinutes = localTime.secsTo(webTime) / 60.0;    //计算时间差
@@ -2302,6 +2307,7 @@ bool MainWindow::checkLocalTime()
 	if (marginMinutes > 3 || marginMinutes < -3)
 	{
 		QMessageBox::warning(this, "时间误差警告", "本地时间与Windows服务器时间的误差超出范围。\n考勤、活动、畅聊等已被禁用，请检查本地时间后前往【设置】页面重新验证时间以启动部分项。");
+        disableDynamicItems();
 		return false;
 	}
     return true;
@@ -4197,7 +4203,6 @@ void MainWindow::on_btn_shareMe_clicked()
 void MainWindow::on_btn_checkTime_clicked()
 {
     qint32 webTimeSinceEpoch = service::getWebTime();
-    curDateTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);
     QDateTime webTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);
     QDateTime localTime = QDateTime::currentDateTime();
     ui->label_webTime->setText(webTime.toString("yyyy年MM月dd日 hh:mm:ss"));
@@ -4209,6 +4214,8 @@ void MainWindow::on_btn_checkTime_clicked()
         QMessageBox::information(this, "时间校验", "网络时间获取失败，请检查网络连接。");
 		return;
     }
+
+    curDateTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);
     
     double marginMinutes = localTime.secsTo(webTime) / 60.0;    //计算时间差
     QString res;
