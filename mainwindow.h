@@ -75,7 +75,7 @@ private:
 
     QShortcut* shortcut;
 
-    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting = false, avatarBinding = false;   //用于加载动画判断
+    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting = false, avatarBinding = false, beginAttendLoading = false, endAttendLoading = false;   //用于加载动画判断
 
     bool dbStatus = true;
 
@@ -208,8 +208,6 @@ private:
     void setUsersFilter_group(int type, QComboBox* group, QComboBox* department);
 
     void setUsersFilter_dpt(int type, QComboBox* group, QComboBox* department);
-
-    void reloadModelBefore();   //用于relationModel跨线程刷新，一般model似乎线程安全！
 
     void resetUID();    //用于切换用户后重新设置Work对象中的uid
 
