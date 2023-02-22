@@ -113,6 +113,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->btn_personalSubmit->setIcon(QPixmap(m_strListImg.at(cnt)));
         if(avatarBinding)
             ui->btn_getMailAvatar->setIcon(QPixmap(m_strListImg.at(cnt)));
+        if(beginAttendLoading)
+            ui->btn_beginAttend->setIcon(QPixmap(m_strListImg.at(cnt)));
+        if(endAttendLoading)
+            ui->btn_endAttend->setIcon(QPixmap(m_strListImg.at(cnt)));
         cnt++;
 		});
     aeMovieTimer->start(20);
@@ -196,7 +200,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     //检查更新
     updateSoftWare.moveToThread(sqlThread_SECOND);
 
-    //校验、更新本地时间，本对象中curDateTime即为5分钟更新一次的网络时间
+    //校验、更新本地时间，本对象中curDateTime即为10分钟更新一次的网络时间
     if (!checkLocalTime())
     {
         disableDynamicItems();
@@ -208,7 +212,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         cnt += 1;
         curDateTime = curDateTime.addSecs(1);
         timeLabel->setText("程序时间：" + curDateTime.toString("yyyy年MM月dd日 hh:mm:ss"));
-        if (cnt > 5 * 60)  //校验一次网络时间
+        if (cnt > 10 * 60)  //校验一次网络时间
         {
             checkLocalTime();
 			cnt = 0;
@@ -422,7 +426,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         if(res)
         {
             QMessageBox::information(this, "消息", "签到成功，签到时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + "\n祝你今天元气满满~", QMessageBox::Ok);
-            emit attendWorking();  //刷新信息
+            beginAttendLoading = false;
+            ui->btn_beginAttend->setIcon(QIcon(":/images/color_icon/approve_3.svg"));
+            on_actAttend_triggered();  //刷新信息
         }
         else
             QMessageBox::warning(this, "消息", "保存数据失败，错误信息：\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
@@ -431,7 +437,9 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         if(res)
         {
             QMessageBox::information(this, "消息", "签退成功，签退时间：" + curDateTime.toString("yyyy-MM-dd hh:mm:ss") + "\n累了一天了，休息一下吧~", QMessageBox::Ok);
-            emit attendWorking();  //刷新信息
+            endAttendLoading = false;
+            ui->btn_endAttend->setIcon(QIcon(":/images/color_icon/approve_2.svg"));
+            on_actAttend_triggered();  //刷新信息
         }
         else
             QMessageBox::warning(this, "消息", "保存数据失败，错误信息：\n" + attendPageModel->lastError().text(), QMessageBox::Ok);
@@ -1190,14 +1198,6 @@ void MainWindow::setUsersFilter_dpt(int type, QComboBox *group, QComboBox *depar
         emit attendManageModelSetFilter(0, sqlWhere);
 }
 
-void MainWindow::reloadModelBefore()
-{
-    //此函数用于在刷新model前，对relationModel clear，避免发生跨线程冲突
-    attendPageModel->clear();
-    userManageModel->clear();
-    attendManageModel->clear();
-}
-
 void MainWindow::resetUID()
 {
     attendWork->setUid(uid);
@@ -1286,7 +1286,6 @@ void MainWindow::on_actAttend_triggered()
     ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    reloadModelBefore();
     emit attendWorking();
 }
 
@@ -2341,7 +2340,6 @@ void MainWindow::on_actUserManager_triggered()
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_userManage->setItemDelegateForColumn(0, readOnlyDelegate);    //UID不可编辑
-    reloadModelBefore();
     emit userManageWorking();
 }
 
@@ -2383,7 +2381,6 @@ void MainWindow::on_actAttendManager_triggered()
     ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
     ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    reloadModelBefore();
     emit attendManageWorking();
 }
 
@@ -3934,6 +3931,7 @@ void MainWindow::on_btn_beginAttend_clicked()
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("isSupply")), "否");
     attendPageModel->setData(attendPageModel->index(currow, attendPageModel->fieldIndex("name")), 1);   //这里要填外键关联的字段！
 
+    beginAttendLoading = true;
     emit attendPageModelSubmitAll(1);
 }
 
@@ -3950,6 +3948,8 @@ void MainWindow::on_btn_endAttend_clicked()
         QMessageBox::warning(this, "消息", "你已经在" + ui->label_attendPage_endTime->text() + "签退过啦，请勿重复签退哦~", QMessageBox::Ok);
         return;
     }
+
+    endAttendLoading = true;
     emit attendPageModelSubmitAll(0);
 }
 
