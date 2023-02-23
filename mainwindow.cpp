@@ -773,7 +773,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             infoWidget->setBoxTitle("审批信息验证系统");
             infoWidget->setInfoTitle("[审批校验码验证通过]");
             infoWidget->setInfoIcon(QPixmap(":/images/color_icon/color-defender.svg"));
-			infoWidget->setInfo(QString("申请表单号：%1\n申请人UID：%2\n申请项目：%3\n审批状态：%4\n申请时间：%5").arg(list[0], list[1], list[2], list[3], list[4]));
+			infoWidget->setInfo(QString("申请表单号：%1\n申请人UID：%2\n申请项目：%3\n审批状态：%4\n申请时间：%5\n\n[token：%6]").arg(list[0], list[1], list[2], list[3], list[4], list[5]));
             infoWidget->showMinimized();
             infoWidget->showNormal();
         }
