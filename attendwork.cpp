@@ -90,6 +90,7 @@ void AttendWork::homeChartWorking()
     seriesObj.insert("data_x", dateArray);
     QString jsCode = QString("init(%1, 1)").arg(QString(QJsonDocument(seriesObj).toJson()));
     
+    isDisplay = false;  //首页仅需要展示图表，并不需要model一直活动
     emit homeChartDone(jsCode);
 }
 
