@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "Bm4kGaYyBrXPaHHw";
+    dataBasePassword = "*************";
 
     /*****************请在此处完善数据库信息*****************/
 }
