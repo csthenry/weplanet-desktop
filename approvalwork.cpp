@@ -171,6 +171,114 @@ void ApprovalWork::getUserPageApplyItems(const QString& uid)
 	emit getUserPageApplyItemsFinished();
 }
 
+void ApprovalWork::autoExecuteSystemApplyItems()
+{
+	DB.open();
+	QSqlQuery query(DB);
+	int step = 0, finishedNum = 0;	//已成功通过的流程，本次自动处理个数
+
+	//处理系统申请项：个人信息异动申请
+	QList<QString> apply_list;	//待自动处理的申请表
+	query.exec(QString("SELECT * FROM magic_apply WHERE item_id = '1' AND (status = '0' OR status = '1')"));
+	while(query.next())
+		apply_list.push_back(query.value("apply_id").toString());
+	for (auto apply_id : apply_list)
+	{
+		for (auto uid : applyAuditorList["1"])
+		{
+			QByteArray processOneStep;	//申请表流程中的一步
+			query.exec(QString("SELECT * FROM magic_applyProcess WHERE apply_id = '%1' AND auditor = '%2'").arg(apply_id, uid));
+			if (query.next())
+			{
+				if (query.value("result").toString() == "0")	//0为拒绝通过，流程终止
+				{
+					query.exec(QString("UPDATE magic_apply SET status=2 WHERE apply_id='%1'").arg(apply_id));	//将申请表状态改为已终止
+					break;	//流程终止
+				}
+				step++;
+			}
+			else
+				break;	//流程终止
+		}
+		if (step == applyAuditorList["1"].count())
+		{
+			query.exec(QString("UPDATE magic_apply SET status=1 WHERE apply_id='%1'").arg(apply_id));	//已通过
+			//更新用户信息
+			query.exec(QString("SELECT uid, options FROM magic_apply WHERE apply_id='%1' AND status=1").arg(apply_id));
+			if (query.next())
+			{
+				QSqlRecord record = query.record();
+				QList<QString> options = record.value("options").toString().split("$", QString::SkipEmptyParts);
+				if (options.count() == 4)
+				{
+					DB_SECOND.open();
+					QSqlQuery subQuery(DB_SECOND);
+					if(options[0] != "无")	//更新姓名
+						subQuery.exec(QString("UPDATE magic_users SET name='%1' WHERE uid=%2").arg(options[0], record.value("uid").toString()));
+					if(options[1] != "无" && (options[1] == "男" || options[1] == "女"))	//更新性别
+						subQuery.exec(QString("UPDATE magic_users SET gender='%1' WHERE uid=%2").arg(options[1], record.value("uid").toString()));
+					if (options[2] != "无")	//更新手机号
+						subQuery.exec(QString("UPDATE magic_users SET telephone='%1' WHERE uid=%2").arg(options[2], record.value("uid").toString()));
+					subQuery.exec(QString("UPDATE magic_apply SET status=3 WHERE apply_id='%1'").arg(apply_id));	//已自动处理数据
+					DB_SECOND.close();
+					finishedNum++;
+				}
+			}
+		}
+	}
+
+	//处理系统申请项：账号认证申请
+	step = 0;
+	apply_list.clear();
+	query.exec(QString("SELECT * FROM magic_apply WHERE item_id = '2' AND (status = '0' OR status = '1')"));
+	while (query.next())
+		apply_list.push_back(query.value("apply_id").toString());
+	for (auto apply_id : apply_list)
+	{
+		for (auto uid : applyAuditorList["2"])
+		{
+			QByteArray processOneStep;	//申请表流程中的一步
+			query.exec(QString("SELECT * FROM magic_applyProcess WHERE apply_id = '%1' AND auditor = '%2'").arg(apply_id, uid));
+			if (query.next())
+			{
+				if (query.value("result").toString() == "0")	//0为拒绝通过，流程终止
+				{
+					query.exec(QString("UPDATE magic_apply SET status=2 WHERE apply_id='%1'").arg(apply_id));	//将申请表状态改为已终止
+					break;	//流程终止
+				}
+				step++;
+			}
+			else
+				break;	//流程终止
+		}
+		if (step == applyAuditorList["2"].count())
+		{
+			query.exec(QString("UPDATE magic_apply SET status=1 WHERE apply_id='%1'").arg(apply_id));	//已通过
+			//更新用户认证信息
+			query.exec(QString("SELECT uid, options FROM magic_apply WHERE apply_id='%1' AND status=1").arg(apply_id));
+			while (query.next())
+			{
+				QSqlRecord record = query.record();
+				QList<QString> options = record.value("options").toString().split("$", QString::SkipEmptyParts);
+				if (options.count() == 3 && (options[0] == "1" || options[0] == "2"))
+				{
+					DB_SECOND.open();
+					QSqlQuery subQuery(DB_SECOND);
+					subQuery.exec(QString("INSERT INTO magic_verify (v_uid, vid, info) VALUES ('%1', '%2', '%3') ON DUPLICATE KEY UPDATE vid='%4', info='%5';").arg(record.value("uid").toString(), options[0], options[1], options[0], options[1]));
+					subQuery.exec(QString("UPDATE magic_apply SET status=3 WHERE apply_id='%1'").arg(apply_id));	//已自动处理数据
+					DB_SECOND.close();
+					finishedNum++;
+				}
+			}
+		}
+	}
+
+	query.clear();
+	DB.close();
+
+	emit autoExecuteSystemApplyItemsFinished(finishedNum);
+}
+
 int ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_id)
 {
 	DB_SECOND.open();
@@ -200,7 +308,10 @@ int ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_i
 	}
 	if (step == applyAuditorList[item_id].count())
 	{
-		query.exec(QString("UPDATE magic_apply SET status=1 WHERE apply_id='%1'").arg(apply_id));	//已通过
+		query.exec(QString("SELECT status FROM magic_apply WHERE apply_id='%1'").arg(apply_id));
+		query.next();
+		if(query.value("status").toString() != "3")		//已自动化处理的表单不更新状态
+			query.exec(QString("UPDATE magic_apply SET status=1 WHERE apply_id='%1'").arg(apply_id));	//已通过
 		apply_status = 1;
 	}
 	applyFormsProcess.insert(apply_id, currentProcess);	//将所有已审核的步骤存入对应id键值

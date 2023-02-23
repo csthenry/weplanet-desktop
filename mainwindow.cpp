@@ -117,6 +117,8 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->btn_beginAttend->setIcon(QPixmap(m_strListImg.at(cnt)));
         if(endAttendLoading)
             ui->btn_endAttend->setIcon(QPixmap(m_strListImg.at(cnt)));
+        if(autoExecuteSystemApplyItemsLoading)
+            ui->btn_autoExecuteSystemApplyItems->setIcon(QPixmap(m_strListImg.at(cnt)));
         cnt++;
 		});
     aeMovieTimer->start(20);
@@ -754,6 +756,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::getApplyToken, approvalWork, &ApprovalWork::getApplyToken);
     connect(this, &MainWindow::agreeOrRejectApply, approvalWork, &ApprovalWork::agreeOrRejectApply);
 	connect(this, &MainWindow::authApplyToken, approvalWork, &ApprovalWork::authApplyToken);
+    connect(this, &MainWindow::autoExecuteSystemApplyItems, approvalWork, &ApprovalWork::autoExecuteSystemApplyItems);
+    connect(approvalWork, &ApprovalWork::autoExecuteSystemApplyItemsFinished, this, [=](int finished_num) {
+        QMessageBox::information(this, "提示", QString("已将支持自动化处理的申请表单提交至系统进行数据变更，本次共处理表单数量：%1，请通知对应用户查看数据是否变更。").arg(finished_num), QMessageBox::Ok);
+        autoExecuteSystemApplyItemsLoading = false;
+        ui->btn_autoExecuteSystemApplyItems->setIcon(QIcon(":/images/color_icon/color-debug.svg"));
+        });
     connect(approvalWork, &ApprovalWork::authApplyTokenFinished, this, [=](bool res) {
         ui->btn_authApplyToken->setEnabled(true);
         if(!res)
@@ -812,6 +820,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 			ui->btn_manageApplyPublish->setEnabled(false);
             ui->btn_manageApplyModify->setEnabled(true);
             ui->groupBox_newApply->setEnabled(true);
+            ui->groupBox_addAuditors->setEnabled(false);
             ui->groupBox_addApplyOptions->setEnabled(false);
             ui->lineEdit_newApplyTitle->clear();
             QMessageBox::information(this, "消息", "操作完成，正在刷新数据。", QMessageBox::Ok);
@@ -829,9 +838,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
             ui->btn_manageApplyPublish->setEnabled(false);
             ui->btn_manageApplyModify->setEnabled(true);
             ui->groupBox_newApply->setEnabled(true);
+            ui->groupBox_addAuditors->setEnabled(false);
             ui->groupBox_addApplyOptions->setEnabled(false);
             ui->btn_manageApplyDelete->setEnabled(false);
             ui->btn_manageApplySwitch->setEnabled(false);
+            ui->btn_reManageApplyOptions->setEnabled(false);
+            ui->btn_reManageApplyProcess->setEnabled(false);
             ui->btn_manageApplyPublish->setText("发布申请项");
             QMessageBox::information(this, "消息", "操作完成，正在刷新数据。", QMessageBox::Ok);
             emit loadManagePageApplyItems(uid);
@@ -1782,6 +1794,8 @@ void MainWindow::setApplyItemsManagePage()
             ui->groupBox_addAuditors->setEnabled(false);
             ui->btn_manageApplyDelete->setEnabled(false);
             ui->btn_manageApplySwitch->setEnabled(false);
+            ui->btn_reManageApplyOptions->setEnabled(false);
+            ui->btn_reManageApplyProcess->setEnabled(false);
             ui->btn_manageApplyPublish->setText("发布申请项目");
             ui->btn_manageApplyModify->setEnabled(true);
 
@@ -2619,6 +2633,12 @@ void MainWindow::on_btn_setApplyToken_clicked()
     emit getApplyToken(currentApplyFormID_user);
 }
 
+void MainWindow::on_btn_autoExecuteSystemApplyItems_clicked()
+{
+    autoExecuteSystemApplyItemsLoading = true;
+    emit autoExecuteSystemApplyItems();
+}
+
 void MainWindow::on_btn_getApplyUserInfo_clicked()
 {
     friendInfoWidget->setTitle("申请人信息");
@@ -2885,7 +2905,6 @@ void MainWindow::on_actPanel_triggered()
 
 void MainWindow::on_actRefresh_triggered()
 {
-    qDebug() << "心跳请求...";
     emit get_statistics();  //统计心跳请求量
     trayIcon->setToolTip("WePlanet - 运行中（上次刷新" + QDateTime::currentDateTime().time().toString("hh:mm") + "）");
     int index = ui->stackedWidget->currentIndex(); 
@@ -4281,9 +4300,14 @@ void MainWindow::on_btn_manageApplyModify_clicked()
     isApplyItemEdit = true; //正在编辑
     ui->btn_manageApplyModify->setEnabled(false);
     ui->groupBox_addAuditors->setEnabled(true);
-    ui->groupBox_addApplyOptions->setEnabled(true);
-    
-    ui->btn_manageApplyDelete->setEnabled(true);
+    ui->btn_reManageApplyProcess->setEnabled(true);
+
+    bool isSystemItem = (currentApplyItemID_manage == "1" || currentApplyItemID_manage == "2");
+
+    ui->groupBox_addApplyOptions->setEnabled(!isSystemItem);
+    ui->btn_manageApplyDelete->setEnabled(!isSystemItem);
+    ui->btn_reManageApplyOptions->setEnabled(!isSystemItem);
+
     ui->btn_manageApplySwitch->setEnabled(true);
 }
 

@@ -75,7 +75,7 @@ private:
 
     QShortcut* shortcut;
 
-    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting = false, avatarBinding = false, beginAttendLoading = false, endAttendLoading = false;   //用于加载动画判断
+    bool homeLoading = false, settingLoading = false, msgSending = false, personalSubmitting = false, avatarBinding = false, beginAttendLoading = false, endAttendLoading = false, autoExecuteSystemApplyItemsLoading = false;   //用于加载动画判断
 
     bool dbStatus = true;
 
@@ -549,6 +549,8 @@ private slots:
 
     void on_btn_authApplyToken_clicked();
 
+    void on_btn_autoExecuteSystemApplyItems_clicked();
+
     void on_btn_smtpSave_clicked();
 
     void on_lineEdit_msgPushTime_textChanged(const QString& arg);
@@ -675,6 +677,8 @@ signals:
     void getApplyToken(const QString& id);
 
     void authApplyToken(const QString& token);
+
+    void autoExecuteSystemApplyItems();
 
     void saveSmtpSettings(const QString& add, const QString& user, const QString& password);
 private:

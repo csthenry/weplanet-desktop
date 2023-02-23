@@ -44,6 +44,7 @@ public:
 	void agreeOrRejectApply(const QString& apply_id, const QString& auditor, const QString& result, const QString& text);
 	void submitOrCancelApply(int type, const QString& apply_id, QByteArray array = QByteArray());	//1提交或0撤销申请
 	void authApplyToken(const QString& token);
+	void autoExecuteSystemApplyItems();	//自动执行系统申请项的数据处理
 	QList<QByteArray> getCurrentApplyProcess(const QString& id);
 	QString getCurrentFormOptionsText(const QString& id);	//当前申请表单的填写项的文本
 	QList<QString> getAuthApplyTokenResultList();
@@ -60,6 +61,7 @@ signals:
 	void getApplyTokenFinished(QString token);
 	void agreeOrRejectApplyFinished(bool res);
 	void authApplyTokenFinished(bool res);
+	void autoExecuteSystemApplyItemsFinished(int num);
 
 public:
 	ApprovalWork(QObject *parent = nullptr);
