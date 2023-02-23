@@ -493,6 +493,7 @@ void ApprovalWork::authApplyToken(const QString& token)
 	bool res = query.next();
 	if (res)
 	{
+		authApplyTokenResultList.clear();
 		QString apply_id = query.value("apply_id").toString();
 		QString uid = query.value("uid").toString();
 		QString item_id = query.value("item_id").toString();
@@ -500,13 +501,13 @@ void ApprovalWork::authApplyToken(const QString& token)
 
 		if(status == "0")
 			status = "待审核";
-		else if (status == "1")
+		else if (status == "1" || status == "3")
 			status = "已通过";
 		else if (status == "2")
 			status = "已终止（未通过）";
 		QString operate_time = query.value("operate_time").toDateTime().toString("yyyy-MM-dd hh:mm:ss");
 		QString item = QString("[%1] %2").arg(item_id, applyItemTitle[item_id]);
-		authApplyTokenResultList << apply_id << uid << item << status << operate_time;
+		authApplyTokenResultList << apply_id << uid << item << status << operate_time << token;
 		emit authApplyTokenFinished(res);
 	}
 	else
