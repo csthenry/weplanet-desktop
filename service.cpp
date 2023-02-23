@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "*************";
+    dataBasePassword = "Bm4kGaYyBrXPaHHw";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -236,10 +236,10 @@ bool service::initDatabaseTables(QSqlDatabase db)
         ")ENGINE=InnoDB;"
         "INSERT IGNORE INTO magic_applyItems"
 		"(item_id, title, options, publisher, auditor_list, isHide)"
-        "VALUES (1, '修改用户名', '新的用户名$申请理由$', 1, '100000;', 0);"
+        "VALUES (1, '个人信息异动申请', '更正姓名（不需要修改此项请填写无）$更正性别（不需要修改此项请填写无）$更正手机号（不需要修改此项请填写无）$申请理由$', 1, '100000;', 0);"
         "INSERT IGNORE INTO magic_applyItems"
         "(item_id, title, options, publisher, auditor_list, isHide)"
-        "VALUES (2, '变更组织架构', '用户组$部门$', 1, '100000;', 0);";
+        "VALUES (2, '账号认证申请', '认证类型代码（个人认证填写1；机构认证填写2）$认证信息$申请理由$', 1, '100000;', 0);";
 
     if (res)
         res = query.exec(creatTableStr);
@@ -590,7 +590,6 @@ QString service::getDepartment(QSqlDatabase& db, const QString& uid)
 }
 int service::sendMail(const QList<QString> smtp_config, const QString& mailto, const QString& title, const QString& mailtext)
 {
-    qDebug() << smtp_config;
     if(smtp_config.count() != 3)
         return -1;
     SmtpClient smtp(smtp_config[0], 465, SmtpClient::SslConnection);
