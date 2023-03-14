@@ -22,6 +22,7 @@ private:
 	QHash<QString, QString> currentFormOptionsText;	//当前申请表单 用户填写的文本
 	QList<QByteArray> applyFormList, applyFormListDone;	//等待审核的列表，已经审核的列表（apply_id, uid, item_id, options, operate_time）
 	QList<QString> authApplyTokenResultList;	//包含申请表id，申请人，申请项目名，审核状态，申请时间
+	QList<QString> smtp_config;
 	
 public:
 	void getManagePageApplyItems(const QString& uid);
@@ -48,6 +49,7 @@ public:
 	QList<QByteArray> getCurrentApplyProcess(const QString& id);
 	QString getCurrentFormOptionsText(const QString& id);	//当前申请表单的填写项的文本
 	QList<QString> getAuthApplyTokenResultList();
+	void setSmtpConfig(const QList<QString> config);
 	
 private slots:
 
