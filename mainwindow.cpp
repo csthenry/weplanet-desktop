@@ -1264,7 +1264,7 @@ void MainWindow::on_actExit_triggered()
 
 void MainWindow::on_actHome_triggered()
 {
-    if (ui->stackedWidget->currentIndex() == 13)
+    if (homeLoading)
         return;
     initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(0);
@@ -1670,6 +1670,7 @@ void MainWindow::setApplyListManagePage()
             QList<QString> currentFormOptionsList = currentOptions.split("$", QString::SkipEmptyParts);
             updateApplyItemOptions(1, currentFormOptionsList);
 
+            ui->groupBox_inputApproveResult->setVisible(true);
             ui->textEdit_applyResultText->setEnabled(true);
             ui->btn_submitApplyResult_argee->setEnabled(true);
             ui->btn_submitApplyResult_reject->setEnabled(true);
@@ -1710,6 +1711,7 @@ void MainWindow::setApplyListManagePage()
             QList<QString> currentFormOptionsList = currentOptions.split("$", QString::SkipEmptyParts);
             updateApplyItemOptions(1, currentFormOptionsList);
 
+            ui->groupBox_inputApproveResult->setVisible(false);
             ui->textEdit_applyResultText->setEnabled(false);
             ui->btn_submitApplyResult_argee->setEnabled(false);
             ui->btn_submitApplyResult_reject->setEnabled(false);
@@ -2636,6 +2638,7 @@ void MainWindow::on_btn_setApplyToken_clicked()
 void MainWindow::on_btn_autoExecuteSystemApplyItems_clicked()
 {
     autoExecuteSystemApplyItemsLoading = true;
+    approvalWork->setSmtpConfig(setBaseInfoWork->getSmtpConfig());
     emit autoExecuteSystemApplyItems();
 }
 
@@ -2932,8 +2935,15 @@ void MainWindow::on_actRefresh_triggered()
     }
 }
 
+void MainWindow::on_btn_openStore_clicked()
+{
+    QMessageBox::information(this, "提示", "迫不及待了？积分商城目前正在装修中...将在今年稍后推出。", QMessageBox::Ok);
+}
+
 void MainWindow::on_actSettings_triggered()
 {
+    if (settingLoading)
+        return;
     initModelViewIsDisplay();
     if (ui->groupBox_system->isEnabled())
     {

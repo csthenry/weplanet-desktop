@@ -283,6 +283,8 @@ private slots:
 
     void receiveData(QString uid); //接收登录窗口信号
 
+    void on_btn_openStore_clicked();
+
     void on_actExit_triggered();
 
     void on_actHome_triggered();

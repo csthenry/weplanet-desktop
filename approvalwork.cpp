@@ -220,8 +220,14 @@ void ApprovalWork::autoExecuteSystemApplyItems()
 					if (options[2] != "无")	//更新手机号
 						subQuery.exec(QString("UPDATE magic_users SET telephone='%1' WHERE uid=%2").arg(options[2], record.value("uid").toString()));
 					subQuery.exec(QString("UPDATE magic_apply SET status=3 WHERE apply_id='%1'").arg(apply_id));	//已自动处理数据
+					subQuery.exec(QString("SELECT mail FROM magic_users WHERE uid='%1';").arg(record.value("uid").toString()));
+					QString mail;
+					if (subQuery.next())
+						mail = subQuery.value("mail").toString();
 					DB_SECOND.close();
-					finishedNum++;
+					finishedNum++; 
+					if(!mail.isEmpty())
+						service::sendMail(smtp_config, mail, "WePlanet 审批进度更新", QString("用户%1：\n你的【个人信息异动申请】现已完成审核，个人信息现已更新。\n\n注：若异动信息有误，请联系管理员。").arg(record.value("uid").toString()));
 				}
 			}
 		}
@@ -266,8 +272,14 @@ void ApprovalWork::autoExecuteSystemApplyItems()
 					QSqlQuery subQuery(DB_SECOND);
 					subQuery.exec(QString("INSERT INTO magic_verify (v_uid, vid, info) VALUES ('%1', '%2', '%3') ON DUPLICATE KEY UPDATE vid='%4', info='%5';").arg(record.value("uid").toString(), options[0], options[1], options[0], options[1]));
 					subQuery.exec(QString("UPDATE magic_apply SET status=3 WHERE apply_id='%1'").arg(apply_id));	//已自动处理数据
+					subQuery.exec(QString("SELECT mail FROM magic_users WHERE uid='%1';").arg(record.value("uid").toString()));
+					QString mail;
+					if (subQuery.next())
+						mail = subQuery.value("mail").toString();
 					DB_SECOND.close();
 					finishedNum++;
+					if (!mail.isEmpty())
+						service::sendMail(smtp_config, mail, "WePlanet 审批进度更新", QString("用户%1：\n你的【账号认证申请】现已完成审核，账号认证信息现已更新。\n\n注：若认证信息有误，请联系管理员。").arg(record.value("uid").toString()));
 				}
 			}
 		}
@@ -529,6 +541,11 @@ QString ApprovalWork::getCurrentFormOptionsText(const QString& id)
 QList<QString> ApprovalWork::getAuthApplyTokenResultList()
 {
 	return authApplyTokenResultList;
+}
+
+void ApprovalWork::setSmtpConfig(const QList<QString> config)
+{
+	smtp_config = config;
 }
 
 ApprovalWork::~ApprovalWork()

@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>9</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -547,6 +547,9 @@
                <property name="text">
                 <string>--</string>
                </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item row="0" column="0">
@@ -575,6 +578,29 @@
               </widget>
              </item>
             </layout>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="btn_openStore">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>积分商城</string>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/color_icon/color-star_2.svg</normaloff>:/images/color_icon/color-star_2.svg</iconset>
+             </property>
+            </widget>
            </item>
           </layout>
           <widget class="QLabel" name="label_verifyIcon">
@@ -607,6 +633,7 @@
           </widget>
           <zorder>avatar</zorder>
           <zorder>label_verifyIcon</zorder>
+          <zorder>btn_openStore</zorder>
          </widget>
         </item>
         <item row="1" column="0">
@@ -2116,8 +2143,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>259</width>
-             <height>16</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -2149,8 +2176,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -3997,8 +4024,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>259</width>
-             <height>16</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -4030,8 +4057,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -4063,8 +4090,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <attribute name="label">
@@ -4148,8 +4175,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>22</width>
-                   <height>16</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="ApplyProcess_Layout">
@@ -4188,8 +4215,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>20</width>
-                   <height>263</height>
+                   <width>98</width>
+                   <height>28</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_Layout">
@@ -7587,8 +7614,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>280</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -7620,8 +7647,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>280</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -7735,8 +7762,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1048</width>
-                   <height>278</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_manage_Layout">
@@ -7843,7 +7870,7 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="2" column="0" colspan="8">
-            <widget class="QGroupBox" name="groupBox_13">
+            <widget class="QGroupBox" name="groupBox_inputApproveResult">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -8032,8 +8059,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>290</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -8065,8 +8092,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -8231,8 +8258,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1016</width>
-                   <height>83</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="manageApplyProcess_Layout">
@@ -8547,8 +8574,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>226</width>
-                   <height>267</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="manageApplyAuditorList_Layout">
@@ -10233,7 +10260,7 @@ padding: 0px 5px;</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>439</width>
+                <width>421</width>
                 <height>291</height>
                </rect>
               </property>
