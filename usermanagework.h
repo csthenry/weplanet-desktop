@@ -15,7 +15,7 @@ public:
     explicit UserManageWork(QObject *parent = nullptr);
     ~UserManageWork();
     void working();
-    void setModel(QSqlRelationalTableModel* model);
+    //void setModel(QSqlRelationalTableModel* model);
     QSqlDatabase getDB();
     void submitAll();
     void setFilter(const QString& filter);
@@ -31,6 +31,7 @@ public:
     int getVerifyTag();
     QString getUid();
     bool isDisplay = false;
+    QSqlRelationalTableModel* getModel();
 	
 private slots:
 
@@ -46,6 +47,7 @@ private:
     QTimer *heartBeat;
     int verifyTag;
     void getComboxItems();
+    QQueue<QSqlRelationalTableModel*> modelQueue;
 signals:
     void userManageWorkFinished();
     void queryAccountFinished(QSqlRecord);

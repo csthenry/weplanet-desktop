@@ -191,7 +191,7 @@ formLogin::formLogin(QDialog *parent) :
 			ui->label_announcement->adjustSize();   //自动调整大小
             this->adjustSize();
             if (loginWork->getAnnouncementTag() == 1)
-                ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-tips.svg"));
+                ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-info.svg"));
             else
                 ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-warning_2.svg"));
         }
@@ -200,7 +200,7 @@ formLogin::formLogin(QDialog *parent) :
         if (loginWork->getIsDebug())
         {
             ui->tabWidget->setEnabled(false);
-			ui->btn_Login->setText("【系统维护中，预计恢复时间详见公告】");
+			ui->btn_Login->setText("系统维护中，预计恢复时间详见公告");
             ui->btn_Login->setIcon(QIcon(":/images/color_icon/color-warning_2.svg"));
         }
         });

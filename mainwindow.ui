@@ -1046,13 +1046,13 @@
               <widget class="QLabel" name="label_122">
                <property name="minimumSize">
                 <size>
-                 <width>95</width>
+                 <width>63</width>
                  <height>38</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>95</width>
+                 <width>63</width>
                  <height>38</height>
                 </size>
                </property>
@@ -1060,7 +1060,7 @@
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap resource="resource.qrc">:/images/img/qq-nt-logo.png</pixmap>
+                <pixmap resource="resource.qrc">:/images/img/nt-logo.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -1849,6 +1849,9 @@ padding: 0px 5px;</string>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_56">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -1898,7 +1901,7 @@ padding: 0px 5px;</string>
               <bool>true</bool>
              </property>
              <property name="placeholderText">
-              <string>功能升级中，暂不可用...</string>
+              <string>请使用[申请]-&gt;[个人信息异动申请]修改手机号</string>
              </property>
             </widget>
            </item>
@@ -7995,7 +7998,7 @@ padding: 0px 5px;</string>
               <string>系统将自动处理【个人信息异动】【账号认证】申请通过后的数据变动。</string>
              </property>
              <property name="text">
-              <string>自动化处理</string>
+              <string>自动化处理数据变动</string>
              </property>
              <property name="icon">
               <iconset resource="resource.qrc">
@@ -10260,7 +10263,7 @@ padding: 0px 5px;</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>421</width>
+                <width>439</width>
                 <height>291</height>
                </rect>
               </property>
@@ -10622,7 +10625,7 @@ padding: 0px 5px;</string>
              </font>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;畅聊系统已被系统管理员暂停使用&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#7a7a7a;&quot;&gt;WePlanet权限系统&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;当前板块已被系统管理员暂停使用&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#7a7a7a;&quot;&gt;WePlanet权限系统&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -10823,7 +10826,7 @@ background-color: transparent;
      <normaloff>:/images/color_icon/color-idcard.svg</normaloff>:/images/color_icon/color-idcard.svg</iconset>
    </property>
    <property name="text">
-    <string>我的</string>
+    <string>资料</string>
    </property>
    <property name="toolTip">
     <string>我的资料</string>

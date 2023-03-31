@@ -17,8 +17,8 @@ public:
     bool isFirst = true;    //是否为首次加载model
     void working();
     void setCurAvatarUrl(const QString url);
-    void setUserModel(QSqlRelationalTableModel *relTableModel);
-    void setAttendModel(QSqlRelationalTableModel *relTableModel);
+    //void setUserModel(QSqlRelationalTableModel *relTableModel);
+    //void setAttendModel(QSqlRelationalTableModel *relTableModel);
     void getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department);  //已弃用
     void submitAll(int type);   //1补签 0退签
     void loadAvatar();
@@ -27,6 +27,8 @@ public:
     void setFilter(int type, const QString& filter);
     bool isDisplay = false;
     QSqlDatabase getDB();
+    QSqlRelationalTableModel* getUserModel();
+    QSqlRelationalTableModel* getAttendModel();
 private:
     service db_service;
     QComboBox *m_group, *m_department;
@@ -36,6 +38,7 @@ private:
     QStringList comboxItems_group, comboxItems_department;
     QSqlRelationalTableModel *userModel, *attendModel;
     QTimer* heartBeat;
+    QQueue<QSqlRelationalTableModel*> userModelQueue, attendModelQueue;
     void getComboxItems();
 signals:
     void attendManageWorkFinished();

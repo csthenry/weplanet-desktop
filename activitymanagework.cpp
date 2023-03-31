@@ -45,6 +45,8 @@ void ActivityManageWork::working()
     tabModel->setHeaderData(tabModel->fieldIndex("editUid"), Qt::Horizontal, "发布者UID");
     tabModel->setHeaderData(tabModel->fieldIndex("act_score"), Qt::Horizontal, "活动学时");
     tabModel->select();
+    while(tabModel->canFetchMore())
+        tabModel->fetchMore();  //加载超过256的其余数据
 
     memberTabModel->setTable("magic_activityMembers");
     memberTabModel->setSort(memberTabModel->fieldIndex("actm_joinDate"), Qt::DescendingOrder);
@@ -54,6 +56,9 @@ void ActivityManageWork::working()
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("actm_joinDate"), Qt::Horizontal, "报名时间");
     memberTabModel->setHeaderData(memberTabModel->fieldIndex("status"), Qt::Horizontal, "活动状态");
     memberTabModel->select();
+    while (memberTabModel->canFetchMore())
+        memberTabModel->fetchMore();  //加载超过256的其余数据
+    
     if (type == 1)
         updateActStatus();  //更新已报名活动状态并统计学时
     emit activityManageWorkFinished(type);
@@ -86,7 +91,7 @@ void ActivityManageWork::updateActStatus()
     }
     memberTabModel->setFilter("actm_uid=" + uid);
 
-    qDebug() << "当前待新增的总学时:" + QString::number(curScore);
+    qDebug() << "当前待新增总学时:" + QString::number(curScore);
 }
 
 void ActivityManageWork::homeWorking()//已废弃

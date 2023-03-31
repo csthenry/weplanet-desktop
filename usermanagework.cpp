@@ -8,7 +8,7 @@ UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
     //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
     heartBeat = new QTimer(this);
     connect(heartBeat, &QTimer::timeout, this, [=]() {
-        if (isDisplay)
+        if (isDisplay && relTableModel != nullptr)
             relTableModel->select();
         else
             if (DB.isOpen())
@@ -29,7 +29,13 @@ void UserManageWork::working()
     if (!DB.isOpen())
         DB.open();
     isDisplay = true;
-    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...      
+    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...  
+
+    if(modelQueue.count() >= 2)
+        delete modelQueue.dequeue();
+    relTableModel = new QSqlRelationalTableModel(this, DB);
+    modelQueue.enqueue(relTableModel);
+
     relTableModel->setTable("magic_users");
     relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
     relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
@@ -48,9 +54,12 @@ void UserManageWork::working()
     relTableModel->setRelation(relTableModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
     relTableModel->setRelation(relTableModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
     relTableModel->select();
+    while (relTableModel->canFetchMore())
+        relTableModel->fetchMore();  //加载超过256的其余数据
 
     //获取用户组和部门
     getComboxItems();
+
     emit userManageWorkFinished();
 }
 
@@ -83,10 +92,10 @@ void UserManageWork::getComboxItems()
     m_department->addItems(comboxItems_department);
 }
 
-void UserManageWork::setModel(QSqlRelationalTableModel *model)
-{
-    relTableModel = model;
-}
+//void UserManageWork::setModel(QSqlRelationalTableModel *model)
+//{
+//    relTableModel = model;
+//}
 
 void UserManageWork::submitAll()
 {
@@ -212,4 +221,9 @@ int UserManageWork::getVerifyTag()
 QString UserManageWork::getUid()
 {
     return uid;
+}
+
+QSqlRelationalTableModel* UserManageWork::getModel()
+{
+    return relTableModel;
 }

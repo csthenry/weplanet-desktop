@@ -8,7 +8,7 @@ AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
     //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
     heartBeat = new QTimer(this);
     connect(heartBeat, &QTimer::timeout, this, [=]() {
-        if (isDisplay)
+        if (isDisplay && userModel != nullptr && attendModel != nullptr)
         {
             userModel->select();
             attendModel->select();
@@ -31,8 +31,13 @@ void AttendManageWork::working()
 {
     if (!DB.isOpen())
         DB.open();
+
+    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...  
+    if(userModelQueue.count() >= 2)
+        delete userModelQueue.dequeue();    //仅保留前一个model
+    userModel = new QSqlRelationalTableModel(this, DB);
+    userModelQueue.enqueue(userModel);
     isDisplay = true;
-    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...   
     userModel->setTable("magic_users");
     userModel->setSort(userModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
     userModel->setEditStrategy(QSqlTableModel::OnManualSubmit);     //手动提交
@@ -51,6 +56,13 @@ void AttendManageWork::working()
     userModel->setRelation(userModel->fieldIndex("user_group"), QSqlRelation("magic_group", "group_id", "group_name"));
     userModel->setRelation(userModel->fieldIndex("user_dpt"), QSqlRelation("magic_department", "dpt_id", "dpt_name"));
     userModel->select();
+    while (userModel->canFetchMore())
+        userModel->fetchMore();  //加载超过256的其余数据
+
+    if(attendModelQueue.count() >= 2)
+		delete attendModelQueue.dequeue();
+    attendModel = new QSqlRelationalTableModel(this, DB);
+    attendModelQueue.enqueue(attendModel);
 
     attendModel->setTable("magic_attendance");
     attendModel->setSort(attendModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
@@ -66,6 +78,8 @@ void AttendManageWork::working()
     //建立外键关联
     attendModel->setRelation(attendModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
     attendModel->select();
+    while (attendModel->canFetchMore())
+		attendModel->fetchMore();  //加载超过256的其余数据
 
     //将未签退的考勤项签退，签退时间23:59:59
     DB_SECOND.open();
@@ -154,19 +168,29 @@ void AttendManageWork::setCurAvatarUrl(const QString url)
     avatarUrl = url;
 }
 
-void AttendManageWork::setUserModel(QSqlRelationalTableModel *relTableModel)
-{
-    userModel = relTableModel;
-}
-
-void AttendManageWork::setAttendModel(QSqlRelationalTableModel *relTableModel)
-{
-    attendModel = relTableModel;
-}
+//void AttendManageWork::setUserModel(QSqlRelationalTableModel *relTableModel)
+//{
+//    userModel = relTableModel;
+//}
+//
+//void AttendManageWork::setAttendModel(QSqlRelationalTableModel *relTableModel)
+//{
+//    attendModel = relTableModel;
+//}
 
 QSqlDatabase AttendManageWork::getDB()
 {
     return DB;
+}
+
+QSqlRelationalTableModel* AttendManageWork::getUserModel()
+{
+    return userModel;
+}
+
+QSqlRelationalTableModel* AttendManageWork::getAttendModel()
+{
+    return attendModel;
 }
 
 void AttendManageWork::getComboxItems(QStringList& comboxItems_group, QStringList& comboxItems_department)

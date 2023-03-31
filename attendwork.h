@@ -21,17 +21,18 @@ public:
     ~AttendWork();
     void working();
     void homeChartWorking();
-    void analyseWorkTime();
+    void analyseWorkTime(QSqlQuery* query = nullptr);
     void analyseWorkStatus();
     QSqlRecord getRecord(const int index);
     QSqlDatabase getDB();
     void setUid(const QString& uid);
-    void setModel(QSqlRelationalTableModel *relTableModel);
+    //void setModel(QSqlRelationalTableModel *relTableModel);
     int fieldIndex(const QString &field);
     int* getWorkTime();
     QJsonArray getWeekMyWorkTime();
     QJsonArray getWeekAllWorkStatus();
     QJsonArray getWeekWorkMem();
+    QSqlRelationalTableModel* getModel();
     bool isDisplay = false;
 private slots:
     void submitAll(int type);   //1代表签到，0代表签退
@@ -43,6 +44,7 @@ private:
     QSqlRelationalTableModel *relTableModel;
     QJsonArray weekMyWorkTime, weekAllWorkStatus, weekWorkMem;
     QTimer* heartBeat;
+    QQueue<QSqlRelationalTableModel*> modelQueue;
 signals:
     void attendWorkFinished();
     void attendDone(bool);

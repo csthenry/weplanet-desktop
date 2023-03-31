@@ -8,7 +8,7 @@ AttendWork::AttendWork(QObject *parent) : QObject(parent)
     //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
     heartBeat = new QTimer(this);
     connect(heartBeat, &QTimer::timeout, this, [=]() {
-        if (isDisplay)
+        if (isDisplay && relTableModel != nullptr)
             relTableModel->select();
         else
             if (DB.isOpen())
@@ -28,6 +28,11 @@ void AttendWork::working()
 {
     if (!DB.isOpen())
         DB.open();
+
+    if (modelQueue.count() >= 2)
+        delete modelQueue.dequeue();
+    relTableModel = new QSqlRelationalTableModel(this, DB);
+    modelQueue.enqueue(relTableModel);
     isDisplay = true;
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
@@ -44,6 +49,8 @@ void AttendWork::working()
     relTableModel->setRelation(relTableModel->fieldIndex("operator"), QSqlRelation("magic_users", "uid", "name"));
     relTableModel->select();
     relTableModel->setFilter("a_uid='" + uid +"'");
+    while (relTableModel->canFetchMore())
+        relTableModel->fetchMore();  //加载超过256的其余数据
 
     //将未签退的考勤项签退，签退时间23:59:59
     DB_SECOND.open();
@@ -61,22 +68,17 @@ void AttendWork::working()
 
 void AttendWork::homeChartWorking()
 {
-    if (!DB.isOpen())
-        DB.open();
-    isDisplay = true;
-    relTableModel->setTable("magic_attendance");
-    relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
-    relTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);  //手动提交
-    relTableModel->select();
-    relTableModel->setFilter("a_uid='" + uid + "'");
-    analyseWorkTime();
+    DB_SECOND.open();
+
+    QSqlQuery query(DB_SECOND);
+    query.exec(QString("SELECT * FROM magic_attendance WHERE a_uid='%1' ORDER BY today DESC").arg(uid));
+    analyseWorkTime(&query);
     
     QJsonObject seriesObj;
     QJsonArray dateArray;
 
     seriesObj.insert("data_yStatus", weekAllWorkStatus);
     seriesObj.insert("data_yTime", weekMyWorkTime);
-    seriesObj.insert("data_yMem", weekWorkMem);
     
     QString date;
     QDateTime curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
@@ -90,11 +92,14 @@ void AttendWork::homeChartWorking()
     seriesObj.insert("data_x", dateArray);
     QString jsCode = QString("init(%1, 1)").arg(QString(QJsonDocument(seriesObj).toJson()));
     
-    isDisplay = false;  //首页仅需要展示图表，并不需要model一直活动
+    isDisplay = false;  //首页仅需要展示图表，并不需要model活动
+
+    query.clear();
+    DB_SECOND.close();
     emit homeChartDone(jsCode);
 }
 
-void AttendWork::analyseWorkTime()
+void AttendWork::analyseWorkTime(QSqlQuery* query)
 {
     int cnt = 0;
     QTime workTime(0, 0, 0, 0), beginTime, endTime;
@@ -105,7 +110,12 @@ void AttendWork::analyseWorkTime()
     for(int i = 0; i < 4; i++)
         workTimeData[i] = 0;
     do{
-        curRecord = relTableModel->record(cnt);
+        if (query != nullptr && query->seek(cnt))
+            curRecord = query->record();
+        else if (query == nullptr)
+            curRecord = relTableModel->record(cnt);
+        else
+            break;
         if(!curRecord.value("begin_date").isNull() && !curRecord.value("end_date").isNull())
         {
             beginTime = QTime::fromString(curRecord.value("begin_date").toString(), "hh:mm:ss");
@@ -123,6 +133,7 @@ void AttendWork::analyseWorkTime()
         }
         cnt ++;
     }while(!curRecord.value("begin_date").isNull());
+    
     today = today.addDays(-7);
     for (int i = 0; i < 7; i++)
     {
@@ -130,7 +141,12 @@ void AttendWork::analyseWorkTime()
         today = today.addDays(1);
         workTime.setHMS(0, 0, 0);
         do{
-            curRecord = relTableModel->record(cnt);
+            if (query != nullptr && query->seek(cnt))
+                curRecord = query->record();
+            else if (query == nullptr)
+                curRecord = relTableModel->record(cnt);
+            else
+                break;
             if (today.date().toString("yyyy-MM-dd") == curRecord.value("today").toDateTime().date().toString("yyyy-MM-dd"))
             {
                 beginTime = QTime::fromString(curRecord.value("begin_date").toString(), "hh:mm:ss");
@@ -147,16 +163,19 @@ void AttendWork::analyseWorkTime()
     }
     this->weekMyWorkTime = weekMyWorkTime;
     this->weekAllWorkStatus = weekAllWorkStatus;
-    QString preFilter = relTableModel->filter();
-    today = today.addDays(-7);
-    for (int i = 0; i < 7; i++)
+    if (query == nullptr)
     {
-        today = today.addDays(1);
-        relTableModel->setFilter("today='" + today.date().toString("yyyy-MM-dd") + "'");
-        weekWorkMem[i] = relTableModel->rowCount();
+        QString preFilter = relTableModel->filter();
+        today = today.addDays(-7);
+        for (int i = 0; i < 7; i++)
+        {
+            today = today.addDays(1);
+            relTableModel->setFilter("today='" + today.date().toString("yyyy-MM-dd") + "'");
+            weekWorkMem[i] = relTableModel->rowCount();
+        }
+        relTableModel->setFilter(preFilter);
+        this->weekWorkMem = weekWorkMem;
     }
-    relTableModel->setFilter(preFilter);
-    this->weekWorkMem = weekWorkMem;
 }
 
 void AttendWork::analyseWorkStatus()
@@ -175,10 +194,10 @@ void AttendWork::setUid(const QString &uid)
     this->uid = uid;
 }
 
-void AttendWork::setModel(QSqlRelationalTableModel *relTableModel)
-{
-    this->relTableModel = relTableModel;
-}
+//void AttendWork::setModel(QSqlRelationalTableModel *relTableModel)
+//{
+//    this->relTableModel = relTableModel;
+//}
 
 int AttendWork::fieldIndex(const QString &field)
 {
@@ -203,6 +222,11 @@ QJsonArray AttendWork::getWeekAllWorkStatus()
 QJsonArray AttendWork::getWeekWorkMem()
 {
     return weekWorkMem;
+}
+
+QSqlRelationalTableModel* AttendWork::getModel()
+{
+    return relTableModel;
 }
 
 QSqlDatabase AttendWork::getDB()
