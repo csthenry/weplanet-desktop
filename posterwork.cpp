@@ -11,9 +11,9 @@ PosterWork::PosterWork(QObject *parent)
     connect(heartBeat, &QTimer::timeout, this, [=]() {
         if (isDisplay)
         {
-            if(workType == 1)
+            if(workType == 1 && !manageModel->isDirty())
                 manageModel->select();
-			else if(workType == 2)
+			else if(workType == 0)
 				tabModel->select();
         }
         else

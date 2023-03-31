@@ -29,7 +29,7 @@ public:
 	bool isDisplay = false;
 
 private:
-	int workType = -1;	//1管理页面；2用户页面
+	int workType = -1;	//1管理页面；0用户页面
 	service db_service;
 	QSqlDatabase DB, DB_SECOND;
 	QSqlTableModel* tabModel, *manageModel;

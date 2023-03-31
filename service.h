@@ -23,7 +23,7 @@
 #include <QNetworkReply>
 #include <./smtp/SmtpMime>  //邮件服务
 
-#define MYSQL_TIME_OUT 60000     //定义数据库心跳时间
+#define MYSQL_TIME_OUT 180000     //定义数据库心跳时间ms
 
 class service
 {
