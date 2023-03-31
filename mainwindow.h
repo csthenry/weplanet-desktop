@@ -79,6 +79,8 @@ private:
 
     bool dbStatus = true;
 
+    bool isDisabledDynamicItems = false;
+
     bool openChat = false;  //是否开启聊天
 
     bool isSending = false; //消息发送中
@@ -117,7 +119,7 @@ private:
 
     QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel, *noticeModel, *noticeManageModel;  //数据模型
 
-    QSqlRelationalTableModel *userManageModel, *attendUserModel, *attendManageModel, *attendPageModel;
+    //QSqlRelationalTableModel *userManageModel, *attendUserModel, *attendManageModel, *attendPageModel;
 
     QDataWidgetMapper* actEditMapper, *noticeEditMapper;
 
@@ -177,9 +179,7 @@ private:
 
     void updateManageApplyItemProcess(QList<QString> list);
 
-    void updateApplyItemProcess(int type, QString apply_id, QList<QString> list);   //0审批流程 1审批进度
-    
-    void updateApplyItemProcess(QList<QString> list);
+    void updateApplyItemProcess(int type, QString apply_id, QList<QString> list);   //0加载审批流程 1加载审批流程和审批进度
 
 	void updateApplyItemOptions(int type, QList<QString> list);//0用户页面，1审核页面
 
@@ -237,7 +237,7 @@ private:
 
     bool checkLocalTime();
 
-    void disableDynamicItems(); //本地时间误差过大，禁用需要准确时间的项目
+    void disableDynamicItems(bool isDisabled); //本地时间误差过大，禁用需要准确时间的项目
 
     void initModelViewIsDisplay();  //重置各work的状态
 

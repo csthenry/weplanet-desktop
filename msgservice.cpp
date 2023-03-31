@@ -7,6 +7,10 @@ MsgService::MsgService(QObject *parent, int path)
 	db_service.addDatabase(DB_PUSHER, "MsgService_DB_PUSHER_" + QString::number(path));
 }
 
+MsgService::~MsgService()
+{
+}
+
 void MsgService::loadMsgMemList(QString uid)
 {
 	DB.open();
@@ -52,8 +56,10 @@ void MsgService::pushMessage(QString me, QString member, int limit)
 	QString from_uid, from_name, to_uid, to_name, msgText, send_time;
 
 	msgStack.clear();
-	query.exec(QString("SELECT * FROM magic_message WHERE from_uid='%1' AND to_uid='%2' UNION ALL SELECT * FROM magic_message WHERE from_uid='%2' AND to_uid='%1' ORDER BY id DESC").arg(me, member));	   // LIMIT 0,30
-	msgStackCnt[member] = query.size();	//消息栈数据量
+	query.exec(QString("SELECT COUNT(id) FROM magic_message WHERE (from_uid='%1' AND to_uid='%2') OR (from_uid='%2' AND to_uid='%1');").arg(me, member));
+	query.next();
+	msgStackCnt[member] = query.value("COUNT(id)").toInt();	//消息栈数据量
+	query.exec(QString("SELECT * FROM magic_message WHERE from_uid='%1' AND to_uid='%2' UNION ALL SELECT * FROM magic_message WHERE from_uid='%2' AND to_uid='%1' ORDER BY id DESC LIMIT %3;").arg(me, member, QString::number(limit)));	   // LIMIT 0,30
 	while (query.next() && cnt <= limit) {
 		QByteArray array;
 		QDataStream stream(&array, QIODevice::WriteOnly);
@@ -84,7 +90,7 @@ void MsgService::pushMessage(QString me, QString member, int limit)
 	}
 	else
 		isOnline.insert(member, false);
-	query.exec();
+	query.clear();
 	DB_PUSHER.close();
 
 	previousPushUid = member;
@@ -320,8 +326,4 @@ QString MsgService::getPushingUid()
 QString MsgService::getPreviousPushUid()
 {
 	return previousPushUid;
-}
-
-MsgService::~MsgService()
-{
 }

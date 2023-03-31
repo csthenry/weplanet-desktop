@@ -46,7 +46,8 @@ void PosterWork::working()
         tabModel->setHeaderData(tabModel->fieldIndex("author_id"), Qt::Horizontal, "发布者");
         tabModel->setFilter("isHide = 0");  //仅显示未隐藏
         tabModel->select();
-        
+        while (tabModel->canFetchMore())
+            tabModel->fetchMore();  //加载超过256的其余数据
         emit contentsWorkFinished();
     }
     else
@@ -60,7 +61,8 @@ void PosterWork::working()
         manageModel->setHeaderData(manageModel->fieldIndex("c_id"), Qt::Horizontal, "编号");
         manageModel->setHeaderData(manageModel->fieldIndex("title"), Qt::Horizontal, "标题");
         manageModel->select();
-
+        while (manageModel->canFetchMore())
+            manageModel->fetchMore();  //加载超过256的其余数据
         emit contentsManageWorkFinished();
     }
 }

@@ -181,7 +181,7 @@ void FriendInfoWidget::on_btn_sendMsg_clicked()
 		return;
     }
     Mailsending = true;
-    int smtp_rescode = service::sendMail(smtp_config, m_mail, QString("WePlanet 消息提醒"), QString("你的好友 %1 正在通过 WePlanet 畅聊 给你发送信息，请尽快前往【WePlanet 畅聊】查看/回复好友最新消息。").arg(fromUserInfo));
+    int smtp_rescode = service::sendMail(smtp_config, m_mail, QString("WePlanet 消息提醒"), QString("你的好友 %1 正在通过 [WePlanet 畅聊] 给你发送信息，请尽快前往 [WePlanet 畅聊] 查看/回复好友最新消息。").arg(fromUserInfo));
 
     if (smtp_rescode != 1)
         QMessageBox::warning(this, "警告", "邮件发送失败，请检查邮箱是否正确或联系管理员检查SMTP配置。", QMessageBox::Ok);

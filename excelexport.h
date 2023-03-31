@@ -1,9 +1,6 @@
 ﻿/***************************************************/
-/*              Magic Light Assistant              */
-/* Copyright (c) 2017-2021 by bytecho.net          */
+/* Copyright (c) 2017-2023 bytecho.net             */
 /* Written by Henry                                */
-/* Function:                                       */
-/* Communication, activity, management and approval*/
 /***************************************************/
 #pragma once
 #pragma execution_character_set("utf-8")
@@ -11,27 +8,26 @@
 #ifndef EXCELEXPORT_H
 #define EXCELEXPORT_H
 
-#include <QObject>
-#include <QAxObject>
-#include <QSqlTableModel>
 #include <QSqlRecord>
-#include <QFileDialog>
+#include <QTextstream>
 #include <QDateTime>
+#include <QFileDialog>
+#include <QStack>
+#include <QFile>
 #include <QDir>
-#include <QDebug>
-
 
 class ExcelExport {
 
 public:
-    ExcelExport(QObject* parent);
+    ExcelExport();
     ~ExcelExport();
-    bool WriteExcel(const QString& filePath, QSqlTableModel* tableModel, const QString& uid, int type);
+    bool WriteExcel(const QString& filepath, QStack<QSqlRecord>& dataStack);
 
 private:
-    QObject *parent;
-    QAxObject *excel;
     QDateTime curDateTime;
+
+signals:
+    void exportExcelFinished(bool res);
 };
 
 #endif

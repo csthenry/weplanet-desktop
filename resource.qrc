@@ -111,6 +111,7 @@
         <file>color_icon/arrow_up_2.svg</file>
         <file>img/stable.png</file>
         <file>img/ae_loading.gif</file>
+        <file>img/nt-logo.png</file>
     </qresource>
     <qresource prefix="/lib">
         <file>eCharts/echarts.html</file>

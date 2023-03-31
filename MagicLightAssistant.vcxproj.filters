@@ -133,9 +133,6 @@
     <QtMoc Include="comboboxdelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="excelexport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="formlogin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -455,6 +452,9 @@
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="excelexport.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -121,6 +121,7 @@ void ApprovalWork::getUserPageApplyItems(const QString& uid)
 {
 	DB.open();
 	QSqlQuery query(DB);
+	//获取可申请的项目
 	query.exec(QString("SELECT * FROM magic_applyItems WHERE isHide=0"));
 	applyItems.clear();
 	while (query.next()) {
@@ -143,9 +144,11 @@ void ApprovalWork::getUserPageApplyItems(const QString& uid)
 		}
 	}
 	query.clear();
+
 	//获取用户已提交的申请
 	applyForms.clear();
 	query.exec(QString("SELECT * FROM magic_apply WHERE uid=%1 ORDER BY apply_id DESC").arg(uid));	//id降序
+	DB_SECOND.open();	//调用getApplyProcess()前需打开该数据库
 	while(query.next())
 	{
 		QByteArray array;
@@ -166,8 +169,8 @@ void ApprovalWork::getUserPageApplyItems(const QString& uid)
 		}
 	}
 	query.clear();
-	DB.close();
-		
+	DB_SECOND.close();	//关闭调用getApplyProcess()所需数据库连接
+	DB.close();	
 	emit getUserPageApplyItemsFinished();
 }
 
@@ -227,7 +230,7 @@ void ApprovalWork::autoExecuteSystemApplyItems()
 					DB_SECOND.close();
 					finishedNum++; 
 					if(!mail.isEmpty())
-						service::sendMail(smtp_config, mail, "WePlanet 审批进度更新", QString("用户%1：\n你的【个人信息异动申请】现已完成审核，个人信息现已更新。\n\n注：若异动信息有误，请联系管理员。").arg(record.value("uid").toString()));
+						service::sendMail(smtp_config, mail, "WePlanet 审批进度更新", QString("用户%1：\n你的【个人信息异动申请】现已完成审核，个人信息已更新。\n\n注：若异动信息有误，请联系管理员。").arg(record.value("uid").toString()));
 				}
 			}
 		}
@@ -279,7 +282,7 @@ void ApprovalWork::autoExecuteSystemApplyItems()
 					DB_SECOND.close();
 					finishedNum++;
 					if (!mail.isEmpty())
-						service::sendMail(smtp_config, mail, "WePlanet 审批进度更新", QString("用户%1：\n你的【账号认证申请】现已完成审核，账号认证信息现已更新。\n\n注：若认证信息有误，请联系管理员。").arg(record.value("uid").toString()));
+						service::sendMail(smtp_config, mail, "WePlanet 审批进度更新", QString("用户%1：\n你的【账号认证申请】现已完成审核，账号认证信息已更新。\n\n注：若认证信息有误，请联系管理员。").arg(record.value("uid").toString()));
 				}
 			}
 		}
@@ -291,9 +294,9 @@ void ApprovalWork::autoExecuteSystemApplyItems()
 	emit autoExecuteSystemApplyItemsFinished(finishedNum);
 }
 
-int ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_id)
+int ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_id)	//调用此函数前需打开数据库DB_SECOND连接
 {
-	DB_SECOND.open();
+	//DB_SECOND.open();
 	QSqlQuery query(DB_SECOND);
 	currentProcess.clear();
 	int step = 0, apply_status = 0;	//已成功通过的流程，申请表状态
@@ -329,7 +332,7 @@ int ApprovalWork::getApplyProcess(const QString& apply_id, const QString& item_i
 	applyFormsProcess.insert(apply_id, currentProcess);	//将所有已审核的步骤存入对应id键值
 	
 	query.clear();
-	DB_SECOND.close();
+	//DB_SECOND.close();
 	return apply_status;
 }
 

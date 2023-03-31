@@ -25,11 +25,11 @@ private:
 	QList<QString> smtp_config;
 	
 public:
-	void getManagePageApplyItems(const QString& uid);
-	void getUserPageApplyItems(const QString& uid);
+	void getManagePageApplyItems(const QString& uid);	//加载审批流程页面数据
+	void getUserPageApplyItems(const QString& uid);		//加载用户申请页面数据
 	void getManagePageAuditorList();	//获取具有审核权限的人员列表
 	void getAllApplyFormList(const QString& uid);	//获取审批队列供管理员审核
-	int getApplyProcess(const QString& apply_id, const QString& item_id);	//返回最新申请表状态
+	int getApplyProcess(const QString& apply_id, const QString& item_id);	//获取申请表流程，返回申请表状态（调用此函数前需打开数据库DB_SECOND连接）
 	void addOrModifyApplyItem(int type, QByteArray array);	//0新增或1修改申请项 ByteArray 标题->选项->发布者->流程->isHide
 	QByteArray getSimpleApplyItems(const QString& item_id);
 	QList<QByteArray> getApplyFormList();
