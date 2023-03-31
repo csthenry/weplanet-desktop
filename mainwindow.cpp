@@ -2449,7 +2449,7 @@ void MainWindow::setActivityManagePage()
     ui->tableView_actList->setSelectionModel(activitySelection);
     ui->tableView_actMember->setModel(activityMemModel);
     ui->tableView_actMember->setSelectionModel(activityMemSelection);
-
+    
     actEditMapper->setModel(activityModel);
     actEditMapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     actEditMapper->addMapping(ui->lineEdit_actName_2, 1);
