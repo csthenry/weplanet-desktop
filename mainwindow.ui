@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>17</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2146,8 +2146,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>300</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -2179,8 +2179,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -4027,8 +4027,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>519</height>
             </rect>
            </property>
            <property name="font">
@@ -4060,8 +4060,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -4093,8 +4093,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <attribute name="label">
@@ -4178,8 +4178,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1026</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="ApplyProcess_Layout">
@@ -4218,8 +4218,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>1024</width>
+                   <height>309</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_Layout">
@@ -7617,8 +7617,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -7650,8 +7650,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -7765,8 +7765,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1048</width>
+                   <height>278</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_manage_Layout">
@@ -8062,8 +8062,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>290</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -8095,8 +8095,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
            <property name="font">
@@ -8261,8 +8261,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1016</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="manageApplyProcess_Layout">
@@ -8577,8 +8577,8 @@ padding: 0px 5px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>226</width>
+                   <height>267</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="manageApplyAuditorList_Layout">
@@ -9732,78 +9732,58 @@ padding: 0px 5px;</string>
            </property>
            <item row="0" column="2">
             <widget class="QGroupBox" name="groupBox_59">
-             <property name="maximumSize">
+             <property name="minimumSize">
               <size>
                <width>220</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>250</width>
                <height>16777215</height>
               </size>
              </property>
              <property name="title">
               <string>在线聊天</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_153">
+             <layout class="QGridLayout" name="gridLayout_26">
               <item row="0" column="0">
-               <layout class="QGridLayout" name="gridLayout_128">
-                <item row="0" column="0">
-                 <widget class="QLineEdit" name="lineEdit_msgPushTime">
-                  <property name="maximumSize">
-                   <size>
-                    <width>40</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>5</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1" colspan="2">
-                 <widget class="QLabel" name="label_110">
-                  <property name="text">
-                   <string>秒后刷新消息列表</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QLabel" name="label_117">
-                  <property name="text">
-                   <string>最多加载消息数量</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QLineEdit" name="lineEdit_msgPushMaxCnt">
-                  <property name="maximumSize">
-                   <size>
-                    <width>40</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>30</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <widget class="QSpinBox" name="spinBox_msgPushTime">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>600</number>
+                </property>
+               </widget>
               </item>
-              <item row="0" column="1">
-               <spacer name="horizontalSpacer_25">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+              <item row="1" column="2">
+               <widget class="QSpinBox" name="spinBox_msgPushMaxCnt">
+                <property name="minimum">
+                 <number>1</number>
                 </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
+                <property name="maximum">
+                 <number>300</number>
                 </property>
-               </spacer>
+                <property name="value">
+                 <number>15</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1" colspan="2">
+               <widget class="QLabel" name="label_110">
+                <property name="text">
+                 <string>秒后刷新消息列表</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QLabel" name="label_117">
+                <property name="text">
+                 <string>最多加载消息数量</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>

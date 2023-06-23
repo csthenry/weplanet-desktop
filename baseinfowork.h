@@ -98,9 +98,10 @@ private:
     QString verifyType, verifyInfo;
     QString lastLoginTime;
     int verifyTag;
-    QPixmap loadAvatar(const QString& url);
+    //QPixmap loadAvatar(const QString& url);
     QString loadGroup(const QString& uid);
     QString loadDepartment(const QString& uid);
+    void loadGroupAndDepartment(const QString& uid, QString& group, QString& department);
     QString announcementText;
     int announcementTag;
 	bool isDebug = false;

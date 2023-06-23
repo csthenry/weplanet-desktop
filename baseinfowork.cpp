@@ -73,15 +73,13 @@ void baseInfoWork::loadBaseInfoWorking()
         }
     }
     query.clear();
+    loadGroupAndDepartment(uid, group, department);
     DB.close();
 
-    //此处操作会关闭数据库连接，故最后执行
-    group = loadGroup(uid);
-    department = loadDepartment(uid);
-    avatar = loadAvatar(avatarUrl);
+    avatar = service::getAvatar(avatarUrl);
 
     emit baseInfoFinished();
-    qDebug() << "baseInfoLoad线程：" << this->thread();
+    //qDebug() << "baseInfoLoad Thread：" << this->thread();
 }
 
 void baseInfoWork::refreshBaseInfo()
@@ -215,34 +213,27 @@ QString baseInfoWork::loadGroup(const QString& uid)
 {
     DB.open();
     QString res;
-    QSqlQuery query(DB);
-    query.exec("SELECT user_group FROM magic_users WHERE uid = " + uid);
-    if(!query.next())
-        return "--";
-    query.exec("SELECT group_name FROM magic_group WHERE group_id = " + query.value("user_group").toString());
-    if(!query.next())
-        return "--";
-    res = query.value("group_name").toString();
-    query.clear();
+    res = service::getGroup(DB, uid);
     DB.close();
     return res;
 }
 
 QString baseInfoWork::loadDepartment(const QString& uid)
 {
-    QString res;
     DB.open();
-    QSqlQuery query(DB);
-    query.exec("SELECT user_dpt FROM magic_users WHERE uid = " + uid);
-    if(!query.next())
-        return "--";
-    query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id = " + query.value("user_dpt").toString());
-    if(!query.next())
-        return "--";
-    res = query.value("dpt_name").toString();
-    query.clear();
+    QString res;
+    res = service::getDepartment(DB, uid);
     DB.close();
     return res;
+}
+
+void baseInfoWork::loadGroupAndDepartment(const QString& uid, QString& group, QString& department)
+{
+    if (!DB.isOpen())
+		DB.open();
+    group = service::getGroup(DB, uid);
+    department = service::getDepartment(DB, uid);
+	DB.close();
 }
 
 void baseInfoWork::autoAuthAccount(const long long account, const QString &pwd)
@@ -696,7 +687,7 @@ QList<QString> baseInfoWork::getSmtpConfig()
     return smtp_config;
 }
 
-QPixmap baseInfoWork::loadAvatar(const QString &url)
+/*QPixmap baseInfoWork::loadAvatar(const QString& url)
 {
     QUrl picUrl(url);
     QNetworkAccessManager manager;
@@ -711,3 +702,4 @@ QPixmap baseInfoWork::loadAvatar(const QString &url)
     pixmap.loadFromData(jpegData);
     return pixmap;
 }
+*/
