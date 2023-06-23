@@ -149,7 +149,7 @@ private:
 
     QLabel* msgListTips_1, *msgListTips_2;
 
-    QString active_id = -1; //活动管理页面当前选择的ID
+    QString active_id = "-1"; //活动管理页面当前选择的ID
 
 	QHash<QString, QString> applyItemsOptions, applyItemsAuditorList, applyItemsIsHide; //申请表单、审核人、是否隐藏
 

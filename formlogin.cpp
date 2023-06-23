@@ -44,7 +44,7 @@ formLogin::formLogin(QDialog *parent) :
     statusOKIcon = new QPixmap(":/images/color_icon/color-approve.svg"), statusErrorIcon = new QPixmap(":/images/color_icon/color-delete.svg");
     ui->labelIcon->setMaximumSize(25, 25);
     ui->labelIcon->setScaledContents(true);    //图片自适应大小
-    ui->mainIcon->setScaledContents(true);
+    //ui->mainIcon->setScaledContents(true);
     //ui->mainIcon->setPixmap(mainicon);
     //ui->labelIcon->setPixmap(QPixmap(":/images/color_icon/color-setting_2.svg"));
 
@@ -450,7 +450,7 @@ void formLogin::on_signUpFinished(int res)
     else if(res == 101)
         QMessageBox::warning(this, "警告", "注册失败，错误信息：" + sqlWork->getDb().lastError().text(), QMessageBox::Ok);
     else
-        QMessageBox::warning(this, "警告", QString("手机号：%1，已被注册，请更换手机号。").arg(ui->lineEdit_SignupTel->text()), QMessageBox::Ok);
+        QMessageBox::warning(this, "警告", QString("手机号：%1，已被注册，请更换手机号，若非本人注册，请联系管理员。").arg(ui->lineEdit_SignupTel->text()), QMessageBox::Ok);
 }
 
 void formLogin::on_lineEdit_Pwd_textEdited(const QString &arg1)
