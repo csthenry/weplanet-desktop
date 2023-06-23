@@ -91,7 +91,7 @@ private:
 
     int curMsgStackCnt = 0; //当前消息栈数据量
 
-    int msgStackMax = 30; //聊天记录最大数量
+    int msgStackMax = 15; //聊天记录最大数量
 
     QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_MSGPUSHER, *sqlThread_SECOND;
 
@@ -99,7 +99,7 @@ private:
 
     QString msg_contents, msgHistoryInfo; //聊天记录、当前聊天信息
 
-    QQueue<QString> getVerifyQueue, getAvatarQueue;
+    QQueue<QString> getVerifyQueue, getAvatarQueue, getActMemQueue;
 
     QSystemTrayIcon* trayIcon;
 
@@ -175,7 +175,7 @@ private:
 	
 	int panel_series_count = 14, panel_option = -1;
 
-    int msgPushTime = 5;
+    int msgPushTime = 10;
 
     void updateManageApplyItemProcess(QList<QString> list);
 
@@ -555,9 +555,9 @@ private slots:
 
     void on_btn_smtpSave_clicked();
 
-    void on_lineEdit_msgPushTime_textChanged(const QString& arg);
+    void on_spinBox_msgPushTime_valueChanged(const QString& arg);
 
-    void on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg);
+    void on_spinBox_msgPushMaxCnt_valueChanged(const QString& arg);
 
     void loadActMemAccountInfo(QSqlRecord rec);
 

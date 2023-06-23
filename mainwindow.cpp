@@ -894,12 +894,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     if (!config_ini->value("/System/MsgPushTime").toBool())
         config_ini->setValue("/System/MsgPushTime", msgPushTime);
     else
-        ui->lineEdit_msgPushTime->setText(config_ini->value("/System/MsgPushTime").toString());
+        ui->spinBox_msgPushTime->setValue(config_ini->value("/System/MsgPushTime").toInt());
 
     if (!config_ini->value("/System/MsgStackMaxCnt").toBool())
         config_ini->setValue("/System/MsgStackMaxCnt", msgStackMax);
     else
-        ui->lineEdit_msgPushMaxCnt->setText(config_ini->value("/System/MsgStackMaxCnt").toString());
+        ui->spinBox_msgPushMaxCnt->setValue(config_ini->value("/System/MsgStackMaxCnt").toInt());
 
     //事件过滤器
     ui->textEdit_msg->installEventFilter(this);
@@ -2528,6 +2528,16 @@ void MainWindow::setNoticePage()
 
 void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
 {
+    if (getActMemQueue.count() != 0)    //待加载队列出队
+        getActMemQueue.dequeue();
+    if (!getActMemQueue.isEmpty())
+    {
+        QString back = getActMemQueue.back();
+        emit queryAccount(back);  //若任务堆积，则加载队尾即可
+        getActMemQueue.clear();
+        getActMemQueue.enqueue(back);
+    }
+
     if (rec.value("uid").toString().isEmpty())
         ui->label_actMemUid->setText("--");
     else
@@ -2564,7 +2574,7 @@ void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
         userManageWork->setCurAvatarUrl(rec.value("user_avatar").toString());
         emit userManageGetAvatar();
     }
-    getAvatarQueue.enqueue(rec.value("user_avatar").toString());   //加载项入栈
+    getAvatarQueue.enqueue(rec.value("user_avatar").toString());   //加载项入队
 }
 
 void MainWindow::on_btn_manageApplyAddApply_clicked()
@@ -3057,7 +3067,7 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
         userManageWork->setCurAvatarUrl(curRecord.value("user_avatar").toString());
         emit userManageGetAvatar();
     }
-    getAvatarQueue.enqueue(curRecord.value("user_avatar").toString());   //加载项入栈
+    getAvatarQueue.enqueue(curRecord.value("user_avatar").toString());   //加载项入队
     
 	//子线程获取认证信息
     ui->label_verifyType_manage->setText("加载中...");
@@ -3066,7 +3076,7 @@ void MainWindow::on_userManagePagecurrentRowChanged(const QModelIndex &current, 
     
     if (getVerifyQueue.isEmpty())
         emit getVerify(curRecord.value("uid").toString());
-    getVerifyQueue.enqueue(curRecord.value("uid").toString());   //加载项入栈
+    getVerifyQueue.enqueue(curRecord.value("uid").toString());   //加载项入队
     
     //密码修改
     if(!ui->lineEdit_editPwd->text().isEmpty())
@@ -3181,6 +3191,7 @@ void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& cu
     Q_UNUSED(previous);
     if (ui->tabWidget_2->currentIndex() != 2)   //切换至报名成员信息页
         ui->tabWidget_2->setCurrentIndex(2);
+    QString currentUid = activityMemModel->record(current.row()).value("actm_uid").toString();
 	ui->activityManage_avatar->setPixmap(QPixmap(":/images/color_icon/user.svg"));
     ui->label_actMemUid->setText("加载中...");
     ui->label_actMemName->setText("加载中...");
@@ -3188,7 +3199,10 @@ void MainWindow::on_activityManagePageMemcurrentRowChanged(const QModelIndex& cu
     ui->label_actMemDpt->setText("加载中...");
     ui->label_actTel->setText("加载中...");
     ui->label_actMail->setText("加载中...");
-    emit queryAccount(activityMemModel->record(current.row()).value("actm_uid").toString());
+
+    if (getActMemQueue.isEmpty())
+        emit queryAccount(currentUid);
+    getActMemQueue.enqueue(currentUid); //加载项入队
 }
 
 void MainWindow::on_myActivityPagecurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -4360,17 +4374,31 @@ void MainWindow::on_btn_manageApplyModify_clicked()
     ui->btn_manageApplySwitch->setEnabled(true);
 }
 
-void MainWindow::on_lineEdit_msgPushTime_textChanged(const QString& arg)
+void MainWindow::on_spinBox_msgPushTime_valueChanged(const QString& arg)
 {
-    if (arg.toInt() >= 3 && arg.toInt() <= 300)
+    if (arg.toInt() <= 600)
     {
-        msgPushTime = arg.toInt();
+        if(arg.toInt() < 10)
+            msgPushTime = 10;
+        else
+            msgPushTime = arg.toInt();
         config_ini->setValue("/System/MsgPushTime", msgPushTime);
         msgPushTimer->stop();
         msgPushTimer->start(msgPushTime * 1000);
     }
     else
-        ui->lineEdit_msgPushTime->setText(QString::number(msgPushTime));
+        ui->spinBox_msgPushTime->setValue(msgPushTime);
+}
+
+void MainWindow::on_spinBox_msgPushMaxCnt_valueChanged(const QString& arg)
+{
+    if (arg.toInt() > 0 && arg.toInt() <= 300)
+    {
+        msgStackMax = arg.toInt();
+        config_ini->setValue("/System/MsgStackMaxCnt", msgStackMax);
+    }
+    else
+        ui->spinBox_msgPushMaxCnt->setValue(msgStackMax);
 }
 
 void MainWindow::on_btn_submitHotkey_clicked()
@@ -4388,17 +4416,6 @@ void MainWindow::on_btn_submitHotkey_clicked()
         ui->btn_sendMsg->setText("发送 Ctrl+Enter");
         config_ini->setValue("/Hotkey/MsgSubmit", "ctrl+enter");
     }
-}
-
-void MainWindow::on_lineEdit_msgPushMaxCnt_textChanged(const QString& arg)
-{
-    if (arg.toInt() > 0 && arg.toInt() <= 300)
-    {
-        msgStackMax = arg.toInt();
-        config_ini->setValue("/System/MsgStackMaxCnt", msgStackMax);
-    }
-    else
-        ui->lineEdit_msgPushMaxCnt->setText(QString::number(msgStackMax));
 }
 
 void MainWindow::on_btn_personalClear_clicked()

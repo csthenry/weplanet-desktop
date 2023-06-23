@@ -3,8 +3,8 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "1.2.9.3";   //在此处定义软件当前版本
-    AutoUpdateToolVersion = 11293;   //自动更新工具识别版本
+    CurVersion = "1.2.9.4";   //在此处定义软件当前版本
+    AutoUpdateToolVersion = 11294;   //自动更新工具识别版本
     writeVersion();
 }
 checkUpdate::~checkUpdate()

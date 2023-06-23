@@ -250,19 +250,20 @@ void MsgService::getAvatar(const QString& member, int path)
 	QSqlQuery query(DB);
 	query.exec("SELECT user_avatar FROM magic_users WHERE uid='" + member + "'");
 	query.next();
+	QPixmap currentAvatar = db_service.getAvatar(query.record().value(0).toString());
 	if (path == 1)
 	{
-		if (db_service.getAvatar(query.record().value(0).toString()).isNull())
+		if (currentAvatar.isNull())
 			avatar.append(QPixmap(":/images/color_icon/user.svg"));
 		else
-			avatar.append(db_service.getAvatar(query.record().value(0).toString()));
+			avatar.append(currentAvatar);
 	}
 	else
 	{
-		if (db_service.getAvatar(query.record().value(0).toString()).isNull())
+		if (currentAvatar.isNull())
 			applyAvatar.append(QPixmap(":/images/color_icon/user.svg"));
 		else
-			applyAvatar.append(db_service.getAvatar(query.record().value(0).toString()));
+			applyAvatar.append(currentAvatar);
 	}
 }
 

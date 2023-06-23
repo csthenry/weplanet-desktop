@@ -508,7 +508,7 @@ void formLogin::on_authAccountRes(int res)
 			QMessageBox::warning(this, "登录失败", "错误代码：400\n由于你违反用户协议，你的账号已被封禁，请联系管理员。", QMessageBox::Yes);
         sqlWork->beginThread();
     }
-    qDebug() << "登录验证状态码：" << res;
+    qDebug() << "登录请求状态码：" << res;
 }
 
 void formLogin::on_autoLoginAuthAccountRes(int res)
