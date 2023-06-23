@@ -146,7 +146,7 @@ formLogin::formLogin(QDialog *parent) :
             QString tmpKey = QString::number(qrand() % 89999 + 10000);
             token = service::pwdEncrypt(tmpKey + QString::number(QDateTime::currentDateTime().toSecsSinceEpoch()));
             forgetAccountLoading = true;
-            int smtp_rescode = service::sendMail(loginWork->getSmtpConfig(), ui->lineEdit_foget_mail->text(), "WePlanet 找回账号", QString("您的账号：%1正在找回，找回验证码为：%2\n\n若非本人操作，请无视该邮件。").arg(accountList, token));
+            int smtp_rescode = service::sendMail(loginWork->getSmtpConfig(), ui->lineEdit_foget_mail->text(), "WePlanet 找回账号", QString("您的账号：%1正在找回：\n\n验证码为：%2\n\n若非本人操作，请无视该邮件。").arg(accountList, token));
             if (smtp_rescode != 1)
                 QMessageBox::warning(this, "警告", "邮件发送失败，请检查邮箱是否正确或联系管理员检查SMTP配置。", QMessageBox::Ok);
             else
@@ -185,6 +185,8 @@ formLogin::formLogin(QDialog *parent) :
     //获取公告
 	connect(this, &formLogin::getAnnouncement, loginWork, &baseInfoWork::getAnnouncement);
     connect(loginWork, &baseInfoWork::getAnnouncementFinished, this, [=](bool res) {
+        ui->groupBox->setVisible(res);
+        this->adjustSize();
         if (res)
         {
 			ui->label_announcement->setText(loginWork->getAnnouncementText());
@@ -195,7 +197,6 @@ formLogin::formLogin(QDialog *parent) :
             else
                 ui->label_announcementIcon->setPixmap(QPixmap(":/images/color_icon/color-warning_2.svg"));
         }
-        ui->groupBox->setVisible(res);
         isDebug = loginWork->getIsDebug();
         if (loginWork->getIsDebug())
         {
