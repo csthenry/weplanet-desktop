@@ -1547,6 +1547,7 @@ void MainWindow::setMsgPage()
             curMsgStackCnt = 0;    //切换用户时初始化消息数据量
             msg_contents.clear();   //初始化消息缓存
             sendToUid = msgMember->toolTip();
+            sendToAvatar = service::setAvatarStyle(friendAvatar[i]);
             emit startPushMsg(uid, sendToUid, msgStackMax);   //获取聊天记录
 
             ui->textBrowser_msgHistory->clear();
@@ -2228,8 +2229,9 @@ void MainWindow::updateApplyItemProcess(int type, QString apply_id, QList<QStrin
 void MainWindow::msgPusher(QStack<QByteArray> msgStack)
 {
     isPushing = false;  //消息推送队列已经处理完成
+    bool isMsgBoxShow = false;  //是否进行消息提醒
+    QString from_uid, from_name, to_uid, to_name, msgText, send_time;
 
-    //qDebug() << "刷新消息cur:" << curMsgStackCnt << "stack:" << msgPusherService->getMsgStackCnt(sendToUid);
     if (curMsgStackCnt < msgPusherService->getMsgStackCnt(sendToUid))  //有新消息
     {
         if (curMsgStackCnt != 0)
@@ -2240,7 +2242,10 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
             ui->btn_newMsgCheacked->setEnabled(true);
         }
         if (curMsgStackCnt != 0 && !ui->checkBox_noMsgRem->isChecked())
-            trayIcon->showMessage("消息提醒", QString("你有一条来自[%1]的新消息~").arg(sendToUid));
+            isMsgBoxShow = true;
+        else
+            isMsgBoxShow = false;
+       
         curMsgStackCnt = msgPusherService->getMsgStackCnt(sendToUid);
     }
 
@@ -2257,8 +2262,6 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         return;
     if (isSending)  //如果正在发送消息，则跳过此次push
         return;
-
-    QString from_uid, from_name, to_uid, to_name, msgText, send_time;
     
     msgBeforePos = ui->textBrowser_msgHistory->verticalScrollBar()->value();   //滚动条位置
     bool atEnd = ui->textBrowser_msgHistory->verticalScrollBar()->maximum() <= msgBeforePos;  //是否在底部
@@ -2281,12 +2284,17 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         if (from_uid == uid)
         {
             msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>%2 %3</p>").arg(from_name, send_time, HarmonyOS_Font_Family);
-            msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);
+            msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 👈 </p>").arg(msgText);
         }
         else
         {
             msg_contents += QString("<p align='left' style='margin-left:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>[%1] %2 %3</p>").arg(from_uid, from_name, send_time, HarmonyOS_Font_Family);
-            msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'> 📣 %1</p>").arg(msgText);
+            msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'> 👉 %1</p>").arg(msgText);
+        }
+        if (msgStack.isEmpty() && to_uid == uid && isMsgBoxShow)  //如果消息栈已空，且需要消息提醒，则进行消息提醒（调用最新一条消息）
+        {
+            QString msgTitle = ui->label_msgMemName->text().replace("🔥", "").simplified();  //去除聊得火热标识以及多余空格
+            trayIcon->showMessage(msgTitle, QString("%1").arg(msgText), QIcon(sendToAvatar));
         }
     }
     ui->textBrowser_msgHistory->insertHtml(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
@@ -4216,7 +4224,7 @@ void MainWindow::on_btn_sendMsg_clicked()
     isSending = true;   //消息发送中...
 
     msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-size:10pt;'>%2 %3</p>").arg(ui->label_home_name->text(), curDateTime.toString("hh:mm:ss"));
-    msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 📨 </p>").arg(msgText);
+    msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 👈 </p>").arg(msgText);
     ui->textBrowser_msgHistory->clear();
     ui->textBrowser_msgHistory->insertHtml(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
     
@@ -4376,7 +4384,7 @@ void MainWindow::on_btn_manageApplyModify_clicked()
 
 void MainWindow::on_spinBox_msgPushTime_valueChanged(const QString& arg)
 {
-    if (arg.toInt() <= 600)
+    if (arg.toInt() > 0 && arg.toInt() <= 600)
     {
         if(arg.toInt() < 10)
             msgPushTime = 10;

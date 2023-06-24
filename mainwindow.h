@@ -89,6 +89,8 @@ private:
 
     int msgBeforePos = 0;   //消息记录光标位置
 
+    int msgPushTime = 10;   //消息推送周期
+
     int curMsgStackCnt = 0; //当前消息栈数据量
 
     int msgStackMax = 15; //聊天记录最大数量
@@ -96,6 +98,8 @@ private:
     QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_MSGPUSHER, *sqlThread_SECOND;
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
+    
+    QPixmap sendToAvatar;   //当前聊天对象头像
 
     QString msg_contents, msgHistoryInfo; //聊天记录、当前聊天信息
 
@@ -174,8 +178,6 @@ private:
     int msgListTipsType = -1;
 	
 	int panel_series_count = 14, panel_option = -1;
-
-    int msgPushTime = 10;
 
     void updateManageApplyItemProcess(QList<QString> list);
 
