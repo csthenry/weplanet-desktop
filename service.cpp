@@ -28,7 +28,7 @@ qint32 service::getWebTime()
 {
     QUdpSocket udpSocket;
     udpSocket.connectToHost("time.windows.com", 123);
-    if (udpSocket.waitForConnected(3000)) {
+    if (udpSocket.waitForConnected(1500)) {
         qint8 LI = 0;
         qint8 VN = 3;
         qint8 MODE = 3;
@@ -55,7 +55,7 @@ qint32 service::getWebTime()
         udpSocket.flush();
         udpSocket.write(timeRequest);
         udpSocket.flush();
-        if (udpSocket.waitForReadyRead(3000)) {
+        if (udpSocket.waitForReadyRead(1500)) {
             QByteArray newTime;
             QDateTime epoch(QDate(1900, 1, 1));
             QDateTime unixStart(QDate(1970, 1, 1));
@@ -536,17 +536,37 @@ bool service::setAuthority(QSqlDatabase& db, const QString &uid, const QVector<Q
 //https://stackoverflow.com/questions/6326237/qnetworkaccessmanager-crashes-on-delete
 QPixmap service::getAvatar(const QString& url)
 {
+    QTimer timeout_timer;
+    timeout_timer.setInterval(1500);    //设置超时时间
+    timeout_timer.setSingleShot(true);  //单次触发
+
     QUrl picUrl(url);
     QNetworkAccessManager manager;
     QEventLoop loop;
     QNetworkReply *reply = manager.get(QNetworkRequest(picUrl));    //可能产生潜在的栈溢出？
     //请求结束并下载完成后，退出子事件循环
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    //超时处理
+    QObject::connect(&timeout_timer, SIGNAL(timeout()), &loop, SLOT(quit()));
     //开启子事件循环
+    timeout_timer.start();
     loop.exec();
-    QByteArray jpegData = reply->readAll();
+
+    QByteArray jpegData;
     QPixmap pixmap;
-    pixmap.loadFromData(jpegData);
+    if (timeout_timer.isActive())
+    {
+        timeout_timer.stop();
+        qDebug() << "service: get avatar successful.";
+        jpegData = reply->readAll();
+        pixmap.loadFromData(jpegData);
+    }
+    else
+    {
+        qDebug() << "service: get avatar timeout.";
+        QObject::disconnect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+        reply->abort();
+    }
     
     reply->deleteLater();
     return pixmap;
