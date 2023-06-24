@@ -21,7 +21,8 @@
 #include <QCryptographicHash>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <./smtp/SmtpMime>  //邮件服务
+#include <./smtp/SmtpMime>  //邮件服务 https://github.com/bluetiger9/SmtpClient-for-Qt
+#include <./wintoast/wintoastlib.h> //系统推送服务 https://github.com/mohabouje/WinToast https://www.codeproject.com/Articles/5286393/Cplusplus-Windows-Toast-Notification
 
 #define MYSQL_TIME_OUT 180000     //定义数据库心跳时间ms
 

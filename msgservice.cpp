@@ -250,7 +250,22 @@ void MsgService::getAvatar(const QString& member, int path)
 	QSqlQuery query(DB);
 	query.exec("SELECT user_avatar FROM magic_users WHERE uid='" + member + "'");
 	query.next();
-	QPixmap currentAvatar = db_service.getAvatar(query.record().value(0).toString());
+
+	QPixmap currentAvatar;
+	QString avatarPath = QString("%1/cache/%2.png").arg(QDir::currentPath(), member);    //头像路径
+
+	//建立头像缓存
+	if (!avatarIsCache.value(member))
+	{
+		currentAvatar = db_service.getAvatar(query.record().value(0).toString());
+		if (currentAvatar.isNull())
+			avatarIsCache.insert(member, false);
+		else
+			avatarIsCache.insert(member, currentAvatar.save(avatarPath, nullptr, 100));
+	}
+	else
+		currentAvatar.load(avatarPath);
+
 	if (path == 1)
 	{
 		if (currentAvatar.isNull())

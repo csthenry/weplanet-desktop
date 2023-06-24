@@ -55,12 +55,16 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+using namespace WinToastLib;    //系统推送服务 命名空间
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
     
+    WinToastTemplate* msgWinToast;  //系统推送消息模板
+
     QFont HarmonyOS_Font;
 
     QString HarmonyOS_Font_Family;
@@ -179,6 +183,8 @@ private:
 	
 	int panel_series_count = 14, panel_option = -1;
 
+    void openMainWindow(int stackIndex = -1);
+
     void updateManageApplyItemProcess(QList<QString> list);
 
     void updateApplyItemProcess(int type, QString apply_id, QList<QString> list);   //0加载审批流程 1加载审批流程和审批进度
@@ -277,6 +283,7 @@ protected:
     bool eventFilter(QObject* target, QEvent* event);//事件过滤器
 
 public:
+    friend class CustomHandler;  //友元类
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
     ~MainWindow();
 
@@ -687,5 +694,45 @@ signals:
     void saveSmtpSettings(const QString& add, const QString& user, const QString& password);
 private:
     Ui::MainWindow *ui;
+};
+
+class CustomHandler : public IWinToastHandler {
+public:
+    CustomHandler(MainWindow* pDialog) : m_pDialog(pDialog) {}
+    //初始化成员变量m_pDialog为传入的pDialog（注：CustomHandler为MainWindow友元）
+
+    void toastActivated() const override {
+        qDebug() << "The user clicked in this toast";
+    }
+
+    void toastActivated(int actionIndex) const override {
+        qDebug() << "The user clicked on button #" << actionIndex << " in this toast";
+        if (actionIndex == 0)
+            m_pDialog->openMainWindow(2);
+        else if (actionIndex == 1)
+            m_pDialog->on_btn_newMsgCheacked_clicked();
+    }
+
+    void toastFailed() const override {
+        qDebug() << "Error showing current toast";
+    }
+    void toastDismissed(WinToastDismissalReason state) const override {
+        switch (state) {
+        case UserCanceled:
+            std::wcout << L"The user dismissed this toast" << std::endl;
+            break;
+        case ApplicationHidden:
+            std::wcout << L"The application hid the toast using ToastNotifier.hide()" << std::endl;
+            break;
+        case TimedOut:
+            std::wcout << L"The toast has timed out" << std::endl;
+            break;
+        default:
+            std::wcout << L"Toast not activated" << std::endl;
+            break;
+        }
+    }
+private:
+    MainWindow* m_pDialog;
 };
 #endif // MAINWINDOW_H

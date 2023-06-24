@@ -19,7 +19,6 @@ void SqlWork::working()
                 QThread::sleep(5);
                 continue;
             }
-            qDebug() << "SqlThread线程运行中,db:" << dbStatus << this->thread();
             if(!dbStatus)
 	            status = false;
             else

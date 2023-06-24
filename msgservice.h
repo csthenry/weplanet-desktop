@@ -15,6 +15,7 @@ class MsgService  : public QObject
 private:
 	QString pushingUid, previousPushUid;	//当前在push谁的消息，和上次push的UID
 	QHash<QString, int> msgStackCnt;	//当前会话消息栈数据量
+	QHash<QString, bool> avatarIsCache;   //好友头像是否已缓存
 	service db_service;
 	QSqlDatabase DB, DB_PUSHER;
 	QList<QString> msgMem, msgApplyMem;

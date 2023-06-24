@@ -25,6 +25,16 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 {
     ui->setupUi(this);
 
+    //初始化系统推送服务
+    WinToast::instance()->setAppName(L"WePlanet");
+    WinToast::instance()->setAppUserModelId(WinToast::configureAUMI(L"bytecho.net", L"WePlanet", L"WePlanet", L"230624"));
+    if (!WinToast::instance()->initialize()) {
+        qDebug() << "Error, your system in not compatible!";
+    }
+    msgWinToast = new WinToastTemplate(WinToastTemplate::ImageAndText02);
+    msgWinToast->addAction(L"查看消息");
+    msgWinToast->addAction(L"忽略提醒");
+
     infoWidget = new InfoWidget();  //初始化信息窗口
     friendsWidget = new FriendsWidget();    //初始化好友窗口
 	friendInfoWidget = new FriendInfoWidget();  //初始化好友资料窗口
@@ -134,7 +144,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         if (!isPushing && openChat)  //Push队列处理中时跳过，避免任务堆积
         {
             isPushing = true;
-            qDebug() << "正在刷新聊天记录：" << curDateTime.toSecsSinceEpoch();
+            qDebug() << "正在请求聊天记录：" << curDateTime.toSecsSinceEpoch();
             emit startPushMsg(uid, sendToUid, msgStackMax);
             //在线状态 #7fba00 #f44336
             if (msgPusherService->getIsOnline(sendToUid))
@@ -993,6 +1003,8 @@ MainWindow::~MainWindow()
     delete dbThread;
 
     delete readOnlyDelegate;
+
+    delete msgWinToast;
 }
 
 void MainWindow::receiveData(QString uid)
@@ -2294,7 +2306,16 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         if (msgStack.isEmpty() && to_uid == uid && isMsgBoxShow)  //如果消息栈已空，且需要消息提醒，则进行消息提醒（调用最新一条消息）
         {
             QString msgTitle = ui->label_msgMemName->text().replace("🔥", "").simplified();  //去除聊得火热标识以及多余空格
-            trayIcon->showMessage(msgTitle, QString("%1").arg(msgText), QIcon(sendToAvatar));
+
+            //系统推送服务
+            QString avatarPath = QString("%1/cache/%2.png").arg(QDir::currentPath(), sendToUid);    //头像路径
+            msgWinToast->setTextField(msgTitle.toStdWString(), WinToastTemplate::FirstLine);
+            msgWinToast->setTextField(msgText.toStdWString(), WinToastTemplate::SecondLine);
+            msgWinToast->setImagePath(avatarPath.toStdWString(), WinToastTemplate::Circle);
+            CustomHandler *handler = new CustomHandler(this);
+            if (WinToast::instance()->showToast(*msgWinToast, handler) < 0) {
+                qDebug() << "WinToast_Error: Could not launch your toast notification!";
+            }
         }
     }
     ui->textBrowser_msgHistory->insertHtml(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
@@ -4484,7 +4505,7 @@ void MainWindow::on_btn_actClear_clicked()
 
 void MainWindow::on_statusChanged(bool status)
 {
-    qDebug() << "调用on_statusChanged SLOT函数,db:" << status;
+    qDebug() << "SLOT on_statusChanged, db:" << status;
     if(!status)
     {
         dbStatus = false;
@@ -4591,16 +4612,7 @@ void MainWindow::createActions()
     mShowMainAction->setIcon(QIcon(":/images/color_icon/color-computer.svg"));
     connect(mShowMainAction, &QAction::triggered, this, [=]()
 		{
-            if (this->isHidden())
-            {
-                this->showMinimized();
-                QThread::msleep(150);
-                this->showNormal();
-                this->setWindowState(Qt::WindowActive);
-                this->activateWindow();
-            }
-            if (this->isMinimized())
-                this->showNormal();
+            openMainWindow();
 		});
 
     mExitAppAction = new QAction("退出", this);
@@ -4623,19 +4635,27 @@ void MainWindow::on_SystemTrayIconClicked(QSystemTrayIcon::ActivationReason acti
 {
     switch (action) {
     case QSystemTrayIcon::Trigger:
-        if (this->isHidden())
-        {
-            this->showMinimized();
-            QThread::msleep(150);
-            this->showNormal();
-            this->setWindowState(Qt::WindowActive);
-            this->activateWindow();
-        }
-        if(this->isMinimized())
-            this->showNormal();
+        openMainWindow();
         break;
     default: break;
     }
+}
+
+void MainWindow::openMainWindow(int stackIndex)
+{
+    if (this->isHidden())
+    {
+        this->showMinimized();
+        QThread::msleep(150);
+        this->showNormal();
+        this->setWindowState(Qt::WindowActive);
+        this->activateWindow();
+    }
+    if (this->isMinimized())
+        this->showNormal();
+
+    if (stackIndex != -1 && stackIndex != ui->stackedWidget->currentIndex())
+        ui->stackedWidget->setCurrentIndex(stackIndex);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)

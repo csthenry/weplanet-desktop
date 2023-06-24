@@ -119,6 +119,9 @@
     <ClCompile Include="approvalwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\wintoast\wintoastlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -454,6 +457,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="excelexport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wintoast\wintoastlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
