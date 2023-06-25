@@ -3,8 +3,8 @@
 
 checkUpdate::checkUpdate()
 {
-    CurVersion = "1.2.9.5";   //在此处定义软件当前版本
-    AutoUpdateToolVersion = 11295;   //自动更新工具识别版本
+    CurVersion = "1.2.9.6";   //在此处定义软件当前版本
+    AutoUpdateToolVersion = 11296;   //自动更新工具识别版本
     writeVersion();
 }
 checkUpdate::~checkUpdate()
@@ -77,7 +77,8 @@ bool checkUpdate::getUpdateInfo()
         Notice = PulseValue.value("Notice").toString();
         UpdateTime = PulseValue.value("UpdateTime").toString();
         ReleaseNote = PulseValue.value("ReleaseNote").toString();
-        qDebug() << Version;
+        qDebug() << "[Update]当前软件版本：" << CurVersion;
+        qDebug() << "[Update]服务器版本：" << Version;
         LatestVersion = Version;
 
         return true;

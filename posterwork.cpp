@@ -6,26 +6,14 @@ PosterWork::PosterWork(QObject *parent)
     db_service.addDatabase(DB, "PosterManageWork_DB");
     db_service.addDatabase(DB_SECOND, "PosterManageWork_DB_SECOND");
 
-    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    heartBeat = new QTimer(this);
-    connect(heartBeat, &QTimer::timeout, this, [=]() {
-        if (isDisplay)
-        {
-            if(workType == 1 && !manageModel->isDirty())
-                manageModel->select();
-			else if(workType == 0)
-				tabModel->select();
-        }
-        else
-            if (DB.isOpen())
-                DB.close();
-        });
-    heartBeat->start(MYSQL_TIME_OUT);
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+
 }
 
 PosterWork::~PosterWork()
 {
-    heartBeat->stop();
+    if (heartBeat != nullptr)
+        heartBeat->deleteLater();
     if (DB.isOpen())
         DB.close();
 }
@@ -34,6 +22,22 @@ void PosterWork::working()
 {
     if (workType == -1)
         return;
+
+    if (heartBeat == nullptr)
+        heartBeat = new QTimer();
+    connect(heartBeat, &QTimer::timeout, this, [=]() {
+        if (isDisplay)
+        {
+            if (workType == 1 && !manageModel->isDirty())
+                manageModel->select();
+            else if (workType == 0)
+                tabModel->select();
+        }
+        else
+            if (DB.isOpen())
+                DB.close();
+        }, Qt::UniqueConnection);
+
     if (workType != 1)
     {
         if (!DB.isOpen())
@@ -113,4 +117,20 @@ void PosterWork::setFilter(int type, const QString& filter)
         tabModel->setFilter(filter);
     else
         manageModel->setFilter(filter);
+}
+
+void PosterWork::setHeartBeat(bool flag)
+{
+    if (heartBeat == nullptr)
+        return;
+    if (flag)
+    {
+        if (!heartBeat->isActive())
+            heartBeat->start(MYSQL_TIME_OUT);
+    }
+    else
+    {
+        if (heartBeat->isActive())
+            heartBeat->stop();
+    }
 }

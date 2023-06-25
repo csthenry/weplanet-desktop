@@ -23,6 +23,7 @@ public:
 	void setWorkType(int type);
 	void poster_statistics();
 	void setFilter(int type, const QString& filter);
+	void setHeartBeat(bool flag);
 
 	bool cache = false;		//新内容缓存
 	int cacheRow = -1;		//缓存row
@@ -32,8 +33,8 @@ private:
 	int workType = -1;	//1管理页面；0用户页面
 	service db_service;
 	QSqlDatabase DB, DB_SECOND;
-	QSqlTableModel* tabModel, *manageModel;
-	QTimer* heartBeat;
+	QSqlTableModel* tabModel = nullptr, *manageModel = nullptr;
+	QTimer* heartBeat = nullptr;
 signals:
 	void contentsManageWorkFinished();
 	void contentsWorkFinished();

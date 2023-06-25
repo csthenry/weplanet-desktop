@@ -6,8 +6,37 @@ ActivityManageWork::ActivityManageWork(QObject *parent)
     db_service.addDatabase(DB, "ActivityManageWork_DB");
     db_service.addDatabase(DB_SECOND, "ActivityManageWork_DB_SECOND");
 
-    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    heartBeat = new QTimer(this);
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+}
+
+ActivityManageWork::~ActivityManageWork()
+{
+    if (heartBeat != nullptr)
+        heartBeat->deleteLater();
+    if(DB.isOpen())
+        DB.close();
+}
+
+void ActivityManageWork::setHeartBeat(bool flag)
+{
+    if (heartBeat == nullptr)
+        return;
+    if (flag)
+    {
+        if (!heartBeat->isActive())
+            heartBeat->start(MYSQL_TIME_OUT);
+    }
+    else
+    {
+        if (heartBeat->isActive())
+            heartBeat->stop();
+    }
+}
+
+void ActivityManageWork::working()
+{
+    if (heartBeat == nullptr)
+        heartBeat = new QTimer();
     connect(heartBeat, &QTimer::timeout, this, [=]() {
         if (isDisplay)
         {
@@ -15,21 +44,9 @@ ActivityManageWork::ActivityManageWork(QObject *parent)
             memberTabModel->select();
         }
         else
-            if(DB.isOpen())
+            if (DB.isOpen())
                 DB.close();
-        });
-    heartBeat->start(MYSQL_TIME_OUT);
-}
-
-ActivityManageWork::~ActivityManageWork()
-{
-    heartBeat->stop();
-    if(DB.isOpen())
-        DB.close();
-}
-
-void ActivityManageWork::working()
-{
+        }, Qt::UniqueConnection);
     if (!DB.isOpen())
         DB.open();
     isDisplay = true;

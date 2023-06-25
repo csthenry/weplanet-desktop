@@ -5,34 +5,33 @@ AttendWork::AttendWork(QObject *parent) : QObject(parent)
     db_service.addDatabase(DB, "AttendWork_DB");
     db_service.addDatabase(DB_SECOND, "AttendWork_DB_SECOND");
 
-    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    heartBeat = new QTimer(this);
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+}
+
+AttendWork::~AttendWork()
+{
+    if (heartBeat != nullptr)
+        heartBeat->deleteLater();
+    if (DB.isOpen())
+        DB.close();
+}
+
+void AttendWork::working(QSqlRelationalTableModel* model)
+{
+    relTableModel = model;
+    if (heartBeat == nullptr)
+        heartBeat = new QTimer();
     connect(heartBeat, &QTimer::timeout, this, [=]() {
         if (isDisplay && relTableModel != nullptr)
             relTableModel->select();
         else
             if (DB.isOpen())
                 DB.close();
-        });
-    heartBeat->start(MYSQL_TIME_OUT);
-}
+        }, Qt::UniqueConnection);
 
-AttendWork::~AttendWork()
-{
-    heartBeat->stop();
-    if (DB.isOpen())
-        DB.close();
-}
-
-void AttendWork::working()
-{
     if (!DB.isOpen())
         DB.open();
 
-    if (modelQueue.count() >= 2)
-        delete modelQueue.dequeue();
-    relTableModel = new QSqlRelationalTableModel(this, DB);
-    modelQueue.enqueue(relTableModel);
     isDisplay = true;
     relTableModel->setTable("magic_attendance");
     relTableModel->setSort(relTableModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
@@ -192,6 +191,22 @@ QSqlRecord AttendWork::getRecord(const int index)
 void AttendWork::setUid(const QString &uid)
 {
     this->uid = uid;
+}
+
+void AttendWork::setHeartBeat(bool flag)
+{
+    if (heartBeat == nullptr)
+        return;
+    if (flag)
+    {
+        if (!heartBeat->isActive())
+            heartBeat->start(MYSQL_TIME_OUT);
+    }
+    else
+    {
+        if (heartBeat->isActive())
+            heartBeat->stop();
+    }
 }
 
 //void AttendWork::setModel(QSqlRelationalTableModel *relTableModel)

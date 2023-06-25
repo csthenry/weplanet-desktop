@@ -5,16 +5,16 @@
 #define USERMANAGEWORK_H
 
 #include <QObject>
-#include "querymodel.h"
 #include "service.h"
 
 class UserManageWork : public QObject
 {
     Q_OBJECT
 public:
-    explicit UserManageWork(QObject *parent = nullptr);
+    explicit UserManageWork(QObject* parent = nullptr);
     ~UserManageWork();
-    void working();
+    void working(QSqlRelationalTableModel* model);
+    void setHeartBeat(bool flag);
     //void setModel(QSqlRelationalTableModel* model);
     QSqlDatabase getDB();
     void submitAll();
@@ -32,22 +32,22 @@ public:
     QString getUid();
     bool isDisplay = false;
     QSqlRelationalTableModel* getModel();
-	
+
 private slots:
 
 private:
     service db_service;
-    QComboBox *m_group, *m_department;
-    QSqlDatabase DB, DB_SECOND;
+    QComboBox* m_group, * m_department;
+    MySQL DB_SERVICE, DB_SERVICE_SECOND;
+    //QSqlDatabase DB, DB_SECOND;
     QString avatarUrl, uid;
     QPixmap curPix;
-    QSqlRelationalTableModel *relTableModel;
+    QSqlRelationalTableModel* relTableModel = nullptr;
     QStringList comboxItems_group, comboxItems_department;
     QString verifyInfo, verifyType;
-    QTimer *heartBeat;
+    QTimer* heartBeat = nullptr;
     int verifyTag;
     void getComboxItems();
-    QQueue<QSqlRelationalTableModel*> modelQueue;
 signals:
     void userManageWorkFinished();
     void queryAccountFinished(QSqlRecord);

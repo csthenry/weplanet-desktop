@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "*************";
+    dataBasePassword = "**************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -557,7 +557,7 @@ QPixmap service::getAvatar(const QString& url)
     if (timeout_timer.isActive())
     {
         timeout_timer.stop();
-        qDebug() << "service: get avatar successful.";
+        //qDebug() << "service: get avatar successful.";
         jpegData = reply->readAll();
         pixmap.loadFromData(jpegData);
     }

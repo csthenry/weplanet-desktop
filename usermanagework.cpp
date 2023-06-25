@@ -1,40 +1,41 @@
 ﻿#include "usermanagework.h"
 
-UserManageWork::UserManageWork(QObject *parent) : QObject(parent)
+UserManageWork::UserManageWork(QObject* parent) : QObject(parent)
 {
-    db_service.addDatabase(DB, "UserManageWork_DB");
-    db_service.addDatabase(DB_SECOND, "UserManageWork_DB_SECOND");
-
+    QString dbErrMsg;
+    if(!DB_SERVICE.connectDb(dbErrMsg))
+        qDebug() << "dbErrMsg" << dbErrMsg;
     //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    heartBeat = new QTimer(this);
-    connect(heartBeat, &QTimer::timeout, this, [=]() {
-        if (isDisplay && relTableModel != nullptr)
-            relTableModel->select();
-        else
-            if (DB.isOpen())
-                DB.close();
-        });
-    heartBeat->start(MYSQL_TIME_OUT);
 }
 
 UserManageWork::~UserManageWork()
 {
-    heartBeat->stop();
-    if (DB.isOpen())
-        DB.close();
+    if (heartBeat != nullptr)
+        heartBeat->deleteLater();
+    delete relTableModel;
+    DB_SERVICE.disconnectDb();
 }
 
-void UserManageWork::working()
+void UserManageWork::working(QSqlRelationalTableModel* model)
 {
-    if (!DB.isOpen())
-        DB.open();
-    isDisplay = true;
-    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...  
+    relTableModel = model;
+    if(heartBeat == nullptr)
+        heartBeat = new QTimer();
+    connect(heartBeat, &QTimer::timeout, this, [=]() {
+        if (isDisplay && relTableModel != nullptr)
+            relTableModel->select();
+        else
+        {
+            heartBeat->stop();
+            relTableModel->database().close();
+        }
+        }, Qt::UniqueConnection);
 
-    if(modelQueue.count() >= 2)
-        delete modelQueue.dequeue();
-    relTableModel = new QSqlRelationalTableModel(this, DB);
-    modelQueue.enqueue(relTableModel);
+    isDisplay = true;
+
+    if(!relTableModel->database().isOpen())
+        relTableModel->database().open();
+    //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...  
 
     relTableModel->setTable("magic_users");
     relTableModel->setSort(relTableModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
@@ -63,23 +64,43 @@ void UserManageWork::working()
     emit userManageWorkFinished();
 }
 
+void UserManageWork::setHeartBeat(bool flag)
+{
+    if (heartBeat == nullptr)
+        return;
+    if (flag)
+    {
+		if (!heartBeat->isActive())
+			heartBeat->start(MYSQL_TIME_OUT);
+	}
+    else
+    {
+		if (heartBeat->isActive())
+			heartBeat->stop();
+	}
+}
+
 void UserManageWork::getComboxItems()
 {
     //获取用户组和部门
-    DB_SECOND.open();
-    QSqlQuery comboxGroup(DB_SECOND);
-    comboxItems_group.clear();
-    comboxGroup.exec("SELECT * FROM magic_group");
-    while (comboxGroup.next())
-        comboxItems_group << comboxGroup.value("group_name").toString();
-    comboxGroup.clear();
-    comboxItems_department.clear();
-    comboxGroup.exec("SELECT * FROM magic_department");
-    while (comboxGroup.next())
-        comboxItems_department << comboxGroup.value("dpt_name").toString();
-    comboxGroup.clear();
-    DB_SECOND.close();
-
+    QString dbErrMsg;
+    if (!DB_SERVICE_SECOND.connectDb(dbErrMsg, "_SECOND"))
+        qDebug() << "dbErrMsg" << dbErrMsg;
+    {
+        QSqlDatabase DB_SECOND = QSqlDatabase::database(DB_SERVICE_SECOND.connectionName);
+        QSqlQuery comboxGroup(DB_SECOND);
+        comboxItems_group.clear();
+        comboxGroup.exec("SELECT * FROM magic_group");
+        while (comboxGroup.next())
+            comboxItems_group << comboxGroup.value("group_name").toString();
+        comboxGroup.clear();
+        comboxItems_department.clear();
+        comboxGroup.exec("SELECT * FROM magic_department");
+        while (comboxGroup.next())
+            comboxItems_department << comboxGroup.value("dpt_name").toString();
+        comboxGroup.clear();
+    }
+    DB_SERVICE_SECOND.disconnectDb();
     //初始化数据过滤comBox
     for (int i = m_group->count() - 1; i >= 1; i--)
         m_group->removeItem(i);
@@ -118,24 +139,29 @@ void UserManageWork::loadAvatar()
 
 void UserManageWork::queryAccount(const QString& account)
 {
-    DB_SECOND.open();
-    QSqlQuery query(DB_SECOND);
     QSqlRecord res;
-    query.exec("SELECT * FROM magic_users WHERE uid=" + account);
-    query.next();
-    res = query.record();
-    query.exec("SELECT group_name FROM magic_group WHERE group_id=" + res.value("user_group").toString());
-    query.next();
-    res.setValue("user_group", query.value(0));
-    query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id=" + res.value("user_dpt").toString());
-    query.next();
-    res.setValue("user_dpt", query.value(0));
-    query.clear();
-	DB_SECOND.close();
+    QString dbErrMsg;
+    if (!DB_SERVICE_SECOND.connectDb(dbErrMsg, "_SECOND"))
+        qDebug() << "dbErrMsg" << dbErrMsg;
+    {
+        QSqlDatabase DB_SECOND = QSqlDatabase::database(DB_SERVICE_SECOND.connectionName);
+        QSqlQuery query(DB_SECOND);
+        query.exec("SELECT * FROM magic_users WHERE uid=" + account);
+        query.next();
+        res = query.record();
+        query.exec("SELECT group_name FROM magic_group WHERE group_id=" + res.value("user_group").toString());
+        query.next();
+        res.setValue("user_group", query.value(0));
+        query.exec("SELECT dpt_name FROM magic_department WHERE dpt_id=" + res.value("user_dpt").toString());
+        query.next();
+        res.setValue("user_dpt", query.value(0));
+        query.clear();
+    }
+    DB_SERVICE_SECOND.disconnectDb();
     emit queryAccountFinished(res);
 }
 
-void UserManageWork::setCurAvatarUrl(const QString &url)
+void UserManageWork::setCurAvatarUrl(const QString& url)
 {
     avatarUrl = url;
 }
@@ -150,7 +176,7 @@ void UserManageWork::getComboxItems(QStringList &comboxItems_group, QStringList 
 
 QSqlDatabase UserManageWork::getDB()
 {
-    return DB;
+    return QSqlDatabase::database(DB_SERVICE.connectionName);
 }
 
 void UserManageWork::setCombox(QComboBox* group, QComboBox* department)
@@ -161,43 +187,54 @@ void UserManageWork::setCombox(QComboBox* group, QComboBox* department)
 
 void UserManageWork::getVerify(const QString& uid)
 {
-	this->uid = uid;
-	DB_SECOND.open();
-	QSqlQuery query(DB_SECOND);
-	bool res = query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
-	if (query.next())
-	{
-		verifyTag = query.value("vid").toInt();
-		verifyInfo = query.value("info").toString();
+    bool res = false;
+    this->uid = uid;
+    QString dbErrMsg;
+    if (!DB_SERVICE_SECOND.connectDb(dbErrMsg, "_SECOND"))
+        qDebug() << "dbErrMsg" << dbErrMsg;
+    {
+        QSqlDatabase DB_SECOND = QSqlDatabase::database(DB_SERVICE_SECOND.connectionName);
+        QSqlQuery query(DB_SECOND);
+        res = query.exec("SELECT * FROM magic_verify WHERE v_uid = " + uid);
+        if (query.next())
+        {
+            verifyTag = query.value("vid").toInt();
+            verifyInfo = query.value("info").toString();
 
-		query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
-		query.next();
-		verifyType = query.value("verify_name").toString();
-	}
-	else
-	{
-		verifyTag = -1;
-		verifyType = "";
-		verifyInfo = "";
-	}
-	query.clear();
-	DB_SECOND.close();
-	emit getVerifyFinished(res);
+            query.exec("SELECT * FROM magic_verifyList WHERE v_id = " + QString::number(verifyTag));
+            query.next();
+            verifyType = query.value("verify_name").toString();
+        }
+        else
+        {
+            verifyTag = -1;
+            verifyType = "";
+            verifyInfo = "";
+        }
+        query.clear();
+    }
+    DB_SERVICE_SECOND.disconnectDb();
+    emit getVerifyFinished(res);
 }
 
 void UserManageWork::updateVerify(int type, int verifyTag, const QString& info)
 {
     bool res = false;
-    DB_SECOND.open();
-    QSqlQuery query(DB_SECOND);
-    if (type == 0)
-        res = query.exec("DELETE FROM magic_verify WHERE v_uid = " + uid);
-    else if(type == 1)
-		res = query.exec("INSERT INTO magic_verify (v_uid, vid, info) VALUES (" + uid + ", " + QString::number(verifyTag) + ", '" + info + "')");
-    else
-		res = query.exec("UPDATE magic_verify SET vid = " + QString::number(verifyTag) + ", info = '" + info + "' WHERE v_uid = " + uid);
-    query.clear();
-    DB_SECOND.close();
+    QString dbErrMsg;
+    if (!DB_SERVICE_SECOND.connectDb(dbErrMsg, "_SECOND"))
+        qDebug() << "dbErrMsg" << dbErrMsg;
+    {
+        QSqlDatabase DB_SECOND = QSqlDatabase::database(DB_SERVICE_SECOND.connectionName);
+        QSqlQuery query(DB_SECOND);
+        if (type == 0)
+            res = query.exec("DELETE FROM magic_verify WHERE v_uid = " + uid);
+        else if (type == 1)
+            res = query.exec("INSERT INTO magic_verify (v_uid, vid, info) VALUES (" + uid + ", " + QString::number(verifyTag) + ", '" + info + "')");
+        else
+            res = query.exec("UPDATE magic_verify SET vid = " + QString::number(verifyTag) + ", info = '" + info + "' WHERE v_uid = " + uid);
+        query.clear();
+    }
+    DB_SERVICE_SECOND.disconnectDb();
     if (res)
         getVerify(this->uid);
     emit updateVerifyFinished(res);

@@ -30,7 +30,6 @@
 #include <QShortcut>
 #include "service.h"
 #include "formlogin.h"
-#include "querymodel.h"
 #include "comboboxdelegate.h"
 #include "excelexport.h"
 #include "readOnlyDelegate.h"
@@ -55,12 +54,16 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+using namespace WinToastLib;    //系统推送服务 命名空间
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
     
+    WinToastTemplate* msgWinToast;  //系统推送消息模板
+
     QFont HarmonyOS_Font;
 
     QString HarmonyOS_Font_Family;
@@ -123,13 +126,11 @@ private:
 
     QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel, *noticeModel, *noticeManageModel;  //数据模型
 
-    //QSqlRelationalTableModel *userManageModel, *attendUserModel, *attendManageModel, *attendPageModel;
+    QSqlRelationalTableModel *userManageModel = nullptr, *userManagePreModel = nullptr, *attendUserModel = nullptr, *attendUserPreModel = nullptr, *attendManageModel = nullptr, *attendManagePreModel = nullptr, *attendPageModel = nullptr, *attendPagePreModel = nullptr;
 
     QDataWidgetMapper* actEditMapper, *noticeEditMapper;
 
     QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManageSelection, *noticeSelection, *attendUserSelection; //选择模型
-
-    queryModel *relTableModel, *relTableModel_attend;
 
     QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
@@ -178,6 +179,8 @@ private:
     int msgListTipsType = -1;
 	
 	int panel_series_count = 14, panel_option = -1;
+
+    void openMainWindow(int stackIndex = -1);
 
     void updateManageApplyItemProcess(QList<QString> list);
 
@@ -277,6 +280,7 @@ protected:
     bool eventFilter(QObject* target, QEvent* event);//事件过滤器
 
 public:
+    friend class CustomHandler;  //友元类
     MainWindow(QWidget *parent = nullptr, QDialog *formLoginWindow = nullptr);
     ~MainWindow();
 
@@ -572,13 +576,17 @@ signals:
 
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
     
-    void attendWorking();
+    void attendWorking(QSqlRelationalTableModel* model);
+
+    void setAttendWorkHeartBeat(bool flag);
 
     void attendHomeChartWorking();
 
     void attendPageModelSubmitAll(int type);
 
-    void userManageWorking();
+    void userManageWorking(QSqlRelationalTableModel* model);
+
+    void setUserManageWorkHeartBeat(bool flag);
 
     void userManageModelSubmitAll();
 
@@ -588,7 +596,9 @@ signals:
 
     void userManageModelSetFilter(const QString& filter);
 
-    void attendManageWorking();
+    void attendManageWorking(QSqlRelationalTableModel* m_userModel, QSqlRelationalTableModel* m_attendModel);
+
+    void setAttendManageWorkHeartBeat(bool flag);
 
     void attendManageGetAvatar();
 
@@ -598,11 +608,15 @@ signals:
 
     void groupManageWorking();
 
+    void setGroupManageWorkHeartBeat(bool flag);
+
     void groupManageModelSubmitAll(int type);
 
     void actHomeWorking();
 
     void activityManageWorking();
+
+    void setActivityManageWorkHeartBeat(bool flag);
 
     void activityManageModelSubmitAll();
 
@@ -633,6 +647,8 @@ signals:
     void updateScore(float score);
 
     void posterWorking();
+
+    void setPosterWorkHeartBeat(bool flag);
 
     void posterModelSetFilter(int type, const QString& filter);
 
@@ -687,5 +703,45 @@ signals:
     void saveSmtpSettings(const QString& add, const QString& user, const QString& password);
 private:
     Ui::MainWindow *ui;
+};
+
+class CustomHandler : public IWinToastHandler {
+public:
+    CustomHandler(MainWindow* pDialog) : m_pDialog(pDialog) {}
+    //初始化成员变量m_pDialog为传入的pDialog（注：CustomHandler为MainWindow友元）
+
+    void toastActivated() const override {
+        qDebug() << "The user clicked in this toast";
+    }
+
+    void toastActivated(int actionIndex) const override {
+        qDebug() << "The user clicked on button #" << actionIndex << " in this toast";
+        if (actionIndex == 0)
+            m_pDialog->openMainWindow(2);
+        else if (actionIndex == 1)
+            m_pDialog->on_btn_newMsgCheacked_clicked();
+    }
+
+    void toastFailed() const override {
+        qDebug() << "Error showing current toast";
+    }
+    void toastDismissed(WinToastDismissalReason state) const override {
+        switch (state) {
+        case UserCanceled:
+            std::wcout << L"The user dismissed this toast" << std::endl;
+            break;
+        case ApplicationHidden:
+            std::wcout << L"The application hid the toast using ToastNotifier.hide()" << std::endl;
+            break;
+        case TimedOut:
+            std::wcout << L"The toast has timed out" << std::endl;
+            break;
+        default:
+            std::wcout << L"Toast not activated" << std::endl;
+            break;
+        }
+    }
+private:
+    MainWindow* m_pDialog;
 };
 #endif // MAINWINDOW_H
