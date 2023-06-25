@@ -435,6 +435,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::attendWorking, attendWork, &AttendWork::working);
     connect(attendWork, &AttendWork::attendWorkFinished, this, &MainWindow::setAttendPage);
     connect(this, SIGNAL(attendPageModelSubmitAll(int)), attendWork, SLOT(submitAll(int)));
+    connect(this, &MainWindow::setAttendWorkHeartBeat, attendWork, &AttendWork::setHeartBeat);
     connect(attendWork, &AttendWork::attendDone, this, [=](bool res){
         if(res)
         {
@@ -466,6 +467,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(userManageWork, &UserManageWork::userManageWorkFinished, this, &MainWindow::setUserManagePage);
 	connect(this, &MainWindow::updateVerify, userManageWork, &UserManageWork::updateVerify);
 	connect(this, &MainWindow::getVerify, userManageWork, &UserManageWork::getVerify);
+    connect(this, &MainWindow::setUserManageWorkHeartBeat, userManageWork, &UserManageWork::setHeartBeat);
     connect(userManageWork, &UserManageWork::updateVerifyFinished, this, [=](bool res) {
         if (res)
             QMessageBox::information(this, "消息", "认证系统：操作成功，当前用户认证信息已更新。", QMessageBox::Ok);
@@ -557,6 +559,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::attendManageGetAvatar, attendManageWork, &AttendManageWork::loadAvatar);
     connect(this, &MainWindow::attendManageModelSubmitAll, attendManageWork, &AttendManageWork::submitAll);
     connect(this, &MainWindow::attendDataOperate, attendManageWork, &AttendManageWork::dataOperate);
+    connect(this, &MainWindow::setAttendManageWorkHeartBeat, attendManageWork, &AttendManageWork::setHeartBeat);
     connect(attendManageWork, &AttendManageWork::dataOperateFinished, this, [=](bool res) {
         if (res)
         {
@@ -614,6 +617,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(this, &MainWindow::queryAccount, userManageWork, &UserManageWork::queryAccount);
     connect(userManageWork, &UserManageWork::queryAccountFinished, this, &MainWindow::loadActMemAccountInfo);
     connect(this, &MainWindow::approveAllActivity, activityManageWork, &ActivityManageWork::m_approveAll);
+    connect(this, &MainWindow::setActivityManageWorkHeartBeat, activityManageWork, &ActivityManageWork::setHeartBeat);
     connect(userManageWork, &UserManageWork::avatarFinished, this, [=](QPixmap avatar) {
         if (ui->stackedWidget->currentIndex() == 8)
         {
@@ -679,12 +683,14 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     connect(posterWork, &PosterWork::contentsManageWorkFinished, this, &MainWindow::setNoticeManagePage);
     connect(posterWork, &PosterWork::contentsWorkFinished, this, &MainWindow::setNoticePage);
     connect(this, &MainWindow::poster_statistics, posterWork, &PosterWork::poster_statistics);
+    connect(this, &MainWindow::setPosterWorkHeartBeat, posterWork, &PosterWork::setHeartBeat);
 
     //组织架构管理信号槽
     connect(this, &MainWindow::groupManageWorking, groupManageWork, &GroupManageWork::working);
     connect(this, &MainWindow::groupManageModelSubmitAll, groupManageWork, &GroupManageWork::submitAll);
     connect(groupManageWork, &GroupManageWork::groupManageWorkFinished, this, &MainWindow::setGroupManagePage);
     connect(this, &MainWindow::fixUser, groupManageWork, &GroupManageWork::fixUser);
+    connect(this, &MainWindow::setGroupManageWorkHeartBeat, groupManageWork, &GroupManageWork::setHeartBeat);
     connect(groupManageWork, &GroupManageWork::submitFinished_0, this, [=](bool res){
         if (!res)
             QMessageBox::warning(this, "消息", "保存数据失败，错误信息:\n" + departmentModel->lastError().text(),
@@ -1320,7 +1326,10 @@ void MainWindow::on_actAttend_triggered()
     ui->stackedWidget->setCurrentIndex(13);
     ui->tableView_attendPage->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    emit attendWorking();
+    attendPagePreModel = attendPageModel;
+    attendPageModel = new QSqlRelationalTableModel(this, attendWork->getDB());
+    emit setAttendWorkHeartBeat(false);
+    emit attendWorking(attendPageModel);
 }
 
 void MainWindow::setAttendPage()
@@ -1328,9 +1337,14 @@ void MainWindow::setAttendPage()
     ui->stackedWidget->setCurrentIndex(4);
     //curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
     
-    ui->tableView_attendPage->setModel(attendWork->getModel());
+    ui->tableView_attendPage->setModel(attendPageModel);
     ui->tableView_attendPage->hideColumn(0);   //隐藏考勤数据编号
     ui->tableView_attendPage->setEditTriggers(QAbstractItemView::NoEditTriggers); //不可编辑
+
+    //析构上一个model
+    delete attendPagePreModel;
+    attendPagePreModel = nullptr;
+
     QSqlRecord curRec = attendWork->getRecord(0);     //取最新的一条记录
     if(curRec.value("today") == curDateTime.date().toString("yyyy-MM-dd"))
     {
@@ -1397,6 +1411,8 @@ void MainWindow::setAttendPage()
     myWorkTimeJson.insert("data", myWorkTimeArray);
     jsCode = QString("init(%1)").arg(QString(QJsonDocument(myWorkTimeJson).toJson()));
     ui->webEngineView_workTime->page()->runJavaScript(jsCode);
+
+    emit setAttendWorkHeartBeat(true);
 }
 
 void MainWindow::setStatisticsPanel(int option, int days)
@@ -2402,17 +2418,25 @@ void MainWindow::on_actUserManager_triggered()
     ui->tableView_userManage->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_userManage->setItemDelegateForColumn(0, readOnlyDelegate);    //UID不可编辑
-    emit userManageWorking();
+
+    emit setUserManageWorkHeartBeat(false);
+    userManagePreModel = userManageModel;
+    userManageModel = new QSqlRelationalTableModel(this, userManageWork->getDB());
+    emit userManageWorking(userManageModel);
 }
 
 void MainWindow::setUserManagePage()
 {
-    ui->tableView_userManage->setModel(userManageWork->getModel()); //userManageModel
+    ui->tableView_userManage->setModel(userManageModel); //userManageModel
     ui->tableView_userManage->hideColumn(1);  //隐藏密码列
     ui->tableView_userManage->hideColumn(10);  //隐藏用户状态
 
-    userManagePageSelection->setModel(userManageWork->getModel()); //userManageModel
+    userManagePageSelection->setModel(userManageModel); //userManageModel
 	ui->tableView_userManage->setSelectionModel(userManagePageSelection);
+
+    //析构上一个model
+    delete userManagePreModel;
+    userManagePreModel = nullptr;
     /*
     //当前项变化时触发currentChanged信号
     connect(userManagePageSelection, SIGNAL(currentChanged(QModelIndex, QModelIndex)),
@@ -2423,11 +2447,13 @@ void MainWindow::setUserManagePage()
                 this, SLOT(on_userManagePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
 
     //移动到下一行（第0行为系统账号）
-    QModelIndex next_index = userManageWork->getModel()->index(1, 1);
+    QModelIndex next_index = userManageModel->index(1, 1);
     userManagePageSelection->setCurrentIndex(next_index, QItemSelectionModel::Select);
 
     ui->stackedWidget->setCurrentIndex(6);
     ui->stackedWidget->currentWidget()->setEnabled(true);
+
+    emit setUserManageWorkHeartBeat(true);
 }
 
 void MainWindow::on_actAttendManager_triggered()
@@ -2444,19 +2470,24 @@ void MainWindow::on_actAttendManager_triggered()
     ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
     ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    emit attendManageWorking();
+    attendUserPreModel = attendUserModel;
+    attendManagePreModel = attendManageModel;
+    attendUserModel = new QSqlRelationalTableModel(this, attendManageWork->getDB());
+    attendManageModel = new QSqlRelationalTableModel(this, attendManageWork->getDB());
+    emit setAttendManageWorkHeartBeat(false);
+    emit attendManageWorking(attendUserModel, attendManageModel);
 }
 
 void MainWindow::setAttendManagePage()
 {
     //用户列表
-    ui->tableView_attendUsers->setModel(attendManageWork->getUserModel());
+    ui->tableView_attendUsers->setModel(attendUserModel);
     ui->tableView_attendUsers->hideColumn(1);  //隐藏密码
     ui->tableView_attendUsers->hideColumn(8);  //头像地址
     ui->tableView_attendUsers->hideColumn(9);  //学时
     ui->tableView_attendUsers->hideColumn(10); //用户状态
     
-    attendUserSelection->setModel(attendManageWork->getUserModel());
+    attendUserSelection->setModel(attendUserModel);
     ui->tableView_attendUsers->setSelectionModel(attendUserSelection);
     
     //当前行变化时触发currentRowChanged信号
@@ -2464,11 +2495,19 @@ void MainWindow::setAttendManagePage()
                 this, SLOT(on_attendManagePageUserscurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
     
     //签到列表
-    ui->tableView_attendInfo->setModel(attendManageWork->getAttendModel());
+    ui->tableView_attendInfo->setModel(attendManageModel);
     ui->tableView_attendInfo->hideColumn(0);     //隐藏不需要的签到编号
+
+    //析构上一个model
+    delete attendUserPreModel;
+    attendUserPreModel = nullptr;
+    delete attendManagePreModel;
+    attendManagePreModel = nullptr;
 
     ui->stackedWidget->setCurrentIndex(7);
     ui->stackedWidget->currentWidget()->setEnabled(true);
+
+    emit setAttendManageWorkHeartBeat(true);
 }
 
 void MainWindow::setActivityManagePage()
@@ -2499,8 +2538,11 @@ void MainWindow::setActivityManagePage()
             ui->tableView_actMember->hideRow(i);
     
     setActivityModelFilter(0, "editUid=" + uid);     //仅能管理自己发布的活动
+
     ui->stackedWidget->setCurrentIndex(8);
     ui->stackedWidget->currentWidget()->setEnabled(true);
+
+    emit setActivityManageWorkHeartBeat(true);
 }
 
 void MainWindow::setNoticeManagePage()
@@ -2532,6 +2574,8 @@ void MainWindow::setNoticeManagePage()
 
     posterModelSetFilter(1, "author_id=" + uid);
     ui->stackedWidget->setCurrentIndex(14);
+
+    emit setPosterWorkHeartBeat(true);
 }
 
 void MainWindow::setNoticePage()
@@ -2553,6 +2597,8 @@ void MainWindow::setNoticePage()
     ui->tableView_contents->setSelectionModel(noticeSelection);
     connect(noticeSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
         this, SLOT(on_myNoticePagecurrentRowChanged(QModelIndex, QModelIndex)), Qt::UniqueConnection);
+
+    emit setPosterWorkHeartBeat(true);
 }
 
 void MainWindow::loadActMemAccountInfo(QSqlRecord rec)
@@ -2756,7 +2802,7 @@ void MainWindow::on_action_triggered()
 		ui->comboBox_activity->setCurrentIndex(0);
     activityManageWork->setType(1);
     //activityManageWork->setUid(uid);
-
+    emit setActivityManageWorkHeartBeat(false);
     emit activityManageWorking();
     ui->tableView_activity->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView_activity->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -2791,6 +2837,7 @@ void MainWindow::setActivityPage()
     if (score > 0)
         emit updateScore(score);    //如果待添加学时不为0，则写入用户数据库
 
+    emit setActivityManageWorkHeartBeat(true);
     ui->stackedWidget->setCurrentIndex(3);
     ui->stackedWidget->currentWidget()->setEnabled(true);
 }
@@ -2802,6 +2849,7 @@ void MainWindow::on_actManage_triggered()
     ui->stackedWidget->setCurrentIndex(13);
     initModelViewIsDisplay();
     activityManageWork->setType(2);
+    emit setActivityManageWorkHeartBeat(false);
     emit activityManageWorking();
     // curDateTime = QDateTime::currentDateTime();
     // ui->dateTimeEdit_actBegin->setDateTime(curDateTime);
@@ -2841,6 +2889,7 @@ void MainWindow::on_actNotice_triggered()
     initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     posterWork->setWorkType(0);
+    emit setPosterWorkHeartBeat(false);
     emit posterWorking();
 
     //初始化Markdown解析
@@ -2868,6 +2917,7 @@ void MainWindow::on_actNoticeManage_triggered()
     initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
     posterWork->setWorkType(1);
+    emit setPosterWorkHeartBeat(false);
     emit posterWorking();
 
     //初始化Markdown解析
@@ -2908,6 +2958,7 @@ void MainWindow::on_actGroup_triggered()
     initModelViewIsDisplay();
     ui->stackedWidget->setCurrentIndex(13);
 
+    emit setGroupManageWorkHeartBeat(false);
     emit groupManageWorking();      //开始加载model
 
     //tableView显示属性设置
@@ -2959,6 +3010,7 @@ void MainWindow::setGroupManagePage()
     ui->tableView_group->setRowHidden(0, true); //隐藏第一行
     ui->stackedWidget->setCurrentIndex(11);
     ui->stackedWidget->currentWidget()->setEnabled(true);
+    emit setGroupManageWorkHeartBeat(true);
 }
 
 void MainWindow::on_actMore_triggered() 

@@ -30,7 +30,6 @@
 #include <QShortcut>
 #include "service.h"
 #include "formlogin.h"
-#include "querymodel.h"
 #include "comboboxdelegate.h"
 #include "excelexport.h"
 #include "readOnlyDelegate.h"
@@ -127,13 +126,11 @@ private:
 
     QSqlTableModel *groupModel, *departmentModel, *activityModel, *activityMemModel, *noticeModel, *noticeManageModel;  //数据模型
 
-    //QSqlRelationalTableModel *userManageModel, *attendUserModel, *attendManageModel, *attendPageModel;
+    QSqlRelationalTableModel *userManageModel = nullptr, *userManagePreModel = nullptr, *attendUserModel = nullptr, *attendUserPreModel = nullptr, *attendManageModel = nullptr, *attendManagePreModel = nullptr, *attendPageModel = nullptr, *attendPagePreModel = nullptr;
 
     QDataWidgetMapper* actEditMapper, *noticeEditMapper;
 
     QItemSelectionModel *groupPageSelection_group, *groupPageSelection_department, *userManagePageSelection, *activitySelection, *activityMemSelection, *myActListSelection, *myActSelection, *noticeManageSelection, *noticeSelection, *attendUserSelection; //选择模型
-
-    queryModel *relTableModel, *relTableModel_attend;
 
     QDataWidgetMapper *userManagePage_dataMapper; //数据映射
 
@@ -579,13 +576,17 @@ signals:
 
     void editPersonalInfo(const QString& oldPwd, const QString& tel, const QString& mail, const QString& avatar, const QString& pwd);
     
-    void attendWorking();
+    void attendWorking(QSqlRelationalTableModel* model);
+
+    void setAttendWorkHeartBeat(bool flag);
 
     void attendHomeChartWorking();
 
     void attendPageModelSubmitAll(int type);
 
-    void userManageWorking();
+    void userManageWorking(QSqlRelationalTableModel* model);
+
+    void setUserManageWorkHeartBeat(bool flag);
 
     void userManageModelSubmitAll();
 
@@ -595,7 +596,9 @@ signals:
 
     void userManageModelSetFilter(const QString& filter);
 
-    void attendManageWorking();
+    void attendManageWorking(QSqlRelationalTableModel* m_userModel, QSqlRelationalTableModel* m_attendModel);
+
+    void setAttendManageWorkHeartBeat(bool flag);
 
     void attendManageGetAvatar();
 
@@ -605,11 +608,15 @@ signals:
 
     void groupManageWorking();
 
+    void setGroupManageWorkHeartBeat(bool flag);
+
     void groupManageModelSubmitAll(int type);
 
     void actHomeWorking();
 
     void activityManageWorking();
+
+    void setActivityManageWorkHeartBeat(bool flag);
 
     void activityManageModelSubmitAll();
 
@@ -640,6 +647,8 @@ signals:
     void updateScore(float score);
 
     void posterWorking();
+
+    void setPosterWorkHeartBeat(bool flag);
 
     void posterModelSetFilter(int type, const QString& filter);
 

@@ -5,7 +5,6 @@
 #define ATTENDMANAGEWORK_H
 
 #include <QObject>
-#include "querymodel.h"
 #include "service.h"
 
 class AttendManageWork : public QObject
@@ -15,7 +14,7 @@ public:
     explicit AttendManageWork(QObject *parent = nullptr);
     ~AttendManageWork();
     bool isFirst = true;    //是否为首次加载model
-    void working();
+    void working(QSqlRelationalTableModel* userModel, QSqlRelationalTableModel* attendModel);
     void setCurAvatarUrl(const QString url);
     //void setUserModel(QSqlRelationalTableModel *relTableModel);
     //void setAttendModel(QSqlRelationalTableModel *relTableModel);
@@ -25,20 +24,20 @@ public:
     void setCombox(QComboBox* group, QComboBox* department);
     void dataOperate(int type);
     void setFilter(int type, const QString& filter);
+    void setHeartBeat(bool flag);
     bool isDisplay = false;
     QSqlDatabase getDB();
     QSqlRelationalTableModel* getUserModel();
     QSqlRelationalTableModel* getAttendModel();
 private:
     service db_service;
-    QComboBox *m_group, *m_department;
+    QComboBox *m_group = nullptr, *m_department = nullptr;
     QPixmap curPix;
     QString avatarUrl;
     QSqlDatabase DB, DB_SECOND;
     QStringList comboxItems_group, comboxItems_department;
-    QSqlRelationalTableModel *userModel, *attendModel;
-    QTimer* heartBeat;
-    QQueue<QSqlRelationalTableModel*> userModelQueue, attendModelQueue;
+    QSqlRelationalTableModel *userModel = nullptr, *attendModel = nullptr;
+    QTimer* heartBeat = nullptr;
     void getComboxItems();
 signals:
     void attendManageWorkFinished();

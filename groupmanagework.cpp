@@ -6,7 +6,20 @@ GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
     db_service.addDatabase(DB_SECOND, "GroupManageWork_DB_SECOND");
 
     //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    heartBeat = new QTimer(this);
+}
+
+GroupManageWork::~GroupManageWork()
+{
+    if (heartBeat != nullptr)
+        heartBeat->deleteLater();
+    if (DB.isOpen())
+        DB.close();
+}
+
+void GroupManageWork::working()
+{
+    if (heartBeat == nullptr)
+        heartBeat = new QTimer();
     connect(heartBeat, &QTimer::timeout, this, [=]() {
         if (isDisplay)
         {
@@ -16,19 +29,8 @@ GroupManageWork::GroupManageWork(QObject *parent) : QObject(parent)
         else
             if (DB.isOpen())
                 DB.close();
-        });
-    heartBeat->start(MYSQL_TIME_OUT);
-}
+        }, Qt::UniqueConnection);
 
-GroupManageWork::~GroupManageWork()
-{
-    heartBeat->stop();
-    if (DB.isOpen())
-        DB.close();
-}
-
-void GroupManageWork::working()
-{
     if (!DB.isOpen())
         DB.open();
     isDisplay = true;
@@ -91,4 +93,20 @@ void GroupManageWork::fixUser(int type, const QString &removedId)
         query.exec("UPDATE magic_users SET user_dpt='1' WHERE user_dpt='" + id + "';");//将已经删除的部门恢复至默认部门
     query.clear();
     DB_SECOND.close();
+}
+
+void GroupManageWork::setHeartBeat(bool flag)
+{
+    if (heartBeat == nullptr)
+        return;
+    if (flag)
+    {
+        if (!heartBeat->isActive())
+            heartBeat->start(MYSQL_TIME_OUT);
+    }
+    else
+    {
+        if (heartBeat->isActive())
+            heartBeat->stop();
+    }
 }

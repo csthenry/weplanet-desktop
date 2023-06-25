@@ -77,7 +77,8 @@ bool checkUpdate::getUpdateInfo()
         Notice = PulseValue.value("Notice").toString();
         UpdateTime = PulseValue.value("UpdateTime").toString();
         ReleaseNote = PulseValue.value("ReleaseNote").toString();
-        qDebug() << Version;
+        qDebug() << "[Update]当前软件版本：" << CurVersion;
+        qDebug() << "[Update]服务器版本：" << Version;
         LatestVersion = Version;
 
         return true;

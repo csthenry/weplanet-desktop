@@ -8,7 +8,6 @@
 #include <QMutex>
 #include <QSqlQuery>
 #include "service.h"
-#include "querymodel.h"
 
 class GroupManageWork : public QObject
 {
@@ -22,12 +21,13 @@ public:
     void setDepartmentModel(QSqlTableModel* department);
     void submitAll(int type);   //1代表提交用户组model，0为部门
     void fixUser(int type, const QString& removedId);
+    void setHeartBeat(bool flag);
     bool isDisplay = false;
 private:
     service db_service;
     QSqlDatabase DB, DB_SECOND;
-    QSqlTableModel *groupModel, *departmentModel;
-    QTimer* heartBeat;
+    QSqlTableModel *groupModel = nullptr, *departmentModel = nullptr;
+    QTimer* heartBeat = nullptr;
 
 signals:
     void groupManageWorkFinished();

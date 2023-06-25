@@ -11,7 +11,6 @@
 #include <QSqlQuery>
 #include <QJsonArray>
 #include "service.h"
-#include "querymodel.h"
 
 class AttendWork : public QObject
 {
@@ -19,13 +18,14 @@ class AttendWork : public QObject
 public:
     explicit AttendWork(QObject *parent = nullptr);
     ~AttendWork();
-    void working();
+    void working(QSqlRelationalTableModel* model);
     void homeChartWorking();
     void analyseWorkTime(QSqlQuery* query = nullptr);
     void analyseWorkStatus();
     QSqlRecord getRecord(const int index);
     QSqlDatabase getDB();
     void setUid(const QString& uid);
+    void setHeartBeat(bool flag);
     //void setModel(QSqlRelationalTableModel *relTableModel);
     int fieldIndex(const QString &field);
     int* getWorkTime();
@@ -41,10 +41,9 @@ private:
     service db_service;
     QString uid;
     QSqlDatabase DB, DB_SECOND;
-    QSqlRelationalTableModel *relTableModel;
+    QSqlRelationalTableModel *relTableModel = nullptr;
     QJsonArray weekMyWorkTime, weekAllWorkStatus, weekWorkMem;
-    QTimer* heartBeat;
-    QQueue<QSqlRelationalTableModel*> modelQueue;
+    QTimer* heartBeat = nullptr;
 signals:
     void attendWorkFinished();
     void attendDone(bool);

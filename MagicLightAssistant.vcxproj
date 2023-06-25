@@ -223,6 +223,7 @@
     <ClCompile Include="friendinfowidget.cpp" />
     <ClCompile Include="friendswidget.cpp" />
     <ClCompile Include="groupmanagework.cpp" />
+    <ClCompile Include="include\db\db.cpp" />
     <ClCompile Include="include\wintoast\wintoastlib.cpp" />
     <ClCompile Include="infowidget.cpp" />
     <ClCompile Include="main.cpp" />
@@ -230,7 +231,6 @@
     <ClCompile Include="msgservice.cpp" />
     <ClCompile Include="posterwork.cpp" />
     <ClCompile Include="previewpage.cpp" />
-    <ClCompile Include="querymodel.cpp" />
     <ClCompile Include="readOnlyDelegate.cpp" />
     <ClCompile Include="service.cpp" />
     <ClCompile Include="sqlwork.cpp" />
@@ -262,8 +262,8 @@
     <QtMoc Include="msgservice.h" />
     <QtMoc Include="friendswidget.h" />
     <QtMoc Include="friendinfowidget.h" />
+    <ClInclude Include="include\db\db.h" />
     <ClInclude Include="include\wintoast\wintoastlib.h" />
-    <ClInclude Include="querymodel.h" />
     <ClInclude Include="readOnlyDelegate.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="service.h" />

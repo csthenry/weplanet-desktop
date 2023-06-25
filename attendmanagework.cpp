@@ -5,8 +5,24 @@ AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
     db_service.addDatabase(DB, "AttendManageWork_DB");
     db_service.addDatabase(DB_SECOND, "AttendManageWork_DB_SECOND");
 
-    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
-    heartBeat = new QTimer(this);
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+}
+
+AttendManageWork::~AttendManageWork()
+{
+    if (heartBeat != nullptr)
+        heartBeat->deleteLater();
+    if (DB.isOpen())
+        DB.close();
+}
+
+void AttendManageWork::working(QSqlRelationalTableModel* m_userModel, QSqlRelationalTableModel* m_attendModel)
+{
+    userModel = m_userModel;
+    attendModel = m_attendModel;
+
+    if (heartBeat == nullptr)
+        heartBeat = new QTimer();
     connect(heartBeat, &QTimer::timeout, this, [=]() {
         if (isDisplay && userModel != nullptr && attendModel != nullptr)
         {
@@ -16,27 +32,12 @@ AttendManageWork::AttendManageWork(QObject *parent) : QObject(parent)
         else
             if (DB.isOpen())
                 DB.close();
-        });
-    heartBeat->start(MYSQL_TIME_OUT);
-}
+        }, Qt::UniqueConnection);
 
-AttendManageWork::~AttendManageWork()
-{
-    heartBeat->stop();
-    if (DB.isOpen())
-        DB.close();
-}
-
-void AttendManageWork::working()
-{
     if (!DB.isOpen())
         DB.open();
 
     //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...  
-    if(userModelQueue.count() >= 2)
-        delete userModelQueue.dequeue();    //仅保留前一个model
-    userModel = new QSqlRelationalTableModel(this, DB);
-    userModelQueue.enqueue(userModel);
     isDisplay = true;
     userModel->setTable("magic_users");
     userModel->setSort(userModel->fieldIndex("uid"), Qt::AscendingOrder);    //升序排列
@@ -58,11 +59,6 @@ void AttendManageWork::working()
     userModel->select();
     while (userModel->canFetchMore())
         userModel->fetchMore();  //加载超过256的其余数据
-
-    if(attendModelQueue.count() >= 2)
-		delete attendModelQueue.dequeue();
-    attendModel = new QSqlRelationalTableModel(this, DB);
-    attendModelQueue.enqueue(attendModel);
 
     attendModel->setTable("magic_attendance");
     attendModel->setSort(attendModel->fieldIndex("today"), Qt::DescendingOrder);    //时间降序排列
@@ -133,6 +129,21 @@ void AttendManageWork::setFilter(int type, const QString& filter)
         attendModel->setFilter(filter);
 }
 
+void AttendManageWork::setHeartBeat(bool flag)
+{
+    if (heartBeat == nullptr)
+        return;
+    if (flag)
+    {
+        if (!heartBeat->isActive())
+            heartBeat->start(MYSQL_TIME_OUT);
+    }
+    else
+    {
+        if (heartBeat->isActive())
+            heartBeat->stop();
+    }
+}
 
 void AttendManageWork::getComboxItems()
 {

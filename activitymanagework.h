@@ -29,17 +29,18 @@ public:
 	void m_delete(const QString actm_id);
 	void setType(int t);
 	void setFilter(int flag, const QString& filter);
+	void setHeartBeat(bool flag);
 	float getCurScore();
 	bool isDisplay = false;	//当前页正在展示
 
 private:
-	QTimer *heartBeat;
+	QTimer *heartBeat = nullptr;
 	float curScore = 0;
 	int type;	//1为活动页面，2为活动管理页面
 	QString uid;	//用于统计当前用户已完成活动
 	service db_service;
 	QSqlDatabase DB, DB_SECOND;
-	QSqlTableModel* tabModel, *memberTabModel;
+	QSqlTableModel* tabModel = nullptr, *memberTabModel = nullptr;
 signals:
 	void activityManageWorkFinished(int type);
 	void actHomeWorkFinished();
