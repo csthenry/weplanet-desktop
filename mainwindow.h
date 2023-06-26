@@ -8,7 +8,6 @@
 #pragma once
 #pragma execution_character_set("utf-8")
 
-
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #define AUTO_RUN "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" //自启注册表地址
@@ -49,6 +48,7 @@
 #include "friendswidget.h"
 #include "friendinfowidget.h"
 #include "approvalwork.h"
+#include "ovowidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -61,7 +61,6 @@ class TimeServer : public QObject {
 public:
     void getTime() {
         webTimeSinceEpoch = service::getWebTime(); //网络时间
-        qDebug() << "芜湖";
         emit getTimeFinished();
     };
     qint32 getTimestamp() {
@@ -78,6 +77,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    OvOWidget* ovoWidget;
+
     TimeServer* timeServer;
     
     WinToastTemplate* msgWinToast;  //系统推送消息模板
@@ -578,6 +579,10 @@ private slots:
     void on_btn_autoExecuteSystemApplyItems_clicked();
 
     void on_btn_smtpSave_clicked();
+
+    void on_btn_delAllLogFiles_clicked();
+
+    void on_btn_openOvOPanel_clicked();
 
     void on_spinBox_msgPushTime_valueChanged(const QString& arg);
 

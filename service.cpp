@@ -644,3 +644,28 @@ int service::sendMail(const QList<QString> smtp_config, const QString& mailto, c
     smtp.quit();
     return 1;
 }
+
+float service::getDirSize(const QString& dirPath)
+{
+    QDir tmpDir(dirPath);
+    qint64 size = 0;
+    /*获取文件列表  统计文件大小*/
+    foreach(QFileInfo fileInfo, tmpDir.entryInfoList(QDir::Files))
+        size += fileInfo.size();
+    /*获取文件夹  并且过滤掉.和..文件夹 统计各个文件夹的文件大小 */
+    foreach(QString subDir, tmpDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        size += getDirSize(dirPath + QDir::separator() + subDir); //递归进行  统计所有子目录
+    return size / 1024.0;
+}
+
+int service::deleteDir(const QString& dirPath)
+{
+    int cnt = 0;
+    QDir tmpDir(dirPath);
+    foreach(QFileInfo fileInfo, tmpDir.entryInfoList(QDir::Files))
+    {
+        tmpDir.remove(fileInfo.fileName());
+        cnt++;
+    }
+    return cnt;
+}

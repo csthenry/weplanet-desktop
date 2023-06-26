@@ -152,7 +152,7 @@ void FriendsWidget::setMemberInfo(QByteArray array)
 
 void FriendsWidget::on_btn_sendApply_clicked()
 {
-    if (ui->lineEdit_applyInfo->text().isEmpty() || searchUid == "-1")
+    if (ui->lineEdit_applyInfo->text().isEmpty() || searchUid == "-1" || searchUid == uid)
     {
         QMessageBox::warning(this, "错误", "请填写正确的信息后重试。", QMessageBox::Ok);
         return;

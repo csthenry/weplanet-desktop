@@ -19,7 +19,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext& context, con
     switch (type)
     {
 	case QtDebugMsg:
-		txt = QString("[%2][Debug] %1").arg(msg, QDateTime::currentDateTime().toString("HH:mm:ss"));
+		txt = QString("[%2][Info] %1").arg(msg, QDateTime::currentDateTime().toString("HH:mm:ss"));
 		break;
 	case QtWarningMsg:
 		txt = QString("[%2][Warning] %1").arg(msg, QDateTime::currentDateTime().toString("HH:mm:ss"));

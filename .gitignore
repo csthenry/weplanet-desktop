@@ -32,6 +32,8 @@ Thumbs.db
 *.res
 /.qmake.cache
 /.qmake.stash
+/cache
+/log
 *.ini
 *.cfg
 *.dat

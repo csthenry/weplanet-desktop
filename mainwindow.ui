@@ -2214,8 +2214,8 @@ padding: 0px 5px;</string>
           <property name="title">
            <string/>
           </property>
-          <layout class="QGridLayout" name="gridLayout_156">
-           <item row="0" column="0" colspan="7">
+          <layout class="QGridLayout" name="gridLayout_155">
+           <item row="0" column="0" colspan="6">
             <widget class="QGroupBox" name="groupBox_56">
              <property name="title">
               <string/>
@@ -2355,7 +2355,7 @@ padding: 0px 5px;</string>
              </layout>
             </widget>
            </item>
-           <item row="1" column="0" colspan="7">
+           <item row="1" column="0" colspan="6">
             <widget class="QSplitter" name="splitter_5">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -2403,64 +2403,112 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QPushButton" name="btn_addMsgMem">
+            <widget class="QPushButton" name="btn_openOvOPanel">
              <property name="minimumSize">
               <size>
-               <width>120</width>
+               <width>40</width>
                <height>40</height>
               </size>
              </property>
-             <property name="text">
-              <string>添加好友</string>
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>40</height>
+              </size>
              </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+             <property name="font">
+              <font>
+               <family>Segoe UI Emoji</family>
+               <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+               <stylestrategy>PreferDefault</stylestrategy>
+               <kerning>true</kerning>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>OvO</string>
+             </property>
+             <property name="text">
+              <string>😅</string>
+             </property>
+             <property name="autoRepeat">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QPushButton" name="btn_deleteMsgMem">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
+            <layout class="QGridLayout" name="gridLayout_153">
+             <property name="spacing">
+              <number>0</number>
              </property>
-             <property name="text">
-              <string>删除好友</string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
-             </property>
-            </widget>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="btn_addMsgMem">
+               <property name="minimumSize">
+                <size>
+                 <width>120</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>添加好友</string>
+               </property>
+               <property name="icon">
+                <iconset resource="resource.qrc">
+                 <normaloff>:/images/color_icon/color-search.svg</normaloff>:/images/color_icon/color-search.svg</iconset>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="btn_deleteMsgMem">
+               <property name="minimumSize">
+                <size>
+                 <width>120</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>删除好友</string>
+               </property>
+               <property name="icon">
+                <iconset resource="resource.qrc">
+                 <normaloff>:/images/color_icon/color-delete.svg</normaloff>:/images/color_icon/color-delete.svg</iconset>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QPushButton" name="btn_shareMe">
+               <property name="minimumSize">
+                <size>
+                 <width>85</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>85</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>分享</string>
+               </property>
+               <property name="icon">
+                <iconset resource="resource.qrc">
+                 <normaloff>:/images/color_icon/color-idcard.svg</normaloff>:/images/color_icon/color-idcard.svg</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item row="2" column="2">
-            <widget class="QPushButton" name="btn_shareMe">
-             <property name="minimumSize">
-              <size>
-               <width>120</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>个人名片</string>
-             </property>
-             <property name="icon">
-              <iconset resource="resource.qrc">
-               <normaloff>:/images/color_icon/color-idcard.svg</normaloff>:/images/color_icon/color-idcard.svg</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
             <widget class="QCheckBox" name="checkBox_noMsgRem">
              <property name="text">
               <string>勿扰模式</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="4">
+           <item row="2" column="3">
             <spacer name="horizontalSpacer_23">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -2473,7 +2521,7 @@ padding: 0px 5px;</string>
              </property>
             </spacer>
            </item>
-           <item row="2" column="5">
+           <item row="2" column="4">
             <widget class="QLabel" name="label_send">
              <property name="minimumSize">
               <size>
@@ -2498,7 +2546,7 @@ padding: 0px 5px;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="6">
+           <item row="2" column="5">
             <layout class="QGridLayout" name="gridLayout_45">
              <property name="spacing">
               <number>0</number>
@@ -9717,19 +9765,20 @@ padding: 0px 5px;</string>
           <property name="title">
            <string/>
           </property>
-          <layout class="QGridLayout" name="gridLayout_155">
-           <property name="leftMargin">
-            <number>11</number>
-           </property>
-           <property name="topMargin">
-            <number>11</number>
-           </property>
-           <property name="rightMargin">
-            <number>11</number>
-           </property>
-           <property name="bottomMargin">
-            <number>11</number>
-           </property>
+          <layout class="QGridLayout" name="gridLayout_150">
+           <item row="0" column="5">
+            <spacer name="horizontalSpacer_28">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>228</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
            <item row="0" column="2">
             <widget class="QGroupBox" name="groupBox_59">
              <property name="minimumSize">
@@ -9788,20 +9837,58 @@ padding: 0px 5px;</string>
              </layout>
             </widget>
            </item>
-           <item row="0" column="4">
-            <spacer name="horizontalSpacer_28">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
+           <item row="0" column="0">
+            <widget class="QGroupBox" name="groupBox_55">
+             <property name="minimumSize">
               <size>
-               <width>228</width>
-               <height>20</height>
+               <width>170</width>
+               <height>0</height>
               </size>
              </property>
-            </spacer>
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>全局设置</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_125">
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="checkBox_autoRun">
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNoPredictiveText</set>
+                </property>
+                <property name="text">
+                 <string>开机时启动应用</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="btn_resetAutoRun">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>重置开机自启</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resource.qrc">
+                  <normaloff>:/images/color_icon/color-launch.svg</normaloff>:/images/color_icon/color-launch.svg</iconset>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
-           <item row="0" column="3">
+           <item row="0" column="4">
             <widget class="QGroupBox" name="groupBox_32">
              <property name="title">
               <string>时间校验</string>
@@ -9890,38 +9977,45 @@ padding: 0px 5px;</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QGroupBox" name="groupBox_55">
+            <widget class="QGroupBox" name="groupBox_69">
              <property name="minimumSize">
               <size>
-               <width>170</width>
+               <width>220</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>200</width>
+               <width>250</width>
                <height>16777215</height>
               </size>
              </property>
              <property name="title">
-              <string>全局设置</string>
+              <string>系统日志</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_125">
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox_autoRun">
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="inputMethodHints">
-                 <set>Qt::ImhNoPredictiveText</set>
+             <layout class="QGridLayout" name="gridLayout_128">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_138">
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>16777215</height>
+                 </size>
                 </property>
                 <property name="text">
-                 <string>开机时启动应用</string>
+                 <string>日志文件大小：</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QPushButton" name="btn_resetAutoRun">
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_logFileSize">
+                <property name="text">
+                 <string>--</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QPushButton" name="btn_delAllLogFiles">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -9929,11 +10023,11 @@ padding: 0px 5px;</string>
                  </size>
                 </property>
                 <property name="text">
-                 <string>重置开机自启</string>
+                 <string>清空系统日志文件</string>
                 </property>
                 <property name="icon">
                  <iconset resource="resource.qrc">
-                  <normaloff>:/images/color_icon/color-launch.svg</normaloff>:/images/color_icon/color-launch.svg</iconset>
+                  <normaloff>:/images/color_icon/color-trash.svg</normaloff>:/images/color_icon/color-trash.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -10243,7 +10337,7 @@ padding: 0px 5px;</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>439</width>
+                <width>421</width>
                 <height>291</height>
                </rect>
               </property>
@@ -10605,7 +10699,7 @@ padding: 0px 5px;</string>
              </font>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;当前板块已被系统管理员暂停使用&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#7a7a7a;&quot;&gt;WePlanet权限系统&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;当前内容已被系统管理员暂停使用&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600; color:#7a7a7a;&quot;&gt;WePlanet权限系统&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

@@ -946,6 +946,12 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         else
             ui->btn_sendMsg->setText("发送 Enter");
     }
+
+    //表情窗口
+    ovoWidget = new OvOWidget(this);
+    connect(ovoWidget, &OvOWidget::OvOChanged, this, [=](const QString& OvO) {
+        ui->textEdit_msg->insertPlainText(OvO);
+        });
 }
 MainWindow::~MainWindow()
 {
@@ -3094,6 +3100,14 @@ void MainWindow::on_actSettings_triggered()
         //ui->label_loadingSettings->setMovie(loadingMovie);
 		settingLoading = true;
     }
+    float fileSize = service::getDirSize(QDir::currentPath() + "/log/");
+    if (fileSize > 1024)
+    {
+        fileSize /= 1024;
+        ui->label_logFileSize->setText(QString::asprintf("%.1f MB", fileSize));
+    }
+    else
+        ui->label_logFileSize->setText(QString::asprintf("%.1f KB", fileSize));
     ui->stackedWidget->setCurrentIndex(17);
 }
 
@@ -4174,6 +4188,32 @@ void MainWindow::on_btn_smtpSave_clicked()
         emit saveSmtpSettings(ui->lineEdit_smtpAdd->text(), ui->lineEdit_smtpUser->text(), ui->lineEdit_smtpPwd->text());
     else
         QMessageBox::warning(this, "消息", "请填写完整的SMTP服务信息。", QMessageBox::Ok);
+}
+
+void MainWindow::on_btn_delAllLogFiles_clicked()
+{
+    int fileNum = service::deleteDir(QDir::currentPath() + "/log/");
+    QMessageBox::information(this, "提示", QString("已删除%1个系统日志文件。").arg(fileNum));
+
+    //更新日志大小
+    float fileSize = service::getDirSize(QDir::currentPath() + "/log/");
+    if (fileSize > 1024)
+    {
+        fileSize /= 1024;
+        ui->label_logFileSize->setText(QString::asprintf("%.1f MB", fileSize));
+    }
+    else
+        ui->label_logFileSize->setText(QString::asprintf("%.1f KB", fileSize));
+}
+
+void MainWindow::on_btn_openOvOPanel_clicked()
+{
+    int x = this->pos().x(), y = this->pos().y();
+    x += ui->btn_openOvOPanel->pos().x() + ui->toolBox_Msg->width() + 35;
+    y += ui->btn_openOvOPanel->pos().y() - ui->textEdit_msg->height() - 185;
+    
+    ovoWidget->move(x, y);
+    ovoWidget->showNormal();
 }
 
 void MainWindow::on_btn_personalSubmit_clicked()
