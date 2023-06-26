@@ -122,6 +122,9 @@
     <ClCompile Include="include\db\db.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ovowidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="attendmanagework.h">
@@ -187,6 +190,9 @@
     <QtMoc Include="approvalwork.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ovowidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -210,6 +216,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="friendinfowidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ovowidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

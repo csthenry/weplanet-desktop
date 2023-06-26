@@ -27,6 +27,7 @@ private:
 
 public:
     explicit SqlWork(QString dbName);
+    ~SqlWork();
     void working();
     void beginThread();
     void stopThread();
@@ -39,7 +40,6 @@ public:
 signals:
     void newStatus(bool status);
     void firstFinished();
-
 };
 
 #endif // SQLWORK_H

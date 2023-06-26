@@ -229,6 +229,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="msgservice.cpp" />
+    <ClCompile Include="ovowidget.cpp" />
     <ClCompile Include="posterwork.cpp" />
     <ClCompile Include="previewpage.cpp" />
     <ClCompile Include="readOnlyDelegate.cpp" />
@@ -264,6 +265,7 @@
     <QtMoc Include="friendinfowidget.h" />
     <ClInclude Include="include\db\db.h" />
     <ClInclude Include="include\wintoast\wintoastlib.h" />
+    <QtMoc Include="ovowidget.h" />
     <ClInclude Include="readOnlyDelegate.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="service.h" />
@@ -298,6 +300,7 @@
     <QtUic Include="infowidget.ui" />
     <QtUic Include="mainwindow.ui">
     </QtUic>
+    <QtUic Include="ovowidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <None Include="color_icon\approve.svg" />

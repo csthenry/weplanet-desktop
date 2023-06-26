@@ -41,15 +41,17 @@ SqlWork::SqlWork(QString dbName)
     this->dbName = dbName;
     service dbService;
     if(dbName == "mainDB")
-    {
         dbService.addDatabase(testDB, "test_" + this->dbName);  //如果是主窗口，则该类的DB弃用，DB由各个工作对象自行添加并连接
-    }
     else
     {
         dbService.addDatabase(DB, this->dbName);
         dbService.addDatabase(testDB, "test_" + this->dbName);
     }
     moveToThread(this->thread());
+}
+
+SqlWork::~SqlWork()
+{
 }
 
 void SqlWork::beginThread()   //完成数据库查询后调用此函数继续对数据库心跳验证

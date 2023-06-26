@@ -52,6 +52,12 @@ public:
 
     static int sendMail(const QList<QString> smtp_config, const QString& mailto, const QString& title, const QString& mailtext);
 
+    //返回目录占用空间大小，单位KB
+    static float getDirSize(const QString& dirPath);
+
+    //删除目录下所有文件
+    static int deleteDir(const QString& dirPath);
+
     service();
 
 private:

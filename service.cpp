@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "**************";
+    dataBasePassword = "*************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -26,6 +26,7 @@ service::service()
 //网络授时 https://www.freesion.com/article/3807754024/
 qint32 service::getWebTime()
 {
+    quint32 t = -1;
     QUdpSocket udpSocket;
     udpSocket.connectToHost("time.windows.com", 123);
     if (udpSocket.waitForConnected(1500)) {
@@ -74,13 +75,14 @@ qint32 service::getWebTime()
                 temp = TransmitTimeStamp[j];
                 seconds = seconds + temp;
             }
-            quint32 t = seconds - epoch.secsTo(unixStart);
-            qDebug() << "网络时间戳：" << t;
-            return t;
+            t = seconds - epoch.secsTo(unixStart);
+            qDebug() << "Network Timestamp: " << t;
             //time.setTime_t(seconds-epoch.secsTo(unixStart));
         }
     }
-    return -1;
+    if(t == -1)
+        qDebug() << "getNetworkTime Failed.";
+    return t;
 }
 
 QString service::pwdEncrypt(const QString &str) //字符串MD5算法加密
@@ -537,7 +539,7 @@ bool service::setAuthority(QSqlDatabase& db, const QString &uid, const QVector<Q
 QPixmap service::getAvatar(const QString& url)
 {
     QTimer timeout_timer;
-    timeout_timer.setInterval(1500);    //设置超时时间
+    timeout_timer.setInterval(2000);    //设置超时时间
     timeout_timer.setSingleShot(true);  //单次触发
 
     QUrl picUrl(url);
@@ -641,4 +643,29 @@ int service::sendMail(const QList<QString> smtp_config, const QString& mailto, c
     }
     smtp.quit();
     return 1;
+}
+
+float service::getDirSize(const QString& dirPath)
+{
+    QDir tmpDir(dirPath);
+    qint64 size = 0;
+    /*获取文件列表  统计文件大小*/
+    foreach(QFileInfo fileInfo, tmpDir.entryInfoList(QDir::Files))
+        size += fileInfo.size();
+    /*获取文件夹  并且过滤掉.和..文件夹 统计各个文件夹的文件大小 */
+    foreach(QString subDir, tmpDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        size += getDirSize(dirPath + QDir::separator() + subDir); //递归进行  统计所有子目录
+    return size / 1024.0;
+}
+
+int service::deleteDir(const QString& dirPath)
+{
+    int cnt = 0;
+    QDir tmpDir(dirPath);
+    foreach(QFileInfo fileInfo, tmpDir.entryInfoList(QDir::Files))
+    {
+        tmpDir.remove(fileInfo.fileName());
+        cnt++;
+    }
+    return cnt;
 }
