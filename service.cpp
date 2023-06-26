@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "**************";
+    dataBasePassword = "*************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -26,6 +26,7 @@ service::service()
 //网络授时 https://www.freesion.com/article/3807754024/
 qint32 service::getWebTime()
 {
+    quint32 t = -1;
     QUdpSocket udpSocket;
     udpSocket.connectToHost("time.windows.com", 123);
     if (udpSocket.waitForConnected(1500)) {
@@ -74,13 +75,14 @@ qint32 service::getWebTime()
                 temp = TransmitTimeStamp[j];
                 seconds = seconds + temp;
             }
-            quint32 t = seconds - epoch.secsTo(unixStart);
-            qDebug() << "网络时间戳：" << t;
-            return t;
+            t = seconds - epoch.secsTo(unixStart);
+            qDebug() << "Network Timestamp: " << t;
             //time.setTime_t(seconds-epoch.secsTo(unixStart));
         }
     }
-    return -1;
+    if(t == -1)
+        qDebug() << "getNetworkTime Failed.";
+    return t;
 }
 
 QString service::pwdEncrypt(const QString &str) //字符串MD5算法加密
@@ -537,7 +539,7 @@ bool service::setAuthority(QSqlDatabase& db, const QString &uid, const QVector<Q
 QPixmap service::getAvatar(const QString& url)
 {
     QTimer timeout_timer;
-    timeout_timer.setInterval(1500);    //设置超时时间
+    timeout_timer.setInterval(2000);    //设置超时时间
     timeout_timer.setSingleShot(true);  //单次触发
 
     QUrl picUrl(url);

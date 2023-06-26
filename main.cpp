@@ -13,6 +13,7 @@
 //日志文件
 void customMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
+	Q_UNUSED(context);
 	QMutex m_LogMutex;
 	QString txt;
     switch (type)

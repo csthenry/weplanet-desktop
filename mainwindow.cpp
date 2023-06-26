@@ -144,7 +144,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         if (!isPushing && openChat)  //Push队列处理中时跳过，避免任务堆积
         {
             isPushing = true;
-            qDebug() << "正在请求聊天记录：" << curDateTime.toSecsSinceEpoch();
+            //qDebug() << "正在请求聊天记录：" << curDateTime.toSecsSinceEpoch();
             emit startPushMsg(uid, sendToUid, msgStackMax);
             //在线状态 #7fba00 #f44336
             if (msgPusherService->getIsOnline(sendToUid))
@@ -195,8 +195,11 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     msgService = new MsgService();
     msgPusherService = new MsgService();
 	approvalWork = new ApprovalWork();
+    timeServer = new TimeServer();
 
+    timeThread = new QThread();
     sqlThread = new QThread(), sqlThread_MSG = new QThread(), sqlThread_MSGPUSHER = new QThread(), sqlThread_SECOND = new QThread(), dbThread = new QThread();
+
     sqlWork->moveToThread(dbThread);
     setBaseInfoWork->moveToThread(sqlThread);
     attendWork->moveToThread(sqlThread);
@@ -208,31 +211,10 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     msgService->moveToThread(sqlThread_MSG);
     msgPusherService->moveToThread(sqlThread_MSGPUSHER);
     approvalWork->moveToThread(sqlThread);
+    timeServer->moveToThread(timeThread);
     
     //检查更新
-    updateSoftWare.moveToThread(sqlThread_SECOND);
-
-    //校验、更新本地时间，本对象中curDateTime即为10分钟更新一次的网络时间
-    bool checkLocalTimeRes = checkLocalTime();
-    if (!checkLocalTimeRes)
-    {
-        disableDynamicItems(true);
-        curDateTime = QDateTime::currentDateTime();
-    }
-    currentTimeUpdate = new QTimer(this);
-    connect(currentTimeUpdate, &QTimer::timeout, this, [=]() {
-        static int cnt = 0;
-        cnt += 1;
-        curDateTime = curDateTime.addSecs(1);
-        timeLabel->setText("程序时间：" + curDateTime.toString("yyyy年MM月dd日 hh:mm:ss"));
-        if (cnt > 10 * 60)  //校验一次网络时间
-        {
-            if(checkLocalTime())
-			    cnt = 0;
-        }
-        });
-    currentTimeUpdate->start(1000);
-        
+    updateSoftWare.moveToThread(sqlThread_SECOND);       
     connect(this, &MainWindow::beginUpdate, &updateSoftWare, &checkUpdate::parse_UpdateJson);
     connect(&updateSoftWare, &checkUpdate::finished, this, &MainWindow::updateFinished);
     emit beginUpdate();
@@ -244,6 +226,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     sqlThread_MSGPUSHER->start();
     sqlThread_SECOND->start();
     sqlWork->beginThread();
+    timeThread->start();
     connect(this, &MainWindow::startDbWork, sqlWork, &SqlWork::working);
     emit startDbWork();
 
@@ -752,7 +735,7 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
         {
             ui->textBrowser_msgHistory->clear();
             ui->label_msgMemName->setText("--");
-            on_btn_newMsgCheacked_clicked();
+            on_btn_newMsgChecked_clicked();
             QMessageBox::information(this, "消息", QString("已删除好友 [%1] ，请刷新好友列表。").arg(sendToUid), QMessageBox::Ok);
             sendToUid = "-1";
             emit loadMsgMemList(uid);
@@ -869,6 +852,28 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
 			QMessageBox::warning(this, "消息", "操作失败，请检查网络或联系管理员。", QMessageBox::Ok);
         });
 
+    //校验、更新本地时间，本对象中curDateTime即为10分钟更新一次的网络时间
+    connect(this, &MainWindow::startTimeServer, timeServer, &TimeServer::getTime, Qt::UniqueConnection);
+    bool checkLocalTimeRes = checkLocalTime();
+    if (!checkLocalTimeRes)
+    {
+        disableDynamicItems(true);
+        curDateTime = QDateTime::currentDateTime();
+    }
+    currentTimeUpdate = new QTimer(this);
+    connect(currentTimeUpdate, &QTimer::timeout, this, [=]() {
+        static int cnt = 0;
+        cnt += 1;
+        curDateTime = curDateTime.addSecs(1);
+        timeLabel->setText("程序时间：" + curDateTime.toString("yyyy年MM月dd日 hh:mm:ss"));
+        if (cnt > 10 * 60)  //校验一次网络时间
+        {
+            if (checkLocalTime())
+                cnt = 0;
+        }
+        });
+    currentTimeUpdate->start(1000);
+
     //更新HarmonyOS字体
     QFont font;
     int font_Id = QFontDatabase::addApplicationFont(":/src/font/HarmonyOS_Sans_SC_Regular.ttf");
@@ -965,6 +970,11 @@ MainWindow::~MainWindow()
         sqlThread_SECOND->quit();
         sqlThread_SECOND->wait();
     }
+    if (timeThread->isRunning())
+    {
+        timeThread->quit();
+        timeThread->wait();
+    }
     if(dbThread->isRunning())
     {
         sqlWork->stopThread();
@@ -993,6 +1003,7 @@ MainWindow::~MainWindow()
     delete msgListTips_2;
 	
     delete sqlWork;
+    delete timeServer;
     delete setBaseInfoWork;
     delete userManageWork;
     delete attendManageWork;
@@ -1006,10 +1017,10 @@ MainWindow::~MainWindow()
     delete sqlThread_MSG;
     delete sqlThread_MSGPUSHER;
     delete sqlThread_SECOND;
+    delete timeThread;
     delete dbThread;
 
     delete readOnlyDelegate;
-
     delete msgWinToast;
 }
 
@@ -1335,8 +1346,7 @@ void MainWindow::on_actAttend_triggered()
 void MainWindow::setAttendPage()
 {
     ui->stackedWidget->setCurrentIndex(4);
-    //curDateTime = QDateTime::fromSecsSinceEpoch(service::getWebTime());
-    
+   
     ui->tableView_attendPage->setModel(attendPageModel);
     ui->tableView_attendPage->hideColumn(0);   //隐藏考勤数据编号
     ui->tableView_attendPage->setEditTriggers(QAbstractItemView::NoEditTriggers); //不可编辑
@@ -2267,7 +2277,7 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
             ui->label_newMsg->setText("<font color=red>" + ui->label_newMsg->text() + "</font>");
             ui->label_newMsgIcon->setVisible(true);
             ui->label_newMsg->setVisible(true);
-            ui->btn_newMsgCheacked->setEnabled(true);
+            ui->btn_newMsgChecked->setEnabled(true);
         }
         if (curMsgStackCnt != 0 && !ui->checkBox_noMsgRem->isChecked())
             isMsgBoxShow = true;
@@ -2312,18 +2322,27 @@ void MainWindow::msgPusher(QStack<QByteArray> msgStack)
         if (from_uid == uid)
         {
             msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>%2 %3</p>").arg(from_name, send_time, HarmonyOS_Font_Family);
-            msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 👈 </p>").arg(msgText);
+            //有换行时，不显示emoji提示
+            if (msgText.contains("<br>"))
+                msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1</p>").arg(msgText);
+            else
+                msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 👈 </p>").arg(msgText);
         }
         else
         {
             msg_contents += QString("<p align='left' style='margin-left:15px;color:#8d8d8d;font-family:%4;font-size:10pt;'>[%1] %2 %3</p>").arg(from_uid, from_name, send_time, HarmonyOS_Font_Family);
-            msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'> 👉 %1</p>").arg(msgText);
+            if (msgText.contains("<br>"))
+                msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'>%1</p>").arg(msgText);
+            else
+                msg_contents += QString("<p align='left' style='margin-top:20px; margin-bottom:20px;margin-left:15px;font-size:12pt;'> 👉 %1</p>").arg(msgText);
         }
+
         if (msgStack.isEmpty() && to_uid == uid && isMsgBoxShow)  //如果消息栈已空，且需要消息提醒，则进行消息提醒（调用最新一条消息）
         {
             QString msgTitle = ui->label_msgMemName->text().replace("🔥", "").simplified();  //去除聊得火热标识以及多余空格
 
             //系统推送服务
+            msgText.replace("<br>", "\n"); //换行符替换
             QString avatarPath = QString("%1/cache/%2.png").arg(QDir::currentPath(), sendToUid);    //头像路径
             msgWinToast->setTextField(msgTitle.toStdWString(), WinToastTemplate::FirstLine);
             msgWinToast->setTextField(msgText.toStdWString(), WinToastTemplate::SecondLine);
@@ -2361,12 +2380,16 @@ void MainWindow::initMsgSys()
     msg_contents.clear();
     ui->textBrowser_msgHistory->clear();
     ui->label_msgMemName->setText("--");
-    on_btn_newMsgCheacked_clicked();
+    on_btn_newMsgChecked_clicked();
 }
 
 bool MainWindow::checkLocalTime()
 {
-    qint32 webTimeSinceEpoch = service::getWebTime(); //网络时间
+    QEventLoop loop;
+    connect(timeServer, &TimeServer::getTimeFinished, &loop, &QEventLoop::quit);
+    emit startTimeServer(); //获取网络时间
+    loop.exec();  //等待获取网络时间完成
+    qint32 webTimeSinceEpoch = timeServer->getTimestamp();
 
     if (webTimeSinceEpoch == -1)
     {
@@ -4283,7 +4306,7 @@ void MainWindow::on_btn_updateVerify_clicked()
 
 void MainWindow::on_btn_sendMsg_clicked()
 {
-    on_btn_newMsgCheacked_clicked();    //已读
+    on_btn_newMsgChecked_clicked();    //已读
     QString msgText = ui->textEdit_msg->toPlainText();
     if (msgText.isEmpty() || sendToUid == "-1")
         return;
@@ -4296,8 +4319,16 @@ void MainWindow::on_btn_sendMsg_clicked()
     emit sendMessage(array);
     isSending = true;   //消息发送中...
 
+    //转换换行符
+    msgText.replace("\n", "<br>");
+
     msg_contents += QString("<p align='right' style='margin-right:15px;color:#8d8d8d;font-size:10pt;'>%2 %3</p>").arg(ui->label_home_name->text(), curDateTime.toString("hh:mm:ss"));
-    msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 👈 </p>").arg(msgText);
+    //有换行时，不显示emoji提示
+    if(msgText.contains("<br>"))
+        msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1</p>").arg(msgText);
+    else
+        msg_contents += QString("<p align='right' style='margin-top:20px; margin-bottom:20px;margin-right:15px;font-size:12pt;'>%1 👈 </p>").arg(msgText);
+
     ui->textBrowser_msgHistory->clear();
     ui->textBrowser_msgHistory->insertHtml(QString("%1%2<p>").arg(msgHistoryInfo, msg_contents));
     
@@ -4314,9 +4345,9 @@ void MainWindow::on_btn_sendMsg_clicked()
     ui->textEdit_msg->clear();
 }
 
-void MainWindow::on_btn_newMsgCheacked_clicked()
+void MainWindow::on_btn_newMsgChecked_clicked()
 {
-    ui->btn_newMsgCheacked->setEnabled(false);
+    ui->btn_newMsgChecked->setEnabled(false);
     ui->label_newMsgIcon->setVisible(false);
     ui->label_newMsg->setVisible(false);
 }
@@ -4373,7 +4404,12 @@ void MainWindow::on_btn_shareMe_clicked()
 
 void MainWindow::on_btn_checkTime_clicked()
 {
-    qint32 webTimeSinceEpoch = service::getWebTime();
+    QEventLoop loop;
+    connect(timeServer, &TimeServer::getTimeFinished, &loop, &QEventLoop::quit);
+    qint32 webTimeSinceEpoch = timeServer->getTimestamp();
+    emit startTimeServer();
+    loop.exec();
+
     QDateTime webTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);
     QDateTime localTime = QDateTime::currentDateTime();
     ui->label_webTime->setText(webTime.toString("yyyy年MM月dd日 hh:mm:ss"));
@@ -4557,7 +4593,7 @@ void MainWindow::on_btn_actClear_clicked()
 
 void MainWindow::on_statusChanged(bool status)
 {
-    qDebug() << "SLOT on_statusChanged, db:" << status;
+    //qDebug() << "SLOT on_statusChanged, db:" << status;
     if(!status)
     {
         dbStatus = false;

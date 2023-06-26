@@ -70,6 +70,8 @@ void MsgService::pushMessage(QString me, QString member, int limit)
 		from_name = getName(from_uid, 2);
 		to_name = getName(to_uid, 2);
 		msgText = record.value("text").toString();
+		//×ª»»»»ÐÐ·û
+		msgText.replace("\n", "<br>");
 		send_time = record.value("send_time").toDateTime().toString("yyyy-MM-dd hh:mm:ss");
 		stream << from_uid << from_name << to_uid << to_name << msgText << send_time;
 		msgStack.push(array);

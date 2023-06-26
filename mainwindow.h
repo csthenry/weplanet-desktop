@@ -56,11 +56,29 @@ QT_END_NAMESPACE
 
 using namespace WinToastLib;    //系统推送服务 命名空间
 
+class TimeServer : public QObject {
+    Q_OBJECT
+public:
+    void getTime() {
+        webTimeSinceEpoch = service::getWebTime(); //网络时间
+        qDebug() << "芜湖";
+        emit getTimeFinished();
+    };
+    qint32 getTimestamp() {
+        return webTimeSinceEpoch;
+    };
+private:
+    qint32 webTimeSinceEpoch = -1;
+signals:
+    void getTimeFinished();
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
+    TimeServer* timeServer;
     
     WinToastTemplate* msgWinToast;  //系统推送消息模板
 
@@ -98,7 +116,7 @@ private:
 
     int msgStackMax = 15; //聊天记录最大数量
 
-    QThread *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_MSGPUSHER, *sqlThread_SECOND;
+    QThread *timeThread, *dbThread, *sqlThread, *sqlThread_MSG, *sqlThread_MSGPUSHER, *sqlThread_SECOND;
 
     QString uid, removedGroupId, removedDptId, sendToUid = "-1";
     
@@ -515,7 +533,7 @@ private slots:
 
     void on_btn_submitHotkey_clicked();
 
-    void on_btn_newMsgCheacked_clicked();
+    void on_btn_newMsgChecked_clicked();
 
     void on_btn_addMsgMem_clicked();
 
@@ -568,6 +586,7 @@ private slots:
     void loadActMemAccountInfo(QSqlRecord rec);
 
 signals:
+
     void startDbWork();
 
     void startBaseInfoWork();
@@ -701,6 +720,8 @@ signals:
     void autoExecuteSystemApplyItems();
 
     void saveSmtpSettings(const QString& add, const QString& user, const QString& password);
+
+    void startTimeServer();
 private:
     Ui::MainWindow *ui;
 };
@@ -719,7 +740,7 @@ public:
         if (actionIndex == 0)
             m_pDialog->openMainWindow(2);
         else if (actionIndex == 1)
-            m_pDialog->on_btn_newMsgCheacked_clicked();
+            m_pDialog->on_btn_newMsgChecked_clicked();
     }
 
     void toastFailed() const override {
