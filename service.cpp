@@ -18,7 +18,7 @@ service::service()
     dataBasePort = 3306;
     dataBaseName = "magic";
     dataBaseUserName = "magic";
-    dataBasePassword = "*************";
+    dataBasePassword = "****************";
 
     /*****************请在此处完善数据库信息*****************/
 }
@@ -332,7 +332,7 @@ bool service::initDatabaseTables(QSqlDatabase db)
     //统计数据表
     creatTableStr =
         "CREATE TABLE IF NOT EXISTS magic_statistics"
-        "(date         date      NOT NULL DEFAULT 0,"
+        "(date         date      NOT NULL,"
         "login_cnt     int(10)   NOT NULL DEFAULT 0,"
         "register_cnt  int(10)   NOT NULL DEFAULT 0,"
         "get_cnt       int(10)   NOT NULL DEFAULT 0,"
