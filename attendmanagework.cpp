@@ -123,6 +123,8 @@ void AttendManageWork::dataOperate(int type)
 
 void AttendManageWork::setFilter(int type, const QString& filter)
 {
+    if (userModel == nullptr || attendModel == nullptr)
+        return;
     if (type == 0)
         userModel->setFilter(filter);
     else
@@ -212,6 +214,14 @@ void AttendManageWork::getComboxItems(QStringList& comboxItems_group, QStringLis
 
 void AttendManageWork::submitAll(int type)
 {
+    if (attendModel == nullptr)
+    {
+        if (type == 1)
+            emit submitAddFinished(false);
+        else
+            emit submitDelFinished(false);
+        return;
+    }
     if(type == 1)
         emit submitAddFinished(attendModel->submitAll());
     else
