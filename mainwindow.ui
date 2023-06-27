@@ -2210,17 +2210,38 @@ padding: 0px 5px;</string>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox_34">
+         <widget class="QGroupBox" name="groupBox_msgPanel">
           <property name="title">
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_155">
            <item row="0" column="0" colspan="6">
             <widget class="QGroupBox" name="groupBox_56">
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">#groupBox_56{border:none}</string>
+             </property>
              <property name="title">
               <string/>
              </property>
              <layout class="QGridLayout" name="gridLayout_80">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>7</number>
+              </property>
               <item row="0" column="5">
                <widget class="QLabel" name="label_newMsg">
                 <property name="maximumSize">
@@ -2258,6 +2279,12 @@ padding: 0px 5px;</string>
                   <width>50</width>
                   <height>16777215</height>
                  </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
                 </property>
                 <property name="text">
                  <string>已读</string>
@@ -2340,6 +2367,12 @@ padding: 0px 5px;</string>
                   <height>34</height>
                  </size>
                 </property>
+                <property name="font">
+                 <font>
+                  <family>微软雅黑</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
                 <property name="toolTip">
                  <string>好友资料</string>
                 </property>
@@ -2357,8 +2390,75 @@ padding: 0px 5px;</string>
            </item>
            <item row="1" column="0" colspan="6">
             <widget class="QSplitter" name="splitter_5">
+             <property name="palette">
+              <palette>
+               <active>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>170</red>
+                   <green>170</green>
+                   <blue>170</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </active>
+               <inactive>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>170</red>
+                   <green>170</green>
+                   <blue>170</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </inactive>
+               <disabled>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>170</red>
+                   <green>170</green>
+                   <blue>170</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>170</red>
+                   <green>170</green>
+                   <blue>170</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </disabled>
+              </palette>
+             </property>
              <property name="orientation">
               <enum>Qt::Vertical</enum>
+             </property>
+             <property name="handleWidth">
+              <number>1</number>
              </property>
              <widget class="QTextBrowser" name="textBrowser_msgHistory">
               <property name="minimumSize">
@@ -2367,11 +2467,54 @@ padding: 0px 5px;</string>
                 <height>350</height>
                </size>
               </property>
+              <property name="palette">
+               <palette>
+                <active>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>240</red>
+                    <green>240</green>
+                    <blue>240</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </active>
+                <inactive>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>240</red>
+                    <green>240</green>
+                    <blue>240</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </inactive>
+                <disabled>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>240</red>
+                    <green>240</green>
+                    <blue>240</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </disabled>
+               </palette>
+              </property>
               <property name="font">
                <font>
                 <family>微软雅黑</family>
                 <pointsize>10</pointsize>
                </font>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Sunken</enum>
               </property>
              </widget>
              <widget class="QTextEdit" name="textEdit_msg">
@@ -2387,11 +2530,51 @@ padding: 0px 5px;</string>
                 <height>250</height>
                </size>
               </property>
+              <property name="palette">
+               <palette>
+                <active>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>240</red>
+                    <green>240</green>
+                    <blue>240</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </active>
+                <inactive>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>240</red>
+                    <green>240</green>
+                    <blue>240</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </inactive>
+                <disabled>
+                 <colorrole role="Base">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>240</red>
+                    <green>240</green>
+                    <blue>240</blue>
+                   </color>
+                  </brush>
+                 </colorrole>
+                </disabled>
+               </palette>
+              </property>
               <property name="font">
                <font>
                 <family>微软雅黑</family>
                 <pointsize>12</pointsize>
                </font>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="documentTitle">
                <string/>

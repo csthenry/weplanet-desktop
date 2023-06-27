@@ -27,6 +27,7 @@
 #include <QWebChannel>
 #include <QClipboard>
 #include <QShortcut>
+#include <QScreen>
 #include "service.h"
 #include "formlogin.h"
 #include "comboboxdelegate.h"

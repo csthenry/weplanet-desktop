@@ -2052,13 +2052,12 @@ void MainWindow::updateManageApplyItemProcess(QList<QString> list)
             delete item;  //析构上一次的列表
         }
     }
-    static int step = 1;
-    step = 1;
+    int step = 1;
     for (auto auditor_uid : list)
     {
         QToolButton* process = new QToolButton();
         process->setMinimumSize(140, 40);
-        process->setToolTip(QString("审批流程[%1]：[%2]审核").arg(QString::number(step), approvalWork->getAuditorName(auditor_uid)));
+        process->setToolTip(QString("审批步骤[%1]：[%2]审核").arg(QString::number(step), approvalWork->getAuditorName(auditor_uid)));
         process->setText(QString(" [%1] %2 ").arg(auditor_uid, approvalWork->getAuditorName(auditor_uid)));
         manageApplyItemProcess.append(process);
         ui->manageApplyProcess_Layout->addWidget(process);
@@ -2172,19 +2171,20 @@ void MainWindow::updateApplyItemProcess(int type, QString apply_id, QList<QStrin
             delete item;  //析构上一次的列表
         }
     }
-    static int step = 1;
-    step = 1;
+    int step = 1, stepCnt = 1;
     QList<QByteArray> processResultList = approvalWork->getCurrentApplyProcess(apply_id);   //审核结果
     for (auto auditor_uid : list)
     {
         QToolButton* process = new QToolButton();
         process->setMinimumSize(140, 40);
-        process->setToolTip(QString("审批流程[%1]：[%2]审核").arg(QString::number(step), approvalWork->getAuditorName(auditor_uid)));
+        if(type == 0)
+            process->setToolTip(QString("审批步骤[%1]：[%2]审核").arg(QString::number(stepCnt++), approvalWork->getAuditorName(auditor_uid)));
         process->setText(QString(" [%1] %2 ").arg(auditor_uid, approvalWork->getAuditorName(auditor_uid)));
         applyItemProcess.append(process);
         
         if (type == 1)
         {
+            process->setToolTip(QString("审批步骤[%1]：[%2]审核").arg(QString::number(step), approvalWork->getAuditorName(auditor_uid)));
             process->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             process->setIcon(QIcon(":/images/color_icon/approve.svg"));  //等待审核
             if(isReject)
@@ -4208,10 +4208,11 @@ void MainWindow::on_btn_delAllLogFiles_clicked()
 
 void MainWindow::on_btn_openOvOPanel_clicked()
 {
-    int x = this->pos().x(), y = this->pos().y();
-    x += ui->btn_openOvOPanel->pos().x() + ui->toolBox_Msg->width() + 35;
-    y += ui->btn_openOvOPanel->pos().y() - ui->textEdit_msg->height() - 185;
-    
+    int x = this->pos().x(), y = this->pos().y() + frameGeometry().height() - ovoWidget->height();  //窗口左下角坐标
+    int margin = 5; //OvO选框与聊天窗口的外边距
+    x += ui->stackedWidget->pos().x() + ui->groupBox_msgPanel->pos().x() + ui->btn_openOvOPanel->pos().x() + margin;
+    y -= ui->statusbar->height() + ui->stackedWidget->pos().y() + ui->groupBox_msgPanel->pos().y() + ui->btn_openOvOPanel->pos().x() + ui->btn_openOvOPanel->height() + ui->gridLayout->verticalSpacing() + ui->textEdit_msg->height() + ui->splitter_5->handleWidth() + margin;
+
     ovoWidget->move(x, y);
     ovoWidget->showNormal();
 }
