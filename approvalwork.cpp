@@ -489,11 +489,9 @@ void ApprovalWork::submitOrCancelApply(int type, const QString& apply_id, QByteA
 		QDataStream stream(&array, QIODevice::ReadOnly);
 		stream >> uid >> item_id >> options >> operate_time;
 		res = query.exec(QString("INSERT INTO magic_apply (uid, item_id, options, status, operate_time) VALUES ('%1', '%2', '%3', '%4', '%5')").arg(uid, item_id, options, QString("0"), operate_time));
-		qDebug() << query.lastError().text();
-	}else
-	{
-		res = query.exec(QString("DELETE FROM magic_apply WHERE apply_id='%1'").arg(apply_id));
 	}
+	else
+		res = query.exec(QString("DELETE FROM magic_apply WHERE apply_id='%1'").arg(apply_id));
 	query.clear();
 	DB.close();
 	

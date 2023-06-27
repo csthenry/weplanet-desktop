@@ -2,18 +2,16 @@
 
 UserManageWork::UserManageWork(QObject* parent) : QObject(parent)
 {
-    QString dbErrMsg;
-    if(!DB_SERVICE.connectDb(dbErrMsg))
-        qDebug() << "dbErrMsg" << dbErrMsg;
-    //DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
+    db_service.addDatabase(DB, "AttendManageWork_DB");
+    DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
 }
 
 UserManageWork::~UserManageWork()
 {
     if (heartBeat != nullptr)
         heartBeat->deleteLater();
-    delete relTableModel;
-    DB_SERVICE.disconnectDb();
+    if (DB.isOpen())
+        DB.close();
 }
 
 void UserManageWork::working(QSqlRelationalTableModel* model)
@@ -25,16 +23,14 @@ void UserManageWork::working(QSqlRelationalTableModel* model)
         if (isDisplay && relTableModel != nullptr)
             relTableModel->select();
         else
-        {
-            heartBeat->stop();
-            relTableModel->database().close();
-        }
+            if (DB.isOpen())
+                DB.close();
         }, Qt::UniqueConnection);
 
     isDisplay = true;
 
-    if(!relTableModel->database().isOpen())
-        relTableModel->database().open();
+    if(!DB.isOpen())
+        DB.open();
     //使用relationalModel时，这数据库不能关闭，否则外键的映射就没办法操作了...早知道不用relationalModel了，数据库连接很难管理...  
 
     relTableModel->setTable("magic_users");
@@ -176,7 +172,7 @@ void UserManageWork::getComboxItems(QStringList &comboxItems_group, QStringList 
 
 QSqlDatabase UserManageWork::getDB()
 {
-    return QSqlDatabase::database(DB_SERVICE.connectionName);
+    return DB;
 }
 
 void UserManageWork::setCombox(QComboBox* group, QComboBox* department)
