@@ -116,14 +116,16 @@ void UserManageWork::getComboxItems()
 
 void UserManageWork::submitAll()
 {
-    bool res = true;
-    res = relTableModel->submitAll();
+    bool res = false;
+    if (relTableModel != nullptr)
+        res = relTableModel->submitAll();
     emit submitAllFinished(res);
 }
 
 void UserManageWork::setFilter(const QString& filter)
 {
-    relTableModel->setFilter(filter);
+    if(relTableModel != nullptr)
+        relTableModel->setFilter(filter);
 }
 
 void UserManageWork::loadAvatar()

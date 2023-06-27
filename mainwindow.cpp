@@ -2457,6 +2457,9 @@ void MainWindow::on_actUserManager_triggered()
     ui->tableView_userManage->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView_userManage->setItemDelegateForColumn(0, readOnlyDelegate);    //UID不可编辑
 
+    on_btn_userManagePage_recovery_clicked();
+    on_btn_userManagePage_recovery_2_clicked();
+
     emit setUserManageWorkHeartBeat(false);
     userManagePreModel = userManageModel;
     userManageModel = new QSqlRelationalTableModel(this, userManageWork->getDB());
@@ -2507,6 +2510,8 @@ void MainWindow::on_actAttendManager_triggered()
     ui->tableView_attendInfo->setItemDelegateForColumn(6, readOnlyDelegate);
     ui->tableView_attendUsers->setEditTriggers(QAbstractItemView::NoEditTriggers);  //不可编辑
     ui->tableView_attendInfo->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    on_btn_attendManagePage_recovery_clicked();
 
     attendUserPreModel = attendUserModel;
     attendManagePreModel = attendManageModel;
@@ -4218,9 +4223,9 @@ void MainWindow::on_btn_delAllLogFiles_clicked()
 void MainWindow::on_btn_openOvOPanel_clicked()
 {
     int x = this->pos().x(), y = this->pos().y() + frameGeometry().height() - ovoWidget->height();  //窗口左下角坐标
-    int margin = 5; //OvO选框与聊天窗口的外边距
+    int margin = 3; //OvO选框与聊天窗口的外边距
     x += ui->stackedWidget->pos().x() + ui->groupBox_msgPanel->pos().x() + ui->btn_openOvOPanel->pos().x() + margin;
-    y -= ui->statusbar->height() + ui->stackedWidget->pos().y() + ui->groupBox_msgPanel->pos().y() + ui->btn_openOvOPanel->pos().x() + ui->btn_openOvOPanel->height() + ui->gridLayout->verticalSpacing() + ui->textEdit_msg->height() + ui->splitter_5->handleWidth() + margin;
+    y -= ui->statusbar->height() + ui->stackedWidget->pos().y() + ui->groupBox_msgPanel->pos().y() + ui->btn_openOvOPanel->height() + ui->gridLayout->verticalSpacing() + ui->textEdit_msg->height() + ui->splitter_5->handleWidth() + margin;
 
     ovoWidget->move(x, y);
     ovoWidget->showNormal();

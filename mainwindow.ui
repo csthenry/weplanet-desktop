@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -2179,8 +2179,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>300</width>
+             <height>557</height>
             </rect>
            </property>
            <property name="font">
@@ -2211,10 +2211,22 @@ padding: 0px 5px;</string>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_msgPanel">
+          <property name="styleSheet">
+           <string notr="true">#groupBox_msgPanel{border-top:0px solid;border-bottom:0px solid;border-left:2px dashed;border-right: 0px solid;border-color: #e3e3e3;}</string>
+          </property>
           <property name="title">
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_155">
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item row="0" column="0" colspan="6">
             <widget class="QGroupBox" name="groupBox_56">
              <property name="font">
@@ -2224,7 +2236,7 @@ padding: 0px 5px;</string>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">#groupBox_56{border:none}</string>
+              <string notr="true">#groupBox_56{border-top:0px;border-bottom:1px solid;border-left:0px;border-right: 0px;border-color: #e3e3e3;}</string>
              </property>
              <property name="title">
               <string/>
@@ -2573,6 +2585,9 @@ padding: 0px 5px;</string>
                 <pointsize>12</pointsize>
                </font>
               </property>
+              <property name="styleSheet">
+               <string notr="true">#textEdit_msg{border-top: 1px solid;border-color: #e3e3e3;}</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::NoFrame</enum>
               </property>
@@ -2601,8 +2616,8 @@ padding: 0px 5px;</string>
              </property>
              <property name="font">
               <font>
-               <family>Segoe UI Emoji</family>
-               <pointsize>12</pointsize>
+               <family>微软雅黑</family>
+               <pointsize>10</pointsize>
                <weight>50</weight>
                <bold>false</bold>
                <stylestrategy>PreferDefault</stylestrategy>
@@ -2633,6 +2648,12 @@ padding: 0px 5px;</string>
                  <height>40</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>添加好友</string>
                </property>
@@ -2649,6 +2670,12 @@ padding: 0px 5px;</string>
                  <width>120</width>
                  <height>40</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>10</pointsize>
+                </font>
                </property>
                <property name="text">
                 <string>删除好友</string>
@@ -2673,6 +2700,12 @@ padding: 0px 5px;</string>
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>分享</string>
                </property>
@@ -2686,6 +2719,12 @@ padding: 0px 5px;</string>
            </item>
            <item row="2" column="2">
             <widget class="QCheckBox" name="checkBox_noMsgRem">
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>勿扰模式</string>
              </property>
@@ -2718,6 +2757,12 @@ padding: 0px 5px;</string>
                <height>30</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>微软雅黑</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -2748,6 +2793,12 @@ padding: 0px 5px;</string>
                  <height>40</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>10</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>发送 Ctrl+Enter</string>
                </property>
@@ -2770,6 +2821,12 @@ padding: 0px 5px;</string>
                  <width>40</width>
                  <height>40</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>微软雅黑</family>
+                 <pointsize>10</pointsize>
+                </font>
                </property>
                <property name="toolTip">
                 <string>切换发送快捷键</string>
