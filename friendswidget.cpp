@@ -134,7 +134,7 @@ void FriendsWidget::setMemberInfo(QByteArray array)
 
     ui->group->setText(group);
     ui->department->setText(department);
-    ui->avatar->setPixmap(avatar);
+    ui->avatar->setPixmap(service::setAvatarStyle(avatar));
     if (res)
     {
         ui->uid->setText(searchUid);

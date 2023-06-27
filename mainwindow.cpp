@@ -246,6 +246,15 @@ MainWindow::MainWindow(QWidget *parent, QDialog *formLoginWindow)
     c_channel->registerObject(QStringLiteral("content"), &c_content);
     m_channel->registerObject(QStringLiteral("content"), &m_content);
 
+    //页面切换信号
+    connect(ui->stackedWidget, &QStackedWidget::currentChanged, this, [=](int index) {
+        if (index == 13)
+            ui->webEngineView->setUrl(QUrl("qrc:/src/newLoading.html"));
+        else
+            ui->webEngineView->setUrl(QUrl());
+        });
+    
+
     //sqlWork firstFinished信号槽
     connect(sqlWork, &SqlWork::firstFinished, this, [=](){
         sqlWork->stopThread();

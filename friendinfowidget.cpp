@@ -90,7 +90,7 @@ void FriendInfoWidget::setInfoPage()
     if(infoWork->getAvatar().isNull())
 		ui->avatar->setPixmap(QPixmap(":/images/color_icon/user.svg"));
     else
-		ui->avatar->setPixmap(infoWork->getAvatar());
+		ui->avatar->setPixmap(service::setAvatarStyle(infoWork->getAvatar()));
     
     int verifyTag = infoWork->getVerifyTag();
     if (verifyTag == 1)

@@ -78,7 +78,6 @@
         <file>color_icon/refresh.svg</file>
         <file>color_icon/user.svg</file>
         <file>logo/MagicLightAssistant.png</file>
-        <file>color_icon/loading.gif</file>
         <file>logo/heart.svg</file>
         <file>logo/planet.svg</file>
         <file>logo/rain.svg</file>
@@ -97,10 +96,6 @@
         <file>index.html</file>
         <file>3rdparty/markdown.css</file>
         <file>3rdparty/marked.js</file>
-        <file>loading.html</file>
-        <file>img/Loading4.gif</file>
-        <file>img/loading.gif</file>
-        <file>img/qq-nt-logo.png</file>
         <file>color_icon/arrow_down.svg</file>
         <file>color_icon/arrow_down_2.svg</file>
         <file>color_icon/arrow_left.svg</file>
@@ -110,7 +105,6 @@
         <file>color_icon/arrow_up.svg</file>
         <file>color_icon/arrow_up_2.svg</file>
         <file>img/stable.png</file>
-        <file>img/ae_loading.gif</file>
         <file>img/nt-logo.png</file>
         <file>logo/bar_icon.png</file>
     </qresource>
@@ -126,6 +120,7 @@
         <file>font/HarmonyOS_Sans_SC_Regular.ttf</file>
         <file>img/headerbg.png</file>
         <file>loader.html</file>
+        <file>newLoading.html</file>
     </qresource>
     <qresource prefix="/qt">
         <file>qss/qmenu.qss</file>

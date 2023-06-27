@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="home">
        <layout class="QGridLayout" name="gridLayout_77">
@@ -4258,8 +4258,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>280</width>
+             <height>519</height>
             </rect>
            </property>
            <property name="font">
@@ -4409,8 +4409,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>1026</width>
+                   <height>83</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="ApplyProcess_Layout">
@@ -4449,8 +4449,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>1024</width>
+                   <height>309</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_Layout">
@@ -5218,7 +5218,7 @@ padding: 0px 5px;</string>
                    <string>[注] 注销账号会删除该UID下的用户数据；
 该操作可能导致其余数据表产生无关联的UID；
 非必要情况不使用此功能，可用封禁账号代替注销账号；
-封禁账号同样有注销账号后的无法登录等效果。</string>
+封禁账号与注销账号有同等效力，但不会造成数据丢失。</string>
                   </property>
                   <property name="scaledContents">
                    <bool>false</bool>
@@ -5275,7 +5275,11 @@ padding: 0px 5px;</string>
                 <item row="4" column="0" colspan="2">
                  <widget class="QLabel" name="label_95">
                   <property name="text">
-                   <string>[注] 修改的是当前选择的用户密码，填写完成后，选择其余任意用户，即可完成新密码缓存，最后单击[确认修改]即可完成密码修改。</string>
+                   <string>[注] 该操作将修改当前所选用户的密码：
+
+1. 填写所选用户的[修改密码]及[确认密码]；
+2. 选择其余任一用户，即可缓存待修改密码；
+3. 单击[确认修改]即可完成密码修改。</string>
                   </property>
                   <property name="scaledContents">
                    <bool>false</bool>
@@ -5659,19 +5663,6 @@ padding: 0px 5px;</string>
               </widget>
              </widget>
             </item>
-            <item row="4" column="0">
-             <spacer name="verticalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
             <item row="5" column="0" colspan="3">
              <widget class="QPushButton" name="btn_editUser_check">
               <property name="enabled">
@@ -5723,6 +5714,19 @@ padding: 0px 5px;</string>
                </size>
               </property>
              </widget>
+            </item>
+            <item row="4" column="0" colspan="3">
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
            <widget class="QLabel" name="label_verifyIcon_manage_main">
@@ -9095,7 +9099,7 @@ padding: 0px 5px;</string>
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;MagicLitePlanet (WePlanet)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/p&gt;&lt;p&gt;[2] ECharts, https://echarts.apache.org.&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;开源协议：&lt;/span&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/p&gt;&lt;p&gt;Limitations: &lt;span style=&quot; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;Copyright (C) 2017-2023 字节星球 Henry &amp;lt;mail:csthenry@foxmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;本项目使用的第三方库：&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;[1] Qt, https://www.qt.io/zh-cn/product?hsLang=zh-cn.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;[2] ECharts, https://echarts.apache.org.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;[3] SmtpClient-for-Qt, https://github.com/bluetiger9/SmtpClient-for-Qt.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;[4] WinToast, https://github.com/mohabouje/WinToast.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;开源协议：GNU General Public License v3.0 &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#535353;&quot;&gt;GPL-3.0 License, https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Limitations: &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600; color:#ff0000;&quot;&gt;Liability, Warranty&lt;/span&gt;&lt;/p&gt;&lt;hr/&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Copyright (C) 2017-2023 字节星球 (https://www.bytecho.net) ：Henry (https://github.com/csthenry)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="textFormat">
               <enum>Qt::AutoText</enum>
@@ -9131,7 +9135,7 @@ padding: 0px 5px;</string>
           </property>
           <property name="url">
            <url>
-            <string>qrc:/src/loader.html</string>
+            <string>qrc:/src/newLoading.html</string>
            </url>
           </property>
          </widget>
