@@ -2,7 +2,7 @@
 
 UserManageWork::UserManageWork(QObject* parent) : QObject(parent)
 {
-    db_service.addDatabase(DB, "AttendManageWork_DB");
+    db_service.addDatabase(DB, "UserManageWork_DB");
     DB.setConnectOptions("MYSQL_OPT_RECONNECT=1");  //超时重连
 }
 
