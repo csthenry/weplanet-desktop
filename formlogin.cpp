@@ -306,8 +306,17 @@ void formLogin::updateFinished(bool res)
         if (ret == 0)
         {
             //QDesktopServices::openUrl(updateSoftWare->getUrl());
-            QString updateAppPath = QApplication::applicationDirPath() + "/update";
-            QProcess::startDetached(updateAppPath + "/update.exe", QStringList(), updateAppPath);    //启动更新程序
+            QString updateAppPath, workPath = QApplication::applicationDirPath();
+            QFile updater(workPath + "/updater.exe");
+            
+            if (updater.exists())
+                updateAppPath = workPath + "/updater.exe"; //1.3.0.2版本后使用新版更新器
+            else
+            {
+                workPath += "/update";
+                updateAppPath = workPath + "/update.exe"; //旧版更新器
+            }
+            QProcess::startDetached(updateAppPath, QStringList(), workPath);    //启动更新程序
             this->close();  //关闭窗口
         }
     }
