@@ -41,6 +41,18 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext& context, con
 	m_LogMutex.unlock();
 }
 
+//初始化必要目录
+void initNecessaryDir()
+{
+	QDir dir = QDir::currentPath();
+	if (!dir.exists("cache"))
+		dir.mkdir("cache");
+	if (!dir.exists("log"))
+		dir.mkdir("log");
+	if (!dir.exists("update"))
+		dir.mkdir("update");
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -51,6 +63,7 @@ int main(int argc, char *argv[])
 	qInstallMessageHandler(customMessageHandler);   //release模式下注册日志处理函数
 	#endif
 
+	initNecessaryDir();
     formLogin *formLoginWindow = new formLogin();
 
     if(formLoginWindow->exec() == QDialog::Accepted)
