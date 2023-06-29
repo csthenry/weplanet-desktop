@@ -2405,13 +2405,18 @@ bool MainWindow::checkLocalTime()
     emit startTimeServer(); //获取网络时间
     loop.exec();  //等待获取网络时间完成
     qint32 webTimeSinceEpoch = timeServer->getTimestamp();
-
+    static bool isShowErrMsg = false;   //仅显示一次错误提示
     if (webTimeSinceEpoch == -1)
     {
-        trayIcon->showMessage("时间校验失败", QString("获取服务器时间失败，请检查网络连接。考勤、活动、畅聊等已被禁用，请前往[设置]验证时间以重新启用。"));
+        if (!isShowErrMsg)
+        {
+            trayIcon->showMessage("时间校验失败", QString("获取服务器时间失败，请检查网络连接。考勤、活动、畅聊等已被禁用，请前往[设置]验证时间以重新启用。"));
+            isShowErrMsg = true;
+        }
         disableDynamicItems(true);
         return false;
     }
+    isShowErrMsg = false;
     curDateTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch); //更新网络时间
 	QDateTime webTime = QDateTime::fromSecsSinceEpoch(webTimeSinceEpoch);   //获取网络时间
 	QDateTime localTime = QDateTime::currentDateTime();   //获取本地时间

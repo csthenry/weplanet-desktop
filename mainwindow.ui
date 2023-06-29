@@ -2179,8 +2179,8 @@ padding: 0px 5px;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>300</width>
-             <height>557</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -2628,7 +2628,17 @@ padding: 0px 5px;</string>
               <string>OvO</string>
              </property>
              <property name="text">
-              <string>😅</string>
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/images/img/ovo.png</normaloff>:/images/img/ovo.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>26</width>
+               <height>26</height>
+              </size>
              </property>
              <property name="autoRepeat">
               <bool>false</bool>
@@ -4315,8 +4325,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>280</width>
-             <height>519</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
            <property name="font">
@@ -4466,8 +4476,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1026</width>
-                   <height>83</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QHBoxLayout" name="ApplyProcess_Layout">
@@ -4506,8 +4516,8 @@ p, li { white-space: pre-wrap; }
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1024</width>
-                   <height>309</height>
+                   <width>98</width>
+                   <height>28</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="applyForm_Layout">

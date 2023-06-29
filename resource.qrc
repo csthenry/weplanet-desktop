@@ -107,6 +107,7 @@
         <file>img/stable.png</file>
         <file>img/nt-logo.png</file>
         <file>logo/bar_icon.png</file>
+        <file>img/ovo.png</file>
     </qresource>
     <qresource prefix="/lib">
         <file>eCharts/echarts.html</file>
