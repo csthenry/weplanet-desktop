@@ -1,4 +1,4 @@
-# MagicLitePlanet（WePlanet）
+# WePlanet (Desktop)
 
 ![GitHub license](https://img.shields.io/github/license/CSTHenry/MagicLitePlanet?style=flat-square)
 ![GitHub forks](https://img.shields.io/github/forks/CSTHenry/MagicLitePlanet?style=flat-square)
@@ -6,9 +6,9 @@
 ![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicLitePlanet?include_prereleases&style=flat-square)
 ![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicLitePlanet/total?style=flat-square)
 
-🚀MagicLitePlanet - Interactive system for small groups
+🚀Interactive system for small groups
 
-  The functions of communication, management, approval... are all incredibly integrated in **Magic<Lite\>Planet**.
+  The functions of communication, management, approval... are all incredibly integrated in **WePlanet(Desktop)**.
 
 - OS：Windows x64
 - IDE：Visual Studio 2022 MSVC
@@ -45,14 +45,7 @@
 
 ### Screenshots
 
-![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/1.png)
-![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/2.png)
-![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/3.png)
-![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/4.png)
-![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/5.png)
-![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/6.png)
-
-more screenshots：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
+screenshots：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
 
 ### Tips：
 
