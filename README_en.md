@@ -55,9 +55,9 @@ Please read before dev the project：https://www.bytecho.net/archives/qt_mysql.h
 
 ### LICENSE
 
-[GPL-3.0 License](https://github.com/csthenry/MagicLitePlanet/blob/master/LICENSE)
+[GPL-3.0 License](https://github.com/csthenry/weplanet-desktop/blob/master/LICENSE)
 
-[![Star History Chart](https://api.star-history.com/svg?repos=csthenry/MagicLitePlanet&type=Date)](https://star-history.com/#csthenry/MagicLitePlanet&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=csthenry/weplanet-desktop&type=Date)](https://star-history.com/#csthenry/weplanet-desktop&Date)
 
 ---
 
