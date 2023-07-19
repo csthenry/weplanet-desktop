@@ -8,7 +8,7 @@
 ![GitHub release](https://img.shields.io/github/v/release/CSTHenry/MagicLitePlanet?include_prereleases&style=flat-square)
 ![GitHub download](https://img.shields.io/github/downloads/CSTHenry/MagicLitePlanet/total?style=flat-square)
 
-🚀MagicLitePlanet - 适用于小型团体的协作系统
+🚀适用于小型团体的协作系统
 
   交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **WePlanet(Desktop)**。
 
@@ -50,7 +50,7 @@
 
 ### 开发进度截图
 
-截图请查看：https://github.com/csthenry/MagicLitePlanet/tree/master/screenshot
+截图请查看：https://github.com/csthenry/weplanet-desktop/tree/master/screenshot
 
 ### 注意：
 

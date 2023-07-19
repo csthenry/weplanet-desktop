@@ -45,7 +45,7 @@
 
 ### Screenshots
 
-screenshots：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
+screenshots：https://github.com/csthenry/weplanet-desktop/tree/master/screenshot
 
 ### Tips：
 
