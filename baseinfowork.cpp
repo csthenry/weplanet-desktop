@@ -179,7 +179,7 @@ void baseInfoWork::bindMailAvatar(QString mail)
 {
     mail = mail.trimmed(); //去空格
     QString hash = service::pwdEncrypt(mail);
-    QString avatarUrl = QString("https://cravatar.cn/avatar/%1?s=120&r=G&d=mp").arg(hash);
+    QString avatarUrl = QString("https://weavatar.com/avatar/%1?s=120&r=G&d=mp").arg(hash);
     DB.open();
     QSqlQuery query(DB);
     bool query_res = query.exec("UPDATE magic_users SET user_avatar='" + avatarUrl + "' WHERE uid='" + uid + "';");

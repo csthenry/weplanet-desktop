@@ -1,4 +1,4 @@
-# MagicLitePlanet（WePlanet）
+# WePlanet (Desktop)
 
 [English Readme](https://github.com/csthenry/MagicLitePlanet/blob/master/README_en.md)
 
@@ -10,7 +10,7 @@
 
 🚀MagicLitePlanet - 适用于小型团体的协作系统
 
-  交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **Magic<Lite\>Planet**。
+  交流、工作、活动、分析、管理、审批...等的功能均不可思议地集成于优雅而简约轻便的 **WePlanet(Desktop)**。
 
 - 平台：Windows x64
 - 开发环境：Visual Studio 2022 MSVC
@@ -18,8 +18,6 @@
 - 数据库：MySQL5.7
 - 语言：C++ 11
 - 框架：Qt5.15.x
-
--> 此项目由一名非科班励志自学成才的大学生呈现——我的第一个可上线项目。
 
 ### 开发进度
 
@@ -52,14 +50,7 @@
 
 ### 开发进度截图
 
-![screenshot_7](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/1.png)
-![screenshot_1](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/2.png)
-![screenshot_2](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/3.png)
-![screenshot_3](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/4.png)
-![screenshot_5](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/5.png)
-![screenshot_6](https://github.com/CSTHenry/MagicLitePlanet/blob/master/screenshot/6.png)
-
-更多截图请查看：https://github.com/CSTHenry/MagicLitePlanet/tree/master/screenshot
+截图请查看：https://github.com/csthenry/MagicLitePlanet/tree/master/screenshot
 
 ### 注意：
 
